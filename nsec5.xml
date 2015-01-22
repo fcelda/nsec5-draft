@@ -162,6 +162,21 @@
                 used for NSEC5 hashing.
             </t>
         </section>
+
+        <section title="NSEC5KEY RDATA Presentation Format">
+            <t>
+                The presentation format of the NSEC5KEY RDATA is as follows:
+            </t>
+
+            <t>
+                The Algorithm field is represented as na unsigned decimal integer.
+            </t>
+
+            <t>
+                The Public Key field is represented in Base64 encoding. Whitespace
+                is allowed within the Base64 text.
+            </t>
+        </section>
     </section>
 
     <section title="The NSEC5 Resource Record">
@@ -245,6 +260,35 @@
                 All other flags are reserverd for future use and must be zero.
             </t>
         </section>
+
+        <section title="NSEC5 RDATA Presentation Format">
+            <t>
+                The presentation format of the NSEC5 RDATA is as follows:
+            </t>
+
+            <t>
+                The Key Tag field is represented as an unsigned decimal integer.
+            </t>
+
+            <t>
+                The Flags field is represented as an unsigned decimal integer.
+            </t>
+
+            <t>
+                The Next Length field is represented as an unsigned decimal integer.
+            </t>
+
+            <t>
+                The Next Hashed Owner Name field is represented as a sequence
+                of case-insensitive base32hex digits, without whitespace.
+                <cref>[NOTE] We will need padding for SHA-256, can we skip it?</cref>
+            </t>
+
+            <t>
+                The Type Bit Maps is representation is equivalent to representation
+                used in NSEC3 RR, described in <xref target="RFC5155"></xref>.
+            </t>
+        </section>
     </section>
 
     <section title="The NSEC5PROOF Resource Record">
@@ -276,6 +320,21 @@
             <t>
                 Owner Name Hash is a variable sized sequence of binary octets
                 encoding the NSEC5 proof-hash of the owner name.
+            </t>
+        </section>
+
+        <section title="NSEC5PROOF RDATA Presentation Format">
+            <t>
+                The presentation format of the NSEC5PROOF RDATA is as follows:
+            </t>
+
+            <t>
+                The Key Tag field is represented as an unsigned decimal integer.
+            </t>
+
+            <t>
+                The Owner Name Hash is represented in Base64 encoding. Whitespace
+                is allowed within the Base64 text.
             </t>
         </section>
     </section>
