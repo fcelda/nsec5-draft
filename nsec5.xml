@@ -213,14 +213,14 @@
 
             <t>
                 Key Tag field contains the key tag value of the NSEC5KEY RR
-                that validates the NSEC5 RR.
+                that validates the NSEC5 RR, in network byte order.
             </t>
             <t>
                 Flags field is a single octet. The meaning of individual bits
                 of the field is defined in <xref target="nsec5_flags"></xref>.
             </t>
             <t>
-                Flags field is an unsigned single octet specifying the length
+                Next length is an unsigned single octet specifying the length
                 of the Next Hashed Owner Name field in octets.
             </t>
             <t>
@@ -275,17 +275,18 @@
             </t>
 
             <t>
-                The Next Length field is represented as an unsigned decimal integer.
+                The Next Length field is not represented.
             </t>
 
             <t>
                 The Next Hashed Owner Name field is represented as a sequence
                 of case-insensitive base32hex digits, without whitespace.
-                <cref>[NOTE] We will need padding for SHA-256, can we skip it?</cref>
+                <cref>[NOTE] We will need padding for SHA-256. NSEC3 omits padding.
+                We can do the same.</cref>
             </t>
 
             <t>
-                The Type Bit Maps is representation is equivalent to representation
+                The Type Bit Maps representation is equivalent to the representation
                 used in NSEC3 RR, described in <xref target="RFC5155"></xref>.
             </t>
         </section>
@@ -315,7 +316,7 @@
 
             <t>
                 Key Tag field contains the key tag value of the NSEC5KEY RR
-                that validates the NSEC5PROOF RR.
+                that validates the NSEC5PROOF RR, in network byte order.
             </t>
             <t>
                 Owner Name Hash is a variable sized sequence of binary octets
