@@ -2,7 +2,6 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
-<!ENTITY rfc4955 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4955.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 ]>
 <?rfc toc="yes"?>
@@ -55,33 +54,22 @@
 
     <abstract>
 
-        <t>
-            Abstract...
-        </t>
+        <!--
+            Keep it brief. Remember, don't put any citations in the abstract, and expand your  acronyms.
+        <-->
 
         <t>
-            This memo defines ...
+            The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource
+            record (RR) for authenticated denial of existence and the NSEC3 for hashed
+            authenticated denial of existence.
 
-            <figure align="center">
-                <artwork><![CDATA[
- ________________
-< NSEC5 is cool! >
- ----------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-            ]]></artwork>
-        </figure>
+            The NSEC allows zone content enumeration by quering the server for carefully chosen
+            domain names. The NSEC3 adds domain name hashing, which makes the zone enumeration
+            harder, but not impossible.
 
-
+            This document introduces NSEC5, which provides an cryptographically-proven mechanism
+            preventing zone enumeration.
         </t>
-
-        <t><cref>
-            [TEMPLATE TODO]: Keep it brief. Remember, don't put any citations in the abstract,
-            and expand your  acronyms.
-        </cref></t>
 
     </abstract>
 
@@ -89,43 +77,84 @@
 
 <middle>
     <section title="Introduction">
-        <!--
-             You can echo the abstract in the Introduction, providing citations here, but you
-             should provide more than just the abstract.
-        -->
 
-        <t>
-            This memo defines...
-        </t>
-    </section>
+        <section title="Rationale">
 
-    <section title="Experimental Status">
-        <t>
-            This document describes an EXPERIMENTAL extension to DNSSEC.
-        </t>
+            <!--
+                You can echo the abstract in the Introduction, providing citations here, but you
+                should provide more than just the abstract.
+            -->
 
-        <t>
-            Methodology for setting up DNSSEC experiments is described in
-            <xref target="RFC4955"></xref>.
-        </t>
-    </section>
+            <t>
+                The DNS Security Extensions (DNSSEC) provides data integrity protection using
+                public-key cryptography while not requiring the servers to compute the signatures
+                on-the-fly. The content of the zone is usually pre-computed and served as it is.
+                The evident advantage of this approach is reduced performance requirements per
+                query. Also the private keys security is higher because the keys do not have to
+                be present on the servers facing the network.
+            </t>
 
-    <section title="Requirements">
-        <t>
-            The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-            "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-            document are to be interpreted as described in
-            <xref target="RFC2119"></xref>.
-        </t>
-    </section>
+            <t>
+                With DNSSEC, each resource record (RR) set in the zone is signed. The signature
+                is retained as an RRSIG RR directly in the zone. This enables data integrity
+                for positive lookups in the zone. To ensure integrity of denying answers, an
+                NSEC chain of all existing domain names in the zone is constructed. The chain
+                is made of RRs, where each RR represents two consecutive domain names in
+                canonical order present in the zone. The NSEC RRs are signed the same way as
+                any other RRs in the zone.
+            </t>
 
-    <section title="Terminology">
-        <t>
-            <list>
-                <t>NSEC5 proof-hash - The signed hash (hash-and-sign).</t>
-                <t>NSEC5 chain-hash - The hashed NSEC5 proof-hash (hash-sign-and-hash).</t>
-            </list>
-        </t>
+            <t>
+                A side-effect of the existence of the NSEC chain is a possibility to enumerate
+                the content of the zone by following individual RRs in the chain. To prevent
+                the zone enumeration, the NSEC3 hashed denial of existence was introduced. The
+                domain names in the chain are replaced by their cryptographic hashes. As the
+                domain name space is restricted, offline attacks are possible and the zone
+                enumeration is harder but still possible.
+            </t>
+
+            <t>
+                There is a mechanism called NSEC white lies, which completely prevents zone
+                content enumeration. The NSEC (or NSEC3) RRs are computed by the authoritative
+                server on-the-fly. On the other hand, this mechanism requires presence of
+                the private keys on all servers authoritative for the zone, which is often
+                undesirable. The holder of the private key can tamper with the zone content.
+            </t>
+
+            <t>
+                To assure zone content enumeration without keeping private keys on all
+                authoritative servers, NSEC5 introduces a public-key based domain name hashing.
+                For the hashing, a separate NSEC5 key is used. This key is present on all
+                authoritative servers, however holder of the key cannot modify the content of
+                the zone.
+            </t>
+
+            <t>
+                <cref>
+                    TODO: What will happen, if the attacked acquires the NSEC5 key? He/she
+                    won't be able to enumerate the zone anyway. Right?
+                </cref>
+            </t>
+        </section>
+
+        <section title="Requirements">
+            <t>
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+                "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+                document are to be interpreted as described in
+                <xref target="RFC2119"></xref>.
+            </t>
+        </section>
+
+        <section title="Terminology">
+            <t>
+                <list>
+                    <t>NSEC5 proof-hash - The signed hash (hash-and-sign).</t>
+                    <t>NSEC5 chain-hash - The hashed NSEC5 proof-hash (hash-sign-and-hash).</t>
+                </list>
+            </t>
+        </section>
+
     </section>
 
     <section title="The NSEC5KEY Resource Record">
@@ -401,7 +430,6 @@
     </references>
 
     <references title="Informative References">
-        &rfc4955;
 
         <reference anchor="nsec5">
             <front>
@@ -420,7 +448,7 @@
 
     <section title="Change Log">
         <t>
-            Note to RFC Editor: if this document does not obsolete an existing RFC, 
+            Note to RFC Editor: if this document does not obsolete an existing RFC,
             please remove this appendix before publication as an RFC.
         </t>
     </section>
