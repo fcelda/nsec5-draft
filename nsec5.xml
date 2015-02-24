@@ -369,6 +369,27 @@
         </section>
     </section>
 
+    <section title="Transition Mechanism">
+    </section>
+
+    <section title="Authoritative Server Considerations">
+    </section>
+
+    <section title="Resolver Considerations">
+    </section>
+
+    <section title="Validator Considerations">
+    </section>
+
+    <section title="Special Considerations">
+    </section>
+
+    <section title="Performance Considerations">
+    </section>
+
+    <section title="Security Considerations">
+    </section>
+
     <section title="IANA Considerations">
 
         <t>
