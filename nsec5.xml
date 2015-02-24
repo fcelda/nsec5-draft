@@ -14,7 +14,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="exp" docName="draft-dnssec-nsec5-01" ipr="trust200902">
+<rfc category="std" docName="draft-jvcelak-nsec5-00" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
