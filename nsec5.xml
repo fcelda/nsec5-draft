@@ -4,6 +4,7 @@
 <!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
+<!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -177,9 +178,8 @@
 
     <section title="The NSEC5KEY Resource Record">
         <t>
-            NSEC5 uses domain name hashing based on public key cryptography.
-            Keys used for the NSEC5 hashing differ from keys used to sign and
-            verify RRs in a zone.
+            NSEC5 uses domain name hashing based on public-key cryptography. Keys used for the
+            NSEC5 hashing differ from keys used to sign and verify RRs in a zone.
         </t>
 
         <t>
@@ -386,9 +386,6 @@
         </section>
     </section>
 
-    <section title="Transition Mechanism">
-    </section>
-
     <section title="Authoritative Server Considerations">
     </section>
 
@@ -399,6 +396,83 @@
     </section>
 
     <section title="Special Considerations">
+
+        <section title="Transition Mechanism">
+            <t>
+                The NSEC5 MUST not be used in parallel with any older NSEC mechanism.
+            </t>
+
+            <t>
+                The answering server MUST use exactly one NSEC5 chain.
+            </t>
+
+            <t>
+                <cref>TODO: Transition from NSEC or NSEC3</cref>
+            </t>
+
+            <t>
+                <cref>TODO: Transition from NSEC5 to NSEC/NSEC3</cref>
+            </t>
+
+            <t>
+                <cref>TODO: transition to new algorithms withtin NSEC5</cref>
+            </t>
+
+        </section>
+
+        <section title="NSEC5 Private Keys">
+            <t>
+                This document does not define format to store NSEC5 private key. Use of
+                standardized and adopted format is RECOMMENDED.
+            </t>
+
+            <t>
+                This document does not define mechanism to distribute NSEC5 private keys.
+            </t>
+        </section>
+
+        <section title="NSEC5KEY Rollover Mechanism">
+            <t>
+                Replacement of the NSEC5 key implies generating a new NSEC5 chain. The NSEC5KEY
+                rollover mechanism is similar to "Pre-Publish Zone Signing Key Rollover" as
+                specified in <xref target="RFC6781"></xref>. The NSEC5KEY rollover MUST be
+                performed as a sequence of the following steps:
+            </t>
+
+            <t>
+                <list style="numbers">
+                    <t>
+                        New public key is added into the NSEC5KEY RRset in the zone apex.
+                    </t>
+                    <t>
+                        Existing NSEC5 chain is instantly replaced by a new NSEC5 chain
+                        constructed using the new key.
+                    </t>
+                    <t>
+                        The old public key is removed from the NSEC5KEY RRset in the zone apex.
+                    </t>
+                </list>
+            </t>
+
+            <t>
+                The minimal delay between the steps 1. and 2. MUST be the time it takes for the
+                data to propagate to the authoritative servers, plus the TTL value of the
+                NSEC5KEY RRset.
+            </t>
+
+            <t>
+                The steps 2. and 3. can be performed simultaneously, without a delay.
+            </t>
+        </section>
+
+        <section title="Domain Name Length Restrictions">
+
+            <t>
+
+            </t>
+
+        </section>
+
     </section>
 
     <section title="Performance Considerations">
@@ -466,6 +540,7 @@
         &rfc5155;
         &rfc2119;
         &rfc4648;
+        &rfc6781;
     </references>
 
     <references title="Informative References">
