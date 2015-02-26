@@ -479,6 +479,17 @@
     </section>
 
     <section title="Security Considerations">
+
+        <t><cref>TODO: attacks</cref></t>
+
+        <t><cref>TODO: hash collisions</cref></t>
+
+        <t><cref>TODO: recommended key sizes</cref></t>
+
+        <t><cref>TODO: private key protection</cref></t>
+
+        <t><cref>TODO: what if defined algorithm (RSA/FDH) is broken</cref></t>
+
     </section>
 
     <section title="IANA Considerations">
