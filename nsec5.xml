@@ -3,6 +3,7 @@
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -148,9 +149,26 @@
 
         <section title="Terminology">
             <t>
-                <list>
-                    <t>NSEC5 proof-hash - The signed hash (hash-and-sign).</t>
-                    <t>NSEC5 chain-hash - The hashed NSEC5 proof-hash (hash-sign-and-hash).</t>
+                <cref>TODO: reader should be familiar with DNSSEC and NSEC3 RFCs</cref>
+
+                <list style="hanging">
+                    <t hangText="NSEC5 proof-hash:">
+                        A signed hash of a domain name (hash-and-sign paradigm). A holder of the
+                        private key (e.g., authoritative server) can compute the hash. Anyone
+                        knowing the public key (e.g., client) can verify it's validity.
+                    </t>
+                    <t hangText="NSEC5 chain-hash:">
+                        A hash of an NSEC5 proof-hash. If the NSEC5 proof-hash is known, anyone
+                        can compute it's NSEC5 chain-hash.
+                    </t>
+                    <t hangText="Base32hex:">
+                        The "Base 32 Encoding with Extended Hex Alphabet" as specified
+                        in <xref target="RFC4648"></xref>. The padding characters ("=") are not
+                        used in NSEC5 specification.
+                    </t>
+                    <t hangText="Base64:">
+                        The "Base 64 Encoding" as specified in <xref target="RFC4648"></xref>.
+                    </t>
                 </list>
             </t>
         </section>
@@ -448,6 +466,7 @@
         &rfc4033;
         &rfc5155;
         &rfc2119;
+        &rfc4648;
     </references>
 
     <references title="Informative References">
