@@ -327,9 +327,8 @@
 
             <t>
                 The Next Hashed Owner Name field is represented as a sequence
-                of case-insensitive base32hex digits, without whitespace.
-                <cref>[NOTE] We will need padding for SHA-256. NSEC3 omits padding.
-                We can do the same.</cref>
+                of case-insensitive Base32hex digits without whitespaces and
+                without padding.
             </t>
 
             <t>
