@@ -485,55 +485,29 @@
     </section>
 
     <section title="Authoritative Server Considerations">
-    </section>
 
-    <section title="Resolver Considerations">
-    </section>
-
-    <section title="Validator Considerations">
-    </section>
-
-    <section title="Special Considerations">
-
-        <section title="Transition Mechanism">
-            <t>
-                The NSEC5 MUST not be used in parallel with any older NSEC mechanism.
-            </t>
-
-            <t>
-                The answering server MUST use exactly one NSEC5 chain.
-            </t>
-
-            <t>
-                <cref>TODO: Transition from NSEC or NSEC3</cref>
-            </t>
-
-            <t>
-                <cref>TODO: Transition from NSEC5 to NSEC/NSEC3</cref>
-            </t>
-
-            <t>
-                <cref>TODO: transition to new algorithms withtin NSEC5</cref>
-            </t>
-
+        <section title="Zone Signing">
         </section>
 
-        <section title="NSEC5 Private Keys">
+        <section title="Zone Serving">
             <t>
-                This document does not define format to store NSEC5 private key. Use of
-                standardized and adopted format is RECOMMENDED.
+                NSEC5 MUST NOT be used in parallel with any other authenticated denial of
+                existence mechanism, which allows zone content enumeration. NSEC and NSEC3 are
+                considered insufficient.
             </t>
 
             <t>
-                This document does not define mechanism to distribute NSEC5 private keys.
+                If NSEC5 is used, the answering server MUST use exactly one NSEC5 chain for
+                one signed zone.
             </t>
+
         </section>
 
         <section title="NSEC5KEY Rollover Mechanism">
             <t>
                 Replacement of the NSEC5 key implies generating a new NSEC5 chain. The NSEC5KEY
                 rollover mechanism is similar to "Pre-Publish Zone Signing Key Rollover" as
-                specified in <xref target="RFC6781"></xref>. The NSEC5KEY rollover MUST be
+                specified in <xref target="RFC6781" />. The NSEC5KEY rollover MUST be
                 performed as a sequence of the following steps:
             </t>
 
@@ -562,6 +536,72 @@
                 The steps 2. and 3. can be performed simultaneously, without a delay.
             </t>
         </section>
+
+        <section title="Secondary Servers">
+            <t>
+                This document does not define mechanism to distribute NSEC5 private keys.
+            </t>
+        </section>
+
+        <section title="Zones Using Unknown Hash Algorithms">
+        </section>
+
+        <section title="Dynamic Updates">
+        </section>
+
+    </section>
+
+    <section title="Resolver Considerations">
+    </section>
+
+    <section title="Validator Considerations">
+    </section>
+
+    <section title="Special Considerations">
+
+        <section title="Transition Mechanism">
+
+            <t>
+                TODO:
+                The zone transitioning to NSEC5 should publish NSEC5KEY RR with a key to be used,
+                wait till the data propagate to caches, The switch from NSEC or NSEC3 to NSEC5
+                is instant. The server will start responding with NSEC5 proofs, instead of
+                previously used mechanism.
+            </t>
+
+            <t>
+                TODO:
+                The reverse-transition is possible instneusly. The server will start respoding
+                with pre-NSEC5 authenticated denial mechanism. The NSEC5KEY MUST not be removed
+                till the old NSEC5 records expire from caches.
+            </t>
+
+            <t>
+                <cref>TODO: Transition from NSEC or NSEC3</cref>
+            </t>
+
+            <t>
+                <cref>TODO: Transition from NSEC5 to NSEC/NSEC3</cref>
+            </t>
+
+            <t>
+                <cref>TODO: transition to new algorithms withtin NSEC5</cref>
+            </t>
+
+        </section>
+
+        <section title="NSEC5 Private Keys">
+            <t>
+                This document does not define format to store NSEC5 private key. Use of
+                standardized and adopted format is RECOMMENDED.
+            </t>
+
+            <t>
+                The NSEC5 private key MAY be shared between multiple zones, however a separate
+                key is RECOMMENDED for each zone.
+            </t>
+        </section>
+
 
         <section title="Domain Name Length Restrictions">
 
