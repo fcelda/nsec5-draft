@@ -231,6 +231,42 @@
         </t>
     </section>
 
+    <section title="NSEC5 Principle">
+        <t>
+            To prove non-existence of a domain name in a zone, NSEC uses a chain built from
+            domain names present in the zone. NSEC3 replaces the original domain names by
+            their cryptographic hashes. NSEC5 is very similar to NSEC3, however a public-key
+            based hashing scheme is used.
+        </t>
+
+        <t>
+            In NSEC5, the original domain name is hashed twice:
+        </t>
+
+        <t>
+            <list style="numbers">
+                <t>
+                    The input of the first hashing is an original domain name and an NSEC5 private
+                    key. The result is called NSEC5 proof-hash. Only an authoritative server
+                    (knowing the private key) can compute the hash and any client (knowing the
+                    public key) can verify the hash's validity.
+                </t>
+                <t>
+                    The second hash is a cryptographic hash of the NSEC5-proof, which results
+                    into an NSEC5 chain-hash. The hash can be computed by any party, if the input
+                    is known.
+                </t>
+            </list>
+        </t>
+
+        <t>
+            The final position of a domain name in an NSEC5 chain is determined by it's NSEC5
+            chain-hash. The NSEC5-proof hash is sent by a server in some responses, to prove
+            a client about the actual position of the name in the chain.
+        </t>
+
+    </section>
+
     <section title="The NSEC5KEY Resource Record">
         <t>
             NSEC5 uses domain name hashing based on public-key cryptography. Keys used for the
