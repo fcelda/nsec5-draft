@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
-<!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
-<!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
+<!ENTITY rfc1034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1034.xml">
+<!ENTITY rfc1035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1035.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY rfc2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
+<!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
+<!ENTITY rfc2308 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2308.xml">
+<!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
+<!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
+<!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
+<!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 ]>
@@ -154,19 +161,27 @@
         </section>
 
         <section title="Terminology">
-            <t>
-                <cref>TODO: reader should be familiar with DNSSEC and NSEC3 RFCs</cref>
 
+            <t>
+                The reader is assumed to be familiar with the basic DNS and DNSSEC concepts
+                described in
+                <xref target="RFC1034"></xref>,
+                <xref target="RFC1035"></xref>,
+                <xref target="RFC4033"></xref>,
+                <xref target="RFC4034"></xref>,
+                <xref target="RFC4035"></xref>, and subsequent RFCs that update them:
+                <xref target="RFC2136"></xref>,
+                <xref target="RFC2181"></xref>,
+                <xref target="RFC2308"></xref>, and
+                <xref target="RFC5155"></xref>.
+            </t>
+
+            <t>
+                The following terminology is used through this document:
+            </t>
+
+            <t>
                 <list style="hanging">
-                    <t hangText="NSEC5 proof-hash:">
-                        A signed hash of a domain name (hash-and-sign paradigm). A holder of the
-                        private key (e.g., authoritative server) can compute the hash. Anyone
-                        knowing the public key (e.g., client) can verify it's validity.
-                    </t>
-                    <t hangText="NSEC5 chain-hash:">
-                        A hash of an NSEC5 proof-hash. If the NSEC5 proof-hash is known, anyone
-                        can compute it's NSEC5 chain-hash.
-                    </t>
                     <t hangText="Base32hex:">
                         The "Base 32 Encoding with Extended Hex Alphabet" as specified
                         in <xref target="RFC4648"></xref>. The padding characters ("=") are not
@@ -174,6 +189,15 @@
                     </t>
                     <t hangText="Base64:">
                         The "Base 64 Encoding" as specified in <xref target="RFC4648"></xref>.
+                    </t>
+                    <t hangText="NSEC5 proof-hash:">
+                        A signed hash of a domain name (hash-and-sign paradigm). A holder of the
+                        private key (e.g., authoritative server) can compute the hash. Anyone
+                        knowing the public key (e.g., client) can verify it's validity.
+                    </t>
+                    <t hangText="NSEC5 chain-hash:">
+                        A cryptographic hash (digest) of an NSEC5 proof-hash. If the NSEC5
+                        proof-hash is known, anyone can compute and verify it's NSEC5 chain-hash.
                     </t>
                 </list>
             </t>
@@ -552,11 +576,17 @@
 -->
 
     <references title="Normative References">
-        &rfc4033;
-        &rfc5155;
+        &rfc1034;
+        &rfc1035;
         &rfc2119;
+        &rfc2136;
+        &rfc2181;
+        &rfc2308;
+        &rfc4033;
+        &rfc4034;
+        &rfc4035;
         &rfc4648;
-        &rfc6781;
+        &rfc5155;
     </references>
 
     <references title="Informative References">
@@ -574,6 +604,7 @@
             </front>
         </reference>
 
+        &rfc6781;
         &rfc7129;
 
     </references>
