@@ -129,7 +129,7 @@
                 There are means to prevent zone enumeration with NSEC or NSEC3. The RRs for
                 denying answers can be computed by the authoritative server on-the-fly. Usually,
                 this mean is called Minimally Covering NSEC3 Records or NSEC3 White Lies
-                <xref target="RFC7129"></xref>. One of the most significant disadvantage of this
+                <xref target="RFC7129" />. One of the most significant disadvantage of this
                 approach is a required presence of the private key on all authoritative servers
                 for the zone. This is often undesirable, as the holder of the private key can
                 tamper with the zone content.
@@ -156,7 +156,7 @@
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
                 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
                 document are to be interpreted as described in
-                <xref target="RFC2119"></xref>.
+                <xref target="RFC2119" />.
             </t>
         </section>
 
@@ -165,15 +165,15 @@
             <t>
                 The reader is assumed to be familiar with the basic DNS and DNSSEC concepts
                 described in
-                <xref target="RFC1034"></xref>,
-                <xref target="RFC1035"></xref>,
-                <xref target="RFC4033"></xref>,
-                <xref target="RFC4034"></xref>,
-                <xref target="RFC4035"></xref>, and subsequent RFCs that update them:
-                <xref target="RFC2136"></xref>,
-                <xref target="RFC2181"></xref>,
-                <xref target="RFC2308"></xref>, and
-                <xref target="RFC5155"></xref>.
+                <xref target="RFC1034" />,
+                <xref target="RFC1035" />,
+                <xref target="RFC4033" />,
+                <xref target="RFC4034" />,
+                <xref target="RFC4035" />, and subsequent RFCs that update them:
+                <xref target="RFC2136" />,
+                <xref target="RFC2181" />,
+                <xref target="RFC2308" />, and
+                <xref target="RFC5155" />.
             </t>
 
             <t>
@@ -184,11 +184,11 @@
                 <list style="hanging">
                     <t hangText="Base32hex:">
                         The "Base 32 Encoding with Extended Hex Alphabet" as specified
-                        in <xref target="RFC4648"></xref>. The padding characters ("=") are not
+                        in <xref target="RFC4648" />. The padding characters ("=") are not
                         used in NSEC5 specification.
                     </t>
                     <t hangText="Base64:">
-                        The "Base 64 Encoding" as specified in <xref target="RFC4648"></xref>.
+                        The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
                     <t hangText="NSEC5 proof-hash:">
                         A signed hash of a domain name (hash-and-sign paradigm). A holder of the
@@ -362,7 +362,7 @@
 
             <t>
                 The Type Bit Maps representation is equivalent to the representation
-                used in NSEC3 RR, described in <xref target="RFC5155"></xref>.
+                used in NSEC3 RR, described in <xref target="RFC5155" />.
             </t>
         </section>
     </section>
