@@ -210,6 +210,27 @@
 
     </section>
 
+    <section title="Backward Compatibility">
+        <t>
+            The specification describes a protocol change that is not backward compatible
+            with <xref target="RFC4035" /> and <xref target="RFC5155" />. NSEC5-unaware
+            resolver will fail to validate responses introduced by this document.
+        </t>
+
+        <t>
+            To prevent NSEC5-unaware resolvers from attempting to validate the responses, new
+            DNSSEC algorithms identifiers are introduced, the identifiers alias with existing
+            algorithm numbers. The zones signed according to this specification MUST use only
+            these algorithm identifiers, thus NSEC5-unaware resolvers will treat the zone as
+            insecure.
+        </t>
+
+        <t>
+            The new algorithm identifiers defined by this document are listed in
+            <xref target="iana_considerations" />.
+        </t>
+    </section>
+
     <section title="The NSEC5KEY Resource Record">
         <t>
             NSEC5 uses domain name hashing based on public-key cryptography. Keys used for the
@@ -526,7 +547,7 @@
 
     </section>
 
-    <section title="IANA Considerations">
+    <section title="IANA Considerations" anchor="iana_considerations">
 
         <t>
             This document updates the IANA registry "Domain Name System (DNS)
@@ -553,6 +574,20 @@
                 <t>0     is Reserved.</t>
                 <t>1     is FDH-SHA256-SHA256.</t>
                 <t>2-255 is Available for assignment.</t>
+            </list>
+        </t>
+
+        <t>
+            This document updates the IANA registry "DNS Security Algorithm Numbers" by
+            defining following aliases:
+        </t>
+
+        <t>
+            <list>
+                <t>XXX is NSEC5-RSASHA256, alias for RSASHA256 (8).</t>
+                <t>XXX is NSEC5-RSASHA512, alias for RSASHA512 (10).</t>
+                <t>XXX is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
+                <t>XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
             </list>
         </t>
     </section>
