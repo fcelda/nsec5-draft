@@ -746,7 +746,18 @@
 
         <t>
             <list style="numbers">
-                <t>Contributor list has to be completed</t>
+                <t>
+                    Consider alternative way to signalize NSEC5 support. The NSEC5 could use
+                    only one DNSSEC algorithm identifier, and the actual algorithm to be used
+                    can be the first byte in DNSKEY public key field and RRSIG signature field.
+                </t>
+                <t>
+                    How to add new NSEC5 hashing algorithm. We will need to add new DNSSEC
+                    algorithm identifiers again.
+                </t>
+                <t>
+                    Contributor list has to be completed.
+                </t>
             </list>
         </t>
     </section>
