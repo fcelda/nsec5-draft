@@ -5,6 +5,7 @@
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
+<!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -91,40 +92,44 @@
                 The DNS Security Extensions (DNSSEC) provides data integrity protection using
                 public-key cryptography while not requiring the servers to compute the signatures
                 on-the-fly. The content of the zone is usually pre-computed and served as it is.
-                The evident advantage of this approach is reduced performance requirements per
+                The evident advantage of this approach are reduced performance requirements per
                 query. Also the private keys security is higher because the keys do not have to
                 be present on the servers facing the network.
             </t>
 
             <t>
                 With DNSSEC, each resource record (RR) set in the zone is signed. The signature
-                is retained as an RRSIG RR directly in the zone. This enables data integrity
-                for positive lookups in the zone. To ensure integrity of denying answers, an
-                NSEC chain of all existing domain names in the zone is constructed. The chain
-                is made of RRs, where each RR represents two consecutive domain names in
+                is retained as an RRSIG RR directly in the zone. This enables response
+                authentication for data existing in the zone. To ensure integrity of denying
+                answers, an NSEC chain of all existing domain names in the zone is constructed.
+                The chain is made of RRs, where each RR represents two consecutive domain names in
                 canonical order present in the zone. The NSEC RRs are signed the same way as
-                any other RRs in the zone.
+                any other RRs in the zone, and each NSEC can be used to prove, that a given
+                name doesn't existing in a part of the domain name space.
             </t>
 
             <t>
-                A side-effect of the existence of the NSEC chain is a possibility to enumerate
+                A side-effect of the NSEC chain existence is a possibility to enumerate
                 the content of the zone by following individual RRs in the chain. To prevent
-                the zone enumeration, the NSEC3 hashed denial of existence was introduced. The
-                domain names in the chain are replaced by their cryptographic hashes. As the
-                domain name space is restricted, offline attacks are possible and the zone
-                enumeration is harder but still possible.
+                the zone enumeration, the NSEC3 hashed denial of existence was introduced.
+                In NSEC3, original domain names are replaced by their cryptographic hashes
+                in the chain. However, the domain name space is restricted and offline attacks
+                are possible. The zone enumeration with NSEC3 is more difficult, but still
+                possible.
             </t>
 
             <t>
-                There is a mechanism called NSEC white lies, which completely prevents zone
-                content enumeration. The NSEC (or NSEC3) RRs are computed by the authoritative
-                server on-the-fly. On the other hand, this mechanism requires presence of
-                the private keys on all servers authoritative for the zone, which is often
-                undesirable. The holder of the private key can tamper with the zone content.
+                There are means to prevent zone enumeration with NSEC or NSEC3. The RRs for
+                denying answers can be computed by the authoritative server on-the-fly. Usually,
+                this mean is called Minimally Covering NSEC3 Records or NSEC3 White Lies
+                <xref target="RFC7129"></xref>. One of the most significant disadvantage of this
+                approach is a required presence of the private key on all authoritative servers
+                for the zone. This is often undesirable, as the holder of the private key can
+                tamper with the zone content.
             </t>
 
             <t>
-                To assure zone content enumeration without keeping private keys on all
+                To prevent zone content enumeration without keeping private keys on all
                 authoritative servers, NSEC5 introduces a public-key based domain name hashing.
                 For the hashing, a separate NSEC5 key is used. This key is present on all
                 authoritative servers, however holder of the key cannot modify the content of
@@ -568,6 +573,8 @@
                 <date year="2014" month="July"></date>
             </front>
         </reference>
+
+        &rfc7129;
 
     </references>
 
