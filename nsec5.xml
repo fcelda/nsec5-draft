@@ -149,6 +149,11 @@
                     won't be able to enumerate the zone anyway. Right?
                 </cref>
             </t>
+
+            <t>
+                The NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
+                alternative mechanisms for authenticated denial of existence.
+            </t>
         </section>
 
         <section title="Requirements">
