@@ -268,13 +268,10 @@
     </section>
 
     <section title="The NSEC5KEY Resource Record">
-        <t>
-            NSEC5 uses domain name hashing based on public-key cryptography. Keys used for the
-            NSEC5 hashing differ from keys used to sign and verify RRs in a zone.
-        </t>
 
         <t>
-            A public key for NSEC5 is stored in NSEC5KEY RRs in the zone apex.
+            The NSEC5KEY RR stores an NSEC5 public key. The key allows clients to verify a
+            validity of NSEC5 proof-hashes sent by a server.
         </t>
 
         <section title="NSEC5KEY RDATA Wire Format">
@@ -293,11 +290,11 @@
             </figure>
 
             <t>
-                Algorithm is a single octet identifying NSEC5 hashing algorithm.
+                Algorithm is a single octet identifying NSEC5 hashing algorithms.
             </t>
             <t>
-                Public Key is a variable sized field holding public key material
-                used for NSEC5 hashing.
+                Public Key is a variable sized field holding public key material for NSEC5
+                proof-hashes verification.
             </t>
         </section>
 
@@ -307,27 +304,22 @@
             </t>
 
             <t>
-                The Algorithm field is represented as na unsigned decimal integer.
+                The Algorithm field is represented as an unsigned decimal integer.
             </t>
 
             <t>
-                The Public Key field is represented in Base64 encoding. Whitespace
-                is allowed within the Base64 text.
+                The Public Key field is represented in Base64 encoding. Whitespace is allowed
+                within the Base64 text.
             </t>
         </section>
     </section>
 
     <section title="The NSEC5 Resource Record">
         <t>
-            Placeholder...
-        </t>
-
-        <t>
-            Placeholder...
-        </t>
-
-        <t>
-            Placeholder...
+            The NSEC5 RR provides authenticated denial of existence for an RRset. One NSEC5 RR
+            represents one piece of an NSEC5 chain, proving existence of RR types present at
+            the original domain name and also non-existence of other domain names in a part of
+            the hashed domain name space.
         </t>
 
         <section title="NSEC5 RDATA Wire Format">
@@ -350,27 +342,27 @@
             </figure>
 
             <t>
-                Key Tag field contains the key tag value of the NSEC5KEY RR
-                that validates the NSEC5 RR, in network byte order.
+                Key Tag field contains the key tag value of the NSEC5KEY RR that validates the
+                NSEC5 RR, in network byte order. The value is computed from the NSEC5KEY RDATA
+                using the same algorithm, which is used to compute key tag values for DNSKEY RRs.
+                The algorithm is defined in <xref target="RFC4034" />.
             </t>
             <t>
-                Flags field is a single octet. The meaning of individual bits
-                of the field is defined in <xref target="nsec5_flags"></xref>.
+                Flags field is a single octet. The meaning of individual bits of the field is
+                defined in <xref target="nsec5_flags" />.
             </t>
             <t>
-                Next length is an unsigned single octet specifying the length
-                of the Next Hashed Owner Name field in octets.
+                Next length is an unsigned single octet specifying the length of the Next Hashed
+                Owner Name field in octets.
             </t>
             <t>
-                Next Hashed Owner Name field is a sequence of binary octets.
-                It contains a result of NSEC5 chain-hashing of the next domain
-                name in the NSEC5 chain.
+                Next Hashed Owner Name field is a sequence of binary octets. It contains a result
+                of NSEC5 chain-hashing of the next domain name in the NSEC5 chain.
             </t>
             <t>
-                Type Bit Maps is a variable sized field encoding RR types
-                present at the original owner name matching the NSEC5 RR.
-                The format of the field is equivalent to the format used
-                in NSEC3 RR, described in <xref target="RFC5155"></xref>.
+                Type Bit Maps is a variable sized field encoding RR types present at the original
+                owner name matching the NSEC5 RR. The format of the field is equivalent to the
+                format used in NSEC3 RR, described in <xref target="RFC5155" />.
             </t>
         </section>
 
@@ -394,8 +386,23 @@
                     <t>W - Wildcard flag</t>
                 </list>
             </t>
+
             <t>
-                All other flags are reserverd for future use and must be zero.
+                All the other flags are reserved for future use and MUST be zero.
+            </t>
+
+            <t>
+                The Opt-Out flag has the same semantics as in NSEC3. The definition and
+                considerations in <xref target="RFC5155" /> are valid, except that NSEC3
+                is replaced by NSEC5.
+            </t>
+
+            <t>
+                The Wildcard flag indicates, that a wildcard synthesis is possible at the
+                original domain name level (i.e., there is a wildcard node immediately
+                descending from the immediate ancestor of the original domain name). The
+                purpose of the Wildcard flag is to reduce a maximum number of RRs required for
+                authenticated denial of existence proof.
             </t>
         </section>
 
@@ -418,7 +425,7 @@
 
             <t>
                 The Next Hashed Owner Name field is represented as a sequence
-                of case-insensitive Base32hex digits without whitespaces and
+                of case-insensitive Base32hex digits without any whitespace and
                 without padding.
             </t>
 
@@ -431,8 +438,8 @@
 
     <section title="The NSEC5PROOF Resource Record">
         <t>
-            The NSEC5PROOF record is synthesised by the authoritative server.
-            The record proves a position of the owner name in relation to the
+            The NSEC5PROOF record is synthesised by the authoritative server on-the-fly. The
+            record reveals the NSEC5 proof-hash, proving a position of the owner name in an
             NSEC5 chain.
         </t>
 
@@ -452,12 +459,12 @@
             </figure>
 
             <t>
-                Key Tag field contains the key tag value of the NSEC5KEY RR
-                that validates the NSEC5PROOF RR, in network byte order.
+                Key Tag field contains the key tag value of the NSEC5KEY RR that validates
+                the NSEC5PROOF RR, in network byte order.
             </t>
             <t>
-                Owner Name Hash is a variable sized sequence of binary octets
-                encoding the NSEC5 proof-hash of the owner name.
+                Owner Name Hash is a variable sized sequence of binary octets encoding the NSEC5
+                proof-hash of the owner name.
             </t>
         </section>
 
