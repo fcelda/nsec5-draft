@@ -924,6 +924,12 @@ FDH(data, key, hash) := Sign(MFG1(data, Size(key), hash), key)
                     Check if the Wildcard flag and proofs work with empty non-terminal wildcards.
                 </t>
                 <t>
+                    NSEC and NSEC3 define optional steps for hash collisions detection. We don't
+                    have a way to avoid them if they really appear (unlikely). We would have
+                    to drop the signing key and generate a new one. Which cannot be done
+                    instantly.
+                </t>
+                <t>
                     Contributor list has to be completed.
                 </t>
             </list>
