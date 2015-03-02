@@ -6,6 +6,7 @@
 <!ENTITY rfc2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
 <!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
 <!ENTITY rfc2308 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2308.xml">
+<!ENTITY rfc2437 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2437.xml">
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
@@ -763,10 +764,61 @@
             </front>
         </reference>
 
+        &rfc2437;
         &rfc6781;
         &rfc7129;
 
     </references>
+
+    <section title="Full Domain Hash Algorithm" anchor="fdh">
+        <t>
+            The Full Domain Hash (FDH) is a RSA-based scheme that allows authentication of
+            hashes using public-key cryptography.
+        </t>
+
+        <t>
+            The FDH is as follows:
+        </t>
+
+        <figure align="center">
+            <artwork><![CDATA[
+FDH(data, key, hash) := Sign(MFG1(data, Size(key), hash), key)
+            ]]></artwork>
+        </figure>
+
+        <t>
+            Inputs:
+        </t>
+
+        <t>
+            <list>
+                <t>data - Input data to be hashed and signed.</t>
+                <t>key  - RSA private key.</t>
+                <t>hash - Cryptographic hash function.</t>
+            </list>
+        </t>
+
+        <t>
+            Where:
+        </t>
+
+        <t>
+            <list>
+                <t>
+                    Size(key) - Function to determine a size of a RSA private key modulus.
+                </t>
+                <t>
+                    MFG1(seed, length, hash) - Mass Genration Function 1 as defined in
+                    Section 10.2.1 of <xref target="RFC2437" />.
+                </t>
+                <t>
+                    Sign(data, key) - Raw RSA private key signature (i.e., without padding).
+                </t>
+            </list>
+        </t>
+
+    </section>
+
 
     <section title="Change Log">
         <t>
