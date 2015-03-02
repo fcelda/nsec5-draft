@@ -488,6 +488,80 @@
     <section title="Authoritative Server Considerations">
 
         <section title="Zone Signing">
+            <t>
+                Zones using NSEC5 MUST satisfy the same properties as described in Section 7.1
+                of <xref target="RFC5155" />, with NSEC3 replaced by NSEC5. In addition, the
+                following conditions MUST be satisfied as well:
+            </t>
+
+            <t>
+                <list style="symbols">
+                    <t>
+                        If the original owner name has a wildcard label immediately descending
+                        from the original owner name, the corresponding NSEC5 RR MUST have the
+                        Wildcard flag set in the Flags field. Otherwise, the flag MUST be cleared.
+                    </t>
+                    <t>
+                        The zone apex MUST include an NSEC5KEY RRset containing a NSEC5 public
+                        key allowing verification of the current NSEC5 chain.
+                    </t>
+                </list>
+            </t>
+
+            <t>
+                The following steps describe one possible method to properly add required NSE5
+                related records into a zone. This is not the only such existing method.
+            </t>
+
+            <t>
+                <list style="numbers">
+                    <t>
+                        Select an algorithm for NSEC5, generate a key to be used.
+                    </t>
+                    <t>
+                        Add a NSEC5KEY RR into the zone apex with the public key.
+                    </t>
+                    <t>
+                        For each unique original domain name in the zone and each empty
+                        non-terminal, add an NSEC5 RR. If Opt-Out is used, owner names of
+                        unsigned delegations MAY be excluded.
+                        <list style="letters">
+                            <t>
+                                The owner name of the NSEC5 RR is the NSEC5-chain hash of the
+                                original owner name encoded in Base32hex without padding,
+                                prepended as a single label to the zone name.
+                            </t>
+                            <t>
+                                Set the Key Tag field according to the used key.
+                            </t>
+                            <t>
+                                Clear the Flags field. If Opt-Out is being used, set the Opt-Out
+                                flag. If there is a wildcard label directly descending from the
+                                original domain name, set the Wildcard flag. Note that the
+                                wildcard can be empty non-terminal.
+                            </t>
+                            <t>
+                                Set the Next Length field to a value determined by the used
+                                algorithm. Leave the Next Hashed Owner Name field blank.
+                            </t>
+                            <t>
+                                Set the Type Bit Maps field based on the RRsets present at the
+                                original owner name.
+                            </t>
+                        </list>
+                    </t>
+                    <t>
+                        Sort the set of NSEC5 RRs into canonical order.
+                    </t>
+                    <t>
+                        For each NSEC5 RR, set the Next Hashed Owner Name field by using the owner
+                        name of the next NSEC5 RR in the canonical order. The the NSEC5 in-update
+                        is the last NSEC5 RR in the chain, the owner name of the first NSEC5 RR
+                        in the chain is used instead.
+                    </t>
+                </list>
+            </t>
+
         </section>
 
         <section title="Zone Serving">
@@ -722,7 +796,6 @@
 </middle>
 
 <back>
-
     <!-- References Section -->
 
 <!--
@@ -842,6 +915,13 @@ FDH(data, key, hash) := Sign(MFG1(data, Size(key), hash), key)
                 <t>
                     How to add new NSEC5 hashing algorithm. We will need to add new DNSSEC
                     algorithm identifiers again.
+                </t>
+                <t>
+                    The Opt-Out needn't to be indicated in the zone, it should be set in signing
+                    tool configuration.
+                </t>
+                <t>
+                    Check if the Wildcard flag and proofs work with empty non-terminal wildcards.
                 </t>
                 <t>
                     Contributor list has to be completed.
