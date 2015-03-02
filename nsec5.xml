@@ -501,6 +501,21 @@
                 one signed zone.
             </t>
 
+            <t>
+                <cref>TODO: CNAME considerations, DS considerations, NSEC5 type queries</cref>
+            </t>
+
+            <section title="Name Error Responses">
+            </section>
+
+            <section title="No Data Responses">
+            </section>
+
+            <section title="Wildcard Responses">
+            </section>
+
+            <section title="Wildcard No Data Responses">
+            </section>
         </section>
 
         <section title="NSEC5KEY Rollover Mechanism">
@@ -552,15 +567,36 @@
     </section>
 
     <section title="Resolver Considerations">
+        <section title="NSEC5 Resource Record Caching">
+        </section>
+
+        <section title="NSEC5PROOF Resource Record Caching">
+        </section>
     </section>
 
     <section title="Validator Considerations">
+        <section title="Responses With Unknown Hash Types">
+        </section>
+
+        <section title="Validating Name Error Responses">
+        </section>
+
+        <section title="Validating No Data Responses">
+        </section>
+
+        <section title="Validating Wildcard Answer Responses">
+        </section>
+
+        <section title="Validating Wildcard No Data Responses">
+        </section>
+
+        <section title="Validating Referrals">
+        </section>
     </section>
 
     <section title="Special Considerations">
 
         <section title="Transition Mechanism">
-
             <t>
                 TODO:
                 The zone transitioning to NSEC5 should publish NSEC5KEY RR with a key to be used,
