@@ -5,7 +5,7 @@ XML2RFC=xml2rfc
 all: nsec5.txt nsec5.html
 
 clean:
-	rm -f nsec5.txt nsec5.xml
+	rm -f nsec5.txt nsec5.html
 
 nsec5.txt: nsec5.xml
 	$(XML2RFC) -o $@ --text $^
