@@ -849,47 +849,101 @@
             hashes using public-key cryptography.
         </t>
 
-        <t>
-            The FDH is as follows:
-        </t>
+        <section title="FDH signature">
+            <t>
+                FDH_sign (m, h, k)
+            </t>
 
-        <figure align="center">
-            <artwork><![CDATA[
-FDH(data, key, hash) := Sign(MFG1(data, Size(key), hash), key)
-            ]]></artwork>
-        </figure>
+            <t>
+                Input:
+                <list>
+                    <t>m - message to be signed, an octet string</t>
+                    <t>h - hash function</t>
+                    <t>k - RSA private key</t>
+                </list>
+            </t>
 
-        <t>
-            Inputs:
-        </t>
+            <t>
+                Output:
+                <list>
+                    <t>s - signature representative, an integer between 0 and n-1</t>
+                </list>
+            </t>
 
-        <t>
-            <list>
-                <t>data - Input data to be hashed and signed.</t>
-                <t>key  - RSA private key.</t>
-                <t>hash - Cryptographic hash function.</t>
-            </list>
-        </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>Let m' = MGF1(m, l) with Hash option h.</t>
+                    <t>Clear the highest bit of m' in binary representation at length l.</t>
+                    <t>Let s = RSASP1(k, m').</t>
+                    <t>Output s.</t>
+                </list>
+            </t>
 
-        <t>
-            Where:
-        </t>
+            <t>
+                Where:
+                <list>
+                    <t>n - modulus of the key k</t>
+                    <t>l - the length of the modulus n in bytes</t>
+                    <t>
+                        MGF1 - Mass Generation Function 1 as defined in
+                        Section 10.2.1 of <xref target="RFC2437" />
+                    </t>
+                    <t>
+                        RSASP1 - RSA signature primitive as defined in
+                        Section 5.2.1 of <xref target="RFC2437" />
+                    </t>
+                </list>
+            </t>
+        </section>
 
-        <t>
-            <list>
-                <t>
-                    Size(key) - Function to determine a size of a RSA private key modulus.
-                </t>
-                <t>
-                    MFG1(seed, length, hash) - Mass Genration Function 1 as defined in
-                    Section 10.2.1 of <xref target="RFC2437" />.
-                </t>
-                <t>
-                    Sign(data, key) - Raw RSA private key signature (i.e., without padding).
-                </t>
-            </list>
-        </t>
+        <section title="FDH verification">
+            <t>
+                FDH_verify (m, s, h, k)
+            </t>
 
+            <t>
+                Input:
+                <list>
+                    <t>m - message to be verified, an octet string</t>
+                    <t>s - signature representative, an integer between 0 and n-1</t>
+                    <t>h - hash function</t>
+                    <t>K - RSA public key, as an (n, e) pair</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>"valid" or "invalid"</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>Let m' = MGF1(m, l) with Hash option h.</t>
+                    <t>Clear the highest bit of m' in binary representation at length l.</t>
+                    <t>Let M = RSAVP1(K, s).</t>
+                    <t>If m' equals to M, output "valid", else output "invalid".</t>
+                </list>
+            </t>
+
+            <t>
+                Where:
+                <list>
+                    <t>l - the length of the modulus n in bytes</t>
+                    <t>
+                        MGF1 - Mass Generation Function 1 as defined in
+                        Section 10.2.1 of <xref target="RFC2437" />
+                    </t>
+                    <t>
+                        RSAVP1 - RSA verification primitive as defined in
+                        Section 5.2.2 of <xref target="RFC2437" />
+                    </t>
+                </list>
+            </t>
+        </section>
     </section>
 
 
