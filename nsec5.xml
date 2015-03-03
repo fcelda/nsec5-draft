@@ -268,8 +268,8 @@
         </t>
 
         <t>
-            The NSEC hash determines the position of a domain name in an NSEC5 chain.
-            That is, all the NSEC hashes for a zone are sorted in their canonical order,
+            The NSEC5 hash determines the position of a domain name in an NSEC5 chain.
+            That is, all the NSEC5 hashes for a zone are sorted in their canonical order,
             and each consecutive pair forms an NSEC5 RR.
         </t>
 
