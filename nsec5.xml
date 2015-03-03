@@ -879,7 +879,7 @@
 
         <section title="FDH signature">
             <t>
-                FDH_sign (m, h, k)
+                FDH_sign (m, h, K)
             </t>
 
             <t>
@@ -887,7 +887,7 @@
                 <list>
                     <t>m - message to be signed, an octet string</t>
                     <t>h - hash function</t>
-                    <t>k - RSA private key</t>
+                    <t>K - RSA private key</t>
                 </list>
             </t>
 
@@ -901,9 +901,8 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Let m' = MGF1(m, l) with Hash option h.</t>
-                    <t>Clear the highest bit of m' in binary representation at length l.</t>
-                    <t>Let s = RSASP1(k, m').</t>
+                    <t>Let m' = MGF1(m, k - 1) with Hash option h.</t>
+                    <t>Let s = RSASP1(K, m').</t>
                     <t>Output s.</t>
                 </list>
             </t>
@@ -912,7 +911,7 @@
                 Where:
                 <list>
                     <t>n - modulus of the key k</t>
-                    <t>l - the length of the modulus n in bytes</t>
+                    <t>k - the length of the modulus n in octets</t>
                     <t>
                         MGF1 - Mass Generation Function 1 as defined in
                         Section 10.2.1 of <xref target="RFC2437" />
@@ -927,7 +926,7 @@
 
         <section title="FDH verification">
             <t>
-                FDH_verify (m, s, h, k)
+                FDH_verify (m, s, h, (n, e))
             </t>
 
             <t>
@@ -936,7 +935,7 @@
                     <t>m - message to be verified, an octet string</t>
                     <t>s - signature representative, an integer between 0 and n-1</t>
                     <t>h - hash function</t>
-                    <t>K - RSA public key, as an (n, e) pair</t>
+                    <t>(n, e) - RSA public key</t>
                 </list>
             </t>
 
@@ -950,9 +949,8 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Let m' = MGF1(m, l) with Hash option h.</t>
-                    <t>Clear the highest bit of m' in binary representation at length l.</t>
-                    <t>Let M = RSAVP1(K, s).</t>
+                    <t>Let m' = MGF1(m, k - 1) with Hash option h.</t>
+                    <t>Let M = RSAVP1((n, e), s).</t>
                     <t>If m' equals to M, output "valid", else output "invalid".</t>
                 </list>
             </t>
@@ -960,7 +958,7 @@
             <t>
                 Where:
                 <list>
-                    <t>l - the length of the modulus n in bytes</t>
+                    <t>k - the length of the modulus n in octets</t>
                     <t>
                         MGF1 - Mass Generation Function 1 as defined in
                         Section 10.2.1 of <xref target="RFC2437" />
