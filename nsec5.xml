@@ -74,12 +74,14 @@
             record (RR) for authenticated denial of existence and the NSEC3 for hashed
             authenticated denial of existence.
 
-            The NSEC allows zone content enumeration by quering the server for carefully chosen
-            domain names. The NSEC3 adds domain name hashing, which makes the zone enumeration
-            harder, but not impossible.
+            The NSEC RR allows for the entire zone contents to be enumerated if a server is
+            queried for carefully chosen domain names; N queries suffice to enumerate a zone
+            containing N names. The NSEC3 RR adds domain-name hashing, which makes the zone
+            enumeration harder, but not impossible.
 
             This document introduces NSEC5, which provides an cryptographically-proven mechanism
-            preventing zone enumeration.
+            that prevents zone enumeration. NSEC5 has the additional advantage of not requiring
+            private zone-signing keys to be present on all authoritative servers for the zone.
         </t>
 
     </abstract>
@@ -98,11 +100,11 @@
 
             <t>
                 The DNS Security Extensions (DNSSEC) provides data integrity protection using
-                public-key cryptography while not requiring the servers to compute the signatures
-                on-the-fly. The content of the zone is usually pre-computed and served as it is.
-                The evident advantage of this approach are reduced performance requirements per
-                query. Also the private keys security is higher because the keys do not have to
-                be present on the servers facing the network.
+                public-key cryptography, while not requiring that servers compute signatures
+                on-the-fly. The content of the zone is usually pre-computed and served as is.
+                The evident advantages of this approach are reduced performance requirements
+                per query, as well as not requiring private zone-signing keys to be present
+                on nameservers facing the network.
             </t>
 
             <t>
@@ -112,43 +114,47 @@
                 answers, an NSEC chain of all existing domain names in the zone is constructed.
                 The chain is made of RRs, where each RR represents two consecutive domain names in
                 canonical order present in the zone. The NSEC RRs are signed the same way as
-                any other RRs in the zone, and each NSEC can be used to prove, that a given
+                any other RRs in the zone, and each NSEC can be used to prove that a given
                 name doesn't existing in a part of the domain name space.
             </t>
 
             <t>
-                A side-effect of the NSEC chain existence is a possibility to enumerate
-                the content of the zone by following individual RRs in the chain. To prevent
-                the zone enumeration, the NSEC3 hashed denial of existence was introduced.
-                In NSEC3, original domain names are replaced by their cryptographic hashes
-                in the chain. However, the domain name space is restricted and offline attacks
-                are possible. The zone enumeration with NSEC3 is more difficult, but still
-                possible.
+                As side-effect, however, the NSEC chain existence allows for the enumeration
+                of the zone's contents by querying for names immediately individual RRs in the
+                chain; N queries suffice to enumerate a zone containing N names. As such, the
+                NSEC3 hashed denial of existence was introduced to prevent zone enumeration.
+                In NSEC3, the original domain names in the NSEC chain are replaced by their
+                cryptographic hashes.  While NSEC3 makes zone enumeration more difficult, offline
+                dictionary attacks are still possible and have been demonstrated; this is
+                because hashes may be computed offline and the space of possible domain names
+                is restricted <xref target="nsec3walker" /><xref target="nsec3gpu" />.
             </t>
 
             <t>
-                There are means to prevent zone enumeration with NSEC or NSEC3. The RRs for
-                denying answers can be computed by the authoritative server on-the-fly. Usually,
-                this mean is called Minimally Covering NSEC3 Records or NSEC3 White Lies
+                Zone enumeration can be prevented if having the authoritative server compute
+                NSEC or NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
+                this is done with Minimally Covering NSEC Records or NSEC3 White Lies
                 <xref target="RFC7129" />. One of the most significant disadvantage of this
                 approach is a required presence of the private key on all authoritative servers
                 for the zone. This is often undesirable, as the holder of the private key can
-                tamper with the zone content.
+                tamper with the zone content, and having private keys on many network-facing servers
+                increases the risk that keys can be compromised.
             </t>
 
             <t>
                 To prevent zone content enumeration without keeping private keys on all
-                authoritative servers, NSEC5 introduces a public-key based domain name hashing.
-                For the hashing, a separate NSEC5 key is used. This key is present on all
-                authoritative servers, however holder of the key cannot modify the content of
-                the zone.
+                authoritative servers, NSEC5 replaces the unkeyed cryptographic hash function used
+                in NSEC3 with a public-key hashing scheme.   Hashing in NSEC5 is performed with
+                a separate NSEC5 key. The public portion of this key is published as an
+                NSEC5KEY RR, and is used to validate NSEC5 hash values by clients.  The private portion
+                of the NSEC5 key is present on all authoritative servers for the zone.
             </t>
 
             <t>
-                <cref>
-                    TODO: What will happen, if the attacked acquires the NSEC5 key? He/she
-                    won't be able to enumerate the zone anyway. Right?
-                </cref>
+                Importantly, the NSEC5KEY key cannot be used to
+                modify the contents of the zone. Thus, any compromise of the private NSEC5 key
+                does not lead to a compromise of zone contents; all that is lost is privacy against
+                zone enumeration, effectively downgrading the security of NSEC5 to that of NSEC3.
             </t>
 
             <t>
@@ -232,7 +238,7 @@
         </t>
     </section>
 
-    <section title="NSEC5 Principle">
+    <section title="How NSEC5 Works">
         <t>
             To prove non-existence of a domain name in a zone, NSEC uses a chain built from
             domain names present in the zone. NSEC3 replaces the original domain names by
@@ -247,23 +253,23 @@
         <t>
             <list style="numbers">
                 <t>
-                    The input of the first hashing is an original domain name and an NSEC5 private
-                    key. The result is called NSEC5 proof-hash. Only an authoritative server
-                    (knowing the private key) can compute the hash and any client (knowing the
-                    public key) can verify the hash's validity.
+                    First, the domain name is hashed using the NSEC5 private key; the result
+                    is called the NSEC5 proof.  Only an authoritative server that knows the
+                    private NSEC5 key can compute the NSEC5 proof.  Any client that the knows
+                    the public NSEC5 key can validate the NSEC5 proof.
                 </t>
                 <t>
-                    The second hash is a cryptographic hash of the NSEC5-proof, which results
-                    into an NSEC5 chain-hash. The hash can be computed by any party, if the input
-                    is known.
+                    Second, the NSEC5 proof is hashed using a cryptographic hash function; the
+                    result is called the NSEC5 chain hash.  This hash can be computed by any party
+                    that knows the input NSEC5 proof.
                 </t>
             </list>
         </t>
 
         <t>
-            The final position of a domain name in an NSEC5 chain is determined by it's NSEC5
-            chain-hash. The NSEC5-proof hash is sent by a server in some responses, to prove
-            a client about the actual position of the name in the chain.
+            The NSEC5 chain hash determines the position of a domain name in an NSEC5 chain.
+            That is, all the chain hashes for a zone are sorted in their cannonical order,
+            and each consecutive pair forms an NSEC5 RR.
         </t>
 
     </section>
@@ -399,7 +405,7 @@
             </t>
 
             <t>
-                The Wildcard flag indicates, that a wildcard synthesis is possible at the
+                The Wildcard flag indicates that a wildcard synthesis is possible at the
                 original domain name level (i.e., there is a wildcard node immediately
                 descending from the immediate ancestor of the original domain name). The
                 purpose of the Wildcard flag is to reduce a maximum number of RRs required for
@@ -440,7 +446,7 @@
     <section title="The NSEC5PROOF Resource Record">
         <t>
             The NSEC5PROOF record is synthesised by the authoritative server on-the-fly. The
-            record reveals the NSEC5 proof-hash, proving a position of the owner name in an
+            record contains the NSEC5 proof, proving a position of the owner name in an
             NSEC5 chain.
         </t>
 
@@ -465,7 +471,7 @@
             </t>
             <t>
                 Owner Name Hash is a variable sized sequence of binary octets encoding the NSEC5
-                proof-hash of the owner name.
+                proof corresponding to the owner name.
             </t>
         </section>
 
@@ -516,10 +522,10 @@
             <t>
                 <list style="numbers">
                     <t>
-                        Select an algorithm for NSEC5, generate a key to be used.
+                        Select an algorithm for NSEC5.  Generate a NSEC5 public/private key pair.
                     </t>
                     <t>
-                        Add a NSEC5KEY RR into the zone apex with the public key.
+                        Add a NSEC5KEY RR into the zone apex containing the public NSEC5 key.
                     </t>
                     <t>
                         For each unique original domain name in the zone and each empty
@@ -527,12 +533,13 @@
                         unsigned delegations MAY be excluded.
                         <list style="letters">
                             <t>
-                                The owner name of the NSEC5 RR is the NSEC5-chain hash of the
+                                The owner name of the NSEC5 RR is the NSEC5 chain hash of the
                                 original owner name encoded in Base32hex without padding,
                                 prepended as a single label to the zone name.
                             </t>
                             <t>
-                                Set the Key Tag field according to the used key.
+                                Set the Key Tag field to be the key tag corresponding
+                                to the public NSEC5 key.
                             </t>
                             <t>
                                 Clear the Flags field. If Opt-Out is being used, set the Opt-Out
@@ -542,7 +549,7 @@
                             </t>
                             <t>
                                 Set the Next Length field to a value determined by the used
-                                algorithm. Leave the Next Hashed Owner Name field blank.
+                                NSEC5 algorithm. Leave the Next Hashed Owner Name field blank.
                             </t>
                             <t>
                                 Set the Type Bit Maps field based on the RRsets present at the
@@ -555,8 +562,8 @@
                     </t>
                     <t>
                         For each NSEC5 RR, set the Next Hashed Owner Name field by using the owner
-                        name of the next NSEC5 RR in the canonical order. The the NSEC5 in-update
-                        is the last NSEC5 RR in the chain, the owner name of the first NSEC5 RR
+                        name of the next NSEC5 RR in the canonical order. If the updated NSEC5 is
+                        the last NSEC5 RR in the chain, the owner name of the first NSEC5 RR
                         in the chain is used instead.
                     </t>
                 </list>
@@ -566,9 +573,8 @@
 
         <section title="Zone Serving">
             <t>
-                NSEC5 MUST NOT be used in parallel with any other authenticated denial of
-                existence mechanism, which allows zone content enumeration. NSEC and NSEC3 are
-                considered insufficient.
+                NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated
+                denial of  existence mechanism that allows for enumeration of zone contents.
             </t>
 
             <t>
@@ -604,11 +610,13 @@
             <t>
                 <list style="numbers">
                     <t>
-                        New public key is added into the NSEC5KEY RRset in the zone apex.
+                        A new public NSEC5 key is added into the NSEC5KEY RRset in the zone apex.
                     </t>
                     <t>
-                        Existing NSEC5 chain is instantly replaced by a new NSEC5 chain
-                        constructed using the new key.
+                        The old NSEC5 chain is replaced by a new NSEC5 chain constructed
+                        using the new key. This replacement MUST happen as a single automic
+                        operation; the server MUST NOT be responding with RRs from
+                        both the new and old chain at the same time.
                     </t>
                     <t>
                         The old public key is removed from the NSEC5KEY RRset in the zone apex.
@@ -618,12 +626,12 @@
 
             <t>
                 The minimal delay between the steps 1. and 2. MUST be the time it takes for the
-                data to propagate to the authoritative servers, plus the TTL value of the
+                data to propagate to the authoritative servers, plus the TTL value of the old
                 NSEC5KEY RRset.
             </t>
 
             <t>
-                The steps 2. and 3. can be performed simultaneously, without a delay.
+                Steps 2. and 3. MAY be performed simultaneously.
             </t>
         </section>
 
@@ -712,7 +720,6 @@
                 key is RECOMMENDED for each zone.
             </t>
         </section>
-
 
         <section title="Domain Name Length Restrictions">
 
@@ -834,6 +841,24 @@
                 <author initials="S" surname="Vasant"><organization></organization></author>
                 <author initials="A" surname="Ziv"><organization></organization></author>
                 <date year="2014" month="July"></date>
+
+        <reference anchor="nsec3gpu">
+            <front>
+                <title>GPU-Based NSEC3 Hash Breaking</title>
+                <author initials="M." surname="Wander"><organization /></author>
+                <author initials="L." surname="Schwittmann"><organization /></author>
+                <author initials="C." surname="Boelmann"><organization /></author>
+                <author initials="T." surname="Weis"><organization /></author>
+                <date year="2014" />
+            </front>
+            <seriesInfo name="in" value="IEEE Symp. Network Computing and Applications (NCA)" />
+        </reference>
+
+        <reference anchor="nsec3walker" target="http://dnscurve.org/nsec3walker.html">
+            <front>
+                <title>Nsec3 walker</title>
+                <author initials="D. J." surname="Bernstein"><organization /></author>
+                <date year="2011" />
             </front>
         </reference>
 
