@@ -115,7 +115,7 @@
                 The chain is made of RRs, where each RR represents two consecutive domain names in
                 canonical order present in the zone. The NSEC RRs are signed the same way as
                 any other RRs in the zone, and each NSEC can be used to prove that a given
-                name doesn't existing in a part of the domain name space.
+                name does not existing in a part of the domain name space.
             </t>
 
             <t>
