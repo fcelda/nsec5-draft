@@ -202,14 +202,14 @@
                     <t hangText="Base64:">
                         The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
-                    <t hangText="NSEC5 proof-hash:">
+                    <t hangText="NSEC5 proof:">
                         A signed hash of a domain name (hash-and-sign paradigm). A holder of the
-                        private key (e.g., authoritative server) can compute the hash. Anyone
+                        private key (e.g., authoritative server) can compute the proof. Anyone
                         knowing the public key (e.g., client) can verify it's validity.
                     </t>
-                    <t hangText="NSEC5 chain-hash:">
-                        A cryptographic hash (digest) of an NSEC5 proof-hash. If the NSEC5
-                        proof-hash is known, anyone can compute and verify it's NSEC5 chain-hash.
+                    <t hangText="NSEC5 hash:">
+                        A cryptographic hash (digest) of an NSEC5 proof. If the NSEC5
+                        proof is known, anyone can compute and verify it's NSEC5 hash.
                     </t>
                 </list>
             </t>
@@ -260,15 +260,15 @@
                 </t>
                 <t>
                     Second, the NSEC5 proof is hashed using a cryptographic hash function; the
-                    result is called the NSEC5 chain hash.  This hash can be computed by any party
+                    result is called the NSEC5 hash.  This hash can be computed by any party
                     that knows the input NSEC5 proof.
                 </t>
             </list>
         </t>
 
         <t>
-            The NSEC5 chain hash determines the position of a domain name in an NSEC5 chain.
-            That is, all the chain hashes for a zone are sorted in their cannonical order,
+            The NSEC hash determines the position of a domain name in an NSEC5 chain.
+            That is, all the NSEC hashes for a zone are sorted in their cannonical order,
             and each consecutive pair forms an NSEC5 RR.
         </t>
 
@@ -278,7 +278,7 @@
 
         <t>
             The NSEC5KEY RR stores an NSEC5 public key. The key allows clients to verify a
-            validity of NSEC5 proof-hashes sent by a server.
+            validity of NSEC5 proof sent by a server.
         </t>
 
         <section title="NSEC5KEY RDATA Wire Format">
@@ -301,7 +301,7 @@
             </t>
             <t>
                 Public Key is a variable sized field holding public key material for NSEC5
-                proof-hashes verification.
+                proof verification.
             </t>
         </section>
 
@@ -363,8 +363,8 @@
                 Owner Name field in octets.
             </t>
             <t>
-                Next Hashed Owner Name field is a sequence of binary octets. It contains a result
-                of NSEC5 chain-hashing of the next domain name in the NSEC5 chain.
+                Next Hashed Owner Name field is a sequence of binary octets. It contains an NSEC5
+                hash of the next domain name in the NSEC5 chain.
             </t>
             <t>
                 Type Bit Maps is a variable sized field encoding RR types present at the original
@@ -533,7 +533,7 @@
                         unsigned delegations MAY be excluded.
                         <list style="letters">
                             <t>
-                                The owner name of the NSEC5 RR is the NSEC5 chain hash of the
+                                The owner name of the NSEC5 RR is the NSEC5 hash of the
                                 original owner name encoded in Base32hex without padding,
                                 prepended as a single label to the zone name.
                             </t>
@@ -765,8 +765,8 @@
         </t>
 
         <t>
-            This document creates a new IANA registry for NSEC5 hash algorithms.
-            This registry is named "DNSSEC NSEC5 Hash Algorithms". The initial
+            This document creates a new IANA registry for NSEC5 algorithms.
+            This registry is named "DNSSEC NSEC5 Algorithms". The initial
             content of the registry is:
         </t>
 
