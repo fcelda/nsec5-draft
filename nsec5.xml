@@ -28,7 +28,7 @@
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
-        <author fullname="Jan Vcelak" initials="J" surname="Vcelak">
+        <author fullname="Jan Vcelak" initials="J." surname="Vcelak">
             <organization>CZ.NIC</organization>
             <address>
                 <postal>
@@ -41,7 +41,7 @@
             </address>
         </author>
 
-        <author fullname="Sharon Goldberg" initials="S" surname="Goldberg">
+        <author fullname="Sharon Goldberg" initials="S." surname="Goldberg">
             <organization>Boston University</organization>
             <address>
                 <postal>
@@ -834,13 +834,15 @@
         <reference anchor="nsec5">
             <front>
                 <title>NSEC5: Provably Preventing DNSSEC Zone Enumeration</title>
-                <author initials="S" surname="Goldberg"><organization></organization></author>
-                <author initials="M" surname="Naor"><organization></organization></author>
-                <author initials="D" surname="Papadopoulos"><organization></organization></author>
-                <author initials="L" surname="Reyzin"><organization></organization></author>
-                <author initials="S" surname="Vasant"><organization></organization></author>
-                <author initials="A" surname="Ziv"><organization></organization></author>
-                <date year="2014" month="July"></date>
+                <author initials="S." surname="Goldberg"><organization /></author>
+                <author initials="M." surname="Naor"><organization /></author>
+                <author initials="D." surname="Papadopoulos"><organization /></author>
+                <author initials="L." surname="Reyzin"><organization /></author>
+                <author initials="S." surname="Vasant"><organization /></author>
+                <author initials="A." surname="Ziv"><organization /></author>
+                <date year="2014" month="July" />
+            </front>
+        </reference>
 
         <reference anchor="nsec3gpu">
             <front>
