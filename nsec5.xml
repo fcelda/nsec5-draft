@@ -100,7 +100,7 @@
 
             <t>
                 The DNS Security Extensions (DNSSEC) provides data integrity protection using
-                public-key cryptography, while not requiring that servers compute signatures
+                public-key cryptography, while not requiring that authoritative servers compute signatures
                 on-the-fly. The content of the zone is usually pre-computed and served as is.
                 The evident advantages of this approach are reduced performance requirements
                 per query, as well as not requiring private zone-signing keys to be present
@@ -131,9 +131,9 @@
             </t>
 
             <t>
-                Zone enumeration can be prevented if having the authoritative server compute
-                NSEC or NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
-                this is done with Minimally Covering NSEC Records or NSEC3 White Lies
+                Zone enumeration can be prevented with NSEC3 if having the authoritative server
+                compute NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
+                this is done with Minimally Covering NSEC3 Records or NSEC3 White Lies
                 <xref target="RFC7129" />. One of the most significant disadvantage of this
                 approach is a required presence of the private key on all authoritative servers
                 for the zone. This is often undesirable, as the holder of the private key can
@@ -145,9 +145,10 @@
                 To prevent zone content enumeration without keeping private keys on all
                 authoritative servers, NSEC5 replaces the unkeyed cryptographic hash function used
                 in NSEC3 with a public-key hashing scheme.   Hashing in NSEC5 is performed with
-                a separate NSEC5 key. The public portion of this key is published as an
-                NSEC5KEY RR, and is used to validate NSEC5 hash values by clients.  The private portion
-                of the NSEC5 key is present on all authoritative servers for the zone.
+                a separate NSEC5K key. The public portion of this key is distributed in an
+                NSEC5KEY RR, and is used to validate NSEC5 hash values.  The private portion
+                of the NSEC5 key is present on all authoritative servers for the zone, and is
+                used to compute hash values.
             </t>
 
             <t>
@@ -522,7 +523,7 @@
             <t>
                 <list style="numbers">
                     <t>
-                        Select an algorithm for NSEC5.  Generate a NSEC5 public/private key pair.
+                        Select an algorithm for NSEC5.  Generate the public and private NSEC5 keys.
                     </t>
                     <t>
                         Add a NSEC5KEY RR into the zone apex containing the public NSEC5 key.
