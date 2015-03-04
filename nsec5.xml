@@ -6,7 +6,7 @@
 <!ENTITY rfc2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
 <!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
 <!ENTITY rfc2308 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2308.xml">
-<!ENTITY rfc2437 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2437.xml">
+<!ENTITY rfc3447 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml">
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
@@ -1035,7 +1035,7 @@
             </front>
         </reference>
 
-        &rfc2437;
+        &rfc3447;
         &rfc6781;
         &rfc7129;
 
@@ -1047,95 +1047,115 @@
             hashes using public-key cryptography.
         </t>
 
+        <t>
+            In this document, the notation from <xref target="RFC3447" /> is used.
+        </t>
+
+        <t>
+            Used parameters:
+            <list>
+                <t>(n, e) - RSA public key</t>
+                <t>K - RSA private key</t>
+                <t>k - length of the RSA modulus n in octets</t>
+            </list>
+        </t>
+
+        <t>
+            Fixed options:
+            <list>
+                <t>Hash - hash function</t>
+            </list>
+        </t>
+
+        <t>
+            Used primitives:
+            <list>
+                <t>
+                    I2OSP - Coversion of a nonnegative integer to an octet string as defined in
+                    Section 4.1 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    OS2IP - Coversion of an octet string to a nonnegative integer as defined in
+                    Section 4.2 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    RSASP1 - RSA signature primitive as defined in
+                    Section 5.2.1 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    RSAVP1 - RSA verification primitive as defined in
+                    Section 5.2.2 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    MGF1 - Mask Generation Function based on a hash function as defined in
+                    Section B.2.1 of <xref target="RFC3447" />
+                </t>
+            </list>
+        </t>
+
         <section title="FDH signature">
             <t>
-                FDH_sign (m, h, K)
+                FDH_SIGN(K, M)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>m - message to be signed, an octet string</t>
-                    <t>h - hash function</t>
                     <t>K - RSA private key</t>
+                    <t>M - message to be signed, an octet string</t>
                 </list>
             </t>
 
             <t>
                 Output:
                 <list>
-                    <t>s - signature representative, an integer between 0 and n-1</t>
+                    <t>S - signature, an octet string of length k</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Let m' = MGF1(m, k - 1) with Hash option h.</t>
-                    <t>Let s = RSASP1(K, m').</t>
-                    <t>Output s.</t>
-                </list>
-            </t>
-
-            <t>
-                Where:
-                <list>
-                    <t>n - modulus of the key k</t>
-                    <t>k - the length of the modulus n in octets</t>
-                    <t>
-                        MGF1 - Mass Generation Function 1 as defined in
-                        Section 10.2.1 of <xref target="RFC2437" />
-                    </t>
-                    <t>
-                        RSASP1 - RSA signature primitive as defined in
-                        Section 5.2.1 of <xref target="RFC2437" />
-                    </t>
+                    <t>EM = MGF1(M, k - 1)</t>
+                    <t>m = OS2IP(EM)</t>
+                    <t>s = RSASP1(K, m)</t>
+                    <t>S = I2OSP(s, k)</t>
+                    <t>Output S</t>
                 </list>
             </t>
         </section>
 
         <section title="FDH verification">
             <t>
-                FDH_verify (m, s, h, (n, e))
+                FDH_VERIFY((n, e), M, S)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>m - message to be verified, an octet string</t>
-                    <t>s - signature representative, an integer between 0 and n-1</t>
-                    <t>h - hash function</t>
                     <t>(n, e) - RSA public key</t>
+                    <t>M - message whose signature is to be verified, an octet string</t>
+                    <t>S - signature to be verified, an octet string of length k</t>
                 </list>
             </t>
 
             <t>
                 Output:
                 <list>
-                    <t>"valid" or "invalid"</t>
+                    <t>"valid signature" or "invalid signature"</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Let m' = MGF1(m, k - 1) with Hash option h.</t>
-                    <t>Let M = RSAVP1((n, e), s).</t>
-                    <t>If m' equals to M, output "valid", else output "invalid".</t>
-                </list>
-            </t>
-
-            <t>
-                Where:
-                <list>
-                    <t>k - the length of the modulus n in octets</t>
+                    <t>s = OS2IP(S)</t>
+                    <t>m = RSAVP1((n, e), s)</t>
+                    <t>EM = I2OSP(m, k - 1)</t>
+                    <t>EM' = MGF(M, k - 1)</t>
                     <t>
-                        MGF1 - Mass Generation Function 1 as defined in
-                        Section 10.2.1 of <xref target="RFC2437" />
-                    </t>
-                    <t>
-                        RSAVP1 - RSA verification primitive as defined in
-                        Section 5.2.2 of <xref target="RFC2437" />
+                        If EM and EM' are the same, output "valid signature";
+                        else output "invalid signature".
                     </t>
                 </list>
             </t>
