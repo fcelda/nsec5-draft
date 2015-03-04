@@ -492,6 +492,169 @@
         </section>
     </section>
 
+    <section title="NSEC5 Proofs">
+
+        <t>
+            The NSEC5 ...
+        </t>
+
+        <section title="Name Error Responses">
+
+            <t>
+                Facts to prove:
+                <list>
+                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No RRset matching the QNAME via wildcard expansion exists.</t>
+                    <t>The QNAME does not fall into a delegation.</t>
+                    <t>The QNAME does not fall into a DNAME redirection.</t>
+                </list>
+            </t>
+
+            <t>
+                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                <list>
+                    <t>Closest encloser.</t>
+                    <t>Next closer name.</t>
+                </list>
+            </t>
+
+            <t>
+                Validator checks:
+                <list>
+                    <t>Closest encloser belongs to the zone.</t>
+                    <t>Closest encloser has the Wildcard flag cleared.</t>
+                    <t>Closest encloser does not have NS without SOA in the Type Bit Map.</t>
+                    <t>Closest encloser does not have DNAME in the Type Bit Maps.</t>
+                    <t>Next closer name is derived correctly.</t>
+                </list>
+            </t>
+
+        </section>
+
+        <section title="No Data Responses">
+
+            <t>
+                The processing of No Data responses for DS QTYPE differs, if Opt-Out is in effect.
+            </t>
+
+            <section title="QTYPE is not DS or Opt-Out Not In Effect">
+
+                <t>
+                    Facts to prove:
+                    <list>
+                        <t>An RRset matching the QNAME exists.</t>
+                        <t>No QTYPE RRset matching the QNAME exists.</t>
+                        <t>No CNAME RRset matching the QNAME exists.</t>
+                    </list>
+                </t>
+
+                <t>
+                    NSEC5 and NSEC5PROOF RRs to include in the answer:
+                    <list>
+                        <t>QNAME.</t>
+                    </list>
+                </t>
+
+                <t>
+                    Validator checks:
+                    <list>
+                        <t>The NSEC5 RR exactly matches the QNAME.</t>
+                        <t>The NSEC5 RR does not have QTYPE in the Type Bit Map.</t>
+                        <t>The NSEC5 RR does not have CNAME in the Type Bit Map.</t>
+                    </list>
+                </t>
+
+            </section>
+
+            <section title="QTYPE is DS and Opt-Out In Effect">
+
+                <t>
+                    Facts to prove:
+                    <list>
+                        <t>Closest provable encloser has the Opt-Out flag set.</t>
+                    </list>
+                </t>
+
+                <t>
+                    NSEC5 and NSEC5PROOF RRs to include in the answer:
+                    <list>
+                        <t>Closest provable encloser.</t>
+                    </list>
+                </t>
+
+                <t>
+                    Validator checks:
+                    <list>
+                        <t>Closest provable encloser is in zone.</t>
+                        <t>Closest provable encloser covers (not matches).</t>
+                        <t>Closest provable encloser has the Opt-Out flag set.</t>
+                    </list>
+                </t>
+
+            </section>
+
+        </section>
+
+        <section title="Wildcard Responses">
+
+            <t>
+                Facts required to prove:
+                <list>
+                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No wildcard closer to the QNAME exists.</t>
+                </list>
+            </t>
+
+            <t>
+                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                <list>
+                    <t>Next closer name.</t>
+                </list>
+            </t>
+            <t>
+                Validator:
+                <list>
+                    <t>Next closer name is derived correctly.</t>
+                    <t>Next closer name covers (not matches).</t>
+                </list>
+            </t>
+
+        </section>
+
+        <section title="Wildcard No Data Responses">
+
+            <t>
+                Facts required to prove:
+                <list>
+                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No QTYPE RRset exists at the wildcard matching the QNAME.</t>
+                    <t>No CNAME RRset exists at the wildcard matching the QNAME.</t>
+                    <t>No wildcard closer to the QNAME exists.</t>
+                </list>
+            </t>
+
+            <t>
+                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                <list>
+                    <t>Source of wildcard synthesis (i.e., wildcard at closest encloser).</t>
+                    <t>Next closer name.</t>
+                </list>
+            </t>
+
+            <t>
+                Validator:
+                <list>
+                    <t>Source of synthesis NSEC5 matches exactly.</t>
+                    <t>Source of synthesis NSEC5 RR does not have QTYPE in the Type Bit Map.</t>
+                    <t>Source of synthesis NSEC5 RR does not have CNAME in the Type Bit Map.</t>
+                    <t>Next closer name is derived correctly.</t>
+                    <t>Next closer name NSEC5 hash covers (not matches).</t>
+                </list>
+            </t>
+
+        </section>
+    </section>
+
     <section title="Authoritative Server Considerations">
 
         <section title="Zone Signing">
@@ -605,106 +768,6 @@
                 </cref>
             </t>
 
-            <section title="Name Error Responses">
-
-                <t>
-                    Facts to prove:
-                    <list>
-                        <t>No RRset matching QNAME exactly exists.</t>
-                        <t>No RRset matching QNAME via wildcard expansion exists.</t>
-                    </list>
-                </t>
-
-                <t>
-                    NSEC5 and NSEC5PROOF RRs to include in the answer:
-                    <list>
-                        <t>Closest encloser of QNAME.</t>
-                        <t>Next closer name of QNAME.</t>
-                    </list>
-                </t>
-
-            </section>
-
-            <section title="No Data Responses">
-
-                <section title="QTYPE is not DS">
-
-                    <t>
-                        Facts to prove:
-                        <list>
-                            <t>RRset with QTYPE does not exist at existing QNAME.</t>
-                            <t>No CNAME RR exists at the QNAME.</t>
-                        </list>
-                    </t>
-
-                    <t>
-                        NSEC5 and NSEC5PROOF RRs to include in the answer:
-                        <list>
-                            <t>QNAME.</t>
-                        </list>
-                    </t>
-
-                </section>
-
-                <section title="QTYPE is DS">
-
-                    <t>
-                        Facts to prove:
-                        <list>
-                            <t>Closest provable encloser has the Opt-Out flag set.</t>
-                        </list>
-                    </t>
-
-                    <t>
-                        NSEC5 and NSEC5PROOF RRs to include in the answer:
-                        <list>
-                            <t>Closest provable encloser of QNAME.</t>
-                        </list>
-                    </t>
-
-                </section>
-
-            </section>
-
-            <section title="Wildcard Responses">
-
-                <t>
-                    Facts required to prove:
-                    <list>
-                        <t>No RRset matching QNAME exactly exists.</t>
-                        <t>No closer wildcard match exists.</t>
-                    </list>
-                </t>
-
-                <t>
-                    NSEC5 and NSEC5PROOF RRs to include in the answer:
-                    <list>
-                        <t>Next closer name of QNAME.</t>
-                    </list>
-                </t>
-
-            </section>
-
-            <section title="Wildcard No Data Responses">
-
-                <t>
-                    Facts required to prove:
-                    <list>
-                        <t>No RRset with QTYPE exist at wildcard matching the QNAME.</t>
-                        <t>No CNAME RRset exists at wildcard matching the QNAME.</t>
-                        <t>No closer wildcard match exists.</t>
-                    </list>
-                </t>
-
-                <t>
-                    NSEC5 and NSEC5PROOF RRs to include in the answer:
-                    <list>
-                        <t>Wildcard at closest encloser of QNAME.</t>
-                        <t>Next closer name of QNAME.</t>
-                    </list>
-                </t>
-
-            </section>
         </section>
 
         <section title="NSEC5KEY Rollover Mechanism">
