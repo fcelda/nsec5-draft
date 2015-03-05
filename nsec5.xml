@@ -495,7 +495,27 @@
     <section title="NSEC5 Proofs">
 
         <t>
-            The NSEC5 ...
+            This section summarizes all possible types of authenticated denial of existence.
+            For each of the types, a list of facts about the zone is enumerated. These facts
+            are the minimum amount of information an authoritative server has to provide
+            to a client, to assure the client that the response content is valid.
+        </t>
+
+        <t>
+            The list of Authoritative server proofs then instructs, which NSEC5 records
+            the authoritative server must include in the response, to prove the facts listed
+            above.
+        </t>
+
+        <t>
+            The last list in each section informs about the checks a validating server
+            is required to perform. If all the checks pass, the response content can be
+            considered valid.
+        </t>
+
+        <t>
+            <cref>TODO: Terminology: closest encloser, next closer name, source of synthesis.</cref>
+            <cref>TODO: NSEC5 covers vs NSEC5 exactly matches</cref>
         </t>
 
         <section title="Name Error Responses">
@@ -511,7 +531,7 @@
             </t>
 
             <t>
-                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                Authoritive server proofs:
                 <list>
                     <t>Closest encloser.</t>
                     <t>Next closer name.</t>
@@ -534,7 +554,10 @@
         <section title="No Data Responses">
 
             <t>
-                The processing of No Data responses for DS QTYPE differs, if Opt-Out is in effect.
+                The processing of No Data responses for DS QTYPE differs if Opt-Out is in effect.
+                For DS QTYPE queries, the validator is able to decide if the checking path of
+                Opt-Out applies based on the content of the response. Otherwise, the processing
+                is done as for any other QTYPEs.
             </t>
 
             <section title="QTYPE is not DS or Opt-Out Not In Effect">
@@ -549,7 +572,7 @@
                 </t>
 
                 <t>
-                    NSEC5 and NSEC5PROOF RRs to include in the answer:
+                    Authoritive server proofs:
                     <list>
                         <t>QNAME.</t>
                     </list>
@@ -576,7 +599,7 @@
                 </t>
 
                 <t>
-                    NSEC5 and NSEC5PROOF RRs to include in the answer:
+                    Authoritive server proofs:
                     <list>
                         <t>Closest provable encloser.</t>
                     </list>
@@ -606,13 +629,13 @@
             </t>
 
             <t>
-                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                Authoritative server proofs:
                 <list>
                     <t>Next closer name.</t>
                 </list>
             </t>
             <t>
-                Validator:
+                Validator checks:
                 <list>
                     <t>Next closer name is derived correctly.</t>
                     <t>Next closer name covers (not matches).</t>
@@ -634,15 +657,15 @@
             </t>
 
             <t>
-                NSEC5 and NSEC5PROOF RRs to include in the answer:
+                Authoritative server proofs:
                 <list>
-                    <t>Source of wildcard synthesis (i.e., wildcard at closest encloser).</t>
+                    <t>Source of wildcard synthesis.</t>
                     <t>Next closer name.</t>
                 </list>
             </t>
 
             <t>
-                Validator:
+                Validator checks:
                 <list>
                     <t>Source of synthesis NSEC5 matches exactly.</t>
                     <t>Source of synthesis NSEC5 RR does not have QTYPE in the Type Bit Map.</t>
@@ -760,11 +783,7 @@
 
             <t>
                 <cref>
-                    TODO: CNAME considerations, DNAME considerations, DS considerations, NSEC5 type queries
-                </cref>
-                <cref>
-                    TODO: proofs explanation - closes encloser proof, denial of wildcard synthesis,
-                    source of synthesis, denial of source of synthesis
+                    TODO: NSEC3 denial paradox -> NSEC5 denial paradox
                 </cref>
             </t>
 
@@ -832,16 +851,7 @@
         <section title="Responses With Unknown Hash Types">
         </section>
 
-        <section title="Validating Name Error Responses">
-        </section>
-
-        <section title="Validating No Data Responses">
-        </section>
-
-        <section title="Validating Wildcard Answer Responses">
-        </section>
-
-        <section title="Validating Wildcard No Data Responses">
+        <section title="Validating Responses">
         </section>
 
         <section title="Validating Referrals">
