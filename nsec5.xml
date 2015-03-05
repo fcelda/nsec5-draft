@@ -905,7 +905,9 @@
         <section title="Domain Name Length Restrictions">
 
             <t>
-
+                <cref>TODO: similar limits as in NSEC3</cref>
+                <cref>TODO: secondary hash length in base32hex without padding + apex</cref>
+                <cref>TODO: maximal length of label imlies output limit for hash function</cref>
             </t>
 
         </section>
@@ -913,6 +915,13 @@
     </section>
 
     <section title="Performance Considerations">
+        <t>
+            <cref>TODO: size of the anser</cref>
+            <cref>TODO: NSEC5 FDH+SHA256 vs NSEC3 SHA1</cref>
+            <cref>TODO: less hashing, identify closest encloser from NSEC5PROOF owner name</cref>
+            <cref>TODO: total number of crypto operations on server side</cref>
+            <cref>TODO: total number of crypto operations on client side</cref>
+        </t>
     </section>
 
     <section title="Security Considerations">
