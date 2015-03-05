@@ -1063,7 +1063,7 @@
         <t>
             Fixed options:
             <list>
-                <t>Hash - hash function</t>
+                <t>Hash - hash function to be used with MGF1</t>
             </list>
         </t>
 
@@ -1152,7 +1152,7 @@
                     <t>s = OS2IP(S)</t>
                     <t>m = RSAVP1((n, e), s)</t>
                     <t>EM = I2OSP(m, k - 1)</t>
-                    <t>EM' = MGF(M, k - 1)</t>
+                    <t>EM' = MGF1(M, k - 1)</t>
                     <t>
                         If EM and EM' are the same, output "valid signature";
                         else output "invalid signature".
