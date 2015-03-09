@@ -853,17 +853,16 @@
             </t>
 
             <t>
-                Although an NSEC5 RR either matches or covers a domain name which is a part of
-                the proof, the NSEC5PROOF RR is always synthesised to match the domain name
-                exactly. Therefore original owner name of the NSEC5 RR need not be the same
-                as an owner name of the matching NSEC5PROOF RR.
-                E.g., an NSEC5 RR covering a non-existing next closer name will have an
-                NSEC5PROOF RR with the next closer name as the owner name.
+                A synthesized NSEC5PROOF RR has the owner name set to a domain name exactly
+                matching the name required for the proof. The class and TTL of the RR MUST
+                be the same as the class and TTL value of the corresponding NSEC5 RR.
             </t>
 
             <t>
-                The class and TTL of the NSEC5PROOF MUST be the same as the class and TTL value
-                of the matching NSEC5 RR.
+                Notice, that the NSEC5PROOF owner name can be a wildcard (e.g., source of
+                synthesis proof in wildcard No Data responses). The name also always matches
+                the domain name required for the proof while the NSEC5 RR may only cover
+                (not match) the name in the proof (e.g., closest encloser in Name Error responses).
             </t>
 
             <t>
