@@ -12,6 +12,7 @@
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
 <!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
+<!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 ]>
@@ -212,6 +213,9 @@
                         A cryptographic hash (digest) of an NSEC5 proof. If the NSEC5
                         proof is known, anyone can compute and verify it's NSEC5 hash.
                     </t>
+                    <t hangText="NSEC5 algorithm:">
+                        A pair of algorithms used to compute NSEC5 proofs and NSEC5 hashes.
+                    </t>
                 </list>
             </t>
         </section>
@@ -271,6 +275,43 @@
             The NSEC5 hash determines the position of a domain name in an NSEC5 chain.
             That is, all the NSEC5 hashes for a zone are sorted in their canonical order,
             and each consecutive pair forms an NSEC5 RR.
+        </t>
+
+    </section>
+
+    <section title="NSEC5 Algorithms">
+
+        <t>
+            The algorithms used for NSEC5 authenticated denial are independent on the algorithms
+            used for DNSSEC signing. An NSEC5 algorithm defines how the NSEC5 proof and the
+            NSEC5 hash is computed and validated.
+        </t>
+
+        <t>
+            The input for the NSEC5 proof computation is an RR owner name in the canonical form
+            and the output is an octet string. The input for the NSEC5 hash is the corresponding
+            NSEC5 proof and the output is an octet string.
+        </t>
+
+        <t>
+            This document defines FDH-SHA256-SHA256 NSEC5 algorithm as follows:
+        </t>
+
+        <t>
+            <list>
+                <t>
+                    NSEC5 proof is a Full Domain Hash (FDH) with SHA-256 hash function used
+                    internally for input preprocessing. The FDH signature and verification is
+                    formally specified in <xref target="fdh" />.
+                </t>
+                <t>
+                    NSEC5 hash is an SHA-256 hash function as specified in <xref target="RFC6234" />.
+                </t>
+            </list>
+        </t>
+
+        <t>
+            The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
         </t>
 
     </section>
@@ -1018,6 +1059,7 @@
         &rfc4035;
         &rfc4648;
         &rfc5155;
+        &rfc6234;
     </references>
 
     <references title="Informative References">
