@@ -280,10 +280,11 @@
 
         <t>
             To prove an non-existence of a particular domain name in response to a query, the
-            server computes the NSEC5 proof (using the private NSEC5 key) and the NSEC5 hash
-            for that name. The NSEC5 hash is used to identify the NSEC5 RR, which covers the
-            hash. In the response message, the server returns the NSEC5 RR, it's corresponding
-            signature (RRSIG RRset), and synthesised NSEC5PROOF RR containg the NSEC5 proof.
+            server computes on the fly, the NSEC5 proof (using the private NSEC5 key). Then it
+            uses the NSEC5 proof to compute the corresponding NSEC5 hash. It then identifies
+            the NSEC5 RR that covers the hash. In the response message, the server returns the
+            NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized NSEC5PROOF RR
+            containing the NSEC5 proof it computed on the fly.
         </t>
 
         <t>
