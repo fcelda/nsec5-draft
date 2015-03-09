@@ -504,7 +504,7 @@
 
     <section title="The NSEC5PROOF Resource Record">
         <t>
-            The NSEC5PROOF record is synthesised by the authoritative server on-the-fly. The
+            The NSEC5PROOF record is synthesized by the authoritative server on-the-fly. The
             record contains the NSEC5 proof, proving a position of the owner name in an
             NSEC5 chain.
         </t>
