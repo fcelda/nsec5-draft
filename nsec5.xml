@@ -1164,11 +1164,12 @@
             This document would not be possible without help of
             Moni Naor (Weizmann Institute),
             Dimitrios Papadopoulos (Boston University),
-            Ondrej Sury (CZ.NIC Labs),
             Sachin Vasant (Cisco Systems),
-            Leonid Reyzin (Boston University),
-            and
-            Asaf Ziv (Weizmann Institute).
+            Leonid Reyzin (Boston University), and
+            Asaf Ziv (Weizmann Institute)
+            who contributed to the design of NSEC5, and
+            Ondrej Sury (CZ.NIC Labs)
+            who provided advice on its implementation.
         </t>
     </section>
 
