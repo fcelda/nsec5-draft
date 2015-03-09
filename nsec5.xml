@@ -816,6 +816,11 @@
                 </list>
             </t>
 
+            <t>
+                The NSEC5KEY and NSEC5 RRs MUST have the same class as the zone SOA RR. Also
+                the NSEC5 RRs SHOULD have the same TTL value as the SOA minimum TTL field.
+            </t>
+
         </section>
 
         <section title="Zone Serving">
@@ -845,6 +850,11 @@
                 as an owner name of the matching NSEC5PROOF RR.
                 E.g., an NSEC5 RR covering a non-existing next closer name will have an
                 NSEC5PROOF RR with the next closer name as the owner name.
+            </t>
+
+            <t>
+                The class and TTL of the NSEC5PROOF MUST be the same as the class and TTL value
+                of the matching NSEC5 RR.
             </t>
 
             <t>
@@ -926,8 +936,8 @@
 
             <t>
                 It is RECOMMENDED that the server rejects all updates containing changes to
-                the NSEC5 chain (or related RRSIG RRs) and performs any required alternations of
-                the NSEC5 chain induced by the update itself.
+                the NSEC5 chain (or related RRSIG RRs) and performs itself any required
+                alternations of the NSEC5 chain induced by the update.
             </t>
 
             <t>
