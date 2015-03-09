@@ -1160,10 +1160,16 @@
     </section>
 
     <section title="Contributors">
-        <t><cref>
-            [TEMPLATE TODO] This optional section can be used to mention contributors
-            to your internet draft.
-        </cref></t>
+        <t>
+            This document would not be possible without help of
+            Moni Naor (Weizmann Institute),
+            Dimitrios Papadopoulos (Boston University),
+            Ondrej Sury (CZ.NIC Labs),
+            Sachin Vasant (Cisco Systems),
+            Leonid Reyzin (Boston University),
+            and
+            Asaf Ziv (Weizmann Institute).
+        </t>
     </section>
 
 </middle>
