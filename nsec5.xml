@@ -308,8 +308,8 @@
         <t>
             <list>
                 <t>
-                    NSEC5 proof is a Full Domain Hash (FDH) with SHA-256 hash function used
-                    internally for input preprocessing. The FDH signature and verification is
+                    NSEC5 proof is an RSA based Full Domain Hash (FDH) with SHA-256 hash function
+                    used internally for input preprocessing. The FDH signature and verification is
                     formally specified in <xref target="fdh" />.
                 </t>
                 <t>
