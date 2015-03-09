@@ -1034,16 +1034,82 @@
     </section>
 
     <section title="Security Considerations">
+        <section title="Zone Enumeration Attacks" anchor="zea">
+        <t>
+         NSEC5 is robust to zone enumeration via offline dictionary attacks by any
+         attacker that does not know the NSEC5 private key.  Without the private NSEC5 key,
+         that attacker cannot compute the NSEC5 proof that corresponds to a given name;
+         the only way it can learn the NSEC5 proof value for a given name is by sending
+         a queries for that name to the authoritative server. Without the NSEC5 proof value,
+         the attacker cannot learn the NSEC5 hash value. Thus, even an attacker that
+         collects the entire chain of NSEC5 RR for a zone cannot use offline attacks to
+         "reverse" that NSEC5 hash values in these NSEC5 RR and thus learn which names are
+         present in the zone.  A formal cryptographic proof of this property is in
+         <xref target="nsec5" />.
+        </t>
+        </section>
 
-        <t><cref>TODO: attacks</cref></t>
+        <section title="Hash Collisions" anchor="hashcol">
+        <t>
+         Hash collisions between QNAME and the owner name of an NSEC5 RR may
+        occur.  When they do, it will be impossible to prove the non-
+        existence of the colliding QNAME.  However, with SHA-256, this is
+        highly unlikely (on the order of 1 in 2^128).  Note that DNSSEC
+        already relies on the presumption that a cryptographic hash function
+        is collision resistant, since these hash functions are used
+        for generating and validating signatures and DS RRs. See also the
+        discussion on key lengths in <xref target="nsec5" />.
+        </t>
+        </section>
 
-        <t><cref>TODO: hash collisions</cref></t>
+        <section title="Compromise of the Private NSEC5 Key" anchor="keyleak">
+        <t>
+        NSEC5 requires authoritative servers to hold the private NSEC5 key, but
+        not the private zone-signing keys or the private key-signing keys for the zone.
+        The private NSEC5 key needs only be as secure as the DNSSEC records
+        whose the privacy (against zone-enumeration attacks) that NSEC5 is protecting.
+        This is because even an adversary that knows the private NSEC5 key cannot modify
+        the contents of the zone; this is because the zone contents are signed using the
+        private zone-signing key, while the private NSEC5 key is only used to compute
+        NSEC5 proof values.  Thus, a compromise of the private NSEC5 keys does not lead to
+        a compromise of the integrity of the DNSSEC record in the zone; insteall,
+        all that is lost is privacy against zone enumeration, in the an attacker that knows
+        the private NSEC5 key can compute NSEC5 hashes offline, and thus launch offline
+        dictionary attacks.  Thus, a compromise of the private NSEC5 key effectively
+        downgrades the security of NSEC5 to that of NSEC3.  A formal cryptographic proof
+        of this property is in  <xref target="nsec5" />.
+        </t>
+        </section>
 
-        <t><cref>TODO: recommended key sizes</cref></t>
+        <section title="Key Length Considerations" anchor="keylen">
+        <t>
+        The NSEC5 key must be long enough to withstand attacks
+        for as long as the privacy of the zone is important. Even if the NSEC5 key
+        is rolled frequently, its length cannot be too short, because zone privacy
+        may be important for a period of time longer than the lifetime of the key.
+        (For example, an attacker might collect the entire chain of NSEC5 RR for the
+        zone over one short period, and then, later (even after the NSEC5 key expires)
+        perform an offline dictionary attack that  attempt to "reverse" the NSEC5
+        hash values present in the NSEC5 RRs.)
+        This is in contrast to zone-signing and key-signing keys used in DNSSEC; these
+        keys, which ensure the authenticity and integrity of the zone contents
+        need to remain secure only during their lifetime.
+        </t>
+        </section>
 
-        <t><cref>TODO: private key protection</cref></t>
-
-        <t><cref>TODO: what if defined algorithm (RSA/FDH) is broken</cref></t>
+         <section title="Transitioning to a New NSEC5 Algorithm" anchor="transAlgo">
+         <t>
+            Although the NSEC5KEY RR formats include a hash algorithm
+            parameter, this document does not define a particular mechanism for
+            safely transitioning from one NSEC5 algorithm to another.  When
+            specifying a new hash algorithm for use with NSEC5, a transition
+            mechanism MUST also be defined.  It is possible that the only
+            practical and palatable transition mechanisms may require an
+            intermediate transition to an insecure state, or to a state that uses
+            NSEC or NSEC3 records instead of NSEC5.
+            <cref>copied this directly from the NSEC3 rfc</cref>
+         </t>
+        </section>
 
     </section>
 
@@ -1291,7 +1357,6 @@
             </t>
         </section>
     </section>
-
 
     <section title="Change Log">
         <t>
