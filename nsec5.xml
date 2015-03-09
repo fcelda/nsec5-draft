@@ -278,6 +278,13 @@
             and each consecutive pair forms an NSEC5 RR.
         </t>
 
+        <t>
+            An authoritative server includes both NSEC5 hashes and NSEC5 proofs in answers
+            to prove non-existence of domain names. The NSEC5 hashes are generated when signing
+            the zone similarly as in NSEC3, the NSEC5 proofs are synthesises by the server
+            when answering and thus are unsigned.
+        </t>
+
     </section>
 
     <section title="NSEC5 Algorithms">
@@ -1023,6 +1030,7 @@
                 <t>XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
             </list>
         </t>
+
     </section>
 
     <section title="Contributors">
