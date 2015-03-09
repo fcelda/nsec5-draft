@@ -545,26 +545,33 @@
 
         <t>
             This section summarizes all possible types of authenticated denial of existence.
-            For each of the types, a list of facts about the zone is enumerated. These facts
-            are the minimum amount of information an authoritative server has to provide
-            to a client, to assure the client that the response content is valid.
+            For each type the following lists are included:
         </t>
 
         <t>
-            The list of Authoritative server proofs then instructs, which NSEC5 records
-            the authoritative server must include in the response, to prove the facts listed
-            above.
+            <list style="numbers">
+                <t>
+                    Facts to prove. The minimum amount of information an authoritative server
+                    must provide to a client to assure the client that the response content is
+                    valid.
+                </t>
+                <t>
+                    Authoritative server proofs. NSEC5 RRs an authoritative server must include
+                    in a response to prove the listed facts.
+                </t>
+                <t>
+                    Validator checks. Individual checks a validating server is required to
+                    perform on a response. The response content is considered valid only if all
+                    the checks pass.
+                </t>
+            </list>
         </t>
 
         <t>
-            The last list in each section informs about the checks a validating server
-            is required to perform. If all the checks pass, the response content can be
-            considered valid.
-        </t>
-
-        <t>
-            <cref>TODO: Terminology: closest encloser, next closer name, source of synthesis.</cref>
-            <cref>TODO: NSEC5 covers vs NSEC5 exactly matches</cref>
+            If NSEC5 is said to match a domain name, the owner name of the NSEC5 has to be
+            equivalent to an NSEC5 hash of that domain name. If NSEC5 is said to cover a domain
+            name, the NSEC5 hash of that name must lay strictly between the NSEC5 owner name and
+            the NSEC5 Next Hashed Owner Name.
         </t>
 
         <section title="Name Error Responses">
@@ -580,7 +587,7 @@
             </t>
 
             <t>
-                Authoritive server proofs:
+                Authoritative server proofs:
                 <list>
                     <t>Closest encloser.</t>
                     <t>Next closer name.</t>
@@ -603,13 +610,17 @@
         <section title="No Data Responses">
 
             <t>
-                The processing of No Data responses for DS QTYPE differs if Opt-Out is in effect.
-                For DS QTYPE queries, the validator is able to decide if the checking path of
-                Opt-Out applies based on the content of the response. Otherwise, the processing
-                is done as for any other QTYPEs.
+                The processing of a No Data response for DS QTYPE differs if the Opt-Out is in
+                effect. For DS QTYPE queries, the validator has two possible checking patch.
+                The correct path can be simply decided by inspecting if the NSEC5 RR in the
+                response matches the QNAME.
             </t>
 
-            <section title="QTYPE is not DS or Opt-Out Not In Effect">
+            <t>
+                Note that the Opt-Out is valid only for DS QTYPE queries.
+            </t>
+
+            <section title="No Data Response, Opt-Out Not In Effect">
 
                 <t>
                     Facts to prove:
@@ -621,7 +632,7 @@
                 </t>
 
                 <t>
-                    Authoritive server proofs:
+                    Authoritative server proofs:
                     <list>
                         <t>QNAME.</t>
                     </list>
@@ -638,17 +649,17 @@
 
             </section>
 
-            <section title="QTYPE is DS and Opt-Out In Effect">
+            <section title="No Data Response, Opt-Out In Effect">
 
                 <t>
                     Facts to prove:
                     <list>
-                        <t>Closest provable encloser has the Opt-Out flag set.</t>
+                        <t>The delegation is not covered by the NSEC5 chain.</t>
                     </list>
                 </t>
 
                 <t>
-                    Authoritive server proofs:
+                    Authoritative server proofs:
                     <list>
                         <t>Closest provable encloser.</t>
                     </list>
@@ -658,7 +669,7 @@
                     Validator checks:
                     <list>
                         <t>Closest provable encloser is in zone.</t>
-                        <t>Closest provable encloser covers (not matches).</t>
+                        <t>Closest provable encloser covers (not matches) the QNAME.</t>
                         <t>Closest provable encloser has the Opt-Out flag set.</t>
                     </list>
                 </t>
@@ -670,7 +681,7 @@
         <section title="Wildcard Responses">
 
             <t>
-                Facts required to prove:
+                Facts to prove:
                 <list>
                     <t>No RRset matching the QNAME exactly exists.</t>
                     <t>No wildcard closer to the QNAME exists.</t>
@@ -696,7 +707,7 @@
         <section title="Wildcard No Data Responses">
 
             <t>
-                Facts required to prove:
+                Facts to prove:
                 <list>
                     <t>No RRset matching the QNAME exactly exists.</t>
                     <t>No QTYPE RRset exists at the wildcard matching the QNAME.</t>
@@ -708,7 +719,7 @@
             <t>
                 Authoritative server proofs:
                 <list>
-                    <t>Source of wildcard synthesis.</t>
+                    <t>Source of synthesis (i.e., wildcard at closest encloser).</t>
                     <t>Next closer name.</t>
                 </list>
             </t>
@@ -716,11 +727,11 @@
             <t>
                 Validator checks:
                 <list>
-                    <t>Source of synthesis NSEC5 matches exactly.</t>
-                    <t>Source of synthesis NSEC5 RR does not have QTYPE in the Type Bit Map.</t>
-                    <t>Source of synthesis NSEC5 RR does not have CNAME in the Type Bit Map.</t>
+                    <t>Source of synthesis matches exactly the QNAME.</t>
+                    <t>Source of synthesis does not have QTYPE in the Type Bit Map.</t>
+                    <t>Source of synthesis does not have CNAME in the Type Bit Map.</t>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name NSEC5 hash covers (not matches).</t>
+                    <t>Next closer name covers (not matches).</t>
                 </list>
             </t>
 
