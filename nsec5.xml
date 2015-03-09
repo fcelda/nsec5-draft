@@ -541,7 +541,7 @@
         </section>
     </section>
 
-    <section title="NSEC5 Proofs">
+    <section title="NSEC5 Proofs" anchor="nsec5_proofs">
 
         <t>
             This section summarizes all possible types of authenticated denial of existence.
@@ -740,7 +740,7 @@
 
     <section title="Authoritative Server Considerations">
 
-        <section title="Zone Signing">
+        <section title="Zone Signing" anchor="zone_signing">
             <t>
                 Zones using NSEC5 MUST satisfy the same properties as described in Section 7.1
                 of <xref target="RFC5155" />, with NSEC3 replaced by NSEC5. In addition, the
@@ -832,19 +832,36 @@
             </t>
 
             <t>
+                According to a type of a response, an authoritative server MUST include NSEC5 RRs
+                in a response as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
+                in the response a matching RRSIG RRset and a synthesized NSEC5PROOF MUST be added
+                as well.
+            </t>
+
+            <t>
+                Although an NSEC5 RR either matches or covers a domain name which is a part of
+                the proof, the NSEC5PROOF RR is always synthesised to match the domain name
+                exactly. Therefore original owner name of the NSEC5 RR need not be the same
+                as an owner name of the matching NSEC5PROOF RR.
+                E.g., an NSEC5 RR covering a non-existing next closer name will have an
+                NSEC5PROOF RR with the next closer name as the owner name.
+            </t>
+
+            <t>
+                If NSEC5 is used, an answering server MUST use exactly one NSEC5 chain for
+                one signed zone.
+            </t>
+
+            <t>
                 NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated
                 denial of  existence mechanism that allows for enumeration of zone contents.
             </t>
 
             <t>
-                If NSEC5 is used, the answering server MUST use exactly one NSEC5 chain for
-                one signed zone.
-            </t>
-
-            <t>
-                <cref>
-                    TODO: NSEC3 denial paradox -> NSEC5 denial paradox
-                </cref>
+                Similarly to NSEC3, the owner names of NSEC5 RRs are not represented in the
+                NSEC5 chain and therefore NSEC5 records deny their own existence. The desired
+                behavior caused by this paradox is the same as described in Section 7.2.8
+                of <xref target="RFC5155" />.
             </t>
 
         </section>
@@ -892,9 +909,31 @@
         </section>
 
         <section title="Zones Using Unknown Hash Algorithms">
+            <t>
+                Zones that are signed by unknown NSEC5 algorithm or by an unavailable NSEC5
+                private key cannot be effectively served. Such zones SHOULD be rejected when
+                loading and servers SHOULD respond with RCODE=2 (Server failure) when handling
+                queries that would fall under such zones.
+            </t>
         </section>
 
         <section title="Dynamic Updates">
+            <t>
+                A zone signed using NSEC5 MAY accept dynamic updates. The changes to the zone
+                MUST be performed in a way, that the zone satisfies the properties specified
+                in <xref target="zone_signing" /> at any time.
+            </t>
+
+            <t>
+                It is RECOMMENDED that the server rejects all updates containing changes to
+                the NSEC5 chain (or related RRSIG RRs) and performs any required alternations of
+                the NSEC5 chain induced by the update itself.
+            </t>
+
+            <t>
+                Alternatively, the server MUST verify that all the properties are satisfied
+                prior to performing the update atomically.
+            </t>
         </section>
 
     </section>
