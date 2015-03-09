@@ -928,7 +928,7 @@
 
         <section title="Zones Using Unknown Hash Algorithms">
             <t>
-                Zones that are signed by unknown NSEC5 algorithm or by an unavailable NSEC5
+                Zones that are signed with unknown NSEC5 algorithm or by an unavailable NSEC5
                 private key cannot be effectively served. Such zones SHOULD be rejected when
                 loading and servers SHOULD respond with RCODE=2 (Server failure) when handling
                 queries that would fall under such zones.
