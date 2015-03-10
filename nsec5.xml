@@ -837,6 +837,12 @@
                 the NSEC5 RRs SHOULD have the same TTL value as the SOA minimum TTL field.
             </t>
 
+            <t>
+                Notice that a use of Opt-Out is not indicated in the zone. This does not affect
+                the ability of a server to prove insecure delegations. The Opt-Out MAY be part
+                of the zone-signing tool configuration.
+            </t>
+
         </section>
 
         <section title="Zone Serving">
@@ -1485,18 +1491,13 @@
                 <t>
                     Consider alternative way to signalize NSEC5 support. The NSEC5 could use
                     only one DNSSEC algorithm identifier, and the actual algorithm to be used
-                    can be the first byte in DNSKEY public key field and RRSIG signature field.
+                    for signing can be the first byte in DNSKEY public key field and RRSIG
+                    signature field. Similar approach is used by PRIVATEDNS and PRIVATEOID
+                    defined in <xref target="RFC4034" />.
                 </t>
                 <t>
                     How to add new NSEC5 hashing algorithm. We will need to add new DNSSEC
                     algorithm identifiers again.
-                </t>
-                <t>
-                    The Opt-Out needn't to be indicated in the zone, it should be set in signing
-                    tool configuration.
-                </t>
-                <t>
-                    Check if the Wildcard flag and proofs work with empty non-terminal wildcards.
                 </t>
                 <t>
                     NSEC and NSEC3 define optional steps for hash collisions detection. We don't
