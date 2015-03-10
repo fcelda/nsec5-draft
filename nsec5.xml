@@ -1486,6 +1486,12 @@
             Note to RFC Editor: if this document does not obsolete an existing RFC,
             please remove this appendix before publication as an RFC.
         </t>
+
+        <t>
+            <list>
+                <t>00 - initial version of the document</t>
+            </list>
+        </t>
     </section>
 
     <section title="Open Issues">
