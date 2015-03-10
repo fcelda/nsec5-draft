@@ -961,11 +961,14 @@
     </section>
 
     <section title="Resolver Considerations">
-        <section title="NSEC5 Resource Record Caching">
-        </section>
 
-        <section title="NSEC5PROOF Resource Record Caching">
-        </section>
+        <t>
+            The same considerations as described in Section 9 of <xref target="RFC5155" />
+            for NSEC3 apply to NSEC5. In addition, as NSEC5 RRs can be validated only with
+            appropriate NSEC5PROOF RRs, the NSEC5PROOF RRs MUST be all together cached and
+            included in responses with NSEC5 RRs.
+        </t>
+
     </section>
 
     <section title="Validator Considerations">
