@@ -159,6 +159,8 @@
                 modify the contents of the zone. Thus, any compromise of the private NSEC5 key
                 does not lead to a compromise of zone contents; all that is lost is privacy against
                 zone enumeration, effectively downgrading the security of NSEC5 to that of NSEC3.
+                NSEC5 comes with a cryptographic proof of security, available in
+                <xref target="nsec5" />.
             </t>
 
             <t>
