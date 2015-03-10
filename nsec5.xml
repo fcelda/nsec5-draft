@@ -1157,8 +1157,8 @@
         the contents of the zone; this is because the zone contents are signed using the
         private zone-signing key, while the private NSEC5 key is only used to compute
         NSEC5 proof values.  Thus, a compromise of the private NSEC5 keys does not lead to
-        a compromise of the integrity of the DNSSEC record in the zone; insteall,
-        all that is lost is privacy against zone enumeration, in the an attacker that knows
+        a compromise of the integrity of the DNSSEC record in the zone; instead,
+        all that is lost is privacy against zone enumeration, if the attacker that knows
         the private NSEC5 key can compute NSEC5 hashes offline, and thus launch offline
         dictionary attacks.  Thus, a compromise of the private NSEC5 key effectively
         downgrades the security of NSEC5 to that of NSEC3.  A formal cryptographic proof
@@ -1192,7 +1192,7 @@
             practical and palatable transition mechanisms may require an
             intermediate transition to an insecure state, or to a state that uses
             NSEC or NSEC3 records instead of NSEC5.
-            <cref>copied this directly from the NSEC3 rfc</cref>
+            <!-- Sharon: copied this directly from the NSEC3 rfc -->
          </t>
         </section>
 
