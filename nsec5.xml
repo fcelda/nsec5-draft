@@ -136,7 +136,7 @@
             <t>
                 Zone enumeration can be prevented with NSEC3 if having the authoritative server
                 compute NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
-                this is done with Minimally Covering NSEC3 Records or NSEC3 White Lies
+                this is done with Minimally Covering NSEC Records or NSEC3 White Lies
                 <xref target="RFC7129" />. One of the most significant disadvantage of this
                 approach is a required presence of the private key on all authoritative servers
                 for the zone. This is often undesirable, as the holder of the private key can
