@@ -1039,7 +1039,7 @@
         <section title="Validating Referrals to Unsigned Subzones">
             <t>
                 The same considerations as defined in Section 8.9 of <xref target="RFC5155" />
-                apply, with NSEC3 replaced by NSEC5.
+                for NSEC3 apply to NSEC5.
             </t>
         </section>
 
