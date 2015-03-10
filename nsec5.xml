@@ -1101,9 +1101,24 @@
         <section title="Domain Name Length Restrictions">
 
             <t>
-                <cref>TODO: similar limits as in NSEC3</cref>
-                <cref>TODO: secondary hash length in base32hex without padding + apex</cref>
-                <cref>TODO: maximal length of label imlies output limit for hash function</cref>
+                The NSEC5 creates additional restrictions on domain name lengths. In particular,
+                zones with names that, when converted into hashed owner names exceed the 255
+                octet length limit imposed by <xref target="RFC1035" />, cannot use this
+                specification.
+            </t>
+
+            <t>
+                The actual maximum length of a domain name depends on the length of the zone
+                name and used NSEC5 algorithm.
+            </t>
+
+            <t>
+                With FDH-SHA256-SHA256 defined in this document, the SHA-256 hash function
+                is used to construct NSEC5 hash values. SHA-256 produces a hash of 256 bits,
+                which can be encoded in 52 characters in Base32hex without padding. The encoded
+                string is prepended to the name of the zone as a single label, which includes
+                the length field of a single octet. The maximal length of the zone name is
+                therefore 202 octets (255 - 53).
             </t>
 
         </section>
