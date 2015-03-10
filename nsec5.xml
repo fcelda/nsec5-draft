@@ -1063,31 +1063,33 @@
     <section title="Special Considerations">
 
         <section title="Transition Mechanism">
+
             <t>
-                TODO:
-                The zone transitioning to NSEC5 should publish NSEC5KEY RR with a key to be used,
-                wait till the data propagate to caches, The switch from NSEC or NSEC3 to NSEC5
-                is instant. The server will start responding with NSEC5 proofs, instead of
-                previously used mechanism.
+                TODO: Not finished. Following information will be covered:
+
+                <list style="symbols">
+                    <t>Transition from NSEC or NSEC3.</t>
+                    <t>Transition from NSEC5 to NSEC/NSEC3</t>
+                    <t>Transition to new algorithms within NSEC5</t>
+                </list>
             </t>
 
             <t>
-                TODO:
-                The reverse-transition is possible instneusly. The server will start respoding
-                with pre-NSEC5 authenticated denial mechanism. The NSEC5KEY MUST not be removed
-                till the old NSEC5 records expire from caches.
+                Quick notes on transition from NSEC/NSEC3 to NSEC5:
+                <list style="numbers">
+                    <t>Publish NSEC5KEY RR.</t>
+                    <t>Wait for data propagation to slaves and cache expiration.</t>
+                    <t>Instantly switch answering from NSEC/NSEC3 to NSEC5.</t>
+                </list>
             </t>
 
             <t>
-                <cref>TODO: Transition from NSEC or NSEC3</cref>
-            </t>
-
-            <t>
-                <cref>TODO: Transition from NSEC5 to NSEC/NSEC3</cref>
-            </t>
-
-            <t>
-                <cref>TODO: transition to new algorithms withtin NSEC5</cref>
+                Quick notes on transition from NSEC5 to NSEC/NSEC3:
+                <list style="numbers">
+                    <t>Instantly switch answering from NSEC5 to NSEC/NSEC3.</t>
+                    <t>Wait for NSEC5 RRs expiration in caches.</t>
+                    <t>Remove NSEC5KEY RR from the zone.</t>
+                </list>
             </t>
 
         </section>
@@ -1132,13 +1134,18 @@
     </section>
 
     <section title="Performance Considerations">
+
         <t>
-            <cref>TODO: size of the anser</cref>
-            <cref>TODO: NSEC5 FDH+SHA256 vs NSEC3 SHA1</cref>
-            <cref>TODO: less hashing, identify closest encloser from NSEC5PROOF owner name</cref>
-            <cref>TODO: total number of crypto operations on server side</cref>
-            <cref>TODO: total number of crypto operations on client side</cref>
+            TODO: Not finished. Following information will be covered:
+
+            <list style="symbols">
+                <t>Size of the answers</t>
+                <t>NSEC5 FDH-SHA256-SHA256 vs NSEC3 SHA1</t>
+                <t>NSEC5 closest encloser name in NSEC5PROOF owner name vs NSEC5 SHA1 hashing</t>
+                <t>Total number of crypto operations on server/client side</t>
+            </list>
         </t>
+
     </section>
 
     <section title="Security Considerations">
@@ -1504,6 +1511,12 @@
                     have a way to avoid them if they really appear (unlikely). We would have
                     to drop the signing key and generate a new one. Which cannot be done
                     instantly.
+                </t>
+                <t>
+                    Write Special Considerations section.
+                </t>
+                <t>
+                    Write Performance Considerations section.
                 </t>
                 <t>
                     Contributor list has to be completed.
