@@ -6,6 +6,7 @@
 <!ENTITY rfc2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
 <!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
 <!ENTITY rfc2308 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2308.xml">
+<!ENTITY rfc3110 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3110.xml">
 <!ENTITY rfc3447 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml">
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
@@ -315,7 +316,7 @@
         </t>
 
         <t>
-            <list>
+            <list style="symbols">
                 <t>
                     NSEC5 proof is an RSA based Full Domain Hash (FDH) with SHA-256 hash function
                     used internally for input preprocessing. The FDH signature and verification is
@@ -324,15 +325,15 @@
                 <t>
                     NSEC5 hash is an SHA-256 hash function as specified in <xref target="RFC6234" />.
                 </t>
+                <t>
+                    The public key format to be used in NSEC5KEY RR is defined in Section 2 of
+                    <xref target="RFC3110" /> and thus is the same as the format used to store
+                    RSA public keys in DNSKEY RRs.
+                </t>
+                <t>
+                    The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
+                </t>
             </list>
-        </t>
-
-        <t>
-            The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
-        </t>
-
-        <t>
-            <cref>TODO: We have to define format of public key in NSEC5KEY RDATA.</cref>
         </t>
 
     </section>
@@ -1279,6 +1280,7 @@
         &rfc2136;
         &rfc2181;
         &rfc2308;
+        &rfc3110;
         &rfc3447;
         &rfc4033;
         &rfc4034;
