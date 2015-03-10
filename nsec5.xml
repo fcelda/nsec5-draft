@@ -63,6 +63,7 @@
         <keyword>DNS</keyword>
         <keyword>DNSSEC</keyword>
         <keyword>NSEC</keyword>
+        <keyword>authenticated denial</keyword>
 
     <abstract>
 
@@ -145,9 +146,8 @@
             <t>
                 To prevent zone content enumeration without keeping private keys on all
                 authoritative servers, NSEC5 replaces the unkeyed cryptographic hash function used
-                in NSEC3 with a public-key hashing scheme <xref target="nsec5" />.
-                Hashing in NSEC5 is performed with
-                a separate NSEC5K key. The public portion of this key is distributed in an
+                in NSEC3 with a public-key hashing scheme. Hashing in NSEC5 is performed with
+                a separate NSEC5 key. The public portion of this key is distributed in an
                 NSEC5KEY RR, and is used to validate NSEC5 hash values.  The private portion
                 of the NSEC5 key is present on all authoritative servers for the zone, and is
                 used to compute hash values.
@@ -620,7 +620,7 @@
 
             <t>
                 The processing of a No Data response for DS QTYPE differs if the Opt-Out is in
-                effect. For DS QTYPE queries, the validator has two possible checking patch.
+                effect. For DS QTYPE queries, the validator has two possible checking paths.
                 The correct path can be simply decided by inspecting if the NSEC5 RR in the
                 response matches the QNAME.
             </t>
