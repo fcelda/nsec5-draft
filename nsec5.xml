@@ -364,7 +364,7 @@
             </figure>
 
             <t>
-                Algorithm is a single octet identifying NSEC5 hashing algorithms.
+                Algorithm is a single octet identifying NSEC5 algorithm.
             </t>
             <t>
                 Public Key is a variable sized field holding public key material for NSEC5
