@@ -517,7 +517,7 @@
             NSEC5 chain.
         </t>
 
-        <section title="NSEC5PROOF RDATA Wire Format">
+        <section title="NSEC5PROOF RDATA Wire Format" anchor="nsec5proof_rdata">
             <t>
                 The RDATA for NSEC5PROOF is as as shown below:
             </t>
@@ -538,7 +538,7 @@
             </t>
             <t>
                 Owner Name Hash is a variable sized sequence of binary octets encoding the NSEC5
-                proof corresponding to the owner name.
+                proof of the owner name of the RR.
             </t>
         </section>
 
@@ -870,7 +870,8 @@
             <t>
                 A synthesized NSEC5PROOF RR has the owner name set to a domain name exactly
                 matching the name required for the proof. The class and TTL of the RR MUST
-                be the same as the class and TTL value of the corresponding NSEC5 RR.
+                be the same as the class and TTL value of the corresponding NSEC5 RR. The RDATA
+                are set according to the description in <xref target="nsec5proof_rdata" />.
             </t>
 
             <t>
