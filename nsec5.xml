@@ -309,8 +309,12 @@
 
         <t>
             The input for the NSEC5 proof computation is an RR owner name in the canonical form
-            and the output is an octet string. The input for the NSEC5 hash is the corresponding
-            NSEC5 proof and the output is an octet string.
+            in the wire format and an NSEC5 private key; the output is an octet string.
+        </t>
+
+        <t>
+            The input for the NSEC5 hash computation is the corresponding NSEC5 proof; the output
+            is an octet string.
         </t>
 
         <t>
