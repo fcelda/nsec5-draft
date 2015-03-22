@@ -1021,7 +1021,7 @@
                         Validate the NSEC5 proof present in the NSEC5PROOF Owner Name Hash field
                         using the NSEC5 public key.
                         If there are multiple NSEC5KEY RRs matching the key tag, at least one of
-                        the keys MUST validate the NSEC5 proof.
+                        the keys must validate the NSEC5 proof.
                     </t>
                     <t>
                         Compute the NSEC5 hash value from the NSEC5 proof and check if the
