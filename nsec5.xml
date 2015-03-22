@@ -992,12 +992,12 @@
             </t>
 
             <t>
-                A validator MAY treat responses as bogus if the response contains NSEC5 RRs
+                The validator MAY treat responses as bogus if the response contains NSEC5 RRs
                 that refer to a different NSEC5KEY.
             </t>
 
             <t>
-                According to a type of a response, a validator MUST verify all conditions defined
+                According to a type of a response, the validator MUST verify all conditions defined
                 in <xref target="nsec5_proofs" />. Prior to making decision based on the content
                 of NSEC5 RRs in a response, the NSEC5 RRs MUST be validated.
             </t>
@@ -1019,13 +1019,13 @@
                     </t>
                     <t>
                         Validate the NSEC5 proof present in the NSEC5PROOF Owner Name Hash field
-                        using the NSEC5 public key.
-                        If there are multiple NSEC5KEY RRs matching the key tag, at least one of
-                        the keys must validate the NSEC5 proof.
+                        using the NSEC5 public key. If there are multiple NSEC5KEY RRs matching
+                        the key tag, at least one of the keys must validate the NSEC5 proof.
                     </t>
                     <t>
                         Compute the NSEC5 hash value from the NSEC5 proof and check if the
                         response contains NSEC5 RR matching or covering the computed NSEC5 hash.
+                        The TTL values of the NSEC5 and NSEC5PROOF RRs must be the same.
                     </t>
                     <t>
                         Validate the signature of the NSEC5 RR.
