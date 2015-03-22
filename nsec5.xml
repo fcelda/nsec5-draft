@@ -914,7 +914,7 @@
                     </t>
                     <t>
                         The old NSEC5 chain is replaced by a new NSEC5 chain constructed
-                        using the new key. This replacement MUST happen as a single automic
+                        using the new key. This replacement MUST happen as a single atomic
                         operation; the server MUST NOT be responding with RRs from
                         both the new and old chain at the same time.
                     </t>
