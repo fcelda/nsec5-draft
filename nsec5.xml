@@ -809,7 +809,8 @@
                                 Clear the Flags field. If Opt-Out is being used, set the Opt-Out
                                 flag. If there is a wildcard label directly descending from the
                                 original domain name, set the Wildcard flag. Note that the
-                                wildcard can be empty non-terminal.
+                                wildcard can be an empty non-terminal (i.e., the wildcard synthesis
+                                does not take effect and therefore the flag is not to be set).
                             </t>
                             <t>
                                 Set the Next Length field to a value determined by the used
