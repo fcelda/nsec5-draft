@@ -931,7 +931,9 @@
             </t>
 
             <t>
-                Steps 2. and 3. MAY be performed simultaneously.
+                The minimal delay between the steps 2. and 3. MUST be the time it takes for the
+                data to propagate to the authoritative servers, plus the maximum zone TTL value
+                of any of the data in the previous version of the zone.
             </t>
         </section>
 
