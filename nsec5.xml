@@ -26,7 +26,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-jvcelak-nsec5-00" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-01" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -1499,6 +1499,10 @@
         <t>
             <list>
                 <t>00 - initial version of the document</t>
+                <t>
+                    01 - fix NSEC5KEY rollover mechanism, clarify NSEC5PROOF RDATA, clarify
+                    inputs and outputs for NSEC5 proof and NSEC5 hash computation
+                </t>
             </list>
         </t>
     </section>
