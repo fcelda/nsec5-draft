@@ -264,7 +264,7 @@
                 <t>
                     First, the domain name is hashed using the NSEC5 private key; the result
                     is called the NSEC5 proof.  Only an authoritative server that knows the
-                    private NSEC5 key can compute the NSEC5 proof.  Any client that the knows
+                    private NSEC5 key can compute the NSEC5 proof.  Any client that knows
                     the public NSEC5 key can validate the NSEC5 proof.
                 </t>
                 <t>
