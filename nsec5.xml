@@ -332,10 +332,11 @@
                     <xref target="RFC3110" /> and thus is the same as the format used to store
                     RSA public keys in DNSKEY RRs.
                 </t>
-                <t>
-                    The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
-                </t>
             </list>
+        </t>
+
+        <t>
+            The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
         </t>
 
     </section>
