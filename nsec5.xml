@@ -122,9 +122,10 @@
             </t>
 
             <t>
-                As side-effect, however, the NSEC chain existence allows for the enumeration
-                of the zone's contents by querying for names immediately individual RRs in the
-                chain; N queries suffice to enumerate a zone containing N names. As such, the
+                As side-effect, however, the NSEC chain allows for enumeration of the zone's
+                contents by sequentially querying for the names immediately following those
+                in the most-recently retrieved NSEC record; N queries suffice to enumerate
+                a zone containing N names. As such, the
                 NSEC3 hashed denial of existence was introduced to prevent zone enumeration.
                 In NSEC3, the original domain names in the NSEC chain are replaced by their
                 cryptographic hashes.  While NSEC3 makes zone enumeration more difficult, offline
@@ -165,7 +166,7 @@
 
             <t>
                 The NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
-                alternative mechanisms for authenticated denial of existence.
+                alternative mechanism for authenticated denial of existence.
             </t>
         </section>
 
@@ -302,7 +303,7 @@
     <section title="NSEC5 Algorithms">
 
         <t>
-            The algorithms used for NSEC5 authenticated denial are independent on the algorithms
+            The algorithms used for NSEC5 authenticated denial are independent of the algorithms
             used for DNSSEC signing. An NSEC5 algorithm defines how the NSEC5 proof and the
             NSEC5 hash is computed and validated.
         </t>
