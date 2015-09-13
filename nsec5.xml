@@ -1156,6 +1156,164 @@
             </list>
         </t>
 
+        <t>
+            This section compares additional complexity and performance requirements of
+            NSEC, NSEC3, and NSEC5.
+        </t>
+
+        <section title="Performance of Cryptographic Operations">
+
+            <t>
+                The additional performance costs depend on the costs of cryptographic operations
+                to a great extent.  The following results were retrieved with OpenSSL 1.0.1k,
+                running an ordinary laptop on a single-core of a CPU manufactured in 2011. The
+                parameters of cryptographic operations were chosen to reflect the parameters
+                used in the real-world DNSSEC.
+            </t>
+
+            <t>
+                Comparison of NSEC3 and NSEC5 performance.
+            </t>
+
+            <t><list style="symbols">
+
+                    <!--
+                        SHA-1
+                        16 bytes, 10000000 loops, 3533511727 nanoseconds
+                        20 bytes, 10000000 loops, 3520898587 nanoseconds
+                        32 bytes, 10000000 loops, 3506890681 nanoseconds
+
+                        2840184.0475958018 ~ 3e6 hash/s
+                    -->
+
+                    <t>
+                        NSEC3 uses multiple iterations of SHA-1 function with an arbitrary salt.
+                        The input of the first iteration is the domain name in the wire format
+                        and the binary salt; the input of the following iterations is the binary
+                        digest and the salt. We can assume that the input size will be smaller
+                        than 32 bytes for most executions.
+
+                        <vspace /><vspace />
+
+                        The measured implementation gives a stable performance for small input
+                        blocks up to 32 bytes. About 3e6 hashes per second can be computed given
+                        these parameters.
+
+                        <vspace /><vspace />
+
+                        The number of additional iterations in NSEC3 parameters will probably
+                        vary between 0 and 20 in reality. Therefore we can expect the NSEC3 hash
+                        computation performance to be in the order between 10^5 and 10^6 hashes
+                        per second.
+                    </t>
+
+                    <!--
+                        SHA-256
+                        128 bytes, 2000000 loops, 2866912377 nanoseconds
+                        256 bytes, 2000000 loops, 4462902983 nanoseconds
+                        512 bytes, 2000000 loops, 7740297051 nanoseconds
+
+                        448138.8028416391 ~ 4e5 hash/s
+
+                        RSA-FDH (sign)
+                        16 bytes, 1024-bit key, 2000 loops, 794122105 nanoseconds
+                        16 bytes, 2048-bit key, 2000 loops, 4928122914 nanoseconds
+                        16 bytes, 4096-bit key, 2000 loops, 37300730429 nanoseconds
+
+                        2518.504380381151 ~ 2e3 sign/s
+                        405.834033546185 ~ 4e2 sign/s
+                        53.618252967107 ~ 5e1 sign/s
+
+                        RSA-FDH (verify)
+                        16 bytes, 1048-bit key, 20000 loops, 496081794 nanoseconds
+                        16 bytes, 2048-bit key, 20000 loops, 1639759090 nanoseconds
+                        16 bytes, 4096-bit key, 20000 loops, 5988793809 nanoseconds
+
+                        40315.93225531675 ~ 4e4 verify/s
+                        12196.91363320937 ~ 1e4 verify/s
+                        3339.57064441655 ~ 3e3 verify/s
+                    -->
+
+                    <t>
+                        NSEC5:
+
+                        <vspace /><vspace />
+
+                        The final SHA-256 hashing in NSEC5 is as expensive as NSEC3 hash
+                        computation, however the most expensive part of NSEC5 hash will be the
+                        RSA-FDH computation, which slower by three orders, assuming the 2048-bit
+                        key size.
+
+                        TODO
+                    </t>
+
+            </list></t>
+
+            <t>
+                Signing and verification performance.
+            </t>
+
+            <!--
+                                sign    verify    sign/s verify/s
+                rsa 1024 bits 0.000408s 0.000024s   2448.5  42148.3
+                rsa 2048 bits 0.002623s 0.000086s    381.2  11599.2
+                rsa 4096 bits 0.019940s 0.000296s     50.2   3381.8
+
+                                            sign    verify    sign/s verify/s
+                256 bit ecdsa (nistp256)   0.0002s   0.0008s   5367.1   1280.1
+                384 bit ecdsa (nistp384)   0.0004s   0.0017s   2722.2    584.3
+            -->
+
+            <t><list style="bullets">
+                <t>RSASHA256</t>
+                <t>RSASHA512</t>
+                <t>ECDSAP256SHA256</t>
+                <t>ECDSAP384SHA384</t>
+            </list></t>
+
+        </section>
+
+        <section title="Authoritative Server Startup">
+
+            <t>
+                This section compares additional server startup cost based on the used
+                authenticated denial mechanism.
+            </t>
+
+            <t><list style="hanging">
+                <t hangText="NSEC">
+                    There are no special requirements on processing of a NSEC-signed zone during
+                    an authoritative server startup. The server handles the NSEC RRs the same way
+                    as any other records in the zone.
+                </t>
+
+                <t hangText="NSEC3">
+                    The authoritative server can precompute NSEC3 hashes for all domain names in
+                    the NSEC3-signed zone on startup. With respect to query answering, this can
+                    speed up inclusion of NSEC3 RRs for existing domain names (i.e., Closest
+                    provable encloser and QNAME for No Data response).
+                </t>
+
+                <t hangText="NSEC5">
+                    Exactly the same considerations apply for NSEC3 and NSEC5. The motivation to
+                    precompute the hashes on server startup is stronger because the NSEC5 hashes
+                    are more costly to compute than NSEC3 hashes. A possible solution to reduce
+                    the startup time is to store the percomputed hashes in a persistent storage.
+                </t>
+
+            </list></t>
+
+        </section>
+
+        <section title="NSEC5 Answer Generating">
+        </section>
+
+        <section title="NSEC5 Response Processing">
+        </section>
+
+        <section title="On-line Signing Comparison">
+        </section>
+
     </section>
 
     <section title="Security Considerations">
