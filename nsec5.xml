@@ -1172,7 +1172,7 @@
             </t>
 
             <t>
-                Comparison of NSEC3 and NSEC5 performance.
+                Comparison of NSEC3 and NSEC5 hashing performance:
             </t>
 
             <t><list style="symbols">
@@ -1213,7 +1213,9 @@
                         256 bytes, 2000000 loops, 4462902983 nanoseconds
                         512 bytes, 2000000 loops, 7740297051 nanoseconds
 
+                        697614.6240272763 ~ 6e5 hash/s
                         448138.8028416391 ~ 4e5 hash/s
+                        258388.0162249861 ~ 2e5 hash/s
 
                         RSA-FDH (sign)
                         16 bytes, 1024-bit key, 2000 loops, 794122105 nanoseconds
@@ -1221,33 +1223,53 @@
                         16 bytes, 4096-bit key, 2000 loops, 37300730429 nanoseconds
 
                         2518.504380381151 ~ 2e3 sign/s
-                        405.834033546185 ~ 4e2 sign/s
-                        53.618252967107 ~ 5e1 sign/s
+                         405.834033546185 ~ 4e2 sign/s
+                          53.618252967107 ~ 5e1 sign/s
 
                         RSA-FDH (verify)
-                        16 bytes, 1048-bit key, 20000 loops, 496081794 nanoseconds
+                        16 bytes, 1024-bit key, 20000 loops, 496081794 nanoseconds
                         16 bytes, 2048-bit key, 20000 loops, 1639759090 nanoseconds
                         16 bytes, 4096-bit key, 20000 loops, 5988793809 nanoseconds
 
                         40315.93225531675 ~ 4e4 verify/s
                         12196.91363320937 ~ 1e4 verify/s
-                        3339.57064441655 ~ 3e3 verify/s
+                         3339.57064441655 ~ 3e3 verify/s
                     -->
 
                     <t>
-                        NSEC5:
+                        The NSEC5 hash is computed in two steps: NSEC5 proof computation and hashing
+                        of the result. The NSEC5 proof is basically an RSA signature and the
+                        performance will therefore vary for signing and verification and also for
+                        different key sizes. We can expect that the final hashing will have
+                        insignificant impact on the overall hashing performance.
 
                         <vspace /><vspace />
 
-                        The final SHA-256 hashing in NSEC5 is as expensive as NSEC3 hash
-                        computation, however the most expensive part of NSEC5 hash will be the
-                        RSA-FDH computation, which slower by three orders, assuming the 2048-bit
-                        key size.
+                        The measurement of NSEC5 proof computation and verification resulted into
+                        the following numbers:
+                        2e3 sign/s and 4e4 verify/s for 1024-bit key;
+                        4e2 sign/s and 1e4 verify/s for 2048-bit key; and
+                        5e1 sign/s and 3e3 verify/s for 4096-bit key.
 
-                        TODO
+                        <vspace /><vspace />
+
+                        The final SHA-256 hashing is about two orders of magnitude faster given
+                        the input block size matching the NSEC5 proof result size.
+
+                        <vspace /><vspace />
+
+                        Picking the moderate key size 2048-bits, the NSEC5 hash computation
+                        performance will be in the order of 10^2 issued hashes per second and
+                        10^4 validated hashes per second.
                     </t>
 
             </list></t>
+
+            <t>
+                According to the results, the NSEC5 hashing is about three orders of magnitude
+                slower than NSEC3 hashing and the NSEC5 hash verification is about one order
+                of magnitude slower than NSEC3 hash verification.
+            </t>
 
             <t>
                 Signing and verification performance.
