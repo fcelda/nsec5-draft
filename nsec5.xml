@@ -1317,10 +1317,10 @@
                 </t>
 
                 <t hangText="NSEC5">
-                    Exactly the same considerations apply for NSEC3 and NSEC5. The motivation to
-                    precompute the hashes on server startup is stronger because the NSEC5 hashes
-                    are more costly to compute than NSEC3 hashes. A possible solution to reduce
-                    the startup time is to store the percomputed hashes in a persistent storage.
+                    Very similar considerations apply for NSEC3 and NSEC5. There is a strong
+                    motivation to precompute the NSEC5 proofs because they are costly to compute.
+                    A possible solution to reduce the startup time is to store the precomputed
+                    NSEC5 proofs and NSEC5 hashes in a persistent storage.
                 </t>
 
             </list></t>
