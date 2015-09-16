@@ -1333,13 +1333,13 @@
 
         </section>
 
-        <section title="NSEC5 Answer Generating">
+        <section title="NSEC5 Answer Generating and Processing">
 
             <t>
                 An authenticated denial proof is required for No Data, Name Error, Wildcard
                 Match, and Wildcard No Data answer. The number of required records depends on
-                used authenticated denial mechanism; and size of these records depends on various
-                zone and signing parameters.
+                used authenticated denial mechanism. Their size, generation cost, and validation
+                cost depend on various zone and signing parameters.
             </t>
 
             <t>
@@ -1508,9 +1508,14 @@
                 has to compute just one NSEC5 proof per answer. But it will still be more expensive
                 than NSEC3 and the same applies for the response size.
             </t>
-        </section>
 
-        <section title="NSEC5 Response Processing">
+            <t>
+                As for the response processing, the validation cost reflects from the records
+                present in the response. Again, the NSEC validation seems to be the most
+                inexpensive. However the difference between RSA and ECDSA verification performance
+                is huge and for some parameters, NSEC3 is faster to validate than NSEC5 and vice
+                versa.
+            </t>
         </section>
 
         <section title="On-line Signing Comparison">
