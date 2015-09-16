@@ -1334,12 +1334,121 @@
                     A possible solution to reduce the startup time is to store the precomputed
                     NSEC5 proofs and NSEC5 hashes in a persistent storage.
                 </t>
-
             </list></t>
+
+            <t>
+                The impact of NSEC3 and NSEC5 on the authoritative server startup performance
+                is greatly implementation specific. The server software vendor has to seek balance
+                between answering performance, startup slowdown, and additional storage cost.
+            </t>
 
         </section>
 
         <section title="NSEC5 Answer Generating">
+
+            <t>
+                An authenticated denial proof is required for No Data, Name Error, Wildcard
+                Match, and Wildcard No Data answer. The number of required records depends on
+                used authenticated denial mechanism; and size of these records depends on various
+                zone and signing parameters.
+            </t>
+
+            <t>
+                In the worst case, the following additional records authenticating the denial
+                will be included into the response:
+            </t>
+
+            <t><list style="symbols">
+                <t hangText="NSEC">
+                    Up to two NSEC records and their associated RRSIG records.
+                </t>
+
+                <t hangText="NSEC3">
+                    Up to three NSEC3 records and their associated RRSIG records.
+                </t>
+
+                <t hangText="NSEC5">
+                    Up to two NSEC5 records and their associated NSEC5PROOF and RRSIG records.
+                </t>
+            </list></t>
+
+            <t>
+                The following table compares the size of NSEC, NSEC3, and NSEC5 records. We assume
+                the SHA-1 hash algorithm for NSEC3 and the FDH-SHA256-SHA256 algorithm for NSEC5.
+            </t>
+
+            <!--
+                RR format:    owner(var) + type(2) + class(2) + ttl(4) + rdlen(2) + rdata(var)
+
+                NSEC format:  next(var) + bitmap(var)
+                NSEC3 format: algo(1) + flags(1) + iterations(2) + saltlen(1) + salt(var) + hash_len(1) + hash(var) + bitmap(var)
+                NSEC5 format: keytag(2) + flags(1) + next_len(1) + next(var) + bitmap(var)
+
+                NSEC:  name(compressible) + 10 + next(uncompressible) + bitmap(var)
+                NSEC3: name(compressed, 1+32+2) 10 + 22 + salt(var) + bitmap(var)
+                NSEC5: name(compressed, 1+52+2) 10 + 36 + bitmap(var)
+            -->
+
+            <figure align="center">
+                <artwork><![CDATA[
++-------+------------+----------------+---------------------------+
+|       | Fixed part |  Common part   | Extra variable part       |
++=======+============+================+===========================+
+| NSEC  | 10 octets  |                | Owner Name, Next Name     |
++-------+------------+                +---------------------------+
+| NSEC3 | 67 octets  |  Type Bit Maps | Salt                      |
++-------+------------+                +---------------------------+
+| NSEC5 | 101 octets |                |                           |
++-------+------------+----------------+---------------------------+
+                ]]></artwork>
+            </figure>
+
+            <t>
+                The size covers complete RR representation in wire format:
+            </t>
+
+            <t><list style="symbols">
+                <t>
+                    The Fixed part includes length of all fixed-size fields in the RR; and also
+                    a size of generally variable-sized fields whose length can determined from the
+                    used parameters (e.g., the NSEC3 owner name consists from one label encoding
+                    the hash and a compression pointer to zone apex).
+                </t>
+
+                <t>
+                    The Common part includes the only field shared among the RR types.
+                </t>
+
+                <t>
+                    The Extra variable part contains unique fields present in the RR types whose
+                    length will vary. Note that the Owner Name can be compressed, but Next Name
+                    must not. Also note that the Salt in NSEC3 will have constant size for all
+                    NSEC3 records in the chain.
+                </t>
+            </list></t>
+
+            <!--
+                RRSIG format: type_covered(2) + algorithm(1) + labels(1) + original_ttl(4) +
+                              signature_expiration(4) + signature_inception(4) + keytag(2) +
+                              signer_name(variable) + signature(variable)
+
+                owner(var) + 10 + 18 + signer(uncompressible) + signature
+            -->
+
+            <t>
+                The size of RRSIG RR is a sum of length of possibly compressed RR owner name,
+                28 octets for fixed-size fields, the length of uncompressed signer name, and the
+                length of the signature.
+            </t>
+
+            <t>
+                The size of NSEC5PROOF RR is a sum of length of possibly compressed RR owner name,
+                2 octets for fixed-size fields, and the length of the proof.
+            </t>
+
+            <t>
+                TBC...
+            </t>
         </section>
 
         <section title="NSEC5 Response Processing">
