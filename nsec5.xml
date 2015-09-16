@@ -1191,12 +1191,12 @@
                         The input of the first iteration is the domain name in the wire format
                         and the binary salt; the input of the following iterations is the binary
                         digest and the salt. We can assume that the input size will be smaller
-                        than 32 bytes for most executions.
+                        than 32 octets for most executions.
 
                         <vspace /><vspace />
 
                         The measured implementation gives a stable performance for small input
-                        blocks up to 32 bytes. About 3e6 hashes per second can be computed given
+                        blocks up to 32 octets. About 3e6 hashes per second can be computed given
                         these parameters.
 
                         <vspace /><vspace />
@@ -1700,7 +1700,7 @@
                 <t>
                     Consider alternative way to signalize NSEC5 support. The NSEC5 could use
                     only one DNSSEC algorithm identifier, and the actual algorithm to be used
-                    for signing can be the first byte in DNSKEY public key field and RRSIG
+                    for signing can be the first octet in DNSKEY public key field and RRSIG
                     signature field. Similar approach is used by PRIVATEDNS and PRIVATEOID
                     defined in <xref target="RFC4034" />.
                 </t>
