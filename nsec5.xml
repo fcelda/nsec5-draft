@@ -1213,16 +1213,16 @@
                         256 bytes, 2000000 loops, 4462902983 nanoseconds
                         512 bytes, 2000000 loops, 7740297051 nanoseconds
 
-                        697614.6240272763 ~ 6e5 hash/s
+                        697614.6240272763 ~ 7e5 hash/s
                         448138.8028416391 ~ 4e5 hash/s
-                        258388.0162249861 ~ 2e5 hash/s
+                        258388.0162249861 ~ 3e5 hash/s
 
                         RSA-FDH (sign)
                         16 bytes, 1024-bit key, 2000 loops, 794122105 nanoseconds
                         16 bytes, 2048-bit key, 2000 loops, 4928122914 nanoseconds
                         16 bytes, 4096-bit key, 2000 loops, 37300730429 nanoseconds
 
-                        2518.504380381151 ~ 2e3 sign/s
+                        2518.504380381151 ~ 3e3 sign/s
                          405.834033546185 ~ 4e2 sign/s
                           53.618252967107 ~ 5e1 sign/s
 
@@ -1247,7 +1247,7 @@
 
                         The measurement of NSEC5 proof computation and verification resulted into
                         the following numbers:
-                        2e3 sign/s and 4e4 verify/s for 1024-bit key;
+                        3e3 sign/s and 4e4 verify/s for 1024-bit key;
                         4e2 sign/s and 1e4 verify/s for 2048-bit key; and
                         5e1 sign/s and 3e3 verify/s for 4096-bit key.
 
