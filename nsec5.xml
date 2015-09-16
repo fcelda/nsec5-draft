@@ -1272,7 +1272,8 @@
             </t>
 
             <t>
-                Signing and verification performance.
+                Comparison of signing and verification performance of different DNSSEC
+                signing algorithms:
             </t>
 
             <!--
@@ -1286,12 +1287,23 @@
                 384 bit ecdsa (nistp384)   0.0004s   0.0017s   2722.2    584.3
             -->
 
-            <t><list style="bullets">
-                <t>RSASHA256</t>
-                <t>RSASHA512</t>
-                <t>ECDSAP256SHA256</t>
-                <t>ECDSAP384SHA384</t>
-            </list></t>
+            <texttable>
+                <ttcol>Algorithm</ttcol>
+                <ttcol align="right">Key size (bits)</ttcol>
+                <ttcol align="right">Signature size (octets)</ttcol>
+                <ttcol align="right">Performance (sign/s)</ttcol>
+                <ttcol align="right">Performance (verify/s)</ttcol>
+                <c>RSASHA256</c>       <c>1024</c> <c>128</c> <c>2000</c> <c>40000</c>
+                <c>RSASHA256</c>       <c>2048</c> <c>256</c> <c>400</c>  <c>10000</c>
+                <c>RSASHA256</c>       <c>4096</c> <c>512</c> <c>50</c>   <c>3000</c>
+                <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>5000</c> <c>1000</c>
+                <c>ECDSAP384SHA384</c> <c>384</c>  <c>96</c>  <c>3000</c> <c>600</c>
+            </texttable>
+
+            <t>
+                The retrieved values can be later used for comparison with online-signing, which
+                is a method usable to prevent zone content enumeration as well.
+            </t>
 
         </section>
 
