@@ -26,7 +26,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-vcelak-nsec5-00" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-01-wip" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -1290,8 +1290,9 @@
             </texttable>
 
             <t>
-                The retrieved values can be later used for comparison with online-signing, which
-                is a method usable to prevent zone content enumeration as well.
+                The retrieved values are important primarily for the purpose of evaluating
+                performance of response validation. The signing performance is not that important
+                because the zone is usually signed offline.
             </t>
 
         </section>
@@ -1516,9 +1517,6 @@
                 is huge and for some parameters, NSEC3 is faster to validate than NSEC5 and vice
                 versa.
             </t>
-        </section>
-
-        <section title="On-line Signing Comparison">
         </section>
 
     </section>
@@ -1870,6 +1868,9 @@
                 <t>
                     00 - fix NSEC5KEY rollover mechanism, clarify NSEC5PROOF RDATA, clarify
                     inputs and outputs for NSEC5 proof and NSEC5 hash computation
+                </t>
+                <t>
+                    01 - added Performance Considerations section
                 </t>
             </list>
         </t>
