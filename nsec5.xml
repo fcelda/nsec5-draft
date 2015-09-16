@@ -1146,19 +1146,8 @@
     <section title="Performance Considerations">
 
         <t>
-            TODO: Not finished. Following information will be covered:
-
-            <list style="symbols">
-                <t>Size of the answers</t>
-                <t>NSEC5 FDH-SHA256-SHA256 vs NSEC3 SHA1</t>
-                <t>NSEC5 closest encloser name in NSEC5PROOF owner name vs NSEC5 SHA1 hashing</t>
-                <t>Total number of crypto operations on server/client side</t>
-            </list>
-        </t>
-
-        <t>
-            This section compares additional complexity and performance requirements of
-            NSEC, NSEC3, and NSEC5.
+            This section compares NSEC, NSEC3, and NSEC5 as for denying response sizes and
+            performance impact on the DNS components.
         </t>
 
         <section title="Performance of Cryptographic Operations">
@@ -1389,19 +1378,17 @@
                 NSEC5: name(compressed, 1+52+2) 10 + 36 + bitmap(var)
             -->
 
-            <figure align="center">
-                <artwork><![CDATA[
-+-------+------------+----------------+---------------------------+
-|       | Fixed part |  Common part   | Extra variable part       |
-+=======+============+================+===========================+
-| NSEC  | 10 octets  |                | Owner Name, Next Name     |
-+-------+------------+                +---------------------------+
-| NSEC3 | 67 octets  |  Type Bit Maps | Salt                      |
-+-------+------------+                +---------------------------+
-| NSEC5 | 101 octets |                |                           |
-+-------+------------+----------------+---------------------------+
-                ]]></artwork>
-            </figure>
+            <texttable>
+                <ttcol></ttcol>
+                <ttcol>Fixed part</ttcol>
+                <ttcol>Common part</ttcol>
+                <ttcol>RR type-specific part</ttcol>
+
+                <c>NSEC</c>  <c> 10 octets</c> <c>Type Bit Maps</c> <c>Owner Name, Next Name</c>
+                <c>NSEC3</c> <c> 64 octets</c> <c>Type Bit Maps</c> <c>Salt</c>
+                <c>NSEC5</c> <c>101 octets</c> <c>Type Bit Maps</c> <c>&ndash;</c>
+
+            </texttable>
 
             <t>
                 The size covers complete RR representation in wire format:
@@ -1420,7 +1407,7 @@
                 </t>
 
                 <t>
-                    The Extra variable part contains unique fields present in the RR types whose
+                    The RR type-specific part contains unique fields present in the RR types whose
                     length will vary. Note that the Owner Name can be compressed, but Next Name
                     must not. Also note that the Salt in NSEC3 will have constant size for all
                     NSEC3 records in the chain.
@@ -1447,7 +1434,79 @@
             </t>
 
             <t>
-                TBC...
+                The following list summarizes the increase of the DNS response size for
+                authenticated denial worst-case scenario. As a significant part of the increase
+                is caused by the used DNSSEC signing algorithm, the summary includes two variants:
+                RSA stands for the RSASHA256 algorithm with 2048-bit key and ECDSA stands for the
+                ECDSAP256SHA256 algorithm. For NSEC5, FDH-SHA256-SHA256 with 2048-bit key is used.
+            </t>
+
+            <t><list style="symbols">
+                <t>
+                    NSEC:
+                    <list style="symbols">
+                        <t>4 &times; compressed domain name</t>
+                        <t>4 &times; uncompressed domain name</t>
+                        <t>2 &times; type bit bitmap</t>
+                        <t>588 octets (RSA) or 204 octets (ECDSA)</t>
+                    </list>
+                </t>
+                <t>
+                    NSEC3:
+                    <list style="symbols">
+                        <t>3 &times; compressed domain name</t>
+                        <t>3 &times; uncompressed domain name</t>
+                        <t>3 &times; salt</t>
+                        <t>3 &times; type bit map</t>
+                        <t>969 octets (RSA) or 393 octets (ECDSA)</t>
+                    </list>
+                </t>
+                <t>
+                    NSEC5:
+                    <list style="symbols">
+                        <t>4 &times; compressed domain name</t>
+                        <t>2 &times; uncompressed domain name</t>
+                        <t>2 &times; type bit map</t>
+                        <t>1286 octets (RSA) or 902 octets (ECDSA)</t>
+                    </list>
+                </t>
+            </list></t>
+
+            <t>
+                The following list summarizes additional cryptographic operations performed
+                by the authoritative server for authenticated denial worst-case scenario:
+            </t>
+
+            <t><list style="symbols">
+                <t>
+                    NSEC:
+                    <list style="symbols">
+                        <t>No cryptographic operations required.</t>
+                    </list>
+                </t>
+                <t>
+                    NSEC3:
+                    <list style="symbols">
+                        <t>NSEC3 hash for Closest provable encloser (possibly precomputed)</t>
+                        <t>NSEC3 hash for Next closer name</t>
+                        <t>NSEC3 hash for wildcard at the closest encloser</t>
+                    </list>
+                </t>
+                <t>
+                    NSEC5:
+                    <list style="symbols">
+                        <t>NSEC5 proof and hash for Closest provable encloser (possibly precomputed)</t>
+                        <t>NSEC5 proof and hash for Next closer name</t>
+                    </list>
+                </t>
+            </list></t>
+
+            <t>
+                As anticipated, NSEC is the most efficient authenticated denial mechanism as
+                for response size and performance cost. The bottleneck of NSEC5 is the NSEC5 proof
+                computation. If the proofs are precomputed for domain names in the zone, the server
+                has to compute just one NSEC5 proof per answer. But it will still be more expensive
+                than NSEC3 and the same applies for the response size.
             </t>
         </section>
 
