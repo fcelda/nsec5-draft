@@ -1146,18 +1146,18 @@
     <section title="Performance Considerations">
 
         <t>
-            This section compares NSEC, NSEC3, and NSEC5 as for denying response sizes and
-            performance impact on the DNS components.
+            This section compares NSEC, NSEC3, and NSEC5 with regards to the size of
+            denial-of-existence responses and performance impact on the DNS components.
         </t>
 
         <section title="Performance of Cryptographic Operations">
 
             <t>
-                The additional performance costs depend on the costs of cryptographic operations
+                Additional performance costs depend on the costs of cryptographic operations
                 to a great extent.  The following results were retrieved with OpenSSL 1.0.1k,
                 running an ordinary laptop on a single-core of a CPU manufactured in 2011. The
                 parameters of cryptographic operations were chosen to reflect the parameters
-                used in the real-world DNSSEC.
+                used in the real-world application of DNSSEC.
             </t>
 
             <t>
@@ -1176,9 +1176,9 @@
                     -->
 
                     <t>
-                        NSEC3 uses multiple iterations of SHA-1 function with an arbitrary salt.
-                        The input of the first iteration is the domain name in the wire format
-                        and the binary salt; the input of the following iterations is the binary
+                        NSEC3 uses multiple iterations of the SHA-1 function with an arbitrary salt.
+                        The input of the first iteration is the domain name in wire format together
+                        with binary salt; the input of the subsequent iterations is the binary
                         digest and the salt. We can assume that the input size will be smaller
                         than 32 octets for most executions.
 
@@ -1192,8 +1192,7 @@
 
                         The number of additional iterations in NSEC3 parameters will probably
                         vary between 0 and 20 in reality. Therefore we can expect the NSEC3 hash
-                        computation performance to be in the order between 10^5 and 10^6 hashes
-                        per second.
+                        computation performance to be between 2e5 and 3e6 hashes per second.
                     </t>
 
                     <!--
@@ -1226,10 +1225,10 @@
                     -->
 
                     <t>
-                        The NSEC5 hash is computed in two steps: NSEC5 proof computation and hashing
-                        of the result. The NSEC5 proof is basically an RSA signature and the
-                        performance will therefore vary for signing and verification and also for
-                        different key sizes. We can expect that the final hashing will have
+                        The NSEC5 hash is computed in two steps: NSEC5 proof computation followed
+                        by hashing of the result. The NSEC5 proof is basically an RSA signature and
+                        the performance will therefore vary for signing and verification and also
+                        for different key sizes. We can expect that the final hashing will have
                         insignificant impact on the overall hashing performance.
 
                         <vspace /><vspace />
@@ -1247,7 +1246,7 @@
 
                         <vspace /><vspace />
 
-                        Picking the moderate key size 2048-bits, the NSEC5 hash computation
+                        Picking a moderate key size of 2048-bits, the NSEC5 hash computation
                         performance will be in the order of 10^2 issued hashes per second and
                         10^4 validated hashes per second.
                     </t>
