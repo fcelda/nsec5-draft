@@ -26,7 +26,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-vcelak-nsec5-01-wip" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-01" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -1901,9 +1901,6 @@
                 </t>
                 <t>
                     Write Special Considerations section.
-                </t>
-                <t>
-                    Write Performance Considerations section.
                 </t>
                 <t>
                     Contributor list has to be completed.
