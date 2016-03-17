@@ -132,10 +132,8 @@
                 answers, an NSEC chain of all existing domain names in the zone is constructed.
                 The chain is made of RRs, where each RR represents two consecutive domain names in
                 canonical order present in the zone. The NSEC RRs are signed the same way as
-                any other RRs in the zone. We say that an NSEC RR "covers" a queried name if the
-                name falls between the two names in the NSEC RR.  Thus, each NSEC RR can be used
-                to prove that a name covered by the NSEC RR does not exist in a part
-                of the domain name space.
+                any other RRs in the zone. Non-existence of a name can be thus proven by
+                presenting a NSEC RR which covers the name.
             </t>
 
             <t>
