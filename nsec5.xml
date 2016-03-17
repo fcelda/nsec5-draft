@@ -16,6 +16,7 @@
 <!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
+<!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -26,7 +27,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-vcelak-nsec5-01" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-02" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -57,7 +58,7 @@
             </address>
         </author>
 
-        <date year="2015" />
+        <date year="2016" />
 
         <!-- <workgroup></workgroup> -->
 
@@ -117,8 +118,10 @@
                 answers, an NSEC chain of all existing domain names in the zone is constructed.
                 The chain is made of RRs, where each RR represents two consecutive domain names in
                 canonical order present in the zone. The NSEC RRs are signed the same way as
-                any other RRs in the zone, and each NSEC can be used to prove that a given
-                name does not existing in a part of the domain name space.
+                any other RRs in the zone. We say that an NSEC RR "covers" a queried name if the
+                name falls between the two names in the NSEC RR.  Thus, each NSEC RR can be used
+                to prove that a name covered by the NSEC RR does not exist in a part
+                of the domain name space.
             </t>
 
             <t>
@@ -138,10 +141,10 @@
                 Zone enumeration can be prevented with NSEC3 if having the authoritative server
                 compute NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
                 this is done with Minimally Covering NSEC Records or NSEC3 White Lies
-                <xref target="RFC7129" />. One of the most significant disadvantage of this
+                <xref target="RFC7129" />. The disadvantage of this
                 approach is a required presence of the private key on all authoritative servers
                 for the zone. This is often undesirable, as the holder of the private key can
-                tamper with the zone content, and having private keys on many network-facing servers
+                tamper with the zone contents, and having private keys on many network-facing servers
                 increases the risk that keys can be compromised.
             </t>
 
@@ -158,7 +161,7 @@
             <t>
                 Importantly, the NSEC5KEY key cannot be used to
                 modify the contents of the zone. Thus, any compromise of the private NSEC5 key
-                does not lead to a compromise of zone contents; all that is lost is privacy against
+                does not lead to a compromise of zone contents. All that is lost is privacy against
                 zone enumeration, effectively downgrading the security of NSEC5 to that of NSEC3.
                 NSEC5 comes with a cryptographic proof of security, available in
                 <xref target="nsec5" />.
@@ -252,8 +255,11 @@
         <t>
             To prove non-existence of a domain name in a zone, NSEC uses a chain built from
             domain names present in the zone. NSEC3 replaces the original domain names by
-            their cryptographic hashes. NSEC5 is very similar to NSEC3, however a public-key
-            based hashing scheme is used.
+            their cryptographic hashes. NSEC5 is very similar to NSEC3, except that the
+            cryptographic hash is replaced by hashes computed using a verifiable random function (VRF).
+            A VRF is essentially the public-key version of a keyed cryptographic hash.
+            A VRF comes with a public/private key pair, and only the holder of the private key
+            can compute the hash, but anyone with public key can verify the hash.
         </t>
 
         <t>
@@ -263,15 +269,14 @@
         <t>
             <list style="numbers">
                 <t>
-                    First, the domain name is hashed using the NSEC5 private key; the result
-                    is called the NSEC5 proof.  Only an authoritative server that knows the
+                    First, the domain name is hashed using a VRF keyed with the NSEC5 private key;
+                    the result is called the NSEC5 proof.  Only an authoritative server that knows the
                     private NSEC5 key can compute the NSEC5 proof.  Any client that knows
                     the public NSEC5 key can validate the NSEC5 proof.
                 </t>
                 <t>
-                    Second, the NSEC5 proof is hashed using a cryptographic hash function; the
-                    result is called the NSEC5 hash.  This hash can be computed by any party
-                    that knows the input NSEC5 proof.
+                    Second, the NSEC5 proof is hashed. The result is called the NSEC5 hash value.
+                    This hash can be computed by any party that knows the input NSEC5 proof.
                 </t>
             </list>
         </t>
@@ -284,9 +289,9 @@
 
         <t>
             To prove an non-existence of a particular domain name in response to a query, the
-            server computes on the fly, the NSEC5 proof (using the private NSEC5 key). Then it
+            server computes the NSEC5 proof (using the private NSEC5 key) on the fly. Then it
             uses the NSEC5 proof to compute the corresponding NSEC5 hash. It then identifies
-            the NSEC5 RR that covers the hash. In the response message, the server returns the
+            the NSEC5 RR that covers the NSEC5 hash. In the response message, the server returns the
             NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized NSEC5PROOF RR
             containing the NSEC5 proof it computed on the fly.
         </t>
@@ -295,7 +300,8 @@
             To validate the response, the client first uses the public NSEC5 key (stored in the
             zone as an NSEC5KEY RR) to verify that the NSEC5 proof corresponds with the domain
             name to be disproved. Then, the client computes the NSEC5 hash from the NSEC5 proof
-            and checks if the NSEC5 RR content and it's signature are valid.
+            and checks that it is covered by the NSEC5 RR. Finally, it checks that the signature on
+            the NSEC5 RR is valid.
         </t>
 
     </section>
@@ -319,18 +325,19 @@
         </t>
 
         <t>
-            This document defines FDH-SHA256-SHA256 NSEC5 algorithm as follows:
+            This document defines RSAFDH-SHA256-SHA256 NSEC5 algorithm as follows.
         </t>
 
         <t>
             <list style="symbols">
                 <t>
-                    NSEC5 proof is an RSA based Full Domain Hash (FDH) with SHA-256 hash function
-                    used internally for input preprocessing. The FDH signature and verification is
-                    formally specified in <xref target="fdh" />.
+                    NSEC5 proof is computed using an RSA based Full Domain Hash (FDH) signature
+                    with SHA-256 hash function used internally for input preprocessing. The RSAFDH
+                    signature and verification is formally specified in <xref target="fdh" />.
                 </t>
                 <t>
-                    NSEC5 hash is an SHA-256 hash function as specified in <xref target="RFC6234" />.
+                    NSEC5 hash is computed by hashing the NSEC5 proof with the SHA-256 hash
+                    function as specified in <xref target="RFC6234" />.
                 </t>
                 <t>
                     The public key format to be used in NSEC5KEY RR is defined in Section 2 of
@@ -341,8 +348,49 @@
         </t>
 
         <t>
-            The NSEC5 algorithm identifier for FDH-SHA256-SHA256 is 1.
+            This document defines EC-P256-SHA256 NSEC5 algorithm as follows:
         </t>
+
+        <t>
+            <list style="symbols">
+                <t>
+                    NSEC5 proof is computed with an the Elliptic Curve VRF formally
+                    specified in <xref target="ecvrf" />.  The proof is
+                    the triple (gamma, c, s), where gamma is an
+                    element on the P-256 Elliptic Curve (encoded as a 256+1 bit
+                    value using point compression), c is a 128 bit value obtained by
+                    truncating an output of the SHA256 hash function, and s is a 256-bit value.
+                    Proof computation and verification is  specified in
+                    <xref target="ecvrf" />.
+                </t>
+                <t>
+                    NSEC5 hash outputs the x-coordinate (i.e., the first 256-bits)
+                    of the group element gamma from the NSEC5 proof.
+                </t>
+                <t>
+                    SHARON SAYS: UMM HOW TO WE SPECIFY THE EC KEY?  SOMEONE ELSE
+                    NEEDS TO WRITE THIS.
+                    The public key format to be used in NSEC5KEY RR is defined in Section 2 of
+                    <xref target="RFC3110" /> and thus is the same as the format used to store
+                    RSA public keys in DNSKEY RRs.
+                </t>
+            </list>
+        </t>
+
+        <t>
+            This document defines EC-C25519-SHA256 NSEC5 similarly to
+            EC-P256-SHA256, but using Curve25519 <xref target="RFC7748" />
+            instead of the NIST P-256 curve.  See <xref target="ecvrf" />.
+        </t>
+
+        <t> NSEC5 uses the following algorithm numbers: </t>
+            <texttable>
+                <ttcol>Algorithm </ttcol>
+                <ttcol align="right">NSEC5 Algorithm Number</ttcol>
+                <c>RSAFDH-SHA256-SHA256</c>       <c>1</c>
+                <c>EC-P256-SHA256</c>       <c>2</c>
+                <c>EC-C25519-SHA256</c>       <c>3</c>
+            </texttable>
 
     </section>
 
@@ -591,7 +639,10 @@
 
         <t>
             If NSEC5 is said to match a domain name, the owner name of the NSEC5 has to be
-            equivalent to an NSEC5 hash of that domain name. If NSEC5 is said to cover a domain
+            equivalent to an NSEC5 hash of that domain name.
+            SHARON SAYS: DO YOU MEAN THE OWNER NAME OF THE NSEC5 RR? THE PREVIOUS SENTENCE
+            IS CONFUSING.
+            If NSEC5 is said to cover a domain
             name, the NSEC5 hash of that name must lay strictly between the NSEC5 owner name and
             the NSEC5 Next Hashed Owner Name.
         </t>
@@ -894,6 +945,11 @@
             <t>
                 NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated
                 denial of  existence mechanism that allows for enumeration of zone contents.
+
+                SHARON SAYS: IT MIGHT BE OK TO USE NSEC5 IN PARALLEL WITH NSEC3 WHITE LIES --
+                THIS MIGHT ENCOURAGE ADOPTION?  THE DOWNSIDE IS THAT WHITE LIES PUTS THE ZSK ON
+                THE NAMESERVER SO WE LOSE THAT ADVANTAGE OF NSEC5. MAYBE WE SHOULD JUST LEAVE
+                IT AS IS?
             </t>
 
             <t>
@@ -947,6 +1003,17 @@
             <t>
                 This document does not define mechanism to distribute NSEC5 private keys.
             </t>
+
+            <t>
+              [SHARON SAYS: ADDED THE FOLLOWING, DO YOU GUYS AGREE?]
+              Note that the NSEC5 private key need only be kept as secure as the zone contents itself.
+              That is, if an adversary learns the NSEC5 private key, it can perform offline
+              zone enumeration attacks, but it cannot forge the zone contents.
+              Thus, the NSEC5 private
+              key MAY be transfered to secondary servers using the same mechanism
+              used to transfer the zone contents.
+            </t>
+
         </section>
 
         <section title="Zones Using Unknown Hash Algorithms">
@@ -1031,10 +1098,16 @@
                     <t>
                         Compute the NSEC5 hash value from the NSEC5 proof and check if the
                         response contains NSEC5 RR matching or covering the computed NSEC5 hash.
+
+                        [SHARON SAYS: THE RESPONSE CANNOT MATCH THE NSEC5 HASH VALUE, IF IT DOES
+                        THAT MEANS THE NAME IS PRESENT IN THE ZONE. I THINK THE PREVIOUS SENTENCE
+                        IS A BUG, JAN CAN YOU CONFIRM.  IT SHOULD SAY
+                        "contains NSEC5 RR  covering the computed NSEC5 hash." ]
+
                         The TTL values of the NSEC5 and NSEC5PROOF RRs must be the same.
                     </t>
                     <t>
-                        Validate the signature of the NSEC5 RR.
+                        Validate the signature (RR SIG) on the NSEC5 RR.
                     </t>
                 </list>
             </t>
@@ -1114,6 +1187,12 @@
                 The NSEC5 private key MAY be shared between multiple zones, however a separate
                 key is RECOMMENDED for each zone.
             </t>
+
+            <t> [SHARON SAYS: ADDED THIS, IT MIGHT BE CONTRAVERSIAL, DO WE AGREE on the "MUST"?]
+            A goal of NSEC5 to prevent zone enumeration without requiring public-facing nameservers
+            to hold the private Zone-Signing Key (ZSK). Thus the NSEC5 private key MUST not
+            be the same as the private ZSK.
+            </t>
         </section>
 
         <section title="Domain Name Length Restrictions">
@@ -1131,11 +1210,15 @@
             </t>
 
             <t>
-                With FDH-SHA256-SHA256 defined in this document, the SHA-256 hash function
+                With RSAFDH-SHA256-SHA256 defined in this document, the SHA-256 hash function
                 is used to construct NSEC5 hash values. SHA-256 produces a hash of 256 bits,
                 which can be encoded in 52 characters in Base32hex without padding. The encoded
                 string is prepended to the name of the zone as a single label, which includes
-                the length field of a single octet. The maximal length of the zone name is
+                the length field of a single octet. EC-P256-SHA256 and EC-C25519-SHA256 defined
+                in this document similarly produce hash values of 256 bits, which can be encoded
+                into 52 characters in Base32hex without padding.
+
+                The maximal length of the zone name is
                 therefore 202 octets (255 - 53).
             </t>
 
@@ -1151,6 +1234,9 @@
         </t>
 
         <section title="Performance of Cryptographic Operations">
+
+            <t> SHARON SAYS: JAN TO UPDATE THIS SECTION. CAN WE ALSO ADD AN
+            ECDSA BENCHMARK AS A COMPARISON POINT.  </t>
 
             <t>
                 Additional performance costs depend on the costs of cryptographic operations
@@ -1362,117 +1448,6 @@
             </list></t>
 
             <t>
-                The following table compares the size of NSEC, NSEC3, and NSEC5 records. We assume
-                the SHA-1 hash algorithm for NSEC3 and the FDH-SHA256-SHA256 algorithm for NSEC5.
-            </t>
-
-            <!--
-                RR format:    owner(var) + type(2) + class(2) + ttl(4) + rdlen(2) + rdata(var)
-
-                NSEC format:  next(var) + bitmap(var)
-                NSEC3 format: algo(1) + flags(1) + iterations(2) + saltlen(1) + salt(var) + hash_len(1) + hash(var) + bitmap(var)
-                NSEC5 format: keytag(2) + flags(1) + next_len(1) + next(var) + bitmap(var)
-
-                NSEC:  name(compressible) + 10 + next(uncompressible) + bitmap(var)
-                NSEC3: name(compressed, 1+32+2) 10 + 22 + salt(var) + bitmap(var)
-                NSEC5: name(compressed, 1+52+2) 10 + 36 + bitmap(var)
-            -->
-
-            <texttable>
-                <ttcol></ttcol>
-                <ttcol>Fixed part</ttcol>
-                <ttcol>Common part</ttcol>
-                <ttcol>RR type-specific part</ttcol>
-
-                <c>NSEC</c>  <c> 10 octets</c> <c>Type Bit Maps</c> <c>Owner Name, Next Name</c>
-                <c>NSEC3</c> <c> 64 octets</c> <c>Type Bit Maps</c> <c>Salt</c>
-                <c>NSEC5</c> <c>101 octets</c> <c>Type Bit Maps</c> <c>&ndash;</c>
-
-            </texttable>
-
-            <t>
-                The size covers complete RR representation in wire format:
-            </t>
-
-            <t><list style="symbols">
-                <t>
-                    The Fixed part includes length of all fixed-size fields in the RR; and also
-                    a size of generally variable-sized fields whose length can determined from the
-                    used parameters (e.g., the NSEC3 owner name consists from one label encoding
-                    the hash and a compression pointer to zone apex).
-                </t>
-
-                <t>
-                    The Common part includes the only field shared among the RR types.
-                </t>
-
-                <t>
-                    The RR type-specific part contains unique fields present in the RR types whose
-                    length will vary. Note that the Owner Name can be compressed, but Next Name
-                    must not. Also note that the Salt in NSEC3 will have constant size for all
-                    NSEC3 records in the chain.
-                </t>
-            </list></t>
-
-            <!--
-                RRSIG format: type_covered(2) + algorithm(1) + labels(1) + original_ttl(4) +
-                              signature_expiration(4) + signature_inception(4) + keytag(2) +
-                              signer_name(variable) + signature(variable)
-
-                owner(var) + 10 + 18 + signer(uncompressible) + signature
-            -->
-
-            <t>
-                The size of RRSIG RR is a sum of length of possibly compressed RR owner name,
-                28 octets for fixed-size fields, the length of uncompressed signer name, and the
-                length of the signature.
-            </t>
-
-            <t>
-                The size of NSEC5PROOF RR is a sum of length of possibly compressed RR owner name,
-                2 octets for fixed-size fields, and the length of the proof.
-            </t>
-
-            <t>
-                The following list summarizes the increase of the DNS response size for
-                authenticated denial worst-case scenario. As a significant part of the increase
-                is caused by the used DNSSEC signing algorithm, the summary includes two variants:
-                RSA stands for the RSASHA256 algorithm with 2048-bit key and ECDSA stands for the
-                ECDSAP256SHA256 algorithm. For NSEC5, FDH-SHA256-SHA256 with 2048-bit key is used.
-            </t>
-
-            <t><list style="symbols">
-                <t>
-                    NSEC:
-                    <list style="symbols">
-                        <t>4 &times; compressed domain name</t>
-                        <t>4 &times; uncompressed domain name</t>
-                        <t>2 &times; type bit bitmap</t>
-                        <t>588 octets (RSA) or 204 octets (ECDSA)</t>
-                    </list>
-                </t>
-                <t>
-                    NSEC3:
-                    <list style="symbols">
-                        <t>3 &times; compressed domain name</t>
-                        <t>3 &times; uncompressed domain name</t>
-                        <t>3 &times; salt</t>
-                        <t>3 &times; type bit map</t>
-                        <t>969 octets (RSA) or 393 octets (ECDSA)</t>
-                    </list>
-                </t>
-                <t>
-                    NSEC5:
-                    <list style="symbols">
-                        <t>4 &times; compressed domain name</t>
-                        <t>2 &times; uncompressed domain name</t>
-                        <t>2 &times; type bit map</t>
-                        <t>1286 octets (RSA) or 902 octets (ECDSA)</t>
-                    </list>
-                </t>
-            </list></t>
-
-            <t>
                 The following list summarizes additional cryptographic operations performed
                 by the authoritative server for authenticated denial worst-case scenario:
             </t>
@@ -1501,7 +1476,65 @@
                 </t>
             </list></t>
 
+   <t>[SHARON SAYS: CAN WE EXPLAIN BETTER WHAT PRECOMPUTATION CAN BE DONE HERE?
+   JAN YOU ALLUDE AT THE END OF THIS SECTION
+   THAT WE CAN PRECOMPUTE ONE OF THE NSEC5 PROOFS BUT NOT THE OTHER,
+   CAN YOU WRITE HERE MORE CLEARLY HOW THIS CAN BE DONE? THANKS.]</t>
+
+   </section>
+    <section title="Response Lengths">
+<t>
+<xref target="nsec5ecc" /> precisely measured response lengths for
+ NSEC, NSEC3 and NSEC5 using
+ empirical data from a sample second-level domain containing about 1000 names.
+ The sample zone was signed with each of the  following algorithms.
+ For NSEC, the zone was signed with 2048-bit RSA, and again with 512-bit ECDSA
+ (i.e. ECDSA over the NIST P-256 curve).
+ For NSEC3, NSEC3 records were computed using the SHA1 hash function,
+ as specified in <xref target="RFC5155" />, and signed with 2048-bit RSA,
+ and again with 512-bit ECDSA.
+ For NSEC5, <xref target="nsec5ecc" /> considered a scheme entirely based on
+ 2048-bit RSA: NSEC5 records and proofs were produced using the
+ RSAFDA-SHA256-SHA256 NSEC5 algorithm with 2048-bit RSA, and signed
+ with 2048-bit RSA for the RRSIG records.
+ An entirely ECC-based scheme for NSEC5 was  considered:
+ NSEC5 records and proofs were produced using the
+ EC-P256-SHA256 NSEC5 algorithm, and signed
+ with 512-bit ECDSA.  (Note that responses lengths for the
+ EC-C25519-SHA256 schemes are identical to those for the
+ EC-P256-SHA256, and therefore were not considered.)
+ A 'hybrid' scheme for NSEC5 was also considered:
+ NSEC5 records and proofs were produced using the
+ EC-P256-SHA256 NSEC5 algorithm, and signed
+ with 2048-bit ECDSA.
+</t>
+
+<t>
+Then, for each instance of the signed zone, denial-of-existence
+responses (response code {NXDOMAIN}) were collected by issuing DNS
+queries with a random five-character string prepended to each actual
+record name from the zone. The average and standard deviation of the
+length of these responses are shown below.
+</t>
+
+        <texttable>
+                <ttcol>NSEC*</ttcol>
+                <ttcol align="right">RRSIG</ttcol>
+                <ttcol align="right">Average length</ttcol>
+                <ttcol align="right">STD length</ttcol>
+                <c>NSEC</c><c>RSA</c><c>1116</c><c>48</c>
+                <c>NSEC</c><c>ECDSA</c><c>543</c><c>24</c>
+                <c>NSEC3</c><c>RSA</c><c>1440</c><c>170</c>
+                <c>NSEC3</c><c>ECDSA</c><c>752</c><c>84</c>
+                <c>NSEC5: RSAFDH-SHA256-SHA256</c><c>RSA</c><c>1767</c><c>7</c>
+                <c>NSEC5: EC-P256-SHA256</c><c>ECDSA</c><c>839</c><c>7</c>
+            </texttable>
+
+    </section>
+    <section title="Summary">
+
             <t>
+                [SHARON SAYS: I WILL REWRITE THE BELOW ONCE ALL THE PERFORMANCE NUMBERS ARE IN]
                 As anticipated, NSEC is the most efficient authenticated denial mechanism as
                 for response size and performance cost. The bottleneck of NSEC5 is the NSEC5 proof
                 computation. If the proofs are precomputed for domain names in the zone, the server
@@ -1625,7 +1658,7 @@
         <t>
             <list>
                 <t>0     is Reserved.</t>
-                <t>1     is FDH-SHA256-SHA256.</t>
+                <t>1     is RSAFDH-SHA256-SHA256.</t>
                 <t>2-255 is Available for assignment.</t>
             </list>
         </t>
@@ -1690,6 +1723,7 @@
         &rfc4648;
         &rfc5155;
         &rfc6234;
+        &rfc7748;
     </references>
 
     <references title="Informative References">
@@ -1705,6 +1739,19 @@
                 <author initials="A." surname="Ziv"><organization /></author>
                 <date year="2014" month="July" />
             </front>
+             <seriesInfo name="in" value="NDSS'15" />
+        </reference>
+
+        <reference anchor="nsec5ecc">
+            <front>
+                <title>NSEC5 from Elliptic Curves</title>
+                <author initials="S." surname="Goldberg"><organization /></author>
+                <author initials="M." surname="Naor"><organization /></author>
+                <author initials="D." surname="Papadopoulos"><organization /></author>
+                <author initials="L." surname="Reyzin"><organization /></author>
+                <date year="2016" month="January" />
+            </front>
+            <seriesInfo name="in" value="ePrint Cryptology Archive 2016/083" />
         </reference>
 
         <reference anchor="nsec3gpu">
@@ -1732,7 +1779,7 @@
 
     </references>
 
-    <section title="Full Domain Hash Algorithm" anchor="fdh">
+    <section title="RSA Full Domain Hash Algorithm" anchor="fdh">
         <t>
             The Full Domain Hash (FDH) is a RSA-based scheme that allows authentication of
             hashes using public-key cryptography.
@@ -1851,6 +1898,12 @@
                 </list>
             </t>
         </section>
+    </section>
+
+    <section title="Elliptic Curve VRF" anchor="ecvrf">
+
+        <t>TO DO</t>
+
     </section>
 
     <section title="Change Log">
