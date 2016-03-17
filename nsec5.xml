@@ -12,11 +12,14 @@
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
+<!ENTITY rfc5114 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5114.xml">
 <!ENTITY rfc5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
+<!ENTITY rfc6605 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6605.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
+<!ENTITY draft-dnskey-ed25519 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-curdle-dnskey-ed25519-01.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -337,14 +340,14 @@
         </t>
 
         <t>
-            This document defines RSAFDH-SHA256-SHA256 NSEC5 algorithm as follows.
+            This document defines RSAFDH-SHA256-SHA256 NSEC5 algorithm as follows:
         </t>
 
         <t>
             <list style="symbols">
                 <t>
                     NSEC5 proof is computed using an RSA based Full Domain Hash (FDH) signature
-                    with SHA-256 hash function used internally for input preprocessing. The RSAFDH
+                    with SHA-256 hash function used internally for input preprocessing. The
                     signature and verification is formally specified in <xref target="fdh" />.
                 </t>
                 <t>
@@ -366,44 +369,50 @@
         <t>
             <list style="symbols">
                 <t>
-                    NSEC5 proof is computed with an the Elliptic Curve VRF formally
-                    specified in <xref target="ecvrf" />.  The proof is
-                    the triple (gamma, c, s), where gamma is an
-                    element on the P-256 Elliptic Curve (encoded as a 256+1 bit
-                    value using point compression), c is a 128 bit value obtained by
-                    truncating an output of the SHA256 hash function, and s is a 256-bit value.
-                    Proof computation and verification is  specified in
+                    NSEC5 proof is computed using an Elliptic Curve VRF with
+                    FIPS 186-3 P-256 curve.
+                    The proof computation and verification is formally specified in
                     <xref target="ecvrf" />.
+                    The curve parameters are specified in
+                    <xref target="FIPS-186-3" /> (Section D.1.2.3) and
+                    <xref target="RFC5114" /> (Section 2.6).
                 </t>
                 <t>
-                    NSEC5 hash outputs the x-coordinate (i.e., the first 256-bits)
-                    of the group element gamma from the NSEC5 proof.
+                    NSEC5 hash is x-coordinate of the group element gamma from the
+                    NSEC5 proof encoded as a fixed-width 32-octet unsigned integer
+                    in network byte order. In practice, the hash is a substring
+                    of the proof ranging from 2nd to 33th octet of the proof
+                    inclusive.
                 </t>
                 <t>
-                    SHARON SAYS: UMM HOW TO WE SPECIFY THE EC KEY?  SOMEONE ELSE
-                    NEEDS TO WRITE THIS.
-                    The public key format to be used in NSEC5KEY RR is defined in Section 2 of
-                    <xref target="RFC3110" /> and thus is the same as the format used to store
-                    RSA public keys in DNSKEY RRs.
+                    The public key format to be used in NSEC5KEY RR is defined in Section 4 of
+                    <xref target="RFC6605" /> and thus is the same as the format used to store
+                    ECDSA public keys in DNSKEY RRs.
                 </t>
             </list>
         </t>
 
         <t>
-            This document defines EC-C25519-SHA256 NSEC5 similarly to
-            EC-P256-SHA256, but using Curve25519 <xref target="RFC7748" />
-            instead of the NIST P-256 curve.  See <xref target="ecvrf" />.
+            This document defines EC-C25519-SHA256 NSEC5 as follows:
         </t>
 
-        <t> NSEC5 uses the following algorithm numbers: </t>
-            <texttable>
-                <ttcol>Algorithm </ttcol>
-                <ttcol align="right">NSEC5 Algorithm Number</ttcol>
-                <c>RSAFDH-SHA256-SHA256</c>       <c>1</c>
-                <c>EC-P256-SHA256</c>       <c>2</c>
-                <c>EC-C25519-SHA256</c>       <c>3</c>
-            </texttable>
-
+        <t>
+            <list style="symbols">
+                <t>
+                    NSEC5 proof is the same as with EC-P256-SHA256 but using Curve25519
+                    elliptic curve with parameters defined in <xref target="RFC7748" />
+                    (Section 4.1).
+                </t>
+                <t>
+                    NSEC5 hash is the same as with EC-P256-SHA256.
+                </t>
+                <t>
+                    The public key format to be used in NSEC5KEY RR is defined in Section 3 of
+                    <xref target="I-D.ietf-curdle-dnskey-ed25519" /> and thus is the same as the
+                    format used to store Ed25519 public keys in DNSKEY RRs.
+                </t>
+            </list>
+        </t>
     </section>
 
     <section title="The NSEC5KEY Resource Record">
@@ -1671,7 +1680,9 @@ length of these responses are shown below.
             <list>
                 <t>0     is Reserved.</t>
                 <t>1     is RSAFDH-SHA256-SHA256.</t>
-                <t>2-255 is Available for assignment.</t>
+                <t>2     is EC-P256-SHA256.</t>
+                <t>3     is EC-C25519-SHA256.</t>
+                <t>4-255 is Available for assignment.</t>
             </list>
         </t>
 
@@ -1732,9 +1743,21 @@ length of these responses are shown below.
         &rfc4034;
         &rfc4035;
         &rfc4648;
+        &rfc5114;
         &rfc5155;
         &rfc6234;
+        &rfc6605;
         &rfc7748;
+        &draft-dnskey-ed25519;
+
+        <reference anchor="FIPS-186-3">
+            <front>
+                <title>Digital Signature Standard (DSS)</title>
+                <author><organization>National Institute for Standards and Technology</organization></author>
+                <date year="2009" month="June" />
+            </front>
+            <seriesInfo name="FIPS" value="PUB 186-3"/>
+        </reference>
     </references>
 
     <references title="Informative References">
