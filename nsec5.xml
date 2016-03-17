@@ -659,14 +659,13 @@
         </t>
 
         <t>
-            If NSEC5 is said to match a domain name, the owner name of the NSEC5 has to be
-            equivalent to an NSEC5 hash of that domain name.
-            SHARON SAYS: DO YOU MEAN THE OWNER NAME OF THE NSEC5 RR? THE PREVIOUS SENTENCE
-            IS CONFUSING.
-            If NSEC5 is said to cover a domain
-            name, the NSEC5 hash of that name must lay strictly between the NSEC5 owner name and
+            If NSEC5 is said to match a domain name, the owner name of the NSEC5 RR has to be
+            equivalent to an NSEC5 hash of that domain name. If NSEC5 is said to cover a domain
+            name, the NSEC5 hash of that name must lay strictly between the NSEC5 RR owner name and
             the NSEC5 Next Hashed Owner Name.
         </t>
+
+        <t><cref source="SHARON">DO YOU MEAN THE OWNER NAME OF THE NSEC5 RR?</cref></t>
 
         <section title="Name Error Responses">
 
@@ -966,11 +965,6 @@
             <t>
                 NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated
                 denial of  existence mechanism that allows for enumeration of zone contents.
-
-                SHARON SAYS: IT MIGHT BE OK TO USE NSEC5 IN PARALLEL WITH NSEC3 WHITE LIES --
-                THIS MIGHT ENCOURAGE ADOPTION?  THE DOWNSIDE IS THAT WHITE LIES PUTS THE ZSK ON
-                THE NAMESERVER SO WE LOSE THAT ADVANTAGE OF NSEC5. MAYBE WE SHOULD JUST LEAVE
-                IT AS IS?
             </t>
 
             <t>
@@ -1024,17 +1018,6 @@
             <t>
                 This document does not define mechanism to distribute NSEC5 private keys.
             </t>
-
-            <t>
-              [SHARON SAYS: ADDED THE FOLLOWING, DO YOU GUYS AGREE?]
-              Note that the NSEC5 private key need only be kept as secure as the zone contents itself.
-              That is, if an adversary learns the NSEC5 private key, it can perform offline
-              zone enumeration attacks, but it cannot forge the zone contents.
-              Thus, the NSEC5 private
-              key MAY be transfered to secondary servers using the same mechanism
-              used to transfer the zone contents.
-            </t>
-
         </section>
 
         <section title="Zones Using Unknown Hash Algorithms">
@@ -1119,16 +1102,10 @@
                     <t>
                         Compute the NSEC5 hash value from the NSEC5 proof and check if the
                         response contains NSEC5 RR matching or covering the computed NSEC5 hash.
-
-                        [SHARON SAYS: THE RESPONSE CANNOT MATCH THE NSEC5 HASH VALUE, IF IT DOES
-                        THAT MEANS THE NAME IS PRESENT IN THE ZONE. I THINK THE PREVIOUS SENTENCE
-                        IS A BUG, JAN CAN YOU CONFIRM.  IT SHOULD SAY
-                        "contains NSEC5 RR  covering the computed NSEC5 hash." ]
-
                         The TTL values of the NSEC5 and NSEC5PROOF RRs must be the same.
                     </t>
                     <t>
-                        Validate the signature (RR SIG) on the NSEC5 RR.
+                        Validate the signature of the NSEC5 RR.
                     </t>
                 </list>
             </t>
@@ -1208,12 +1185,6 @@
                 The NSEC5 private key MAY be shared between multiple zones, however a separate
                 key is RECOMMENDED for each zone.
             </t>
-
-            <t> [SHARON SAYS: ADDED THIS, IT MIGHT BE CONTRAVERSIAL, DO WE AGREE on the "MUST"?]
-            A goal of NSEC5 to prevent zone enumeration without requiring public-facing nameservers
-            to hold the private Zone-Signing Key (ZSK). Thus the NSEC5 private key MUST not
-            be the same as the private ZSK.
-            </t>
         </section>
 
         <section title="Domain Name Length Restrictions">
@@ -1246,6 +1217,8 @@
 
     <section title="Performance Considerations">
 
+        <t><cref source="Jan">Will update this.</cref></t>
+
         <t>
             This section compares NSEC, NSEC3, and NSEC5 with regards to the size of
             denial-of-existence responses and performance impact on the DNS components.
@@ -1253,8 +1226,9 @@
 
         <section title="Performance of Cryptographic Operations">
 
-            <t> SHARON SAYS: JAN TO UPDATE THIS SECTION. CAN WE ALSO ADD AN
-            ECDSA BENCHMARK AS A COMPARISON POINT.  </t>
+            <t>
+                <cref source="SHARON">JAN TO UPDATE THIS SECTION. CAN WE ALSO ADD AN
+                    ECDSA BENCHMARK AS A COMPARISON POINT.</cref>  </t>
 
             <t>
                 Additional performance costs depend on the costs of cryptographic operations
@@ -1494,12 +1468,7 @@
                 </t>
             </list></t>
 
-   <t>[SHARON SAYS: CAN WE EXPLAIN BETTER WHAT PRECOMPUTATION CAN BE DONE HERE?
-   JAN YOU ALLUDE AT THE END OF THIS SECTION
-   THAT WE CAN PRECOMPUTE ONE OF THE NSEC5 PROOFS BUT NOT THE OTHER,
-   CAN YOU WRITE HERE MORE CLEARLY HOW THIS CAN BE DONE? THANKS.]</t>
-
-   </section>
+    </section>
     <section title="Response Lengths">
 <t>
 <xref target="nsec5ecc" /> precisely measured response lengths for
@@ -1552,7 +1521,9 @@ length of these responses are shown below.
     <section title="Summary">
 
             <t>
-                [SHARON SAYS: I WILL REWRITE THE BELOW ONCE ALL THE PERFORMANCE NUMBERS ARE IN]
+                <cref source="SHARON">
+                    I WILL REWRITE THE BELOW ONCE ALL THE PERFORMANCE NUMBERS ARE IN
+                </cref>
                 As anticipated, NSEC is the most efficient authenticated denial mechanism as
                 for response size and performance cost. The bottleneck of NSEC5 is the NSEC5 proof
                 computation. If the proofs are precomputed for domain names in the zone, the server
