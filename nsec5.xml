@@ -1231,15 +1231,12 @@
             </t>
 
             <t>
-                With RSAFDH-SHA256-SHA256 defined in this document, the SHA-256 hash function
-                is used to construct NSEC5 hash values. SHA-256 produces a hash of 256 bits,
-                which can be encoded in 52 characters in Base32hex without padding. The encoded
-                string is prepended to the name of the zone as a single label, which includes
-                the length field of a single octet. EC-P256-SHA256 and EC-C25519-SHA256 defined
-                in this document similarly produce hash values of 256 bits, which can be encoded
-                into 52 characters in Base32hex without padding.
+                All NSEC5 algorithms defined in this document use 256-bit NSEC5 hash values.
+                Such a value can be encoded in 52 characters in Base32hex without padding. When
+                constructing the NSEC5 RR owner name, the encoded hash is prepended to the name
+                of the zone as a single label which includes the length field of a single octet.
 
-                The maximal length of the zone name is
+                The maximal length of the zone name in wire format is
                 therefore 202 octets (255 - 53).
             </t>
 
