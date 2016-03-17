@@ -58,6 +58,20 @@
             </address>
         </author>
 
+        <author fullname="Dimitrios Papadopoulos" initials="D." surname="Papadopoulos">
+            <organization>Boston University</organization>
+            <address>
+                <postal>
+                    <street>111 Cummington St, MCS135</street>
+                    <city>Boston</city>
+                    <region>MA</region>
+                    <code>02215</code>
+                    <country>USA</country>
+                </postal>
+                <email>dipapado@bu.edu</email>
+            </address>
+        </author>
+
         <date year="2016" />
 
         <!-- <workgroup></workgroup> -->
@@ -1683,7 +1697,6 @@ length of these responses are shown below.
         <t>
             This document would not be possible without help of
             Moni Naor (Weizmann Institute),
-            Dimitrios Papadopoulos (Boston University),
             Sachin Vasant (Cisco Systems),
             Leonid Reyzin (Boston University), and
             Asaf Ziv (Weizmann Institute)
