@@ -378,8 +378,9 @@
                     <xref target="RFC5114" /> (Section 2.6).
                 </t>
                 <t>
-                    NSEC5 hash is x-coordinate of the group element gamma from the
-                    NSEC5 proof encoded as a fixed-width 32-octet unsigned integer
+                    NSEC5 hash is x-coordinate of the group element gamma
+                    from the NSEC5 proof (specified in <xref target="ecvrf" />),
+                    encoded as a fixed-width 32-octet unsigned integer
                     in network byte order. In practice, the hash is a substring
                     of the proof ranging from 2nd to 33th octet of the proof
                     inclusive.
@@ -393,13 +394,13 @@
         </t>
 
         <t>
-            This document defines EC-C25519-SHA256 NSEC5 as follows:
+            This document defines EC-ED25519-SHA256 NSEC5 as follows:
         </t>
 
         <t>
             <list style="symbols">
                 <t>
-                    NSEC5 proof is the same as with EC-P256-SHA256 but using Curve25519
+                    NSEC5 proof is the same as with EC-P256-SHA256 but using Ed25519
                     elliptic curve with parameters defined in <xref target="RFC7748" />
                     (Section 4.1).
                 </t>
@@ -660,12 +661,10 @@
 
         <t>
             If NSEC5 is said to match a domain name, the owner name of the NSEC5 RR has to be
-            equivalent to an NSEC5 hash of that domain name. If NSEC5 is said to cover a domain
-            name, the NSEC5 hash of that name must lay strictly between the NSEC5 RR owner name and
-            the NSEC5 Next Hashed Owner Name.
+            equivalent to an NSEC5 hash of that domain name. If an NSEC5 RR is said to cover
+            a domain name, the NSEC5 hash of the domain name must lay strictly between that
+            NSEC5 RR's Owner Name and  Next Hashed Owner Name.
         </t>
-
-        <t><cref source="SHARON">DO YOU MEAN THE OWNER NAME OF THE NSEC5 RR?</cref></t>
 
         <section title="Name Error Responses">
 
@@ -1017,6 +1016,8 @@
         <section title="Secondary Servers">
             <t>
                 This document does not define mechanism to distribute NSEC5 private keys.
+                See <xref target="keyleak" />
+                for discussion on the security requirements for NSEC5 private keys.
             </t>
         </section>
 
@@ -1470,38 +1471,29 @@
 
     </section>
     <section title="Response Lengths">
+
 <t>
-<xref target="nsec5ecc" /> precisely measured response lengths for
- NSEC, NSEC3 and NSEC5 using
- empirical data from a sample second-level domain containing about 1000 names.
- The sample zone was signed with each of the  following algorithms.
- For NSEC, the zone was signed with 2048-bit RSA, and again with 512-bit ECDSA
- (i.e. ECDSA over the NIST P-256 curve).
- For NSEC3, NSEC3 records were computed using the SHA1 hash function,
- as specified in <xref target="RFC5155" />, and signed with 2048-bit RSA,
- and again with 512-bit ECDSA.
- For NSEC5, <xref target="nsec5ecc" /> considered a scheme entirely based on
- 2048-bit RSA: NSEC5 records and proofs were produced using the
- RSAFDA-SHA256-SHA256 NSEC5 algorithm with 2048-bit RSA, and signed
- with 2048-bit RSA for the RRSIG records.
- An entirely ECC-based scheme for NSEC5 was  considered:
- NSEC5 records and proofs were produced using the
- EC-P256-SHA256 NSEC5 algorithm, and signed
- with 512-bit ECDSA.  (Note that responses lengths for the
- EC-C25519-SHA256 schemes are identical to those for the
- EC-P256-SHA256, and therefore were not considered.)
- A 'hybrid' scheme for NSEC5 was also considered:
- NSEC5 records and proofs were produced using the
- EC-P256-SHA256 NSEC5 algorithm, and signed
- with 2048-bit ECDSA.
+        <cref source="SHARON">
+                    JAN PLEASE READ THE BELOW IS IT OK NOW.
+        </cref>
+    <xref target="nsec5ecc" /> precisely measured response lengths for
+    NSEC, NSEC3 and NSEC5 using empirical data from a sample second-level domain
+    containing about 1000 names.  The sample zone was signed several times with
+    different algorithms for the RRSIG records and denial-of-existence records.
+    For RRSIG records, RSA with 2048-bit ZSK keys and ECDSAP256SHA256 were considered.
+    For denial-of-existence,  NSEC, NSEC3, NSEC5 with the RSAFDA-SHA256-SHA256
+    with a 2048-bit NSEC5KEY, and NSEC5 with the EC-P256-SHA256 algorithm were considered.
+    (Note that responses
+    lengths for the EC-ED25519-SHA256 schemes are identical to those for the
+    EC-P256-SHA256, and therefore were not considered.)
 </t>
 
 <t>
-Then, for each instance of the signed zone, denial-of-existence
-responses (response code {NXDOMAIN}) were collected by issuing DNS
-queries with a random five-character string prepended to each actual
-record name from the zone. The average and standard deviation of the
-length of these responses are shown below.
+    Then, for each instance of the signed zone, denial-of-existence
+    responses (response code NXDOMAIN) were collected by issuing DNS
+    queries with a random five-character string prepended to each actual
+    record name from the zone. The average and standard deviation of the
+    length of these responses are shown below.
 </t>
 
         <texttable>
@@ -1575,6 +1567,8 @@ length of these responses are shown below.
         <t>
         NSEC5 requires authoritative servers to hold the private NSEC5 key, but
         not the private zone-signing keys or the private key-signing keys for the zone.
+        </t>
+        <t>
         The private NSEC5 key needs only be as secure as the DNSSEC records
         whose the privacy (against zone-enumeration attacks) that NSEC5 is protecting.
         This is because even an adversary that knows the private NSEC5 key cannot modify
@@ -1587,6 +1581,12 @@ length of these responses are shown below.
         dictionary attacks.  Thus, a compromise of the private NSEC5 key effectively
         downgrades the security of NSEC5 to that of NSEC3.  A formal cryptographic proof
         of this property is in  <xref target="nsec5" />.
+        </t>
+
+        <t><cref source="SHARON">CAN WE ADD THE FOLLOWING?</cref>If a zone owner
+        wants to preserve this property of NSEC5, the zone owner SHOULD
+        choose the NSEC5 private key to be different from the private
+        zone-signing keys or key-signing keys for the zone.
         </t>
         </section>
 
@@ -1649,7 +1649,7 @@ length of these responses are shown below.
                 <t>0     is Reserved.</t>
                 <t>1     is RSAFDH-SHA256-SHA256.</t>
                 <t>2     is EC-P256-SHA256.</t>
-                <t>3     is EC-C25519-SHA256.</t>
+                <t>3     is EC-ED25519-SHA256.</t>
                 <t>4-255 is Available for assignment.</t>
             </list>
         </t>
