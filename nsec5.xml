@@ -1578,7 +1578,7 @@ NSEC5 EC-P256-SHA256
         <ttcol align="right">Authoritative (ops/sec)</ttcol>
         <ttcol align="right">Resolver (ops/sec)</ttcol>
         <c>NSEC3WL/RSA</c>   <c>1440</c> <c>1500</c>  <c>47000</c>
-        <c>NSEC3WL/ECDSA</c> <c>752</c>  <c>24000</c> <c>11000</c>
+        <c>NSEC3WL/ECDSA</c> <c>752</c>  <c>7400</c>  <c>4000</c>
         <c>NSEC5/RSA</c>     <c>1767</c> <c>1500</c>  <c>46000</c>
         <c>NSEC5/EC</c>      <c>839</c>  <c>4700</c>  <c>4000</c>
 </texttable>
@@ -1589,18 +1589,15 @@ NSEC5 EC-P256-SHA256
     responses that are about 13% longer than NSEC3/ECDSA. For both NSEC3 and NSEC5,
     it is clear that EC-based solutions give much shorter responses. </t>
 
-    <t>Regarding the computation performance, with RSA the difference is negligible
-     for both nameserver and resolver, whereas with the EC-based schemes the slowdown
-     is approximately 5x for the server and 2.7x for the resolver. Importantly,
-     we expect these gaps to be smaller in practice for two reasons: (1) NSEC3
-     entails three signing/verifying computations per query in the worst case
-     (closest encloser, next closer, wildcard at closest encloser)
-     whereas NSEC5 requires only two.  The table above does not capture this issue,
-      it just measures number of signing/verifying operations per second.
-      (2) The measured implementation of the NSEC5
-     EC VRF is not optimized, whereas the implementation of ECDSA is highly optimized.
-     Future versions of this draft will more accurately measure and compare NSEC5
-     performance.
+    <>
+    Regarding the computation performance, with RSA the difference is negligible for both
+    nameserver and resolver, whereas with the EC-based schemes there is no slowdown for the
+    resolver, and a slowdown of 1.5x for the server. Importantly, we expect the slowdown to be smaller
+    in practice because NSEC3 entails three signing/verifying computations per query in the worst
+    case (closest encloser, next closer, wildcard at closest encloser) whereas NSEC5 requires only two.
+    The table above does not capture this issue, it just measures number of signing/verifying
+    operations per second. Future versions of this draft will more accurately measure and compare
+    NSEC5 performance.
     </t>
 
     <t>
