@@ -1383,7 +1383,7 @@ NSEC5 EC-P256-SHA256
                 </t>
 
                 <t>
-                    EC-P256-SHA256 trades off performance for the signature size. Both signature
+                    EC-P256-SHA256 trades off verification performance for shorter proof size and faster query processing at the nameserver. In that case, both hash
                     computation and verification performance will be in the order of 10^3 hashes
                     per second.
                 </t>
@@ -1411,8 +1411,9 @@ NSEC5 EC-P256-SHA256
 
                 <t>
                     The retrieved values are important primarily for the purpose of evaluating
-                    performance of response validation. The signing performance is not that important
-                    because the zone is usually signed offline.
+                    performance of response validation. The signing performance is usually not that important
+                    because the zone is signed offline. However, when NSEC3 is used with online signing
+                    (NSEC3 White Lies <xref target="RFC7129" />), signing performance is also important.
                 </t>
 
             </section>
@@ -1552,24 +1553,56 @@ NSEC5 EC-P256-SHA256
     </section>
     <section title="Summary">
 
-            <t>
-                <cref source="SHARON">
-                    I WILL REWRITE THE BELOW ONCE ALL THE PERFORMANCE NUMBERS ARE IN
-                </cref>
-                As anticipated, NSEC is the most efficient authenticated denial mechanism as
-                for response size and performance cost. The bottleneck of NSEC5 is the NSEC5 proof
-                computation. If the proofs are precomputed for domain names in the zone, the server
-                has to compute just one NSEC5 proof per answer. But it will still be more expensive
-                than NSEC3 and the same applies for the response size.
-            </t>
+	<t>
+	As anticipated, NSEC and NSEC3 are the most efficient authenticated denial mechanisms,
+    in terms of computation for nameserver and resolver.  NSEC also has the shortest
+    response lengths. However, these mechanisms do not prevent zone enumeration.
+    </t>
 
-            <t>
-                As for the response processing, the validation cost reflects from the records
-                present in the response. Again, the NSEC validation seems to be the most
-                inexpensive. However the difference between RSA and ECDSA verification performance
-                is huge and for some parameters, NSEC3 is faster to validate than NSEC5 and vice
-                versa.
-            </t>
+    <t> Regarding mechanisms that do prevent zone enumeration, NSEC5 should be
+    compared to NSEC3 White Lies <xref target="RFC7129" /> should be compared
+    to NSEC5. The following table summarizes their comparison in terms of
+    response size, performance at the nameserver, and performance at the resolvers.
+    For NSEC3 White Lies, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered,
+    and for NSEC5, RSAFDH-SHA256-SHA256 (2048-bit) and EC-P256-SHA256 were considered.
+	</t>
+<texttable>
+        <ttcol>Algorithm</ttcol>
+        <ttcol align="right">Response length (octets)</ttcol>
+        <ttcol align="right">Nameserver (ops/sec)</ttcol>
+        <ttcol align="right">Resolver (ops/sec)</ttcol>
+        <c>NSEC3WL/RSA</c> <c>1440</c>  <c>1500</c> <c>47000</c>
+        <c>NSEC3WL/ECDSA</c>  <c>752</c>  <c>24000</c> <c>11000</c>
+        <c>NSEC5/RSA</c>   <c>1767</c>  <c>1500</c> <c>46000</c>
+        <c>NSEC5/EC</c>   <c>839</c>  <c>4700</c> <c>4000</c>
+</texttable>
+
+ 	<t>
+	NSEC5 responses lengths are only slighly longer than NSEC3 response lengths:
+    NSEC5/RSA has responses that are about 22% than NSEC3/RSA, while NSEC5/EC has
+    responses that are about 13% longer than NSEC3/ECDSA. For both NSEC3 and NSEC5,
+    it is clear that EC-based solutions give much shorter responses. </t>
+
+    <t>Regarding the computation performance, with RSA the difference is negligible
+     for both nameserver and resolver, whereas with the EC-based schemes the slowdown
+     is approximately 5x for the server and 2.7x for the resolver. Importantly,
+     we expect these gaps to be smaller in practice for two reasons: (1) NSEC3
+     entails three signing/verifying computations per query in the worst case
+     (queried name, closest encloser, wildcard)
+     whereas NSEC5 requires only two.  The table above does not capture this issue,
+      it just measures number of signing/verifying operations per second.
+      (2) The measured implementation of the NSEC5
+     EC VRF is highly unoptimized, whereas the implementation of ECDSA is highly optimized.
+     Future versions of this draft will more accurately measure and compare NSEC5
+     performance.
+ 	</t>
+
+	<t>
+	Note also that while NSEC3 White Lies outperforms NSEC5 for certain cases,
+    NSEC3 White Lies does require authoratitive nameservers to stores the private zone-signing
+    key---making each nameserver a potential point of compromise.
+	</t>
+
         </section>
 
     </section>
