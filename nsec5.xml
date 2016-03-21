@@ -2252,7 +2252,7 @@ NSEC5 EC-P256-SHA256
                     01 - added Performance Considerations section
                 </t>
                 <t>
-                    02 - add Elliptic Curve based VRF for NSEC5 proofs; response size computation with empirical data
+                    02 - Elliptic Curve based VRF for NSEC5 proofs; response sizes based on empirical data
                 </t>
             </list>
         </t>
