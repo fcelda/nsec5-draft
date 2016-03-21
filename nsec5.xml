@@ -1218,8 +1218,6 @@
 
     <section title="Performance Considerations">
 
-        <t><cref source="Jan">Will update this.</cref></t>
-
         <t>
             This section compares NSEC, NSEC3, and NSEC5 with regards to the size of
             denial-of-existence responses and performance impact on the DNS components.
@@ -1227,152 +1225,197 @@
 
         <section title="Performance of Cryptographic Operations">
 
-            <t>
-                <cref source="SHARON">JAN TO UPDATE THIS SECTION. CAN WE ALSO ADD AN
-                    ECDSA BENCHMARK AS A COMPARISON POINT.</cref>  </t>
+<!--
 
+Intel(R) Core(TM) i7-5600U CPU @ 2.60GHz
+OpenSSL 1.0.2h-dev (1.0.2g)
+
+Raw signing performance (openssl speed):
+
+                  sign    verify    sign/s verify/s
+rsa 1024 bits 0.000118s 0.000008s   8493.2 131800.0
+rsa 1024 bits 0.000112s 0.000007s   8893.0 140316.2
+rsa 1024 bits 0.000103s 0.000007s   9737.1 151930.2
+rsa 2048 bits 0.000769s 0.000023s   1300.7  43904.4
+rsa 2048 bits 0.000770s 0.000021s   1299.4  46795.1
+rsa 2048 bits 0.000664s 0.000020s   1507.0  50344.6
+rsa 4096 bits 0.005319s 0.000075s    188.0  13279.2
+rsa 4096 bits 0.004724s 0.000074s    211.7  13493.9
+rsa 4096 bits 0.004796s 0.000068s    208.5  14744.0
+
+                              sign    verify    sign/s verify/s
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  22985.7  10769.2
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  23077.8  11633.2
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  25084.0  11335.6
+ 384 bit ecdsa (nistp384)   0.0002s   0.0009s   4775.7   1152.5
+ 384 bit ecdsa (nistp384)   0.0002s   0.0008s   5102.7   1248.2
+ 384 bit ecdsa (nistp384)   0.0002s   0.0008s   5139.5   1246.5
+
+Hashing:
+
+SHA-1 on 32-byte blocks, 1e8 iterations
+% for x in 1 2 3; do time ./main sha1; done
+./main sha1  24,78s user 0,00s system 99% cpu 24,868 total
+./main sha1  26,12s user 0,01s system 99% cpu 26,222 total
+./main sha1  24,77s user 0,01s system 99% cpu 24,897 total
+
+SHA-256 on 32-byte blocks, 1e8 iterations
+% for x in 1 2 3; do time ./main sha256; done
+./main sha256  34,09s user 0,00s system 99% cpu 34,092 total
+./main sha256  33,95s user 0,01s system 99% cpu 34,091 total
+./main sha256  33,41s user 0,01s system 99% cpu 33,614 total
+
+sha1   3948043.74 hash/s
+sha256 2947041.66 hash/s
+
+NSEC5 RSA, 3e4 signatures, 3e6 verifications
+
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_1024.pem sign; done
+./demo_openssl sha256 rsa_1024.pem sign  3,16s user 0,00s system 99% cpu 3,169 total
+./demo_openssl sha256 rsa_1024.pem sign  3,18s user 0,00s system 99% cpu 3,178 total
+./demo_openssl sha256 rsa_1024.pem sign  3,14s user 0,00s system 99% cpu 3,148 total
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_1024.pem verify; done
+./demo_openssl sha256 rsa_1024.pem verify  8,46s user 0,00s system 99% cpu 8,510 total
+./demo_openssl sha256 rsa_1024.pem verify  8,66s user 0,00s system 99% cpu 8,678 total
+./demo_openssl sha256 rsa_1024.pem verify  8,05s user 0,00s system 99% cpu 8,080 total
+
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_2048.pem sign; done
+./demo_openssl sha256 rsa_2048.pem sign  20,21s user 0,00s system 99% cpu 20,215 total
+./demo_openssl sha256 rsa_2048.pem sign  20,25s user 0,00s system 99% cpu 20,261 total
+./demo_openssl sha256 rsa_2048.pem sign  20,25s user 0,00s system 99% cpu 20,257 total
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_2048.pem verify; done
+./demo_openssl sha256 rsa_2048.pem verify  21,60s user 0,00s system 99% cpu 21,634 total
+./demo_openssl sha256 rsa_2048.pem verify  21,34s user 0,00s system 99% cpu 21,445 total
+./demo_openssl sha256 rsa_2048.pem verify  21,35s user 0,00s system 99% cpu 21,409 total
+
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_4096.pem sign; done
+./demo_openssl sha256 rsa_4096.pem sign  132,38s user 0,00s system 99% cpu 2:12,47 total
+./demo_openssl sha256 rsa_4096.pem sign  132,98s user 0,01s system 99% cpu 2:13,07 total
+./demo_openssl sha256 rsa_4096.pem sign  135,21s user 0,02s system 99% cpu 2:15,74 total
+% for i in $(seq 3); do time ./demo_openssl sha256 rsa_4096.pem verify; done
+./demo_openssl sha256 rsa_4096.pem verify  70,38s user 0,00s system 99% cpu 1:10,39 total
+./demo_openssl sha256 rsa_4096.pem verify  72,30s user 0,00s system 99% cpu 1:12,31 total
+./demo_openssl sha256 rsa_4096.pem verify  74,95s user 0,00s system 99% cpu 1:15,00 total
+
+1024: 9494.67 sign/s   119189.51 verify/s
+2048: 1482.46 sign/s    46223.54 verify/s
+4096:  224.68 sign/s    13916.72 verify/s
+
+NSEC5 EC-P256-SHA256
+
+% wc -l /usr/share/dict/words
+479828 /usr/share/dict/words
+
+% for x in $(seq 3); do time ./ecc ecc-secp256r1.pem sign; done
+./ecc ecc-secp256r1.pem sign  101,80s user 0,01s system 99% cpu 1:41,86 total
+./ecc ecc-secp256r1.pem sign  102,40s user 0,01s system 99% cpu 1:42,45 total
+./ecc ecc-secp256r1.pem sign  101,84s user 0,01s system 99% cpu 1:41,88 total
+
+% for x in $(seq 3); do time ./ecc ecc-secp256r1.pem verify; done
+./ecc ecc-secp256r1.pem verify  129,26s user 0,10s system 99% cpu 2:09,69 total
+./ecc ecc-secp256r1.pem verify  116,57s user 0,02s system 99% cpu 1:56,61 total
+./ecc ecc-secp256r1.pem verify  116,74s user 0,02s system 99% cpu 1:56,91 tota
+
+4703.27 hash/s
+3969.69 verify/s
+
+-->
             <t>
                 Additional performance costs depend on the costs of cryptographic operations
-                to a great extent.  The following results were retrieved with OpenSSL 1.0.1k,
-                running an ordinary laptop on a single-core of a CPU manufactured in 2011. The
+                to a great extent. The following results were retrieved with OpenSSL 1.0.2g,
+                running an ordinary laptop on a single-core of a CPU manufactured in 2016. The
                 parameters of cryptographic operations were chosen to reflect the parameters
                 used in the real-world application of DNSSEC.
             </t>
 
-            <t>
-                Comparison of NSEC3 and NSEC5 hashing performance:
-            </t>
+            <section title="NSEC3 Hashing Performance">
 
-            <t><list style="symbols">
+                <t>
+                    NSEC3 uses multiple iterations of the SHA-1 function with an arbitrary salt.
+                    The input of the first iteration is the domain name in wire format together
+                    with binary salt; the input of the subsequent iterations is the binary
+                    digest and the salt. We can assume that the input size will be smaller
+                    than 32 octets for most executions.
+                </t>
+                <t>
+                    The measured implementation gives a stable performance for small input
+                    blocks up to 32 octets. About 4e6 hashes per second can be computed given
+                    these parameters.
+                </t>
+                <t>
+                    The number of additional iterations in NSEC3 parameters will probably
+                    vary between 0 and 20 in reality. Therefore we can expect the NSEC3 hash
+                    computation performance to be between 2e5 and 4e6 hashes per second.
+                </t>
 
-                    <!--
-                        SHA-1
-                        16 bytes, 10000000 loops, 3533511727 nanoseconds
-                        20 bytes, 10000000 loops, 3520898587 nanoseconds
-                        32 bytes, 10000000 loops, 3506890681 nanoseconds
+            </section>
 
-                        2840184.0475958018 ~ 3e6 hash/s
-                    -->
+            <section title="NSEC5 Hashing Performance">
 
-                    <t>
-                        NSEC3 uses multiple iterations of the SHA-1 function with an arbitrary salt.
-                        The input of the first iteration is the domain name in wire format together
-                        with binary salt; the input of the subsequent iterations is the binary
-                        digest and the salt. We can assume that the input size will be smaller
-                        than 32 octets for most executions.
+                <t>
+                    The NSEC5 hash is computed in two steps: NSEC5 proof computation followed
+                    by hashing of the result. As the proof computation involves relatively
+                    expensive RSA/EC cryptographic operations, the final hashing will have
+                    insignificant impact on the overall performance. We can also expect
+                    difference between NSEC5 hashing (signing) and verification time.
+                </t>
+                <t>
+                    The measurement results for various NSEC5 algorithms and key sizes are
+                    summarized in the following table:
+                </t>
 
-                        <vspace /><vspace />
+                <texttable>
+                    <ttcol>NSEC5 algorithm</ttcol>
+                    <ttcol align="right">Key size (bits)</ttcol>
+                    <ttcol align="right">Proof size (octets)</ttcol>
+                    <ttcol align="right">Perf. (hash/s)</ttcol>
+                    <ttcol align="right">Perf. (verify/s)</ttcol>
+                    <c>RSAFDH-SHA256-SHA256</c> <c>1024</c> <c>128</c> <c>9500</c> <c>120000</c>
+                    <c>RSAFDH-SHA256-SHA256</c> <c>2048</c> <c>256</c> <c>1500</c> <c>46000</c>
+                    <c>RSAFDH-SHA256-SHA256</c> <c>4096</c> <c>512</c> <c>200</c>  <c>14000</c>
+                    <c>EC-P256-SHA256</c>       <c>256</c>  <c>81</c>  <c>4700</c> <c>4000</c>
+                </texttable>
 
-                        The measured implementation gives a stable performance for small input
-                        blocks up to 32 octets. About 3e6 hashes per second can be computed given
-                        these parameters.
+                <t>
+                    Picking a moderate key size of 2048-bits for RSAFDH-SHA256-SHA256, the NSEC5
+                    hash computation performance will be in the order of 10^3 issued hashes per
+                    second and 10^4 validated hashes per second.
+                </t>
 
-                        <vspace /><vspace />
+                <t>
+                    EC-P256-SHA256 trades off performance for the signature size. Both signature
+                    computation and verification performance will be in the order of 10^3 hashes
+                    per second.
+                </t>
 
-                        The number of additional iterations in NSEC3 parameters will probably
-                        vary between 0 and 20 in reality. Therefore we can expect the NSEC3 hash
-                        computation performance to be between 2e5 and 3e6 hashes per second.
-                    </t>
+            </section>
 
-                    <!--
-                        SHA-256
-                        128 bytes, 2000000 loops, 2866912377 nanoseconds
-                        256 bytes, 2000000 loops, 4462902983 nanoseconds
-                        512 bytes, 2000000 loops, 7740297051 nanoseconds
+            <section title="DNSSEC Signing Performance">
+                <t>
+                    For completeness, the following table sumarrizes the signing and verification
+                    performance for different DNSSEC signing algorithms:
+                </t>
 
-                        697614.6240272763 ~ 7e5 hash/s
-                        448138.8028416391 ~ 4e5 hash/s
-                        258388.0162249861 ~ 3e5 hash/s
+                <texttable>
+                    <ttcol>Algorithm</ttcol>
+                    <ttcol align="right">Key size (bits)</ttcol>
+                    <ttcol align="right">Signature size (octets)</ttcol>
+                    <ttcol align="right">Performance (sign/s)</ttcol>
+                    <ttcol align="right">Performance (verify/s)</ttcol>
+                    <c>RSASHA256</c>       <c>1024</c> <c>128</c> <c>9000</c>  <c>140000</c>
+                    <c>RSASHA256</c>       <c>2048</c> <c>256</c> <c>1500</c>  <c>47000</c>
+                    <c>RSASHA256</c>       <c>4096</c> <c>512</c> <c>200</c>   <c>14000</c>
+                    <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>24000</c> <c>11000</c>
+                    <c>ECDSAP384SHA384</c> <c>384</c>  <c>96</c>  <c>5000</c>  <c>1000</c>
+                </texttable>
 
-                        RSA-FDH (sign)
-                        16 bytes, 1024-bit key, 2000 loops, 794122105 nanoseconds
-                        16 bytes, 2048-bit key, 2000 loops, 4928122914 nanoseconds
-                        16 bytes, 4096-bit key, 2000 loops, 37300730429 nanoseconds
+                <t>
+                    The retrieved values are important primarily for the purpose of evaluating
+                    performance of response validation. The signing performance is not that important
+                    because the zone is usually signed offline.
+                </t>
 
-                        2518.504380381151 ~ 3e3 sign/s
-                         405.834033546185 ~ 4e2 sign/s
-                          53.618252967107 ~ 5e1 sign/s
-
-                        RSA-FDH (verify)
-                        16 bytes, 1024-bit key, 20000 loops, 496081794 nanoseconds
-                        16 bytes, 2048-bit key, 20000 loops, 1639759090 nanoseconds
-                        16 bytes, 4096-bit key, 20000 loops, 5988793809 nanoseconds
-
-                        40315.93225531675 ~ 4e4 verify/s
-                        12196.91363320937 ~ 1e4 verify/s
-                         3339.57064441655 ~ 3e3 verify/s
-                    -->
-
-                    <t>
-                        The NSEC5 hash is computed in two steps: NSEC5 proof computation followed
-                        by hashing of the result. The NSEC5 proof is basically an RSA signature and
-                        the performance will therefore vary for signing and verification and also
-                        for different key sizes. We can expect that the final hashing will have
-                        insignificant impact on the overall hashing performance.
-
-                        <vspace /><vspace />
-
-                        The measurement of NSEC5 proof computation and verification resulted into
-                        the following numbers:
-                        3e3 sign/s and 4e4 verify/s for 1024-bit key;
-                        4e2 sign/s and 1e4 verify/s for 2048-bit key; and
-                        5e1 sign/s and 3e3 verify/s for 4096-bit key.
-
-                        <vspace /><vspace />
-
-                        The final SHA-256 hashing is about two orders of magnitude faster given
-                        the input block size matching the NSEC5 proof result size.
-
-                        <vspace /><vspace />
-
-                        Picking a moderate key size of 2048-bits, the NSEC5 hash computation
-                        performance will be in the order of 10^2 issued hashes per second and
-                        10^4 validated hashes per second.
-                    </t>
-
-            </list></t>
-
-            <t>
-                According to the results, the NSEC5 hashing is about three orders of magnitude
-                slower than NSEC3 hashing and the NSEC5 hash verification is about one order
-                of magnitude slower than NSEC3 hash verification.
-            </t>
-
-            <t>
-                Comparison of signing and verification performance of different DNSSEC
-                signing algorithms:
-            </t>
-
-            <!--
-                                sign    verify    sign/s verify/s
-                rsa 1024 bits 0.000408s 0.000024s   2448.5  42148.3
-                rsa 2048 bits 0.002623s 0.000086s    381.2  11599.2
-                rsa 4096 bits 0.019940s 0.000296s     50.2   3381.8
-
-                                            sign    verify    sign/s verify/s
-                256 bit ecdsa (nistp256)   0.0002s   0.0008s   5367.1   1280.1
-                384 bit ecdsa (nistp384)   0.0004s   0.0017s   2722.2    584.3
-            -->
-
-            <texttable>
-                <ttcol>Algorithm</ttcol>
-                <ttcol align="right">Key size (bits)</ttcol>
-                <ttcol align="right">Signature size (octets)</ttcol>
-                <ttcol align="right">Performance (sign/s)</ttcol>
-                <ttcol align="right">Performance (verify/s)</ttcol>
-                <c>RSASHA256</c>       <c>1024</c> <c>128</c> <c>2000</c> <c>40000</c>
-                <c>RSASHA256</c>       <c>2048</c> <c>256</c> <c>400</c>  <c>10000</c>
-                <c>RSASHA256</c>       <c>4096</c> <c>512</c> <c>50</c>   <c>3000</c>
-                <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>5000</c> <c>1000</c>
-                <c>ECDSAP384SHA384</c> <c>384</c>  <c>96</c>  <c>3000</c> <c>600</c>
-            </texttable>
-
-            <t>
-                The retrieved values are important primarily for the purpose of evaluating
-                performance of response validation. The signing performance is not that important
-                because the zone is usually signed offline.
-            </t>
-
+            </section>
         </section>
 
         <section title="Authoritative Server Startup">
