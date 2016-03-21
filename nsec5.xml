@@ -1244,9 +1244,12 @@ rsa 4096 bits 0.004724s 0.000074s    211.7  13493.9
 rsa 4096 bits 0.004796s 0.000068s    208.5  14744.0
 
                               sign    verify    sign/s verify/s
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  22985.7  10769.2
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  23077.8  11633.2
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  25084.0  11335.6
+ 256 bit ecdsa (nistp256)   0.0001s   0.0002s   7513.1   4078.3
+ 256 bit ecdsa (nistp256)   0.0001s   0.0002s   7544.7   4032.7
+ 256 bit ecdsa (nistp256)   0.0001s   0.0003s   7033.7   3878.4
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  22985.7  10769.2 (asm)
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  23077.8  11633.2 (asm)
+ 256 bit ecdsa (nistp256)   0.0000s   0.0001s  25084.0  11335.6 (asm)
  384 bit ecdsa (nistp384)   0.0002s   0.0009s   4775.7   1152.5
  384 bit ecdsa (nistp384)   0.0002s   0.0008s   5102.7   1248.2
  384 bit ecdsa (nistp384)   0.0002s   0.0008s   5139.5   1246.5
@@ -1405,9 +1408,12 @@ NSEC5 EC-P256-SHA256
                     <c>RSASHA256</c>       <c>1024</c> <c>128</c> <c>9000</c>  <c>140000</c>
                     <c>RSASHA256</c>       <c>2048</c> <c>256</c> <c>1500</c>  <c>47000</c>
                     <c>RSASHA256</c>       <c>4096</c> <c>512</c> <c>200</c>   <c>14000</c>
-                    <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>24000</c> <c>11000</c>
+                    <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>7400</c>  <c>4000</c>
                     <c>ECDSAP384SHA384</c> <c>384</c>  <c>96</c>  <c>5000</c>  <c>1000</c>
+                    <c>ECDSAP256SHA256*</c><c>256</c>  <c>64</c>  <c>24000</c> <c>11000</c>
                 </texttable>
+
+                <t>* highly optimized implementation</t>
 
                 <t>
                     The retrieved values are important primarily for the purpose of evaluating
