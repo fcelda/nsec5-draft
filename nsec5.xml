@@ -1418,8 +1418,8 @@ NSEC5 EC-P256-SHA256
                 <t>
                     The retrieved values are important primarily for the purpose of evaluating
                     performance of response validation. The signing performance is usually not that important
-                    because the zone is signed offline. However, when NSEC3 is used with online signing
-                    (NSEC3 White Lies <xref target="RFC7129" />), signing performance is also important.
+                    because the zone is signed offline. However, when online signing is used,
+                    signing performace is also important.
                 </t>
 
             </section>
@@ -1559,23 +1559,23 @@ NSEC5 EC-P256-SHA256
     </section>
     <section title="Summary">
 
-	<t>
-	As anticipated, NSEC and NSEC3 are the most efficient authenticated denial mechanisms,
-    in terms of computation for nameserver and resolver.  NSEC also has the shortest
+    <t>
+    As anticipated, NSEC and NSEC3 are the most efficient authenticated denial mechanisms,
+    in terms of computation for authoritative server and resolver.  NSEC also has the shortest
     response lengths. However, these mechanisms do not prevent zone enumeration.
     </t>
 
-    <t> Regarding mechanisms that do prevent zone enumeration, NSEC5 should be
-    compared to NSEC3 White Lies <xref target="RFC7129" /> should be compared
-    to NSEC5. The following table summarizes their comparison in terms of
-    response size, performance at the nameserver, and performance at the resolvers.
+    <t> Regarding mechanisms that do prevent zone enumeration, NSEC5 should be examined in
+    contrast with Minimally Covering NSEC Records or NSEC3 White Lies <xref target="RFC7129" />.
+    The following table summarizes their comparison in terms of
+    response size, performance at the authoritative server, and performance at the resolver.
     For NSEC3 White Lies, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered,
     and for NSEC5, RSAFDH-SHA256-SHA256 (2048-bit) and EC-P256-SHA256 were considered.
-	</t>
+    </t>
 <texttable>
         <ttcol>Algorithm</ttcol>
         <ttcol align="right">Response length (octets)</ttcol>
-        <ttcol align="right">Nameserver (ops/sec)</ttcol>
+        <ttcol align="right">Authoritative (ops/sec)</ttcol>
         <ttcol align="right">Resolver (ops/sec)</ttcol>
         <c>NSEC3WL/RSA</c>   <c>1440</c> <c>1500</c>  <c>47000</c>
         <c>NSEC3WL/ECDSA</c> <c>752</c>  <c>24000</c> <c>11000</c>
@@ -1583,9 +1583,9 @@ NSEC5 EC-P256-SHA256
         <c>NSEC5/EC</c>      <c>839</c>  <c>4700</c>  <c>4000</c>
 </texttable>
 
- 	<t>
-	NSEC5 responses lengths are only slighly longer than NSEC3 response lengths:
-    NSEC5/RSA has responses that are about 22% than NSEC3/RSA, while NSEC5/EC has
+    <t>
+    NSEC5 responses lengths are only slighly longer than NSEC3 response lengths:
+    NSEC5/RSA has responses that are about 22% longer than NSEC3/RSA, while NSEC5/EC has
     responses that are about 13% longer than NSEC3/ECDSA. For both NSEC3 and NSEC5,
     it is clear that EC-based solutions give much shorter responses. </t>
 
@@ -1594,20 +1594,20 @@ NSEC5 EC-P256-SHA256
      is approximately 5x for the server and 2.7x for the resolver. Importantly,
      we expect these gaps to be smaller in practice for two reasons: (1) NSEC3
      entails three signing/verifying computations per query in the worst case
-     (queried name, closest encloser, wildcard)
+     (closest encloser, next closer, wildcard at closest encloser)
      whereas NSEC5 requires only two.  The table above does not capture this issue,
       it just measures number of signing/verifying operations per second.
       (2) The measured implementation of the NSEC5
-     EC VRF is highly unoptimized, whereas the implementation of ECDSA is highly optimized.
+     EC VRF is not optimized, whereas the implementation of ECDSA is highly optimized.
      Future versions of this draft will more accurately measure and compare NSEC5
      performance.
- 	</t>
+    </t>
 
-	<t>
-	Note also that while NSEC3 White Lies outperforms NSEC5 for certain cases,
-    NSEC3 White Lies does require authoratitive nameservers to stores the private zone-signing
-    key---making each nameserver a potential point of compromise.
-	</t>
+    <t>
+    Note also that while NSEC3 White Lies outperforms NSEC5 for certain cases,
+    NSEC3 White Lies require authoratitive nameserver to store the private zone-signing
+    key, making each nameserver a potential point of compromise.
+    </t>
 
         </section>
 
