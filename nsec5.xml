@@ -1577,10 +1577,10 @@ NSEC5 EC-P256-SHA256
         <ttcol align="right">Response length (octets)</ttcol>
         <ttcol align="right">Nameserver (ops/sec)</ttcol>
         <ttcol align="right">Resolver (ops/sec)</ttcol>
-        <c>NSEC3WL/RSA</c> <c>1440</c>  <c>1500</c> <c>47000</c>
-        <c>NSEC3WL/ECDSA</c>  <c>752</c>  <c>24000</c> <c>11000</c>
-        <c>NSEC5/RSA</c>   <c>1767</c>  <c>1500</c> <c>46000</c>
-        <c>NSEC5/EC</c>   <c>839</c>  <c>4700</c> <c>4000</c>
+        <c>NSEC3WL/RSA</c>   <c>1440</c> <c>1500</c>  <c>47000</c>
+        <c>NSEC3WL/ECDSA</c> <c>752</c>  <c>24000</c> <c>11000</c>
+        <c>NSEC5/RSA</c>     <c>1767</c> <c>1500</c>  <c>46000</c>
+        <c>NSEC5/EC</c>      <c>839</c>  <c>4700</c>  <c>4000</c>
 </texttable>
 
  	<t>
