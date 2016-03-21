@@ -1516,41 +1516,38 @@ NSEC5 EC-P256-SHA256
     <section title="Response Lengths">
 
 <t>
-        <cref source="SHARON">
-                    JAN PLEASE READ THE BELOW IS IT OK NOW.
-        </cref>
     <xref target="nsec5ecc" /> precisely measured response lengths for
     NSEC, NSEC3 and NSEC5 using empirical data from a sample second-level domain
     containing about 1000 names.  The sample zone was signed several times with
-    different algorithms for the RRSIG records and denial-of-existence records.
-    For RRSIG records, RSA with 2048-bit ZSK keys and ECDSAP256SHA256 were considered.
-    For denial-of-existence,  NSEC, NSEC3, NSEC5 with the RSAFDA-SHA256-SHA256
-    with a 2048-bit NSEC5KEY, and NSEC5 with the EC-P256-SHA256 algorithm were considered.
-    (Note that responses
-    lengths for the EC-ED25519-SHA256 schemes are identical to those for the
-    EC-P256-SHA256, and therefore were not considered.)
+    different DNSSEC signing algorithms and different authenticated denial of existence
+    mechanisms.
 </t>
 
 <t>
-    Then, for each instance of the signed zone, denial-of-existence
-    responses (response code NXDOMAIN) were collected by issuing DNS
-    queries with a random five-character string prepended to each actual
-    record name from the zone. The average and standard deviation of the
-    length of these responses are shown below.
+    For DNSKEY algorithms, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered.
+    For authenticated denial, NSEC, NSEC3, NSEC5 with RSAFDH-SHA256-SHA256 (2048-bit), and
+    NSEC5 with EC-P256-SHA256 were considered.
+    (Note that NSEC5 with EC-ED25519-SHA256 is identical to EC-P256-SHA256 as for response size.)
 </t>
 
-        <texttable>
-                <ttcol>NSEC*</ttcol>
-                <ttcol align="right">RRSIG</ttcol>
-                <ttcol align="right">Average length</ttcol>
-                <ttcol align="right">STD length</ttcol>
-                <c>NSEC</c><c>RSA</c><c>1116</c><c>48</c>
-                <c>NSEC</c><c>ECDSA</c><c>543</c><c>24</c>
-                <c>NSEC3</c><c>RSA</c><c>1440</c><c>170</c>
-                <c>NSEC3</c><c>ECDSA</c><c>752</c><c>84</c>
-                <c>NSEC5: RSAFDH-SHA256-SHA256</c><c>RSA</c><c>1767</c><c>7</c>
-                <c>NSEC5: EC-P256-SHA256</c><c>ECDSA</c><c>839</c><c>7</c>
-            </texttable>
+<t>
+    For each instance of the signed zone, Name Error responses were collected by issuing DNS
+    queries with a random five-character label prepended to each actual record name from the zone.
+    The average and standard deviation of the length of these responses are shown below.
+</t>
+
+<texttable>
+        <ttcol></ttcol>
+        <ttcol>DNSKEY algorithm</ttcol>
+        <ttcol align="right">Average length (octets)</ttcol>
+        <ttcol align="right">Standard deviation (octets)</ttcol>
+        <c>NSEC</c>      <c>RSA</c>   <c>1116</c> <c>48</c>
+        <c>NSEC</c>      <c>ECDSA</c> <c>543</c>  <c>24</c>
+        <c>NSEC3</c>     <c>RSA</c>   <c>1440</c> <c>170</c>
+        <c>NSEC3</c>     <c>ECDSA</c> <c>752</c>  <c>84</c>
+        <c>NSEC5/RSA</c> <c>RSA</c>   <c>1767</c> <c>7</c>
+        <c>NSEC5/EC</c>  <c>ECDSA</c> <c>839</c>  <c>7</c>
+</texttable>
 
     </section>
     <section title="Summary">
@@ -2219,7 +2216,7 @@ NSEC5 EC-P256-SHA256
                     01 - added Performance Considerations section
                 </t>
                 <t>
-                    02 - add Elliptic Curve based VRF for NSEC5 proofs
+                    02 - add Elliptic Curve based VRF for NSEC5 proofs; response size computation with empirical data
                 </t>
             </list>
         </t>
