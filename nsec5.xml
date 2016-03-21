@@ -1626,7 +1626,7 @@ NSEC5 EC-P256-SHA256
         of this property is in  <xref target="nsec5" />.
         </t>
 
-        <t><cref source="SHARON">CAN WE ADD THE FOLLOWING?</cref>If a zone owner
+        <t>If a zone owner
         wants to preserve this property of NSEC5, the zone owner SHOULD
         choose the NSEC5 private key to be different from the private
         zone-signing keys or key-signing keys for the zone.
@@ -2025,7 +2025,6 @@ NSEC5 EC-P256-SHA256
                 </list>
             </t>
 
-            <t><cref source="Jan">TODO: fixed binary width of the counter</cref></t>
         </section>
 
         <section title="ECVRF Auxiliary Functions">
@@ -2058,8 +2057,6 @@ NSEC5 EC-P256-SHA256
                     <t>Output h</t>
                 </list>
             </t>
-
-            <t><cref source="Jan">TODO: ECP to OS conversion</cref></t>
         </section>
 
         <section title="ECVRF Proof To Hash">
@@ -2222,7 +2219,7 @@ NSEC5 EC-P256-SHA256
                     01 - added Performance Considerations section
                 </t>
                 <t>
-                    <cref source="Jan">add changelog for -02</cref>
+                    02 - add Elliptic Curve based VRF for NSEC5 proofs
                 </t>
             </list>
         </t>
