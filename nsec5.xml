@@ -1589,7 +1589,7 @@ NSEC5 EC-P256-SHA256
     responses that are about 13% longer than NSEC3/ECDSA. For both NSEC3 and NSEC5,
     it is clear that EC-based solutions give much shorter responses. </t>
 
-    <>
+    <t>
     Regarding the computation performance, with RSA the difference is negligible for both
     nameserver and resolver, whereas with the EC-based schemes there is no slowdown for the
     resolver, and a slowdown of 1.5x for the server. Importantly, we expect the slowdown to be smaller
