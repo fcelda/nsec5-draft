@@ -30,7 +30,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-vcelak-nsec5-02" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-03" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -2281,6 +2281,9 @@ NSEC5 EC-P256-SHA256
                 </t>
                 <t>
                     02 - Elliptic Curve based VRF for NSEC5 proofs; response sizes based on empirical data
+                </t>
+                <t>
+                    03 - Precomputed NSEC5PROOF Values (section <xref target="precomp" />)
                 </t>
             </list>
         </t>
