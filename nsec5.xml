@@ -1448,9 +1448,10 @@ NSEC5 EC-P256-SHA256
 
                 <t hangText="NSEC5">
                     Very similar considerations apply for NSEC3 and NSEC5. There is a strong
-                    motivation to precompute the NSEC5 proofs because they are costly to compute.
-                    A possible solution to reduce the startup time is to store the precomputed
-                    NSEC5 proofs and NSEC5 hashes in a persistent storage.
+                    motivation to store the NSEC5PROOF values for existing domain names in order
+                    to reduce query processing time. A possible way to do this, without inceasing
+                    the zone size, is to store NSEC5PROOF values in a persistent storage structure,
+                    as explained in <xref target="precomp" />.
                 </t>
             </list></t>
 
@@ -1505,7 +1506,7 @@ NSEC5 EC-P256-SHA256
                 <t>
                     NSEC3:
                     <list style="symbols">
-                        <t>NSEC3 hash for Closest provable encloser (possibly precomputed)</t>
+                        <t>NSEC3 hash for Closest provable encloser</t>
                         <t>NSEC3 hash for Next closer name</t>
                         <t>NSEC3 hash for wildcard at the closest encloser</t>
                     </list>
@@ -1518,6 +1519,33 @@ NSEC5 EC-P256-SHA256
                     </list>
                 </t>
             </list></t>
+
+    </section>
+    <section title="Precomputed NSEC5PROOF Values" anchor="precomp">
+
+        <t>
+        As we dicussed in the previous section, the worst-case authenticated denial scenario with NSEC5
+        entails the computation of two NSEC5 proof and hash values, one for the Closest provable encloser
+        and one for the Next closer name. For the latter, these values must be computed from scratch at
+        query time. However, the proof value for the former had been computed during startup, without being
+        stored, as part of the NSEC5 hash computation.
+        </t>
+
+        <t>
+        The query processing time can be drastically reduced if the NSEC5 proof values for all existing
+        names in the zone are stored by the authoritative. In that case,
+        the authoritative identifies the Closest provable encloser name for the given query and looks up
+        both the NSEC5 proof and hash value. This limits the necessary computation during query processing
+        to just one NSEC5 proof and hash value (that of the Next closer name). For both
+        variants of NSEC5, the proof computation time strongly dominates the final NSEC5 hash computation.
+        Therefore, by storing NSEC5 proof values query processing time is almost halved.
+        </t>
+
+        <t>
+        On the other hand,
+        this slightly increases the used storage space at the authoritative. It should be noted that these values
+        should not be part of the zone explicitly. They can be stored at an additional data structure.
+        </t>
 
     </section>
     <section title="Response Lengths">
