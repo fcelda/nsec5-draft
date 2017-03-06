@@ -6,8 +6,6 @@
 <!ENTITY rfc2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
 <!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
 <!ENTITY rfc2308 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2308.xml">
-<!ENTITY rfc3110 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3110.xml">
-<!ENTITY rfc3447 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml">
 <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
@@ -376,7 +374,7 @@
         </t>
     
         <t>
-                With NSEC5, the original domain named is hashed using the VRF
+                With NSEC5, the original domain name is hashed using the VRF
                 using the following steps:
         </t>
 
@@ -385,9 +383,9 @@
                 <t>
                     The domain name is processed using a VRF keyed with the 
                     NSEC5 private key, to obtain a result is called the NSEC5 
-                    proof.  Anyone who knows the public NSEC5 key (which
-                    is distributed
-                    in an NSEC5KEY RR) can verify that a given NSEC5 proof 
+                    proof.  Anyone who knows the public NSEC5 key, normally
+                    acquired via
+                    an NSEC5KEY RR, can verify that a given NSEC5 proof 
                     corresponds to a given domain name.
                 </t>
                 <t>
@@ -408,7 +406,7 @@
         <t>
             To sign a zone, the private NSEC5 key is used to compute the
             NSEC5 hashes for each name in the zone. These NSEC5 hashes are sorted in  
-            canonical order, and each consecutive pair forms an NSEC5 RR. 
+            canonical order <xref target="RFC4034"/> , and each consecutive pair forms an NSEC5 RR. 
             Each NSEC5 RR is signed offline using the private zone-signing key. 
             The resulting signed chain of NSEC5 RRs is provided to all 
             authoratitive servers for the zone, along with the private
@@ -420,35 +418,35 @@
             response to a query, the server uses the private NSEC5 key 
             to compute the NSEC5 proof and NSEC5 hash corresponding to 
             the queried name. 
-            The server then identifies the NSEC5 RR that covers the NSEC5 hash. 
+            The server then identifies the NSEC5 RR that covers the NSEC5 hash.
             The server then responds with 
-            the NSEC5 RR and its corresponding signature (RRSIG RRset), 
+            the NSEC5 RR and its corresponding RRSIG signature RRset,
             as well as a synthesized NSEC5PROOF RR that contains the 
             NSEC5 proof corresponding to the queried name. 
         </t>
 
         <t>
-            To validate the response for a queried name, 
-            the client verifies the following items 
-            (in any order): 
+            To validate the response,
+            the client verifies the following items
+            in any order:
         </t>    
         <t>
             <list style="symbols">
             <t> 
-            The client uses the public NSEC5 key (in the NSEC5KEY RR) 
-            to verify that the NSEC5 proof (in the NSEC5PROOF RR) 
+            The client uses the public NSEC5 key in the NSEC5KEY RR
+            to verify that the NSEC5 proof in the NSEC5PROOF RR
             corresponds to the queried name. 
             </t>
             
             <t>
             The client uses the VRF proof-to-hash function to compute
-            the NSEC5 hash from the NSEC5 proof (in the NSEC5PROOF RR). 
+            the NSEC5 hash from the NSEC5 proof in the NSEC5PROOF RR.
             The client verifies that the NSEC5 hash is
             covered by the NSEC5 RR. 
             </t>
             <t>
-            The client verifies that the NSEC5 RR is validly signed (by the
-            RRSIG RRset).
+            The client verifies that the NSEC5 RR is validly signed by the
+            RRSIG RRset.
             </t>
             </list>
         </t>
@@ -464,8 +462,9 @@
         </t>
 
         <t>
-            The input for the NSEC5 proof computation is an RR owner name in the canonical form
-            in the wire format and a private NSEC5 key; the output is an octet string.
+            The input for the NSEC5 proof computation is an RR owner name in
+            <xref target="RFC4034"/> canonical wire format followed by
+            a private NSEC5 key.  The output is an octet string.
         </t>
 
         <t>
@@ -505,7 +504,7 @@
         <t>
             <list style="symbols">
                 <t>
-                    NSEC5 proof is computed using an Elliptic Curve VRF with
+                    The NSEC5 proof is computed using an Elliptic Curve VRF with
                     FIPS 186-3 P-256 curve.
                     The proof computation and verification is formally specified in
                     <xref target="ecvrf" />.
@@ -514,15 +513,15 @@
                     <xref target="RFC5114" /> (Section 2.6).
                 </t>
                 <t>
-                    NSEC5 hash is x-coordinate of the group element gamma
+                    The NSEC5 hash is the x-coordinate of the group element gamma
                     from the NSEC5 proof (specified in <xref target="ecvrf" />),
-                    encoded as a fixed-width 32-octet unsigned integer
+                    encoded as a 32-octet unsigned integer
                     in network byte order. In practice, the hash is a substring
-                    of the proof ranging from 2nd to 33th octet of the proof
+                    of the proof ranging from 2nd through 33th octet of the proof,
                     inclusive.
                 </t>
                 <t>
-                    The public key format to be used in NSEC5KEY RR is defined in Section 4 of
+                    The public key format to be used in the NSEC5KEY RR is defined in Section 4 of
                     <xref target="RFC6605" /> and thus is the same as the format used to store
                     ECDSA public keys in DNSKEY RRs.
                 </t>
@@ -536,15 +535,15 @@
         <t>
             <list style="symbols">
                 <t>
-                    NSEC5 proof is the same as with EC-P256-SHA256 but using Ed25519
+                    The NSEC5 proof is the same as with EC-P256-SHA256 but using Ed25519
                     elliptic curve with parameters defined in <xref target="RFC7748" />
-                    (Section 4.1).
+                    Section 4.1.
                 </t>
                 <t>
-                    NSEC5 hash is the same as with EC-P256-SHA256.
+                    The NSEC5 hash is the same as with EC-P256-SHA256.
                 </t>
                 <t>
-                    The public key format to be used in NSEC5KEY RR is defined in Section 3 of
+                    The public key format to be used in the NSEC5KEY RR is defined in Section 3 of
                     <xref target="RFC8080" /> and thus is the same as the
                     format used to store Ed25519 public keys in DNSKEY RRs.
                 </t>
@@ -555,8 +554,8 @@
     <section title="The NSEC5KEY Resource Record">
 
         <t>
-            The NSEC5KEY RR stores an NSEC5 public key. The key allows clients to verify a
-            validity of NSEC5 proof sent by a server.
+            The NSEC5KEY RR stores an NSEC5 public key. The key allows clients to
+            validate an NSEC5 proof sent by a server.
         </t>
 
         <section title="NSEC5KEY RDATA Wire Format">
@@ -575,10 +574,10 @@
             </figure>
 
             <t>
-                Algorithm is a single octet identifying NSEC5 algorithm.
+                Algorithm is a single octet identifying the NSEC5 algorithm.
             </t>
             <t>
-                Public Key is a variable sized field holding public key material for NSEC5
+                Public Key is a variable-sized field holding public key material for NSEC5
                 proof verification.
             </t>
         </section>
@@ -601,10 +600,12 @@
 
     <section title="The NSEC5 Resource Record">
         <t>
-            The NSEC5 RR provides authenticated denial of existence for an RRset. One NSEC5 RR
-            represents one piece of an NSEC5 chain, proving existence of RR types present at
-            the original domain name and also non-existence of other domain names in a part of
-            the hashed domain name space.
+            The NSEC5 RR provides authenticated denial of existence
+            for an RRset or domain name. One NSEC5 RR
+            represents one piece of an NSEC5 chain, proving existence
+            of the owner name and non-existence of other domain names
+            in the part of the hashed domain space covered until the
+            next owner name hashed in the RDATA.
         </t>
 
         <section title="NSEC5 RDATA Wire Format">
@@ -627,27 +628,27 @@
             </figure>
 
             <t>
-                Key Tag field contains the key tag value of the NSEC5KEY RR that validates the
+                The Key Tag field contains the key tag value of the NSEC5KEY RR that validates the
                 NSEC5 RR, in network byte order. The value is computed from the NSEC5KEY RDATA
                 using the same algorithm, which is used to compute key tag values for DNSKEY RRs.
                 The algorithm is defined in <xref target="RFC4034" />.
             </t>
             <t>
-                Flags field is a single octet. The meaning of individual bits of the field is
+                The Flags field is a single octet. The meaning of individual bits of the field is
                 defined in <xref target="nsec5_flags" />.
             </t>
             <t>
-                Next length is an unsigned single octet specifying the length of the Next Hashed
+                The Next Length field is an unsigned single octet specifying the length of the Next Hashed
                 Owner Name field in octets.
             </t>
             <t>
-                Next Hashed Owner Name field is a sequence of binary octets. It contains an NSEC5
+                The Next Hashed Owner Name field is a sequence of binary octets. It contains an NSEC5
                 hash of the next domain name in the NSEC5 chain.
             </t>
             <t>
-                Type Bit Maps is a variable sized field encoding RR types present at the original
+                Type Bit Maps is a variable-sized field encoding RR types present at the original
                 owner name matching the NSEC5 RR. The format of the field is equivalent to the
-                format used in NSEC3 RR, described in <xref target="RFC5155" />.
+                format used in the NSEC3 RR, described in <xref target="RFC5155" />.
             </t>
         </section>
 
@@ -687,8 +688,8 @@
                 original domain name level (i.e., there is a wildcard node immediately
                 descending from the immediate ancestor of the original domain name). 
                 The purpose of the Wildcard flag is to reduce the maximum number of
-                RRs required for authenticated denial of existence proof, as
-                originally described in <xref target="I-D.gieben-nsec4" />  Section 7.2.1.
+                RRs required for an authenticated denial of existence proof, as
+                originally described in <xref target="I-D.gieben-nsec4" /> Section 7.2.1.
             </t>
         </section>
 
@@ -724,8 +725,9 @@
 
     <section title="The NSEC5PROOF Resource Record">
         <t>
-            The NSEC5PROOF record is synthesized by the authoritative server on-the-fly. The
-            record contains the NSEC5 proof, proving a position of the owner name in an
+            The NSEC5PROOF record is synthesized by the authoritative
+            server on the fly. It
+            contains the NSEC5 proof, proving the position of the owner name in an
             NSEC5 chain.
         </t>
 
@@ -749,7 +751,7 @@
                 the NSEC5PROOF RR, in network byte order.
             </t>
             <t>
-                Owner Name Hash is a variable sized sequence of binary octets encoding the NSEC5
+                Owner Name Hash is a variable-sized sequence of binary octets encoding the NSEC5
                 proof of the owner name of the RR.
             </t>
         </section>
@@ -1581,8 +1583,6 @@
         &rfc2136;
         &rfc2181;
         &rfc2308;
-        &rfc3110;
-        &rfc3447;
         &rfc4033;
         &rfc4034;
         &rfc4035;
