@@ -1491,6 +1491,7 @@
                 <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t>
                 <t>TBD is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
                 <t>TBD is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
+                <t>TBD is NSEC5-ED25519, alias for ED25519 (15).</t>
             </list>
         </t>
 
@@ -1504,7 +1505,7 @@
             Leonid Reyzin (Boston University), and
             Asaf Ziv (Weizmann Institute)
             who contributed to the design of NSEC5, and
-            Ondrej Sury (CZ.NIC Labs)
+            Ondrej Sury (CZ.NIC Labs), and
             Duane Wessels (Verisign Labs)
             who provided advice on its implementation, and assisted with
             evaluating its performance.
