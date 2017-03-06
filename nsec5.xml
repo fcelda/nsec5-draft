@@ -87,9 +87,27 @@
                     <code>20171</code>
                     <country>USA</country>
                 </postal>
-                <email>goldbe@cs.bu.edu</email>
+                <email>shuque@gmail.com</email>
             </address>
         </author>
+
+
+
+
+        <author fullname="David C Lawrence" initials="D." surname="Lawrence">
+            <organization>Akamai</organization>
+            <address>
+                <postal>
+                    <street>X</street>
+                    <city>Cambridge</city>
+                    <region>MA</region>
+                    <code>X</code>
+                    <country>USA</country>
+                </postal>
+                <email>tale@akamai.com</email>
+            </address>
+        </author>
+
 
         <date year="2017" />
 
@@ -109,18 +127,15 @@
         <t>
             The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource
             record (RR) for authenticated denial of existence and the NSEC3 for hashed
-            authenticated denial of existence.
-
-            The NSEC RR allows for the entire zone contents to be enumerated if a server is
-            queried for carefully chosen domain names; N queries suffice to enumerate a zone
-            containing N names. The NSEC3 RR adds domain-name hashing, which makes the zone
-            enumeration harder, but not impossible.
-
-            This document introduces NSEC5, which provides an cryptographically-proven mechanism
-            that prevents zone enumeration via the use of verifiable random
-            functions (VRFs). NSEC5 has the additional advantage of not requiring
+            authenticated denial of existence.  This document introduces NSEC5
+            as an alternative mechanism for DNSSEC authenticated denial of existence. 
+            NSEC5 uses verifiable random functions (VRFs) to prevent
+            offline zone contents enumeration. NSEC5 protects the integrity of the
+            zone contents even if an adversary compromises one of the
+            authoritative nameservers for the zone.  Integrity is
+            preserved because NSEC5 does not require
             private zone-signing keys to be present on all authoritative servers
-            for the zone, in contrast to online signing schemes like NSEC3
+            for the zone, in contrast to DNSSEC online signing schemes like NSEC3
             White Lies.
         </t>
 
