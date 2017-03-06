@@ -281,7 +281,7 @@
            <t>
                 NSEC5 is not intended to replace NSEC or NSEC3. It is an
                 alternative mechanism for authenticated denial of existence.
-                This document specifies NSEC5 based on the NIST P-256 elliptic
+                This document specifies NSEC5 based on the FIPS 186-3 P-256 elliptic
                 curve and on the Ed25519 elliptic curve. A formal cryptographic 
                 proof of security for elliptic curve (EC) NSEC5 is in 
                 <xref target="nsec5ecc"/>.
@@ -433,7 +433,7 @@
             (in any order): 
         </t>    
         <t>
-            <list style="numbers">
+            <list style="symbols">
             <t> 
             The client uses the public NSEC5 key (in the NSEC5KEY RR) 
             to verify that the NSEC5 proof (in the NSEC5PROOF RR) 
@@ -460,12 +460,12 @@
         <t>
             The algorithms used for NSEC5 authenticated denial are independent of the algorithms
             used for DNSSEC signing. An NSEC5 algorithm defines how the NSEC5 proof and the
-            NSEC5 hash is computed and validated.
+            NSEC5 hash are computed and validated.
         </t>
 
         <t>
             The input for the NSEC5 proof computation is an RR owner name in the canonical form
-            in the wire format and an NSEC5 private key; the output is an octet string.
+            in the wire format and a private NSEC5 key; the output is an octet string.
         </t>
 
         <t>
@@ -473,6 +473,8 @@
             is an octet string.
         </t>
 
+
+    <!-- REMOVE RSA NSEC5 FROM THIS DRAFT!
         <t>
             This document defines RSAFDH-SHA256-SHA256 NSEC5 algorithm as follows:
         </t>
@@ -495,7 +497,7 @@
                 </t>
             </list>
         </t>
-
+-->
         <t>
             This document defines EC-P256-SHA256 NSEC5 algorithm as follows:
         </t>
@@ -1071,16 +1073,15 @@
             be precomputed and stored as part of zone signing.  
             </t>
             
-            <t>For each NSEC5 record, an NSEC5PROOF record corresponding to 
-            the original owner name of the NSEC5 record MAY be precomputed. 
-            The content of the precomputed NSEC5PROOF record MUST be the 
-            same as if the record was computed on-the-fly when serving the zone.
-            </t>
-            
-            <t>
-            Precomputing the NSEC5PROOF halves the number of online 
+            <t>Precomputing NSEC5PROOF RRs halves the number of online 
             cryptographic computations required when responding to a negative 
-            query. NSEC5PROOF records are not part of the zone 
+            query. NSEC5PROOF RRs MAY be precomputed as part of zone signing
+            as follows: 
+            For each NSEC5 RR, compute an NSEC5PROOF RR corresponding to 
+            the original owner name of the NSEC5 RR. The content of the 
+            precomputed NSEC5PROOF record MUST be the 
+            same as if the record was computed on-the-fly when serving the zone.
+            NSEC5PROOF records are not part of the zone 
             and SHOULD be stored separately from the zone file. 
             </t>
                 
