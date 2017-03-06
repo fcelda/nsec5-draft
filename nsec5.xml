@@ -376,53 +376,80 @@
         </t>
     
         <t>
-            To prove non-existence of a domain name in a zone, NSEC uses a chain built from
-            domain names that are present in the zone. NSEC3 replaces the original domain names by
-            their cryptographic hashes. NSEC5 is very similar to NSEC3, except that the
-            cryptographic hash is replaced by hashes computed using a verifiable random function (VRF).
-        </t>
-
-        <t>
-            In NSEC5, the original domain name is hashed with the VRF
-            using the following steps:
+                With NSEC5, the original domain named is hashed using the VRF
+                using the following steps:
         </t>
 
         <t>
             <list style="numbers">
                 <t>
-                    The domain name is hashed using a VRF keyed with the NSEC5 private key, and
-                    the result is called the NSEC5 proof.  Only an authoritative server that knows the
-                    private NSEC5 key can compute the NSEC5 proof.  Any client that knows
-                    the public NSEC5 key can validate the NSEC5 proof.
+                    The domain name is processed using a VRF keyed with the 
+                    NSEC5 private key, to obtain a result is called the NSEC5 
+                    proof.  Anyone who knows the public NSEC5 key (distributed
+                    in an NSEC5KEY RR) can verify that a given NSEC5 proof 
+                    corresponds to a given domain name.
                 </t>
                 <t>
-                    The NSEC5 proof is then hashed. The result is called the NSEC5 hash value.
-                    This hash can be computed by any party that knows the input NSEC5 proof.
+                    The NSEC5 proof is then processed using a publicly-computable
+                    VRF proof-to-hash function, to obtain a result is called 
+                    the NSEC5 hash. 
+                    The NSEC5 hash can be computed by anyone who knows the 
+                    input NSEC5 proof.
                 </t>
             </list>
         </t>
 
         <t>
-            The NSEC5 hash determines the position of a domain name in an NSEC5 chain.
-            That is, all the NSEC5 hashes for a zone are sorted in their canonical order,
-            and each consecutive pair forms an NSEC5 RR.
+            The NSEC5 hash determines the position of a domain name 
+            in an NSEC5 chain. 
+        </t>
+        
+        <t>
+            To sign a zone, the private NSEC5 key is used to compute the
+            NSEC5 hashes for each name in the zone. These NSEC5 hashes are sorted in  
+            canonical order, and each consecutive pair forms an NSEC5 RR. 
+            Each NSEC5 RR is signed offline using the private zone-signing key. 
+            The resulting signed chain of NSEC5 RRs is provided to all 
+            authoratitive servers for the zone, along with the private
+            NSEC5 key. 
         </t>
 
         <t>
-            To prove an non-existence of a particular domain name in response to a query, the
-            server computes the NSEC5 proof (using the private NSEC5 key) on the fly. Then it
-            uses the NSEC5 proof to compute the corresponding NSEC5 hash. It then identifies
-            the NSEC5 RR that covers the NSEC5 hash. In the response message, the server returns the
-            NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized an NSEC5PROOF RR
-            containing the NSEC5 proof that it computed on the fly.
+            To prove an non-existence of a particular domain name in 
+            response to a query, the server uses the private NSEC5 key 
+            to compute the NSEC5 proof and NSEC5 hash corresponding to 
+            the queried name. 
+            The server then identifies the NSEC5 RR that covers the NSEC5 hash. 
+            The server then responds with 
+            the NSEC5 RR and its corresponding signature (RRSIG RRset), 
+            as well as a synthesized NSEC5PROOF RR that contains the 
+            NSEC5 proof corresponding to the queried name. 
         </t>
 
         <t>
-            To validate the response, the client first uses the public NSEC5 key, stored in the
-            zone at an NSEC5KEY RR, to verify that the NSEC5 proof corresponds with the domain
-            name to be disproved. Then, the client computes the NSEC5 hash from the NSEC5 proof
-            and checks that it is covered by the NSEC5 RR. Finally, it checks that the signature on
-            the NSEC5 RR is valid.
+            To validate the response for a queried name, 
+            the client verifies the following items 
+            (in any order): 
+        </t>    
+        <t>
+            <list style="numbers">
+            <t> 
+            The client uses the public NSEC5 key (in the NSEC5KEY RR) 
+            to verify that the NSEC5 proof (in the NSEC5PROOF RR) 
+            corresponds to the queried name. 
+            </t>
+            
+            <t>
+            The client uses the VRF proof-to-hash function to compute
+            the NSEC5 hash from the NSEC5 proof (in the NSEC5PROOF RR). 
+            The client then verifies that the NSEC5 hash is
+            covered by the NSEC5 RR. 
+            </t>
+            <t>
+            The client verifies that the 
+            The signature on the NSEC5 RR is valid.
+            </t>
+            </list>
         </t>
 
     </section>
