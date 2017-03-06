@@ -1422,13 +1422,14 @@
 
 
     <section title="Security Considerations">
+    
         <section title="Zone Enumeration Attacks" anchor="zea">
         <t>
          NSEC5 is robust to zone enumeration via offline dictionary attacks by any
-         attacker that does not know the NSEC5 private key.  Without the private NSEC5 key,
-         that attacker cannot compute the NSEC5 proof that corresponds to a given name. 
-         The only way it can learn the NSEC5 proof value for a given name is by sending
-         a queries for that name to the authoritative server. Without the NSEC5 proof value,
+         attacker that does not know the private NSEC5 key.  Without the private NSEC5 key,
+         that attacker cannot compute the NSEC5 proof that corresponds to a given domain name. 
+         The only way it can learn the NSEC5 proof value for a domain name is by querying
+         the authoratitive server for that name. Without the NSEC5 proof value,
          the attacker cannot learn the NSEC5 hash value. Thus, even an attacker that
          collects the entire chain of NSEC5 RR for a zone cannot use offline attacks to
          "reverse" that NSEC5 hash values in these NSEC5 RR and thus learn which names are
@@ -1460,10 +1461,10 @@
         zone contents are signed using the private zone-signing key. 
         As such, a compromise of the private NSEC5 key does 
         not compromise the integrity of the zone. 
-        However, an adversary that knows the private NSEC5 key can perform 
-        offline zone-enumeration attacks.  As such, the private NSEC5 key 
-        needs only be as secure as those DNSSEC records who are being
-        protected against zone-enumeration attacks.
+        An adversary that learn the private NSEC5 key can, however, perform 
+        offline zone-enumeration attacks.  For this reason, the private NSEC5 key 
+        need only be as secure as the DNSSEC records whose privacy (against zone 
+        enumeration) is being protected by NSEC5. 
         A formal cryptographic proof 
         of this property is in  <xref target="nsec5" /> and <xref target="nsec5ecc" />.
         </t>
@@ -1518,9 +1519,9 @@
         <t>
             <list>
                 <t>0     is Reserved.</t>
-<!--            <t>1     is RSAFDH-SHA256-SHA256.</t> -->
                 <t>1     is EC-P256-SHA256.</t>
                 <t>2     is EC-ED25519-SHA256.</t>
+<!--            <t>X     is RSAFDH-SHA256-SHA256.</t> -->
                 <t>3-255 is Available for assignment.</t>
             </list>
         </t>
@@ -1532,8 +1533,8 @@
 
         <t>
             <list>
-<!--            <t>TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).</t> 
-                <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t> -->
+<!--            <t>TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).</t>  -->
+<!--            <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t> -->
                 <t>TBD is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
 <!--            <t>TBD is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t -->
                 <t>TBD is NSEC5-ED25519, alias for ED25519 (15).</t>
