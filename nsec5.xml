@@ -1009,7 +1009,7 @@
                 of the zone-signing tool configuration.
             </t>
             
-            <section title="Precomputing Closest Provable Encloser Proofs">
+            <section title="Precomputing Closest Provable Encloser Proofs" anchor="precompute">
             
             <t>The worst-case scenario when answering a negative
             query with NSEC5 requires authoratitive nameserver to respond with
@@ -1017,44 +1017,24 @@
             <xref target="nsec5_proofs"/>, one pair of NSEC5PROOF and 
             NSEC5 RRs corresponds to the closest provable encloser, and the other
             pair corresponds to the next closer name.  The NSEC5PROOF 
-            corresponding to the next closer MUST be computed on-the-fly by the 
+            corresponding to the next closer name MUST be computed on-the-fly by the 
             authoratitive nameserver when responding to the query. However,
-            NSEC5PROOF  corresponding to the closest provable encloser SHOULD
+            NSEC5PROOF corresponding to the closest provable encloser MAY
             be precomputed and stored as part of zone signing.  
             </t>
             
-            <t>
-            The following steps describe one possible method to properly precompute
-            NSEC5PROOF  corresponding to the closest provable encloser. 
-            This is not the only such existing method.
-            </t>
-            <t>
-                <list style="numbers">
-                <t>  For each unique original domain name in the zone and each
-                 empty non-terminal, add an NSEC5PROOF RR. If Opt-Out is used, 
-                 owner names of unsigned delegations MAY be excluded. 
-                 
-                 <list style="numbers">
-                <t>
-                 The Owner Name Hash is the NSEC5 proof for the domain name 
-                 encoded in Base32hex without padding.</t>
-                 
-                 <t> The Key Tag field is
-                  the key tag corresponding to the public NSEC5 key. 
-                  </t>
-                  </list>
-                </t>
-                </list>
+            <t>For each NSEC5 record, an NSEC5PROOF record corresponding to 
+            the original owner name of the NSEC5 record MAY be precomputed. 
+            The content of the precomputed NSEC5PROOF record MUST be the 
+            same as if the record was computed on-the-fly when serving the zone.
             </t>
             
-           <t>
-           Precomputing that NSEC5PROOF halves the number of online 
-           cryptographic computations required when responding to a negative 
-           query. This drastically reduces query processing time while slightly 
-           increasing the used storage space at the authoritative. 
-           It should be noted that the precomputed NSEC5PROOF values do not
-           need be part of the zone explicitly and can be stored in an 
-           additional data structure. </t>
+            <t>
+            Precomputing the NSEC5PROOF halves the number of online 
+            cryptographic computations required when responding to a negative 
+            query. NSEC5PROOF records are not part of the zone 
+            and SHOULD be stored separately from the zone file. 
+            </t>
                 
             </section>
         </section>
@@ -1355,12 +1335,39 @@
 
     </section>
 
+    <section  title="Implementation Status" anchor="implementation-status">
+
+    <t>NSEC5 has been implemented for the Knot DNS authoritative server 
+    (version 1.6.4) and the
+    Unbound recursive server (version 1.5.9).
+    The implementation did
+    not introduce additional library dependencies; all cryptographic
+    primitives are already present in OpenSSL
+    v1.0.2j, which is used by both implementations. 
+    The implementation supports the full spectrum of negative responses, 
+    (i.e., NXDOMAIN, NODATA, Wildcard, Wildcard NODATA, and
+    unsigned delegation). The implementation supports the RSAFDH-SHA256-SHA256
+    and EC-P256-SHA256 algorithms. The code is deliberately modular, 
+    so that the EC-ED25519-SHA256 algorithm could be implemented
+    by using the Ed25519 elliptic curve <xref target="RFC8080" />
+    as a drop-in replacement for the P256 elliptic curve. 
+    The authoritative implements
+    the optimization from <xref target="precompute" />
+    that precomputes the NSEC5PROOFs
+    matching each NSEC5 record. 
+    </t>
+
+    </section>
+
+
     <section title="Performance Considerations">
     
     <t>The performance of NSEC5 has been evaluated in <xref target="nsec5ecc"/>.
     </t>
 
     </section>
+
+
 
     <section title="Security Considerations">
         <section title="Zone Enumeration Attacks" anchor="zea">
@@ -1400,8 +1407,8 @@
         The private NSEC5 key needs only be as secure as the DNSSEC records
         whose the privacy (against zone-enumeration attacks) that NSEC5 is protecting.
         This is because even an adversary that knows the private NSEC5 key cannot modify
-        the contents of the zone; this is because the zone contents are signed using the
-        private zone-signing key, while the private NSEC5 key is only used to compute
+        the contents of the zone, because the zone contents are signed using the
+        private zone-signing key. The private NSEC5 key is only used to compute
         NSEC5 proof values.  Thus, a compromise of the private NSEC5 keys does not lead to
         a compromise of the integrity of the DNSSEC record in the zone; instead,
         all that is lost is privacy against zone enumeration, if the attacker that knows
