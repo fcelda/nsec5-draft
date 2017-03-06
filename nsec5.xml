@@ -1398,8 +1398,8 @@
     v1.0.2j, which is used by both implementations. 
     The implementation supports the full spectrum of negative responses, 
     (i.e., NXDOMAIN, NODATA, Wildcard, Wildcard NODATA, and
-    unsigned delegation). The implementation supports the RSAFDH-SHA256-SHA256
-    and EC-P256-SHA256 algorithms. The code is deliberately modular, 
+    unsigned delegation). The implementation supports the 
+    EC-P256-SHA256 algorithms. The code is deliberately modular, 
     so that the EC-ED25519-SHA256 algorithm could be implemented
     by using the Ed25519 elliptic curve <xref target="RFC8080" />
     as a drop-in replacement for the P256 elliptic curve. 
@@ -1532,12 +1532,12 @@
 
         <t>
             <list>
-<!--            <t>TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).</t> -->
-                <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t>
+<!--            <t>TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).</t> 
+                <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t> -->
                 <t>TBD is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
-                <t>TBD is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
+<!--            <t>TBD is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t -->
                 <t>TBD is NSEC5-ED25519, alias for ED25519 (15).</t>
-                <t>TBD is NSEC5-ED448, alias for ED448 (16).</t>
+<!--            <t>TBD is NSEC5-ED448, alias for ED448 (16).</t> -->
             </list>
         </t>
 
@@ -1721,7 +1721,7 @@
 
     <section title="Elliptic Curve VRF" anchor="ecvrf">
         <t>
-            The Elliptic Curve Verifiable Random Function EC-VRF 
+            The Elliptic Curve Verifiable Random Function (EC-VRF) 
             operates in a cyclic group G of prime order with 
             generator g. 
             The cyclic group G MAY be over the NIST-P256 elliptic curve, with curve 
@@ -1765,7 +1765,10 @@
             </list>
         </t>
 
-        <section title="ECVRF Hash To Curve">
+        <section title="EC-VRF Auxiliary Functions">
+
+
+        <section title="EC-VRF Hash To Curve">
             <t>
                 ECVRF_hash_to_curve(m)
             </t>
@@ -1801,9 +1804,9 @@
 
         </section>
 
-        <section title="ECVRF Auxiliary Functions">
 
-        <section title="ECVRF Hash Points">
+
+        <section title="EC-VRF Hash Points">
             <t>
                 ECVRF_hash_points(p_1, p_2, ..., p_n)
             </t>
@@ -1834,7 +1837,7 @@
         </section>
 
    
-        <section title="ECVRF Decode Proof">
+        <section title="EC-VRF Decode Proof">
             <t>
                 ECVRF_decode_proof(pi)
             </t>
@@ -1866,7 +1869,7 @@
 
         </section><!-- Auxiliary Functions -->
 
-        <section title="ECVRF Proving">
+        <section title="EC-VRF Proving">
             <t>
                 ECVRF_PROVE(g^x, x, alpha)
             </t>
@@ -1903,7 +1906,7 @@
             </t>
         </section>
 
-        <section title="ECVRF Proof To Hash">
+        <section title="EC-VRF Proof To Hash">
             <t>
                 ECVRF_PROOF2HASH(gamma)
             </t>
@@ -1933,7 +1936,7 @@
         </section>
 
 
-        <section title="ECVRF Verifying">
+        <section title="EC-VRF Verifying">
             <t>
                 ECVRF_VERIFY(g^x, pi, alpha)
             </t>
