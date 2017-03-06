@@ -18,6 +18,7 @@
 <!ENTITY rfc6605 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6605.xml">
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
+<!ENTITY rfc7719 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7719.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
 <!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
 <!ENTITY I-D.gieben-nsec4 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gieben-nsec4.xml">
@@ -91,23 +92,19 @@
             </address>
         </author>
 
-
-
-
-        <author fullname="David C Lawrence" initials="D." surname="Lawrence">
-            <organization>Akamai</organization>
+        <author fullname="David C Lawrence" initials="D.C." surname="Lawrence">
+            <organization>Akamai Technologies</organization>
             <address>
                 <postal>
-                    <street>X</street>
-                    <city>Cambridge</city>
+                    <street>150 Broadway</street>
+                    <city>Boston</city>
                     <region>MA</region>
-                    <code>X</code>
+                    <code>02142-1054</code>
                     <country>USA</country>
                 </postal>
                 <email>tale@akamai.com</email>
             </address>
         </author>
-
 
         <date year="2017" />
 
@@ -126,11 +123,11 @@
 
         <t>
             The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource
-            record (RR) for authenticated denial of existence and the NSEC3 for hashed
+            record (RR) for authenticated denial of existence and the NSEC3 RR for hashed
             authenticated denial of existence.  This document introduces NSEC5
             as an alternative mechanism for DNSSEC authenticated denial of existence. 
-            NSEC5 uses Verifiable Random Functions (VRFs) to prevent
-            offline zone contents enumeration. NSEC5 protects the integrity of the
+            NSEC5 uses verifiable random functions (VRFs) to prevent
+            offline enumeration of zone contents. NSEC5 protects the integrity of the
             zone contents even if an adversary compromises one of the
             authoritative servers for the zone.  Integrity is
             preserved because NSEC5 does not require
@@ -164,11 +161,11 @@
                
                Second, NSEC5 prevents offline zone enumeration, where 
                an adversary makes a small number of online DNS queries 
-                and then processes them offline in order to learn all
+                and then processes them offline in order to learn all of
                 the names in a zone. Zone enumeration can be used to
                 identify routers, servers or other "things" that could 
                 then be targeted in more complex attacks. An enumerated
-                zone can also be a source of probable e-mail addresses
+                zone can also be a source of probable email addresses
                 for spam, or as a "key for multiple WHOIS queries to
                 reveal registrant data that many registries may have
                 legal obligations to protect" <xref target="RFC5155" />. 
@@ -197,8 +194,8 @@
                 zone is protected even if the server is compromised.
                 However, the NSEC chain allows for easy zone enumeration:
                 N queries to the server suffice to learn all N names in 
-                the zone (see e.g., <xref target="nmap-nsec-enum"/>
-                <xref target="nsec3map"/>
+                the zone (see e.g., <xref target="nmap-nsec-enum"/>,
+                <xref target="nsec3map"/>, and
                 <xref target="ldns-walk"/>).
             </t>
             
@@ -209,9 +206,9 @@
                 even if an authoratitive server is compromised. However, 
                 offline zone enumeration is still possible with 
                 NSEC3
-                (see e.g., <xref target="nsec3walker" />,<xref target="nsec3gpu" />), 
+                (see e.g., <xref target="nsec3walker" />, <xref target="nsec3gpu" />), 
                 and is part of standard network reconnaissance tools 
-                (e.g., <xref target="nmap-nsec3-enum"/>,<xref target="nsec3map"/>). 
+                (e.g., <xref target="nmap-nsec3-enum"/>, <xref target="nsec3map"/>). 
             </t>
             
             <t>
@@ -219,9 +216,8 @@
                 zone-signing key and use this key to synthesize 
                 NSEC or NSEC3 responses on the fly 
                 (e.g. 
-                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />,
-                Minimally-Covering NSEC 
-                <xref target="RFC7129" />).  Because the 
+                NSEC3 White Lies (NSEC3-WL) or Minimally-Covering NSEC,
+                both described in <xref target="RFC7129" />).  Because the 
                 synthesized response only contains information 
                 about the queried name (but not about any other name in 
                 the zone), offline zone enumeration is not possible.
@@ -229,7 +225,6 @@
                 holds the private zone-signing key, integrity is lost if 
                 the authoritative server is compromised.
             </t>
-            
             
                 <texttable>
                     <ttcol>Scheme</ttcol>
@@ -250,7 +245,7 @@
                 NSEC5 prevents offline zone enumeration and protects integrity 
                 even if a zone's authoratitive server is compromised. 
                 To do this, NSEC5 replaces the unkeyed cryptographic hash 
-                function used in NSEC3 with a Verifiable Random Function 
+                function used in NSEC3 with a verifiable random function 
                 (VRF) <xref target="MRV99" />.  
                 A VRF is the public-key version of a keyed 
                 cryptographic hash.  Only the holder of the private VRF key 
@@ -259,28 +254,26 @@
             </t>
            
            <t> 
-                The public VRF key is distributed in an NSEC5KEY RR 
-                (similarly to a DNSKEY RR),
+                The public VRF key is distributed in an NSEC5KEY RR,
+                similar to a DNSKEY RR,
                 and is used to verify NSEC5 hash values.  The private VRF key
                 is present on all authoritative servers for the zone, and is 
-                used to compute hash values. For every query that elicilits 
+                used to compute hash values. For every query that elicits 
                 a denying response, the authoritative server hashes the 
-                query on-the-fly using the private VRF key, and then returns 
+                query on the fly using the private VRF key, and then returns 
                 the corresponding precomputed NSEC5 record(s). In contrast
-                to the online signing approach  (e.g. 
-                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />,
-                Minimally-Covering NSEC 
-                <xref target="RFC7129" />), the private key that is present 
+                to the online signing approach <xref target="RFC7129" />,
+                the private key that is present 
                 on all authoratitive servers for NSEC5 cannot be used to modify 
                 the zone contents.  
            </t>
                 
            <t>
-                Like online-signing approaches, NSEC5 requires the authoratitive server
-                to perform online public key cryptographic operations for 
+                Like online signing approaches, NSEC5 requires the authoritative server
+                to perform online public key cryptographic operations for
                 every query eliciting a denying response.
-                This is nessecary:  <xref target="nsec5" />  proved that 
-                online crypto is nessecary to prevent offline zone enumeration 
+                This is necessary; <xref target="nsec5" />  proved that 
+                online crypto is required to prevent offline zone enumeration 
                 while still protecting the integrity of zone contents against network 
                 attacks.   
            </t>
@@ -314,13 +307,14 @@
                 <xref target="RFC1034" />,
                 <xref target="RFC1035" />,
                 <xref target="RFC4033" />,
-                <xref target="RFC4034" />,
-                <xref target="RFC4035" />, and subsequent RFCs that update them:
+                <xref target="RFC4034" />, and
+                <xref target="RFC4035" />; subsequent RFCs that update them in
                 <xref target="RFC2136" />,
                 <xref target="RFC2181" />,
                 <xref target="RFC2308" />,
-                <xref target="RFC5155" />, and 
-                <xref target="RFC7129" />.
+                <xref target="RFC5155" />, and
+                <xref target="RFC7129" />; and DNS terms in
+                <xref target="RFC7719" />.
             </t>
 
             <t>
@@ -332,13 +326,13 @@
                     <t hangText="Base32hex:">
                         The "Base 32 Encoding with Extended Hex Alphabet" as specified
                         in <xref target="RFC4648" />. The padding characters ("=") are not
-                        used in NSEC5 specification.
+                        used in the NSEC5 specification.
                     </t>
                     <t hangText="Base64:">
                         The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
                     <t hangText="NSEC5 proof:">
-                        VRF proof. A holder of the private key 
+                        A verifiable random function (VRF) proof. A holder of the private key 
                         (e.g., authoritative server) can compute the proof. Anyone
                         knowing the public key (e.g., client) can verify it's validity.
                     </t>
@@ -358,13 +352,13 @@
     <section title="Backward Compatibility">
         <t>
             The specification describes a protocol change that is not backward compatible
-            with <xref target="RFC4035" /> and <xref target="RFC5155" />. NSEC5-unaware
+            with <xref target="RFC4035" /> and <xref target="RFC5155" />. An NSEC5-unaware
             resolver will fail to validate responses introduced by this document.
         </t>
 
         <t>
             To prevent NSEC5-unaware resolvers from attempting to validate the responses, new
-            DNSSEC algorithms identifiers are introduced, the identifiers alias with existing
+            DNSSEC algorithms identifiers are introduced which alias existing
             algorithm numbers. The zones signed according to this specification MUST use only
             these algorithm identifiers, thus NSEC5-unaware resolvers will treat the zone as
             insecure.
@@ -383,25 +377,26 @@
     
         <t>
             To prove non-existence of a domain name in a zone, NSEC uses a chain built from
-            domain names present in the zone. NSEC3 replaces the original domain names by
+            domain names that are present in the zone. NSEC3 replaces the original domain names by
             their cryptographic hashes. NSEC5 is very similar to NSEC3, except that the
             cryptographic hash is replaced by hashes computed using a verifiable random function (VRF).
         </t>
 
         <t>
-            In NSEC5, the original domain name is hashed with the VRF: 
+            In NSEC5, the original domain name is hashed with the VRF
+            using the following steps:
         </t>
 
         <t>
             <list style="numbers">
                 <t>
-                    First, the domain name is hashed using a VRF keyed with the NSEC5 private key;
+                    The domain name is hashed using a VRF keyed with the NSEC5 private key, and
                     the result is called the NSEC5 proof.  Only an authoritative server that knows the
                     private NSEC5 key can compute the NSEC5 proof.  Any client that knows
                     the public NSEC5 key can validate the NSEC5 proof.
                 </t>
                 <t>
-                    Second, the NSEC5 proof is hashed. The result is called the NSEC5 hash value.
+                    The NSEC5 proof is then hashed. The result is called the NSEC5 hash value.
                     This hash can be computed by any party that knows the input NSEC5 proof.
                 </t>
             </list>
@@ -418,13 +413,13 @@
             server computes the NSEC5 proof (using the private NSEC5 key) on the fly. Then it
             uses the NSEC5 proof to compute the corresponding NSEC5 hash. It then identifies
             the NSEC5 RR that covers the NSEC5 hash. In the response message, the server returns the
-            NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized NSEC5PROOF RR
-            containing the NSEC5 proof it computed on the fly.
+            NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized an NSEC5PROOF RR
+            containing the NSEC5 proof that it computed on the fly.
         </t>
 
         <t>
-            To validate the response, the client first uses the public NSEC5 key (stored in the
-            zone as an NSEC5KEY RR) to verify that the NSEC5 proof corresponds with the domain
+            To validate the response, the client first uses the public NSEC5 key, stored in the
+            zone at an NSEC5KEY RR, to verify that the NSEC5 proof corresponds with the domain
             name to be disproved. Then, the client computes the NSEC5 hash from the NSEC5 proof
             and checks that it is covered by the NSEC5 RR. Finally, it checks that the signature on
             the NSEC5 RR is valid.
@@ -1702,6 +1697,7 @@
 
         &rfc6781;
         &rfc7129;
+        &rfc7719;
         &I-D.gieben-nsec4;
         
     </references>
