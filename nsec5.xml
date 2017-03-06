@@ -116,8 +116,11 @@
             enumeration harder, but not impossible.
 
             This document introduces NSEC5, which provides an cryptographically-proven mechanism
-            that prevents zone enumeration. NSEC5 has the additional advantage of not requiring
-            private zone-signing keys to be present on all authoritative servers for the zone.
+            that prevents zone enumeration via the use of verifiable random
+            functions (VRFs). NSEC5 has the additional advantage of not requiring
+            private zone-signing keys to be present on all authoritative servers
+            for the zone, in contrast to online signing schemes like NSEC3
+            White Lies.
         </t>
 
     </abstract>
@@ -137,18 +140,14 @@
             <t>
                NSEC5 provides an alternative mechanism for authenticated denial of
                existence for the DNS Security Extensions (DNSSEC). NSEC5 has two 
-               key security properties.
-            </t>   
+               key security properties. 
                
-            <t>   
-                First, NSEC5 protects the integrity of the zone contents 
-                even if an adversary compromises one of the 
-                authoritative nameservers for the zone. 
-            </t>
-            
-            <t>
-                Second, NSEC5 prevents offline zone enumeration, where 
-                an adversary makes a small number of online DNS queries 
+               First, NSEC5 protects the integrity of the zone contents 
+               even if an adversary compromises one of the 
+               authoritative nameservers for the zone.   
+               
+               Second, NSEC5 prevents offline zone enumeration, where 
+               an adversary makes a small number of online DNS queries 
                 and then processes them offline in order to learn all
                 the names in a zone. Zone enumeration can be used to
                 identify routers, servers or other "things" that could 
@@ -160,11 +159,11 @@
             </t>
         
             <t>
-                All other DNSSEC mechanisms for authenticated denial of
+                As summarized below, all other DNSSEC mechanisms for authenticated denial of
                 existence either fail to preserve integrity against a 
                 compromised nameserver, or fail to prevent offline zone 
-                enumeration.  See the summary below.
-            </t>
+                enumeration.  
+           </t>
             
             
                 <texttable>
@@ -193,17 +192,11 @@
                 authoritative nameserver need not know the private 
                 zone-signing key, the integrity of the zone is ensured even 
                 if an adversary compromises the authoritative nameserver.  
-           </t>     
-            
-            <t>    
-                On
-                the other hand, the NSEC chain allows for easy enumeration 
-                of the zone's contents by sequentially querying for the names
-                immediately following those in the most-recently retrieved NSEC 
-                record. N queries suffice to enumerate a zone containing N names.
-                Several publicly available network reconnaissance tools use
-                NSEC records to launch zone-enumeration attacks 
-                (e.g., <xref target="nmap-nsec-enum"/>
+
+                However, the NSEC chain allows for easy enumeration 
+                of the zone contents. N queries suffice to enumerate a 
+                zone containing N names
+                (see e.g., <xref target="nmap-nsec-enum"/>
                 <xref target="nsec3map"/>
                 <xref target="ldns-walk"/>).
             </t>
@@ -212,39 +205,34 @@
                 When offline signing with NSEC3 is used, the original domain 
                 names in the NSEC chain are replaced by their cryptographic 
                 hashes. Offline signing ensures that NSEC provides integrity
-                even in the face of a compromised nameserver. NSEC3
-                makes offline zone enumeration attacks more difficult but 
-                not impossible.  Dictionary attacks on offline signing with 
-                NSEC3 have been demonstrated 
+                even if an authoratitive server is compromised. However, 
+                offline zone enumeration is still possible with 
+                NSEC3
                 (<xref target="nsec3walker" />,<xref target="nsec3gpu" />), 
-                and available as part of 
-                network reconnaissance tools 
+                and used in standard network reconnaissance tools 
                 (<xref target="nmap-nsec3-enum"/>,<xref target="nsec3map"/>). 
             </t>
             
             <t>
-                An alternative online signing approach requires the 
-                authoritative server 
-                to hold the private zone-signing key and use this key to 
-                synthesize NSEC or NSEC3 responses on the fly. When online signing
-                with NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" /> is used,
-                the synthesized NSEC3 record containing a pair of hash values, 
-                where the first is hash of query minus one, and the second is 
-                the hash of the query plus one. A similar approach is used in 
-                online signing with Minimally-Covering NSEC records 
-                <xref target="RFC7129" />. Both 
-                approaches prevent offline zone enumeration because the 
+                When online signing is used, the authoritative server holds the private 
+                zone-signing key and use this key to synthesize 
+                NSEC or NSEC3 responses on the fly 
+                (e.g. 
+                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />
+                and Minimally-Covering NSEC 
+                <xref target="RFC7129" />). This prevents offline 
+                zone enumeration because the 
                 synthesized NSEC or NSEC3 record only contains information 
-                about the queried name, and does not contain information about 
-                names that are present in the zone.  However, both approaches
+                about the queried name, but not any other name in the zone.  
+                However, because the authoritative server 
+                holds the private zone-signing key, this approaches
                 fail to provide integrity in the face of a compromised 
-                authoritative nameserver, because the authoritative nameserver 
-                holds the private zone-signing key.
+                authoritative server.
             </t>
             
             <t>
                 To prevent offline zone enumeration while still preserving 
-                integrity against a compromised authoritative nameserver, NSEC5
+                integrity against a compromised authoritative server, NSEC5
                 replaces the unkeyed cryptographic hash function used
                 in NSEC3 with a Verifiable Random Function (VRF) <xref target="MRV99" />.  
                 A VRF is essentially the public-key version of a keyed 
@@ -253,36 +241,26 @@
                 can compute the hash, but anyone with public VRF key can 
                 verify the correctness of the hash.
             </t>
-            
-            <t>
-                Hashing in NSEC5 is performed with the VRF key. The public VRF 
-                key PK is distributed in an NSEC5KEY RR, and is 
-                used to validate NSEC5 hash values.  The private VRF key SK
-                is present on all authoritative servers for the 
-                zone, and is used to compute hash values. Importantly, the 
-                NSEC5KEY key cannot be used to modify the contents of the zone.
-                Thus, any compromise of the private NSEC5 key does not lead to
-                a compromise of zone contents. All that is lost is privacy 
-                against zone enumeration, effectively downgrading the security 
-                of NSEC5 to that of NSEC3. 
-           </t>
            
            <t> 
                 For every query that elicilits a denying response, the authoratitive
-                nameserver hashes the query on-the-fly using the secret VRF 
+                server hashes the query on-the-fly using the secret VRF 
                 key, and then returns the corresponding precomputed NSEC5 record.
-                As such, the nameserver must perform an online 
+                As such, the server must perform an online 
                 cryptographic computation for every denying NSEC5 response.  
                 Notice that online signing (e.g. NSEC3 White Lies) also has this 
                 requirement.  This is not a coincidence: <xref target="nsec5"/>
                 proved that any solution that both (a) prevents offline zone
                 enumeration and (b) provides integrity, must necessarily 
                 use online cryptography. What is interesting about NSEC5 is 
-                that it provides integrity even if the nameserver is 
+                that it provides integrity even if the authoratitive server is 
                 compromised. 
            </t>
-           
-           <t>  This document specifies two variants of NSEC5: RSA-based NSEC5 
+         
+           <t>
+                NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
+                alternative mechanism for authenticated denial of existence.
+                This document specifies two variants of NSEC5: RSA-based NSEC5 
                 elliptic curve crypto (EC)-based NSEC5. The cryptographic 
                 proof of security for RSA-based NSEC is in <xref target="nsec5" />.
                 The cryptographic 
@@ -290,10 +268,7 @@
                 <xref target="nsec5ecc"/>.
            </t>
            
-           <t>
-                NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
-                alternative mechanism for authenticated denial of existence.
-           </t>
+         
         </section>
 
         <section title="Requirements">
