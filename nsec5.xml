@@ -19,7 +19,7 @@
 <!ENTITY rfc6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
-<!ENTITY draft-dnskey-ed25519 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-curdle-dnskey-ed25519-01.xml">
+<!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -30,7 +30,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-vcelak-nsec5-03" ipr="trust200902">
+<rfc category="std" docName="draft-vcelak-nsec5-04" ipr="trust200902">
     <front>
         <title abbrev="NSEC5">NSEC5, DNSSEC Authenticated Denial of Existence</title>
 
@@ -74,8 +74,23 @@
                 <email>dipapado@bu.edu</email>
             </address>
         </author>
+        
+        
+        <author fullname="Shumon Huque" initials="S." surname="Huque">
+            <organization>Salesforce</organization>
+            <address>
+                <postal>
+                    <street>2550 Wasser Terrace</street>
+                    <city>Herndon</city>
+                    <region>VA</region>
+                    <code>20171</code>
+                    <country>USA</country>
+                </postal>
+                <email>goldbe@cs.bu.edu</email>
+            </address>
+        </author>
 
-        <date year="2016" />
+        <date year="2017" />
 
         <!-- <workgroup></workgroup> -->
 
@@ -120,72 +135,165 @@
             -->
 
             <t>
-                The DNS Security Extensions (DNSSEC) provides data integrity protection using
-                public-key cryptography, while not requiring that authoritative servers compute signatures
-                on-the-fly. The content of the zone is usually pre-computed and served as is.
-                The evident advantages of this approach are reduced performance requirements
-                per query, as well as not requiring private zone-signing keys to be present
-                on nameservers facing the network.
+               NSEC5 provides an alternative mechanism for authenticated denial of
+               existence for the DNS Security Extensions (DNSSEC). NSEC5 has two 
+               key security properties.
+            </t>   
+               
+            <t>   
+                First, NSEC5 protects the integrity of the zone contents 
+                even if an adversary compromises one of the 
+                authoritative nameservers for the zone. 
             </t>
+            
+            <t>
+                Second, NSEC5 prevents offline zone enumeration, where 
+                an adversary makes a small number of online DNS queries 
+                and then processes them offline in order to learn all
+                the names in a zone. Zone enumeration can be used to
+                identify routers, servers or other "things" that could 
+                then be targeted in more complex attacks. An enumerated
+                zone can also be a source of probable e-mail addresses
+                for spam, or as a "key for multiple WHOIS queries to
+                reveal registrant data that many registries may have
+                legal obligations to protect" <xref target="RFC5155" />. 
+            </t>
+        
+            <t>
+                All other DNSSEC mechanisms for authenticated denial of
+                existence either fail to preserve integrity against a 
+                compromised nameserver, or fail to prevent offline zone 
+                enumeration.  See the summary below.
+            </t>
+            
+            
+                <texttable>
+                    <ttcol>Scheme</ttcol>
+                    <ttcol align="right">Integrity vs network attacks?</ttcol>
+                    <ttcol align="right">Integrity vs compromised nameserver?</ttcol>
+                    <ttcol align="right">Prevents offline zone enumeration?</ttcol>
+                    <ttcol align="right">Online crypto?</ttcol>
+                    <c>Unsigned</c> <c>NO</c> <c>NO</c> <c>YES</c> <c>NO</c>
+                    <c>NSEC</c> <c>YES</c> <c>YES</c> <c>NO</c> <c>NO</c>
+                    <c>NSEC3</c> <c>YES</c> <c>YES</c> <c>NO</c> <c>NO</c>
+                    <c>NSEC3-WL</c> <c>YES</c> <c>NO</c> <c>YES</c>  <c>YES</c>
+                    <c>NSEC5</c> <c>YES</c>  <c>YES</c>  <c>YES</c> <c>YES</c>
+                </texttable>
+
 
             <t>
-                With DNSSEC, each resource record (RR) set in the zone is signed. The signature
-                is retained as an RRSIG RR directly in the zone. This enables response
-                authentication for data existing in the zone. To ensure integrity of denying
-                answers, an NSEC chain of all existing domain names in the zone is constructed.
-                The chain is made of RRs, where each RR represents two consecutive domain names in
-                canonical order present in the zone. The NSEC RRs are signed the same way as
-                any other RRs in the zone. Non-existence of a name can be thus proven by
-                presenting a NSEC RR which covers the name.
+                When offline signing with NSEC is used 
+                <xref target="RFC4034" />, an NSEC chain of 
+                all existing domain names in the zone is constructed. The chain 
+                is made of RRs, where each RR represents two consecutive domain
+                names in canonical order present in the zone. The NSEC RRs are 
+                signed offline. Non-existence of a name is proven by 
+                presenting a signed NSEC 
+                RR which covers the name. Because the 
+                authoritative nameserver need not know the private 
+                zone-signing key, the integrity of the zone is ensured even 
+                if an adversary compromises the authoritative nameserver.  
+           </t>     
+            
+            <t>    
+                On
+                the other hand, the NSEC chain allows for easy enumeration 
+                of the zone's contents by sequentially querying for the names
+                immediately following those in the most-recently retrieved NSEC 
+                record. N queries suffice to enumerate a zone containing N names.
+                Several publicly available network reconnaissance tools use
+                NSEC records to launch zone-enumeration attacks 
+                (e.g., <xref target="nmap-nsec-enum"/>
+                <xref target="nsec3map"/>
+                <xref target="ldns-walk"/>).
             </t>
-
+            
             <t>
-                As side-effect, however, the NSEC chain allows for enumeration of the zone's
-                contents by sequentially querying for the names immediately following those
-                in the most-recently retrieved NSEC record; N queries suffice to enumerate
-                a zone containing N names. As such, the
-                NSEC3 hashed denial of existence was introduced to prevent zone enumeration.
-                In NSEC3, the original domain names in the NSEC chain are replaced by their
-                cryptographic hashes.  While NSEC3 makes zone enumeration more difficult, offline
-                dictionary attacks are still possible and have been demonstrated; this is
-                because hashes may be computed offline and the space of possible domain names
-                is restricted <xref target="nsec3walker" /><xref target="nsec3gpu" />.
+                When offline signing with NSEC3 is used, the original domain 
+                names in the NSEC chain are replaced by their cryptographic 
+                hashes. Offline signing ensures that NSEC provides integrity
+                even in the face of a compromised nameserver. NSEC3
+                makes offline zone enumeration attacks more difficult but 
+                not impossible.  Dictionary attacks on offline signing with 
+                NSEC3 have been demonstrated 
+                (<xref target="nsec3walker" />,<xref target="nsec3gpu" />), 
+                and available as part of 
+                network reconnaissance tools 
+                (<xref target="nmap-nsec3-enum"/>,<xref target="nsec3map"/>). 
             </t>
-
+            
             <t>
-                Zone enumeration can be prevented with NSEC3 if having the authoritative server
-                compute NSEC3 RRs on-the-fly, in response to queries with denying responses. Usually,
-                this is done with Minimally Covering NSEC Records or NSEC3 White Lies
-                <xref target="RFC7129" />. The disadvantage of this
-                approach is a required presence of the private key on all authoritative servers
-                for the zone. This is often undesirable, as the holder of the private key can
-                tamper with the zone contents, and having private keys on many network-facing servers
-                increases the risk that keys can be compromised.
+                An alternative online signing approach requires the 
+                authoritative server 
+                to hold the private zone-signing key and use this key to 
+                synthesize NSEC or NSEC3 responses on the fly. When online signing
+                with NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" /> is used,
+                the synthesized NSEC3 record containing a pair of hash values, 
+                where the first is hash of query minus one, and the second is 
+                the hash of the query plus one. A similar approach is used in 
+                online signing with Minimally-Covering NSEC records 
+                <xref target="RFC7129" />. Both 
+                approaches prevent offline zone enumeration because the 
+                synthesized NSEC or NSEC3 record only contains information 
+                about the queried name, and does not contain information about 
+                names that are present in the zone.  However, both approaches
+                fail to provide integrity in the face of a compromised 
+                authoritative nameserver, because the authoritative nameserver 
+                holds the private zone-signing key.
             </t>
-
+            
             <t>
-                To prevent zone content enumeration without keeping private keys on all
-                authoritative servers, NSEC5 replaces the unkeyed cryptographic hash function used
-                in NSEC3 with a public-key hashing scheme. Hashing in NSEC5 is performed with
-                a separate NSEC5 key. The public portion of this key is distributed in an
-                NSEC5KEY RR, and is used to validate NSEC5 hash values.  The private portion
-                of the NSEC5 key is present on all authoritative servers for the zone, and is
-                used to compute hash values.
+                To prevent offline zone enumeration while still preserving 
+                integrity against a compromised authoritative nameserver, NSEC5
+                replaces the unkeyed cryptographic hash function used
+                in NSEC3 with a Verifiable Random Function (VRF) <xref target="MRV99" />.  
+                A VRF is essentially the public-key version of a keyed 
+                cryptographic hash. The VRF comes with a public-private 
+                key pair. Only the holder of the private VRF key 
+                can compute the hash, but anyone with public VRF key can 
+                verify the correctness of the hash.
             </t>
-
+            
             <t>
-                Importantly, the NSEC5KEY key cannot be used to
-                modify the contents of the zone. Thus, any compromise of the private NSEC5 key
-                does not lead to a compromise of zone contents. All that is lost is privacy against
-                zone enumeration, effectively downgrading the security of NSEC5 to that of NSEC3.
-                NSEC5 comes with a cryptographic proof of security, available in
-                <xref target="nsec5" />.
-            </t>
-
-            <t>
-                The NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
+                Hashing in NSEC5 is performed with the VRF key. The public VRF 
+                key PK is distributed in an NSEC5KEY RR, and is 
+                used to validate NSEC5 hash values.  The private VRF key SK
+                is present on all authoritative servers for the 
+                zone, and is used to compute hash values. Importantly, the 
+                NSEC5KEY key cannot be used to modify the contents of the zone.
+                Thus, any compromise of the private NSEC5 key does not lead to
+                a compromise of zone contents. All that is lost is privacy 
+                against zone enumeration, effectively downgrading the security 
+                of NSEC5 to that of NSEC3. 
+           </t>
+           
+           <t> 
+                For every query that elicilits a denying response, the authoratitive
+                nameserver hashes the query on-the-fly using the secret VRF 
+                key, and then returns the corresponding precomputed NSEC5 record.
+                As such, the nameserver must perform an online 
+                cryptographic computation for every denying NSEC5 response.  
+                Notice that online signing (e.g. NSEC3 White Lies) also has this 
+                requirement.  This is not a coincidence: <xref target="nsec5"/>
+                proved that any solution that both (a) prevents offline zone
+                enumeration and (b) provides integrity, must necessarily 
+                use online cryptography. What is interesting about NSEC5 is 
+                that it provides integrity even if the nameserver is 
+                compromised. 
+           </t>
+           
+           <t>  This document specifies two variants of NSEC5: RSA-based NSEC5 
+                elliptic curve crypto (EC)-based NSEC5. The cryptographic 
+                proof of security for RSA-based NSEC is in <xref target="nsec5" />.
+                The cryptographic 
+                proof of security for EC-based NSEC is in 
+                <xref target="nsec5ecc"/>.
+           </t>
+           
+           <t>
+                NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
                 alternative mechanism for authenticated denial of existence.
-            </t>
+           </t>
         </section>
 
         <section title="Requirements">
@@ -209,8 +317,9 @@
                 <xref target="RFC4035" />, and subsequent RFCs that update them:
                 <xref target="RFC2136" />,
                 <xref target="RFC2181" />,
-                <xref target="RFC2308" />, and
-                <xref target="RFC5155" />.
+                <xref target="RFC2308" />,
+                <xref target="RFC5155" />, and 
+                <xref target="RFC7129" />.
             </t>
 
             <t>
@@ -228,8 +337,8 @@
                         The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
                     <t hangText="NSEC5 proof:">
-                        A signed hash of a domain name (hash-and-sign paradigm). A holder of the
-                        private key (e.g., authoritative server) can compute the proof. Anyone
+                        VRF proof. A holder of the private key 
+                        (e.g., authoritative server) can compute the proof. Anyone
                         knowing the public key (e.g., client) can verify it's validity.
                     </t>
                     <t hangText="NSEC5 hash:">
@@ -267,18 +376,19 @@
     </section>
 
     <section title="How NSEC5 Works">
+    
+        <t>[TODO: This section to be updated to be consistent with the VRF I-D.]
+        </t>
+    
         <t>
             To prove non-existence of a domain name in a zone, NSEC uses a chain built from
             domain names present in the zone. NSEC3 replaces the original domain names by
             their cryptographic hashes. NSEC5 is very similar to NSEC3, except that the
             cryptographic hash is replaced by hashes computed using a verifiable random function (VRF).
-            A VRF is essentially the public-key version of a keyed cryptographic hash.
-            A VRF comes with a public/private key pair, and only the holder of the private key
-            can compute the hash, but anyone with public key can verify the hash.
         </t>
 
         <t>
-            In NSEC5, the original domain name is hashed twice:
+            In NSEC5, the original domain name is hashed with the VRF: 
         </t>
 
         <t>
@@ -409,7 +519,7 @@
                 </t>
                 <t>
                     The public key format to be used in NSEC5KEY RR is defined in Section 3 of
-                    <xref target="I-D.ietf-curdle-dnskey-ed25519" /> and thus is the same as the
+                    <xref target="RFC8080" /> and thus is the same as the
                     format used to store Ed25519 public keys in DNSKEY RRs.
                 </t>
             </list>
@@ -633,7 +743,7 @@
         </section>
     </section>
 
-    <section title="NSEC5 Proofs" anchor="nsec5_proofs">
+    <section title="Types of Authenticated Denial of Existence with NSEC5" anchor="nsec5_proofs">
 
         <t>
             This section summarizes all possible types of authenticated denial of existence.
@@ -853,6 +963,8 @@
                 </list>
             </t>
 
+
+
             <t>
                 The following steps describe one possible method to properly add required NSEC5
                 related records into a zone. This is not the only such existing method.
@@ -919,7 +1031,55 @@
                 the ability of a server to prove insecure delegations. The Opt-Out MAY be part
                 of the zone-signing tool configuration.
             </t>
-
+            
+            <section title="Precomputing Closest Provable Encloser Proofs">
+            
+            <t>The worst-case scenario when answering a negative
+            query with NSEC5 requires authoratitive nameserver to respond with
+            two NSEC5PROOF RRs and two NSEC5 RRs. Per 
+            <xref target="nsec5_proofs"/>, one pair of NSEC5PROOF and 
+            NSEC5 RRs corresponds to the closest provable encloser, and the other
+            pair corresponds to the next closer name.  The NSEC5PROOF 
+            corresponding to the next closer MUST be computed on-the-fly by the 
+            authoratitive nameserver when responding to the query. However,
+            NSEC5PROOF  corresponding to the closest provable encloser SHOULD
+            be precomputed and stored as part of zone signing.  
+            </t>
+            
+            <t>
+            The following steps describe one possible method to properly precompute
+            NSEC5PROOF  corresponding to the closest provable encloser. 
+            This is not the only such existing method.
+            </t>
+            <t>
+                <list style="numbers">
+                <t>  For each unique original domain name in the zone and each
+                 empty non-terminal, add an NSEC5PROOF RR. If Opt-Out is used, 
+                 owner names of unsigned delegations MAY be excluded. 
+                 
+                 <list style="numbers">
+                <t>
+                 The Owner Name Hash is the NSEC5 proof for the domain name 
+                 encoded in Base32hex without padding.</t>
+                 
+                 <t> The Key Tag field is
+                  the key tag corresponding to the public NSEC5 key. 
+                  </t>
+                  </list>
+                </t>
+                </list>
+            </t>
+            
+           <t>
+           Precomputing that NSEC5PROOF halves the number of online 
+           cryptographic computations required when responding to a negative 
+           query. This drastically reduces query processing time while slightly 
+           increasing the used storage space at the authoritative. 
+           It should be noted that the precomputed NSEC5PROOF values do not
+           need be part of the zone explicitly and can be stored in an 
+           additional data structure. </t>
+                
+            </section>
         </section>
 
         <section title="Zone Serving">
@@ -938,12 +1098,12 @@
             <t>
                 According to a type of a response, an authoritative server MUST include NSEC5 RRs
                 in a response as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
-                in the response a matching RRSIG RRset and a synthesized NSEC5PROOF MUST be added
+                in the response a matching RRSIG RRset and a NSEC5PROOF MUST be added
                 as well.
             </t>
 
             <t>
-                A synthesized NSEC5PROOF RR has the owner name set to a domain name exactly
+                The NSEC5PROOF RR has the owner name set to a domain name exactly
                 matching the name required for the proof. The class and TTL of the RR MUST
                 be the same as the class and TTL value of the corresponding NSEC5 RR. The RDATA
                 are set according to the description in <xref target="nsec5proof_rdata" />.
@@ -963,7 +1123,8 @@
 
             <t>
                 NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated
-                denial of  existence mechanism that allows for enumeration of zone contents.
+                denial of  existence mechanism that allows for enumeration of zone contents, 
+                as this would defeat a principal security goal of NSEC5
             </t>
 
             <t>
@@ -1217,424 +1378,9 @@
     </section>
 
     <section title="Performance Considerations">
-
-        <t>
-            This section compares NSEC, NSEC3, and NSEC5 with regards to the size of
-            denial-of-existence responses and performance impact on the DNS components.
-        </t>
-
-        <section title="Performance of Cryptographic Operations">
-
-<!--
-
-Intel(R) Core(TM) i7-5600U CPU @ 2.60GHz
-OpenSSL 1.0.2h-dev (1.0.2g)
-
-Raw signing performance (openssl speed):
-
-                  sign    verify    sign/s verify/s
-rsa 1024 bits 0.000118s 0.000008s   8493.2 131800.0
-rsa 1024 bits 0.000112s 0.000007s   8893.0 140316.2
-rsa 1024 bits 0.000103s 0.000007s   9737.1 151930.2
-rsa 2048 bits 0.000769s 0.000023s   1300.7  43904.4
-rsa 2048 bits 0.000770s 0.000021s   1299.4  46795.1
-rsa 2048 bits 0.000664s 0.000020s   1507.0  50344.6
-rsa 4096 bits 0.005319s 0.000075s    188.0  13279.2
-rsa 4096 bits 0.004724s 0.000074s    211.7  13493.9
-rsa 4096 bits 0.004796s 0.000068s    208.5  14744.0
-
-                              sign    verify    sign/s verify/s
- 256 bit ecdsa (nistp256)   0.0001s   0.0002s   7513.1   4078.3
- 256 bit ecdsa (nistp256)   0.0001s   0.0002s   7544.7   4032.7
- 256 bit ecdsa (nistp256)   0.0001s   0.0003s   7033.7   3878.4
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  22985.7  10769.2 (asm)
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  23077.8  11633.2 (asm)
- 256 bit ecdsa (nistp256)   0.0000s   0.0001s  25084.0  11335.6 (asm)
- 384 bit ecdsa (nistp384)   0.0002s   0.0009s   4775.7   1152.5
- 384 bit ecdsa (nistp384)   0.0002s   0.0008s   5102.7   1248.2
- 384 bit ecdsa (nistp384)   0.0002s   0.0008s   5139.5   1246.5
-
-Hashing:
-
-SHA-1 on 32-byte blocks, 1e8 iterations
-% for x in 1 2 3; do time ./main sha1; done
-./main sha1  24,78s user 0,00s system 99% cpu 24,868 total
-./main sha1  26,12s user 0,01s system 99% cpu 26,222 total
-./main sha1  24,77s user 0,01s system 99% cpu 24,897 total
-
-SHA-256 on 32-byte blocks, 1e8 iterations
-% for x in 1 2 3; do time ./main sha256; done
-./main sha256  34,09s user 0,00s system 99% cpu 34,092 total
-./main sha256  33,95s user 0,01s system 99% cpu 34,091 total
-./main sha256  33,41s user 0,01s system 99% cpu 33,614 total
-
-sha1   3948043.74 hash/s
-sha256 2947041.66 hash/s
-
-NSEC5 RSA, 3e4 signatures, 3e6 verifications
-
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_1024.pem sign; done
-./demo_openssl sha256 rsa_1024.pem sign  3,16s user 0,00s system 99% cpu 3,169 total
-./demo_openssl sha256 rsa_1024.pem sign  3,18s user 0,00s system 99% cpu 3,178 total
-./demo_openssl sha256 rsa_1024.pem sign  3,14s user 0,00s system 99% cpu 3,148 total
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_1024.pem verify; done
-./demo_openssl sha256 rsa_1024.pem verify  8,46s user 0,00s system 99% cpu 8,510 total
-./demo_openssl sha256 rsa_1024.pem verify  8,66s user 0,00s system 99% cpu 8,678 total
-./demo_openssl sha256 rsa_1024.pem verify  8,05s user 0,00s system 99% cpu 8,080 total
-
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_2048.pem sign; done
-./demo_openssl sha256 rsa_2048.pem sign  20,21s user 0,00s system 99% cpu 20,215 total
-./demo_openssl sha256 rsa_2048.pem sign  20,25s user 0,00s system 99% cpu 20,261 total
-./demo_openssl sha256 rsa_2048.pem sign  20,25s user 0,00s system 99% cpu 20,257 total
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_2048.pem verify; done
-./demo_openssl sha256 rsa_2048.pem verify  21,60s user 0,00s system 99% cpu 21,634 total
-./demo_openssl sha256 rsa_2048.pem verify  21,34s user 0,00s system 99% cpu 21,445 total
-./demo_openssl sha256 rsa_2048.pem verify  21,35s user 0,00s system 99% cpu 21,409 total
-
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_4096.pem sign; done
-./demo_openssl sha256 rsa_4096.pem sign  132,38s user 0,00s system 99% cpu 2:12,47 total
-./demo_openssl sha256 rsa_4096.pem sign  132,98s user 0,01s system 99% cpu 2:13,07 total
-./demo_openssl sha256 rsa_4096.pem sign  135,21s user 0,02s system 99% cpu 2:15,74 total
-% for i in $(seq 3); do time ./demo_openssl sha256 rsa_4096.pem verify; done
-./demo_openssl sha256 rsa_4096.pem verify  70,38s user 0,00s system 99% cpu 1:10,39 total
-./demo_openssl sha256 rsa_4096.pem verify  72,30s user 0,00s system 99% cpu 1:12,31 total
-./demo_openssl sha256 rsa_4096.pem verify  74,95s user 0,00s system 99% cpu 1:15,00 total
-
-1024: 9494.67 sign/s   119189.51 verify/s
-2048: 1482.46 sign/s    46223.54 verify/s
-4096:  224.68 sign/s    13916.72 verify/s
-
-NSEC5 EC-P256-SHA256
-
-% wc -l /usr/share/dict/words
-479828 /usr/share/dict/words
-
-% for x in $(seq 3); do time ./ecc ecc-secp256r1.pem sign; done
-./ecc ecc-secp256r1.pem sign  101,80s user 0,01s system 99% cpu 1:41,86 total
-./ecc ecc-secp256r1.pem sign  102,40s user 0,01s system 99% cpu 1:42,45 total
-./ecc ecc-secp256r1.pem sign  101,84s user 0,01s system 99% cpu 1:41,88 total
-
-% for x in $(seq 3); do time ./ecc ecc-secp256r1.pem verify; done
-./ecc ecc-secp256r1.pem verify  129,26s user 0,10s system 99% cpu 2:09,69 total
-./ecc ecc-secp256r1.pem verify  116,57s user 0,02s system 99% cpu 1:56,61 total
-./ecc ecc-secp256r1.pem verify  116,74s user 0,02s system 99% cpu 1:56,91 tota
-
-4703.27 hash/s
-3969.69 verify/s
-
--->
-            <t>
-                Additional performance costs depend on the costs of cryptographic operations
-                to a great extent. The following results were retrieved with OpenSSL 1.0.2g,
-                running an ordinary laptop on a single-core of a CPU manufactured in 2016. The
-                parameters of cryptographic operations were chosen to reflect the parameters
-                used in the real-world application of DNSSEC.
-            </t>
-
-            <section title="NSEC3 Hashing Performance">
-
-                <t>
-                    NSEC3 uses multiple iterations of the SHA-1 function with an arbitrary salt.
-                    The input of the first iteration is the domain name in wire format together
-                    with binary salt; the input of the subsequent iterations is the binary
-                    digest and the salt. We can assume that the input size will be smaller
-                    than 32 octets for most executions.
-                </t>
-                <t>
-                    The measured implementation gives a stable performance for small input
-                    blocks up to 32 octets. About 4e6 hashes per second can be computed given
-                    these parameters.
-                </t>
-                <t>
-                    The number of additional iterations in NSEC3 parameters will probably
-                    vary between 0 and 20 in reality. Therefore we can expect the NSEC3 hash
-                    computation performance to be between 2e5 and 4e6 hashes per second.
-                </t>
-
-            </section>
-
-            <section title="NSEC5 Hashing Performance">
-
-                <t>
-                    The NSEC5 hash is computed in two steps: NSEC5 proof computation followed
-                    by hashing of the result. As the proof computation involves relatively
-                    expensive RSA/EC cryptographic operations, the final hashing will have
-                    insignificant impact on the overall performance. We can also expect
-                    difference between NSEC5 hashing (signing) and verification time.
-                </t>
-                <t>
-                    The measurement results for various NSEC5 algorithms and key sizes are
-                    summarized in the following table:
-                </t>
-
-                <texttable>
-                    <ttcol>NSEC5 algorithm</ttcol>
-                    <ttcol align="right">Key size (bits)</ttcol>
-                    <ttcol align="right">Proof size (octets)</ttcol>
-                    <ttcol align="right">Perf. (hash/s)</ttcol>
-                    <ttcol align="right">Perf. (verify/s)</ttcol>
-                    <c>RSAFDH-SHA256-SHA256</c> <c>1024</c> <c>128</c> <c>9500</c> <c>120000</c>
-                    <c>RSAFDH-SHA256-SHA256</c> <c>2048</c> <c>256</c> <c>1500</c> <c>46000</c>
-                    <c>RSAFDH-SHA256-SHA256</c> <c>4096</c> <c>512</c> <c>200</c>  <c>14000</c>
-                    <c>EC-P256-SHA256</c>       <c>256</c>  <c>81</c>  <c>4700</c> <c>4000</c>
-                </texttable>
-
-                <t>
-                    Picking a moderate key size of 2048-bits for RSAFDH-SHA256-SHA256, the NSEC5
-                    hash computation performance will be in the order of 10^3 issued hashes per
-                    second and 10^4 validated hashes per second.
-                </t>
-
-                <t>
-                    EC-P256-SHA256 trades off verification performance for shorter proof size and faster query processing at the nameserver. In that case, both hash
-                    computation and verification performance will be in the order of 10^3 hashes
-                    per second.
-                </t>
-
-            </section>
-
-            <section title="DNSSEC Signing Performance">
-                <t>
-                    For completeness, the following table sumarrizes the signing and verification
-                    performance for different DNSSEC signing algorithms:
-                </t>
-
-                <texttable>
-                    <ttcol>Algorithm</ttcol>
-                    <ttcol align="right">Key size (bits)</ttcol>
-                    <ttcol align="right">Signature size (octets)</ttcol>
-                    <ttcol align="right">Performance (sign/s)</ttcol>
-                    <ttcol align="right">Performance (verify/s)</ttcol>
-                    <c>RSASHA256</c>       <c>1024</c> <c>128</c> <c>9000</c>  <c>140000</c>
-                    <c>RSASHA256</c>       <c>2048</c> <c>256</c> <c>1500</c>  <c>47000</c>
-                    <c>RSASHA256</c>       <c>4096</c> <c>512</c> <c>200</c>   <c>14000</c>
-                    <c>ECDSAP256SHA256</c> <c>256</c>  <c>64</c>  <c>7400</c>  <c>4000</c>
-                    <c>ECDSAP384SHA384</c> <c>384</c>  <c>96</c>  <c>5000</c>  <c>1000</c>
-                    <c>ECDSAP256SHA256*</c><c>256</c>  <c>64</c>  <c>24000</c> <c>11000</c>
-                </texttable>
-
-                <t>* highly optimized implementation</t>
-
-                <t>
-                    The retrieved values are important primarily for the purpose of evaluating
-                    performance of response validation. The signing performance is usually not that important
-                    because the zone is signed offline. However, when online signing is used,
-                    signing performace is also important.
-                </t>
-
-            </section>
-        </section>
-
-        <section title="Authoritative Server Startup">
-
-            <t>
-                This section compares additional server startup cost based on the used
-                authenticated denial mechanism.
-            </t>
-
-            <t><list style="hanging">
-                <t hangText="NSEC">
-                    There are no special requirements on processing of a NSEC-signed zone during
-                    an authoritative server startup. The server handles the NSEC RRs the same way
-                    as any other records in the zone.
-                </t>
-
-                <t hangText="NSEC3">
-                    The authoritative server can precompute NSEC3 hashes for all domain names in
-                    the NSEC3-signed zone on startup. With respect to query answering, this can
-                    speed up inclusion of NSEC3 RRs for existing domain names (i.e., Closest
-                    provable encloser and QNAME for No Data response).
-                </t>
-
-                <t hangText="NSEC5">
-                    Very similar considerations apply for NSEC3 and NSEC5. There is a strong
-                    motivation to store the NSEC5PROOF values for existing domain names in order
-                    to reduce query processing time. A possible way to do this, without inceasing
-                    the zone size, is to store NSEC5PROOF values in a persistent storage structure,
-                    as explained in <xref target="precomp" />.
-                </t>
-            </list></t>
-
-            <t>
-                The impact of NSEC3 and NSEC5 on the authoritative server startup performance
-                is greatly implementation specific. The server software vendor has to seek balance
-                between answering performance, startup slowdown, and additional storage cost.
-            </t>
-
-        </section>
-
-        <section title="NSEC5 Answer Generating and Processing">
-
-            <t>
-                An authenticated denial proof is required for No Data, Name Error, Wildcard
-                Match, and Wildcard No Data answer. The number of required records depends on
-                used authenticated denial mechanism. Their size, generation cost, and validation
-                cost depend on various zone and signing parameters.
-            </t>
-
-            <t>
-                In the worst case, the following additional records authenticating the denial
-                will be included into the response:
-            </t>
-
-            <t><list style="symbols">
-                <t hangText="NSEC">
-                    Up to two NSEC records and their associated RRSIG records.
-                </t>
-
-                <t hangText="NSEC3">
-                    Up to three NSEC3 records and their associated RRSIG records.
-                </t>
-
-                <t hangText="NSEC5">
-                    Up to two NSEC5 records and their associated NSEC5PROOF and RRSIG records.
-                </t>
-            </list></t>
-
-            <t>
-                The following list summarizes additional cryptographic operations performed
-                by the authoritative server for authenticated denial worst-case scenario:
-            </t>
-
-            <t><list style="symbols">
-                <t>
-                    NSEC:
-                    <list style="symbols">
-                        <t>No cryptographic operations required.</t>
-                    </list>
-                </t>
-                <t>
-                    NSEC3:
-                    <list style="symbols">
-                        <t>NSEC3 hash for Closest provable encloser</t>
-                        <t>NSEC3 hash for Next closer name</t>
-                        <t>NSEC3 hash for wildcard at the closest encloser</t>
-                    </list>
-                </t>
-                <t>
-                    NSEC5:
-                    <list style="symbols">
-                        <t>NSEC5 proof and hash for Closest provable encloser (possibly precomputed)</t>
-                        <t>NSEC5 proof and hash for Next closer name</t>
-                    </list>
-                </t>
-            </list></t>
-
-    </section>
-    <section title="Precomputed NSEC5PROOF Values" anchor="precomp">
-
-        <t>
-        As we dicussed in the previous section, the worst-case authenticated denial scenario with NSEC5
-        entails the computation of two NSEC5 proof and hash values, one for the Closest provable encloser
-        and one for the Next closer name. For the latter, these values must be computed from scratch at
-        query time. However, the proof value for the former had been computed during startup, without being
-        stored, as part of the NSEC5 hash computation.
-        </t>
-
-        <t>
-        The query processing time can be drastically reduced if the NSEC5 proof values for all existing
-        names in the zone are stored by the authoritative. In that case,
-        the authoritative identifies the Closest provable encloser name for the given query and looks up
-        both the NSEC5 proof and hash value. This limits the necessary computation during query processing
-        to just one NSEC5 proof and hash value (that of the Next closer name). For both
-        variants of NSEC5, the proof computation time strongly dominates the final NSEC5 hash computation.
-        Therefore, by storing NSEC5 proof values query processing time is almost halved.
-        </t>
-
-        <t>
-        On the other hand,
-        this slightly increases the used storage space at the authoritative. It should be noted that these values
-        should not be part of the zone explicitly. They can be stored at an additional data structure.
-        </t>
-
-    </section>
-    <section title="Response Lengths">
-
-<t>
-    <xref target="nsec5ecc" /> precisely measured response lengths for
-    NSEC, NSEC3 and NSEC5 using empirical data from a sample second-level domain
-    containing about 1000 names.  The sample zone was signed several times with
-    different DNSSEC signing algorithms and different authenticated denial of existence
-    mechanisms.
-</t>
-
-<t>
-    For DNSKEY algorithms, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered.
-    For authenticated denial, NSEC, NSEC3, NSEC5 with RSAFDH-SHA256-SHA256 (2048-bit), and
-    NSEC5 with EC-P256-SHA256 were considered.
-    (Note that NSEC5 with EC-ED25519-SHA256 is identical to EC-P256-SHA256 as for response size.)
-</t>
-
-<t>
-    For each instance of the signed zone, Name Error responses were collected by issuing DNS
-    queries with a random five-character label prepended to each actual record name from the zone.
-    The average and standard deviation of the length of these responses are shown below.
-</t>
-
-<texttable>
-        <ttcol></ttcol>
-        <ttcol>DNSKEY algorithm</ttcol>
-        <ttcol align="right">Average length (octets)</ttcol>
-        <ttcol align="right">Standard deviation (octets)</ttcol>
-        <c>NSEC</c>      <c>RSA</c>   <c>1116</c> <c>48</c>
-        <c>NSEC</c>      <c>ECDSA</c> <c>543</c>  <c>24</c>
-        <c>NSEC3</c>     <c>RSA</c>   <c>1440</c> <c>170</c>
-        <c>NSEC3</c>     <c>ECDSA</c> <c>752</c>  <c>84</c>
-        <c>NSEC5/RSA</c> <c>RSA</c>   <c>1767</c> <c>7</c>
-        <c>NSEC5/EC</c>  <c>ECDSA</c> <c>839</c>  <c>7</c>
-</texttable>
-
-    </section>
-    <section title="Summary">
-
-    <t>
-    As anticipated, NSEC and NSEC3 are the most efficient authenticated denial mechanisms,
-    in terms of computation for authoritative server and resolver.  NSEC also has the shortest
-    response lengths. However, these mechanisms do not prevent zone enumeration.
+    
+    <t>The performance of NSEC5 has been evaluated in <xref target="nsec5ecc"/>.
     </t>
-
-    <t> Regarding mechanisms that do prevent zone enumeration, NSEC5 should be examined in
-    contrast with Minimally Covering NSEC Records or NSEC3 White Lies <xref target="RFC7129" />.
-    The following table summarizes their comparison in terms of
-    response size, performance at the authoritative server, and performance at the resolver.
-    For NSEC3 White Lies, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered,
-    and for NSEC5, RSAFDH-SHA256-SHA256 (2048-bit) and EC-P256-SHA256 were considered.
-    </t>
-<texttable>
-        <ttcol>Algorithm</ttcol>
-        <ttcol align="right">Response length (octets)</ttcol>
-        <ttcol align="right">Authoritative (ops/sec)</ttcol>
-        <ttcol align="right">Resolver (ops/sec)</ttcol>
-        <c>NSEC3WL/RSA</c>   <c>1440</c> <c>1500</c>  <c>47000</c>
-        <c>NSEC3WL/ECDSA</c> <c>752</c>  <c>7400</c>  <c>4000</c>
-        <c>NSEC5/RSA</c>     <c>1767</c> <c>1500</c>  <c>46000</c>
-        <c>NSEC5/EC</c>      <c>839</c>  <c>4700</c>  <c>4000</c>
-</texttable>
-
-    <t>
-    NSEC5 responses lengths are only slighly longer than NSEC3 response lengths:
-    NSEC5/RSA has responses that are about 22% longer than NSEC3/RSA, while NSEC5/EC has
-    responses that are about 13% longer than NSEC3/ECDSA. For both NSEC3 and NSEC5,
-    it is clear that EC-based solutions give much shorter responses. </t>
-
-    <t>
-    Regarding the computation performance, with RSA the difference is negligible for both
-    nameserver and resolver, whereas with the EC-based schemes there is no slowdown for the
-    resolver, and a slowdown of 1.5x for the server. Importantly, we expect the slowdown to be smaller
-    in practice because NSEC3 entails three signing/verifying computations per query in the worst
-    case (closest encloser, next closer, wildcard at closest encloser) whereas NSEC5 requires only two.
-    The table above does not capture this issue, it just measures number of signing/verifying
-    operations per second. Future versions of this draft will more accurately measure and compare
-    NSEC5 performance.
-    </t>
-
-    <t>
-    Note also that while NSEC3 White Lies outperforms NSEC5 for certain cases,
-    NSEC3 White Lies require authoratitive nameserver to store the private zone-signing
-    key, making each nameserver a potential point of compromise.
-    </t>
-
-        </section>
 
     </section>
 
@@ -1736,9 +1482,9 @@ NSEC5 EC-P256-SHA256
 
         <t>
             <list>
-                <t>NSEC5KEY   value XXX.</t>
-                <t>NSEC5      value XXX.</t>
-                <t>NSEC5PROOF value XXX.</t>
+                <t>NSEC5KEY   value TBD.</t>
+                <t>NSEC5      value TBD.</t>
+                <t>NSEC5PROOF value TBD.</t>
             </list>
         </t>
 
@@ -1765,10 +1511,10 @@ NSEC5 EC-P256-SHA256
 
         <t>
             <list>
-                <t>XXX is NSEC5-RSASHA256, alias for RSASHA256 (8).</t>
-                <t>XXX is NSEC5-RSASHA512, alias for RSASHA512 (10).</t>
-                <t>XXX is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
-                <t>XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
+                <t>TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).</t>
+                <t>TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).</t>
+                <t>TBD is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</t>
+                <t>TBD is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</t>
             </list>
         </t>
 
@@ -1783,7 +1529,9 @@ NSEC5 EC-P256-SHA256
             Asaf Ziv (Weizmann Institute)
             who contributed to the design of NSEC5, and
             Ondrej Sury (CZ.NIC Labs)
-            who provided advice on its implementation.
+            Duane Wessels (Verisign Labs)
+            who provided advice on its implementation, and assisted with
+            evaluating its performance.
         </t>
     </section>
 
@@ -1820,7 +1568,7 @@ NSEC5 EC-P256-SHA256
         &rfc6234;
         &rfc6605;
         &rfc7748;
-        &draft-dnskey-ed25519;
+        &rfc8080;
 
         <reference anchor="FIPS-186-3">
             <front>
@@ -1858,16 +1606,19 @@ NSEC5 EC-P256-SHA256
              <seriesInfo name="in" value="NDSS'15" />
         </reference>
 
-        <reference anchor="nsec5ecc">
+        <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
-                <title>NSEC5 from Elliptic Curves</title>
-                <author initials="S." surname="Goldberg"><organization /></author>
-                <author initials="M." surname="Naor"><organization /></author>
+                <title>Can NSEC5 be Practical for DNSSEC Deployments?</title>
                 <author initials="D." surname="Papadopoulos"><organization /></author>
+                <author initials="D." surname="Wessels"><organization /></author>
+                <author initials="S." surname="Huque"><organization /></author>
+                <author initials="J." surname="Vcelak"><organization /></author>
+                <author initials="M." surname="Naor"><organization /></author>
                 <author initials="L." surname="Reyzin"><organization /></author>
-                <date year="2016" month="January" />
+                <author initials="S." surname="Goldberg"><organization /></author>
+                <date year="2017" month="February" />
             </front>
-            <seriesInfo name="in" value="ePrint Cryptology Archive 2016/083" />
+            <seriesInfo name="in" value="ePrint Cryptology Archive 2017/099" />
         </reference>
 
         <reference anchor="nsec3gpu">
@@ -1888,6 +1639,54 @@ NSEC5 EC-P256-SHA256
                 <author initials="D. J." surname="Bernstein"><organization /></author>
                 <date year="2011" />
             </front>
+        </reference>
+
+
+        <reference anchor="nmap-nsec-enum" target="https://nmap.org/nsedoc/scripts/dns-nsec-enum.html">
+            <front>
+                <title>nmap: dns-nsec-enum</title>
+                <author initials="J. R." surname="Bond"><organization /></author>
+                <date year="2011" />
+            </front>
+        </reference>
+
+        <reference anchor="nmap-nsec3-enum" target="https://nmap.org/nsedoc/scripts/dns-nsec3-enum.html">
+            <front>
+                <title>nmap: dns-nsec3-enum</title>
+                <author initials="A." surname="Nikolic"><organization /></author>
+                <author initials="J. R." surname="Bond"><organization /></author>
+                <date year="2011" />
+            </front>
+        </reference>
+
+        
+        <reference anchor="nsec3map" target="https://github.com/anonion0/nsec3map.">
+            <front>
+                <title>nsec3map with John the Ripper plugin</title>
+                <author initials="" surname="anonion0"><organization /></author>
+                <date year="2015" />
+            </front>
+        </reference>
+
+
+        
+        <reference anchor="ldns-walk" target="http://git.nlnetlabs.nl/ldns/tree/examples/ldns-walk.c">
+            <front>
+                <title>ldns</title>
+                <author initials="" surname="NLNetLabs"><organization /></author>
+                <date year="2015" />
+            </front>
+        </reference>
+        
+        <reference anchor="MRV99">
+            <front>
+                <title>Verifiable Random Functions</title>
+                <author initials="S." surname="Michali"><organization /></author>
+                <author initials="M." surname="Rabin"><organization /></author>
+                <author initials="S." surname="Vadhan"><organization /></author>
+                <date year="1999" />
+            </front>
+            <seriesInfo name="in" value="FOCS" />
         </reference>
 
         &rfc6781;
@@ -2283,7 +2082,13 @@ NSEC5 EC-P256-SHA256
                     02 - Elliptic Curve based VRF for NSEC5 proofs; response sizes based on empirical data
                 </t>
                 <t>
-                    03 - Precomputed NSEC5PROOF Values (section <xref target="precomp" />)
+                    03 - Mention precomputed NSEC5PROOF Values in 
+                    Performance Considerations section
+                </t>
+                <t>
+                    04 - Edit rationale, edit Zone Signing section to mention
+                    precomputed NSEC5PROOFs, update Performance Considerations
+                    section.
                 </t>
             </list>
         </t>
