@@ -385,7 +385,8 @@
                 <t>
                     The domain name is processed using a VRF keyed with the 
                     NSEC5 private key, to obtain a result is called the NSEC5 
-                    proof.  Anyone who knows the public NSEC5 key (distributed
+                    proof.  Anyone who knows the public NSEC5 key (which
+                    is distributed
                     in an NSEC5KEY RR) can verify that a given NSEC5 proof 
                     corresponds to a given domain name.
                 </t>
@@ -442,12 +443,12 @@
             <t>
             The client uses the VRF proof-to-hash function to compute
             the NSEC5 hash from the NSEC5 proof (in the NSEC5PROOF RR). 
-            The client then verifies that the NSEC5 hash is
+            The client verifies that the NSEC5 hash is
             covered by the NSEC5 RR. 
             </t>
             <t>
-            The client verifies that the 
-            The signature on the NSEC5 RR is valid.
+            The client verifies that the NSEC5 RR is validly signed (by the
+            RRSIG RRset).
             </t>
             </list>
         </t>
