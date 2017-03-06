@@ -1251,8 +1251,8 @@
             </t>
 
             <t>
-                To validate a denial of existence, zone NSEC5 public keys are required in addition
-                to DNSSEC public keys. Similarly to DNSKEY RRs, the NSEC5KEY RRs are present in
+                To validate a denial of existence, NSEC5 public keys for the zone are required in addition
+                to DNSSEC public keys. Similarly to DNSKEY RRs, the NSEC5KEY RRs are present at
                 the zone apex.
             </t>
 
@@ -1261,7 +1261,7 @@
 
                 <list style="numbers">
                     <t>
-                        Select a correct NSEC5 public key to validate the NSEC5PROOF. The Key Tag
+                        Select a correct NSEC5 public key to validate the NSEC5 proof. The Key Tag
                         value of the NSEC5PROOF RR must match with the key tag value computed
                         from the NSEC5KEY RDATA.
                     </t>
@@ -1288,7 +1288,7 @@
             </t>
 
             <t>
-                Notice that determining closest encloser and next closer name in NSEC5 is easier
+                Notice that determining the closest encloser and next closer name in NSEC5 is easier
                 than in NSEC3. NSEC5 and NSEC5PROOF RRs are always present in pairs in responses
                 and the original owner name of the NSEC5 RR matches the owner name of the
                 NSEC5PROOF RR.
@@ -1350,7 +1350,7 @@
 
         <section title="NSEC5 Private Keys">
             <t>
-                This document does not define format to store NSEC5 private key. Use of
+                This document does not define a format to store NSEC5 private keys. Use of a
                 standardized and adopted format is RECOMMENDED.
             </t>
 
@@ -1363,15 +1363,15 @@
         <section title="Domain Name Length Restrictions">
 
             <t>
-                The NSEC5 creates additional restrictions on domain name lengths. In particular,
-                zones with names that, when converted into hashed owner names exceed the 255
-                octet length limit imposed by <xref target="RFC1035" />, cannot use this
+                NSEC5 creates additional restrictions on domain name lengths. In particular,
+                zones with names that, when converted into hashed owner names, exceed the 255
+                octet length limit imposed by <xref target="RFC1035" /> cannot use this
                 specification.
             </t>
 
             <t>
                 The actual maximum length of a domain name depends on the length of the zone
-                name and used NSEC5 algorithm.
+                name and the NSEC5 algorithm used.
             </t>
 
             <t>
@@ -1380,7 +1380,8 @@
                 constructing the NSEC5 RR owner name, the encoded hash is prepended to the name
                 of the zone as a single label which includes the length field of a single octet.
 
-                The maximal length of the zone name in wire format is
+                The maximum length of the zone name in wire format
+                using the 256-bit hash is
                 therefore 202 octets (255 - 53).
             </t>
 
@@ -1400,13 +1401,13 @@
     The implementation supports the full spectrum of negative responses, 
     (i.e., NXDOMAIN, NODATA, Wildcard, Wildcard NODATA, and
     unsigned delegation). The implementation supports the 
-    EC-P256-SHA256 algorithms. The code is deliberately modular, 
+    EC-P256-SHA256 algorithm. The code is deliberately modular, 
     so that the EC-ED25519-SHA256 algorithm could be implemented
     by using the Ed25519 elliptic curve <xref target="RFC8080" />
     as a drop-in replacement for the P256 elliptic curve. 
-    The authoritative implements
+    The authoritative server implements
     the optimization from <xref target="precompute" />
-    that precomputes the NSEC5PROOFs
+    to precompute the NSEC5PROOF RRs
     matching each NSEC5 record. 
     </t>
 
@@ -1444,9 +1445,9 @@
          Hash collisions between QNAME and the owner name of an NSEC5 RR may
         occur.  When they do, it will be impossible to prove the non-
         existence of the colliding QNAME.  However, with SHA-256, this is
-        highly unlikely (on the order of 1 in 2^128).  Note that DNSSEC
+        highly unlikely, on the order of 1 in 2^128.  Note that DNSSEC
         already relies on the presumption that a cryptographic hash function
-        is collision resistant, since these hash functions are used
+        is collision-resistant, since these hash functions are used
         for generating and validating signatures and DS RRs. See also the
         discussion on key lengths in <xref target="nsec5" />.
         </t>
@@ -1483,10 +1484,10 @@
         for as long as the privacy of the zone contents is important. Even if the NSEC5 key
         is rolled frequently, its length cannot be too short, because zone privacy
         may be important for a period of time longer than the lifetime of the key.
-        (For example, an attacker might collect the entire chain of NSEC5 RR for the
+        For example, an attacker might collect the entire chain of NSEC5 RR for the
         zone over one short period, and then, later (even after the NSEC5 key expires)
         perform an offline dictionary attack that  attempt to "reverse" the NSEC5
-        hash values present in the NSEC5 RRs.)
+        hash values present in the NSEC5 RRs.
         This is in contrast to zone-signing and key-signing keys used in DNSSEC; these
         keys, which ensure the authenticity and integrity of the zone contents,
         need to remain secure only during their lifetime.
@@ -1930,7 +1931,7 @@
                 </list>
             </t>
             <t>
-                Note: Because of the format of compressed form of an elliptic curve, the hash can
+                Note: Because of the format of the compressed form of an elliptic curve, the hash can
                 be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
             </t>
         </section>
