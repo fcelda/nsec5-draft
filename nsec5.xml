@@ -276,9 +276,9 @@
            </t>
                 
            <t>
-                Like online-signing approaches, NSEC5 requires online public key 
-                cryptographic operations at the authoratitive server
-                for every query eliciliting a denying response.
+                Like online-signing approaches, NSEC5 requires the authoratitive server
+                to perform online public key cryptographic operations for 
+                every query eliciting a denying response.
                 This is nessecary:  <xref target="nsec5" />  proved that 
                 online crypto is nessecary to prevent offline zone enumeration 
                 while still protecting the integrity of zone contents against network 
