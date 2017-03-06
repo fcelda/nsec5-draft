@@ -382,16 +382,15 @@
             <list style="numbers">
                 <t>
                     The domain name is processed using a VRF keyed with the 
-                    NSEC5 private key, to obtain a result is called the NSEC5 
-                    proof.  Anyone who knows the public NSEC5 key, normally
+                    NSEC5 private key to obtain the NSEC5 proof.
+                    Anyone who knows the public NSEC5 key, normally
                     acquired via
                     an NSEC5KEY RR, can verify that a given NSEC5 proof 
                     corresponds to a given domain name.
                 </t>
                 <t>
                     The NSEC5 proof is then processed using a publicly-computable
-                    VRF proof-to-hash function, to obtain a result is called 
-                    the NSEC5 hash. 
+                    VRF proof-to-hash function to obtain the NSEC5 hash.
                     The NSEC5 hash can be computed by anyone who knows the 
                     input NSEC5 proof.
                 </t>
@@ -529,7 +528,7 @@
         </t>
 
         <t>
-            This document defines EC-ED25519-SHA256 NSEC5 as follows:
+            This document defines EC-ED25519-SHA256 NSEC5 algorithm as follows:
         </t>
 
         <t>
@@ -725,8 +724,8 @@
 
     <section title="The NSEC5PROOF Resource Record">
         <t>
-            The NSEC5PROOF record is synthesized by the authoritative
-            server on the fly. It
+            The NSEC5PROOF record is not to be included in the zone file and is synthesized by
+            the authoritative server on the fly. It
             contains the NSEC5 proof, proving the position of the owner name in an
             NSEC5 chain.
         </t>
@@ -1307,7 +1306,7 @@
         <section title="Responses With Unknown Hash Algorithms">
             <t>
                 A validator MUST ignore NSEC5KEY RRs with unknown NSEC5 algorithms. The
-                practical result of this is that zones sighed with unknown algorithms will
+                practical result of this is that zones signed with unknown algorithms will
                 be considered bogus.
             </t>
         </section>
