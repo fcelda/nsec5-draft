@@ -781,18 +781,18 @@
         <t>
             <list style="numbers">
                 <t>
-                    Facts to prove. The minimum amount of information an authoritative server
+                    Facts to prove: the minimum amount of information that an authoritative server
                     must provide to a client to assure the client that the response content is
                     valid.
                 </t>
                 <t>
-                    Authoritative server proofs. NSEC5 RRs an authoritative server must include
+                    Authoritative server proofs: the NSEC5 RRs that an authoritative server must include
                     in a response to prove the listed facts.
                 </t>
                 <t>
-                    Validator checks. Individual checks a validating server is required to
+                    Validator checks: the individual checks that a validating server is required to
                     perform on a response. The response content is considered valid only if all
-                    the checks pass.
+                    of the checks pass.
                 </t>
             </list>
         </t>
@@ -800,8 +800,8 @@
         <t>
             If NSEC5 is said to match a domain name, the owner name of the NSEC5 RR has to be
             equivalent to an NSEC5 hash of that domain name. If an NSEC5 RR is said to cover
-            a domain name, the NSEC5 hash of the domain name must lay strictly between that
-            NSEC5 RR's Owner Name and  Next Hashed Owner Name.
+            a domain name, the NSEC5 hash of the domain name must sort in canonical order between that
+            NSEC5 RR's Owner Name and Next Hashed Owner Name.
         </t>
 
         <section title="Name Error Responses">
@@ -1068,8 +1068,8 @@
             <xref target="nsec5_proofs"/>, one pair of NSEC5PROOF and 
             NSEC5 RRs corresponds to the closest provable encloser, and the other
             pair corresponds to the next closer name.  The NSEC5PROOF 
-            corresponding to the next closer name MUST be computed on-the-fly by the 
-            authoratitive server when responding to the query. However,
+            corresponding to the next closer name MUST be computed on the fly by the 
+            authoratitive server when responding to the query. However, the
             NSEC5PROOF corresponding to the closest provable encloser MAY
             be precomputed and stored as part of zone signing.  
             </t>
@@ -1081,7 +1081,7 @@
             For each NSEC5 RR, compute an NSEC5PROOF RR corresponding to 
             the original owner name of the NSEC5 RR. The content of the 
             precomputed NSEC5PROOF record MUST be the 
-            same as if the record was computed on-the-fly when serving the zone.
+            same as if the record was computed on the fly when serving the zone.
             NSEC5PROOF records are not part of the zone 
             and SHOULD be stored separately from the zone file. 
             </t>
@@ -1099,26 +1099,26 @@
             <t>
                 The authenticated denial of existence proofs in NSEC5 are almost the same
                 as in NSEC3. Because of the Wildcard flag in NSEC5 RRs, the
-                NSEC5 proof consists of (up to) two NSEC5 RRs, instead of (up to) three as
-                originally described in <xref target="I-D.gieben-nsec4" />  Section 7.2.1.
+                NSEC5 proof consists of one or two NSEC5 RRs, instead of up to three as
+                originally described in <xref target="I-D.gieben-nsec4" /> Section 7.2.1.
             </t>
 
             <t>
                 According to the type of a response, an authoritative server MUST include NSEC5 RRs
                 in a response as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
-                in the response, a corresponding RRSIG RRset and a NSEC5PROOF MUST be added
+                in the response, a corresponding RRSIG RRset and an NSEC5PROOF MUST be added
                 as well.
             </t>
 
             <t>
                 The NSEC5PROOF RR has the owner name set to a domain name exactly
                 matching the name required for the proof. The class and TTL of the RR MUST
-                be the same as the class and TTL value of the corresponding NSEC5 RR. The RDATA
-                are set according to the description in <xref target="nsec5proof_rdata" />.
+                be the same as the class and TTL value of the corresponding NSEC5 RR. Its RDATA
+                payload is set according to the description in <xref target="nsec5proof_rdata" />.
             </t>
 
             <t>
-                Notice, that the NSEC5PROOF owner name can be a wildcard (e.g., source of
+                Notice that the NSEC5PROOF owner name can be a wildcard (e.g., source of
                 synthesis proof in wildcard No Data responses). The name also always matches
                 the domain name required for the proof while the NSEC5 RR may only cover
                 (not match) the name in the proof (e.g., closest encloser in Name Error responses).
@@ -1170,13 +1170,13 @@
             </t>
 
             <t>
-                The minimal delay between the steps 1. and 2. MUST be the time it takes for the
+                The minimum delay between steps 1 and 2 MUST be the time it takes for the
                 data to propagate to the authoritative servers, plus the TTL value of the old
                 NSEC5KEY RRset.
             </t>
 
             <t>
-                The minimal delay between the steps 2. and 3. MUST be the time it takes for the
+                The minimum delay between steps 2 and 3 MUST be the time it takes for the
                 data to propagate to the authoritative servers, plus the maximum zone TTL value
                 of any of the data in the previous version of the zone.
             </t>
@@ -1212,7 +1212,7 @@
             
             <t>
             It is RECOMMENDED that the server rejects all updates containing
-            changes to the NSEC5 chain (or related RRSIG RRs) and performs itself
+            changes to the NSEC5 chain and its related RRSIG RRs, and performs itself
             any required alternations of the NSEC5 chain induced by the update.
             Alternatively, the server MUST verify that all the properties are
             satisfied prior to performing the update atomically.
