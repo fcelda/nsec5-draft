@@ -290,7 +290,7 @@
                 alternative mechanism for authenticated denial of existence.
                 This document specifies NSEC5 based on the NIST P-256 elliptic
                 curve and on the Ed25519 elliptic curve. A formal cryptographic 
-                proof of security for elliptic curve NSEC5 is in 
+                proof of security for elliptic curve (EC) NSEC5 is in 
                 <xref target="nsec5ecc"/>.
            </t>
            
