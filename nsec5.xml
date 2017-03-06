@@ -1747,7 +1747,7 @@
             <list>
                 <t>g^x - EC public key</t>
                 <t>x - EC private key</t>
-                <t>q - primer order of group G</t>
+                <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
             </list>
         </t>
