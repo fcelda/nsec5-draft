@@ -129,10 +129,10 @@
             record (RR) for authenticated denial of existence and the NSEC3 for hashed
             authenticated denial of existence.  This document introduces NSEC5
             as an alternative mechanism for DNSSEC authenticated denial of existence. 
-            NSEC5 uses verifiable random functions (VRFs) to prevent
+            NSEC5 uses Verifiable Random Functions (VRFs) to prevent
             offline zone contents enumeration. NSEC5 protects the integrity of the
             zone contents even if an adversary compromises one of the
-            authoritative nameservers for the zone.  Integrity is
+            authoritative servers for the zone.  Integrity is
             preserved because NSEC5 does not require
             private zone-signing keys to be present on all authoritative servers
             for the zone, in contrast to DNSSEC online signing schemes like NSEC3
@@ -160,7 +160,7 @@
                
                First, NSEC5 protects the integrity of the zone contents 
                even if an adversary compromises one of the 
-               authoritative nameservers for the zone.   
+               authoritative servers for the zone.   
                
                Second, NSEC5 prevents offline zone enumeration, where 
                an adversary makes a small number of online DNS queries 
@@ -175,17 +175,66 @@
             </t>
         
             <t>
-                As summarized below, all other DNSSEC mechanisms for authenticated denial of
+                All other DNSSEC mechanisms for authenticated denial of
                 existence either fail to preserve integrity against a 
-                compromised nameserver, or fail to prevent offline zone 
+                compromised server, or fail to prevent offline zone 
                 enumeration.  
            </t>
+            
+            
+            <t>
+                When offline signing with NSEC is used 
+                <xref target="RFC4034" />, an NSEC chain of 
+                all existing domain names in the zone is constructed and signed
+                offline. The chain 
+                is made of resource records (RRs), where each RR 
+                represents two consecutive domain
+                names in canonical order present in the zone. 
+                The authoritative server proves the non-existence of 
+                a name by presenting a signed NSEC RR which covers the name.  
+                Because the authoratitive server does not need not 
+                to know the private zone-signing key,  the integrity of the 
+                zone is protected even if the server is compromised.
+                However, the NSEC chain allows for easy zone enumeration:
+                N queries to the server suffice to learn all N names in 
+                the zone (see e.g., <xref target="nmap-nsec-enum"/>
+                <xref target="nsec3map"/>
+                <xref target="ldns-walk"/>).
+            </t>
+            
+            <t>
+                When offline signing with NSEC3 is used <xref target="RFC5155" />, 
+                the original names in the NSEC chain are replaced by their cryptographic 
+                hashes. Offline signing ensures that NSEC preserves integrity
+                even if an authoratitive server is compromised. However, 
+                offline zone enumeration is still possible with 
+                NSEC3
+                (see e.g., <xref target="nsec3walker" />,<xref target="nsec3gpu" />), 
+                and is part of standard network reconnaissance tools 
+                (e.g., <xref target="nmap-nsec3-enum"/>,<xref target="nsec3map"/>). 
+            </t>
+            
+            <t>
+                When online signing is used, the authoritative server holds the private 
+                zone-signing key and use this key to synthesize 
+                NSEC or NSEC3 responses on the fly 
+                (e.g. 
+                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />,
+                Minimally-Covering NSEC 
+                <xref target="RFC7129" />).  Because the 
+                synthesized response only contains information 
+                about the queried name (but not about any other name in 
+                the zone), offline zone enumeration is not possible.
+                However, because the authoritative server 
+                holds the private zone-signing key, integrity is lost if 
+                the authoritative server is compromised.
+            </t>
             
             
                 <texttable>
                     <ttcol>Scheme</ttcol>
                     <ttcol align="right">Integrity vs network attacks?</ttcol>
-                    <ttcol align="right">Integrity vs compromised nameserver?</ttcol>
+                    <ttcol align="right">Integrity vs compromised auth. server?</ttcol>
                     <ttcol align="right">Prevents offline zone enumeration?</ttcol>
                     <ttcol align="right">Online crypto?</ttcol>
                     <c>Unsigned</c> <c>NO</c> <c>NO</c> <c>YES</c> <c>NO</c>
@@ -196,91 +245,52 @@
                 </texttable>
 
 
-            <t>
-                When offline signing with NSEC is used 
-                <xref target="RFC4034" />, an NSEC chain of 
-                all existing domain names in the zone is constructed. The chain 
-                is made of RRs, where each RR represents two consecutive domain
-                names in canonical order present in the zone. The NSEC RRs are 
-                signed offline. Non-existence of a name is proven by 
-                presenting a signed NSEC 
-                RR which covers the name. Because the 
-                authoritative nameserver need not know the private 
-                zone-signing key, the integrity of the zone is ensured even 
-                if an adversary compromises the authoritative nameserver.  
-
-                However, the NSEC chain allows for easy enumeration 
-                of the zone contents. N queries suffice to enumerate a 
-                zone containing N names
-                (see e.g., <xref target="nmap-nsec-enum"/>
-                <xref target="nsec3map"/>
-                <xref target="ldns-walk"/>).
-            </t>
             
             <t>
-                When offline signing with NSEC3 is used, the original domain 
-                names in the NSEC chain are replaced by their cryptographic 
-                hashes. Offline signing ensures that NSEC provides integrity
-                even if an authoratitive server is compromised. However, 
-                offline zone enumeration is still possible with 
-                NSEC3
-                (<xref target="nsec3walker" />,<xref target="nsec3gpu" />), 
-                and used in standard network reconnaissance tools 
-                (<xref target="nmap-nsec3-enum"/>,<xref target="nsec3map"/>). 
-            </t>
-            
-            <t>
-                When online signing is used, the authoritative server holds the private 
-                zone-signing key and use this key to synthesize 
-                NSEC or NSEC3 responses on the fly 
-                (e.g. 
-                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />
-                and Minimally-Covering NSEC 
-                <xref target="RFC7129" />). This prevents offline 
-                zone enumeration because the 
-                synthesized NSEC or NSEC3 record only contains information 
-                about the queried name, but not any other name in the zone.  
-                However, because the authoritative server 
-                holds the private zone-signing key, this approaches
-                fail to provide integrity in the face of a compromised 
-                authoritative server.
-            </t>
-            
-            <t>
-                To prevent offline zone enumeration while still preserving 
-                integrity against a compromised authoritative server, NSEC5
-                replaces the unkeyed cryptographic hash function used
-                in NSEC3 with a Verifiable Random Function (VRF) <xref target="MRV99" />.  
-                A VRF is essentially the public-key version of a keyed 
-                cryptographic hash. The VRF comes with a public-private 
-                key pair. Only the holder of the private VRF key 
+                NSEC5 prevents offline zone enumeration and protects integrity 
+                even if a zone's authoratitive server is compromised. 
+                To do this, NSEC5 replaces the unkeyed cryptographic hash 
+                function used in NSEC3 with a Verifiable Random Function 
+                (VRF) <xref target="MRV99" />.  
+                A VRF is the public-key version of a keyed 
+                cryptographic hash.  Only the holder of the private VRF key 
                 can compute the hash, but anyone with public VRF key can 
                 verify the correctness of the hash.
             </t>
            
            <t> 
-                For every query that elicilits a denying response, the authoratitive
-                server hashes the query on-the-fly using the secret VRF 
-                key, and then returns the corresponding precomputed NSEC5 record.
-                As such, the server must perform an online 
-                cryptographic computation for every denying NSEC5 response.  
-                Notice that online signing (e.g. NSEC3 White Lies) also has this 
-                requirement.  This is not a coincidence: <xref target="nsec5"/>
-                proved that any solution that both (a) prevents offline zone
-                enumeration and (b) provides integrity, must necessarily 
-                use online cryptography. What is interesting about NSEC5 is 
-                that it provides integrity even if the authoratitive server is 
-                compromised. 
+                The public VRF key is distributed in an NSEC5KEY RR 
+                (similarly to a DNSKEY RR),
+                and is used to verify NSEC5 hash values.  The private VRF key
+                is present on all authoritative servers for the zone, and is 
+                used to compute hash values. For every query that elicilits 
+                a denying response, the authoritative server hashes the 
+                query on-the-fly using the private VRF key, and then returns 
+                the corresponding precomputed NSEC5 record(s). In contrast
+                to the online signing approach  (e.g. 
+                NSEC3 White Lies (NSEC3-WL) <xref target="RFC7129" />,
+                Minimally-Covering NSEC 
+                <xref target="RFC7129" />), the private key that is present 
+                on all authoratitive servers for NSEC5 cannot be used to modify 
+                the zone contents.  
+           </t>
+                
+           <t>
+                Like online-signing approaches, NSEC5 requires online public key 
+                cryptographic operations at the authoratitive server
+                for every query eliciliting a denying response.
+                This is nessecary:  <xref target="nsec5" />  proved that 
+                online crypto is nessecary to prevent offline zone enumeration 
+                while still protecting the integrity of zone contents against network 
+                attacks.   
            </t>
          
            <t>
-                NSEC5 is not intended to replace NSEC or NSEC3. It is designed as an
+                NSEC5 is not intended to replace NSEC or NSEC3. It is an
                 alternative mechanism for authenticated denial of existence.
-                This document specifies two variants of NSEC5: RSA-based NSEC5 
-                elliptic curve crypto (EC)-based NSEC5. The cryptographic 
-                proof of security for RSA-based NSEC is in <xref target="nsec5" />.
-                The cryptographic 
-                proof of security for EC-based NSEC is in 
+                This document specifies NSEC5 based on the NIST P-256 elliptic
+                curve and on the Ed25519 elliptic curve. A formal cryptographic 
+                proof of security for elliptic curve NSEC5 is in 
                 <xref target="nsec5ecc"/>.
            </t>
            
@@ -1027,13 +1037,13 @@
             <section title="Precomputing Closest Provable Encloser Proofs" anchor="precompute">
             
             <t>The worst-case scenario when answering a negative
-            query with NSEC5 requires authoratitive nameserver to respond with
+            query with NSEC5 requires authoratitive server to respond with
             two NSEC5PROOF RRs and two NSEC5 RRs. Per 
             <xref target="nsec5_proofs"/>, one pair of NSEC5PROOF and 
             NSEC5 RRs corresponds to the closest provable encloser, and the other
             pair corresponds to the next closer name.  The NSEC5PROOF 
             corresponding to the next closer name MUST be computed on-the-fly by the 
-            authoratitive nameserver when responding to the query. However,
+            authoratitive server when responding to the query. However,
             NSEC5PROOF corresponding to the closest provable encloser MAY
             be precomputed and stored as part of zone signing.  
             </t>
