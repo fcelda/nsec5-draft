@@ -20,6 +20,7 @@
 <!ENTITY rfc7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
 <!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
+<!ENTITY I-D.gieben-nsec4 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gieben-nsec4.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -634,9 +635,10 @@
             <t>
                 The Wildcard flag indicates that a wildcard synthesis is possible at the
                 original domain name level (i.e., there is a wildcard node immediately
-                descending from the immediate ancestor of the original domain name). The
-                purpose of the Wildcard flag is to reduce a maximum number of RRs required for
-                authenticated denial of existence proof.
+                descending from the immediate ancestor of the original domain name). 
+                The purpose of the Wildcard flag is to reduce the maximum number of
+                RRs required for authenticated denial of existence proof, as
+                originally described in <xref target="I-D.gieben-nsec4" />  Section 7.2.1.
             </t>
         </section>
 
@@ -1668,7 +1670,8 @@
 
         &rfc6781;
         &rfc7129;
-
+        &I-D.gieben-nsec4;
+        
     </references>
 
     <section title="RSA Full Domain Hash Algorithm" anchor="fdh">
