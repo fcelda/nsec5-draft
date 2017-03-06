@@ -1168,20 +1168,21 @@
 
         <section title="Dynamic Updates">
             <t>
-                A zone signed using NSEC5 MAY accept dynamic updates. The changes to the zone
-                MUST be performed in a way, that the zone satisfies the properties specified
-                in <xref target="zone_signing" /> at any time.
+            A zone signed using NSEC5 MAY accept dynamic updates 
+            <xref target="RFC2136" />.  The
+            changes to the zone MUST be performed in a way that ensures that the zone
+            satisfies the properties specified in <xref target="zone_signing" /> at any time.  The
+            process described in <xref target="RFC5155" /> Section 7.5 describes how to handle
+            the issues surrouding the handling of empty non-terminals as well as
+            Opt-Out.
             </t>
-
+            
             <t>
-                It is RECOMMENDED that the server rejects all updates containing changes to
-                the NSEC5 chain (or related RRSIG RRs) and performs itself any required
-                alternations of the NSEC5 chain induced by the update.
-            </t>
-
-            <t>
-                Alternatively, the server MUST verify that all the properties are satisfied
-                prior to performing the update atomically.
+            It is RECOMMENDED that the server rejects all updates containing
+            changes to the NSEC5 chain (or related RRSIG RRs) and performs itself
+            any required alternations of the NSEC5 chain induced by the update.
+            Alternatively, the server MUST verify that all the properties are
+            satisfied prior to performing the update atomically.
             </t>
         </section>
 
