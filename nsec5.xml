@@ -257,13 +257,13 @@
                 and is used to verify NSEC5 hash values.  The private VRF key
                 is present on all authoritative servers for the zone, and is 
                 used to compute hash values. For every query that elicits 
-                a denying response, the authoritative server hashes the 
-                query on the fly using the private VRF key, and then returns 
+                a negative response, the authoritative server hashes the 
+                query on the fly using the private VRF key, and also returns 
                 the corresponding precomputed NSEC5 record(s). In contrast
                 to the online signing approach <xref target="RFC7129" />,
                 the private key that is present 
                 on all authoritative servers for NSEC5 cannot be used to modify 
-                the zone contents.  
+                the zone contents.
            </t>
                 
            <t>
@@ -271,7 +271,7 @@
                 to perform online public key cryptographic operations for
                 every query eliciting a denying response.
                 This is necessary; <xref target="nsec5" />  proved that 
-                online crypto is required to prevent offline zone enumeration 
+                online cryptography is required to prevent offline zone enumeration 
                 while still protecting the integrity of zone contents against network 
                 attacks.   
            </t>
