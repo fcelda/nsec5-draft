@@ -366,22 +366,19 @@
 
         <t>
             To prevent NSEC5-unaware resolvers from attempting to validate the responses, new
-            DNSSEC algorithms identifiers are introduced which alias existing
+            DNSSEC algorithms identifiers are introduced in 
+            <xref target="iana_considerations" /> which alias existing
             algorithm numbers. The zones signed according to this specification MUST use only
             these algorithm identifiers, thus NSEC5-unaware resolvers will treat the zone as
             insecure.
         </t>
 
-        <t>
-            The new algorithm identifiers defined by this document are listed in
-            <xref target="iana_considerations" />.
-        </t>
     </section>
 
     <section title="How NSEC5 Works">
     
-        <t>[TODO: This section to be updated to be consistent with the VRF I-D.]
-        </t>
+        <!--<t>[TODO: This section to be updated to be consistent with the VRF I-D.]
+        </t>-->
     
         <t>
                 With NSEC5, the original domain name is hashed using the VRF
@@ -392,7 +389,7 @@
             <list style="numbers">
                 <t>
                     The domain name is processed using a VRF keyed with the 
-                    NSEC5 private key to obtain the NSEC5 proof.
+                    private NSEC5 key to obtain the NSEC5 proof.
                     Anyone who knows the public NSEC5 key, normally
                     acquired via
                     an NSEC5KEY RR, can verify that a given NSEC5 proof 
@@ -436,13 +433,12 @@
 
         <t>
             To validate the response,
-            the client verifies the following items
-            in any order:
+            the client verifies the following items:
         </t>    
         <t>
             <list style="symbols">
             <t> 
-            The client uses the public NSEC5 key in the NSEC5KEY RR
+            The client uses the public NSEC5 key, normally acquired from the NSEC5KEY RR,
             to verify that the NSEC5 proof in the NSEC5PROOF RR
             corresponds to the queried name. 
             </t>
@@ -515,7 +511,8 @@
                 <t>
                     The NSEC5 proof is computed using an Elliptic Curve VRF with
                     FIPS 186-3 P-256 curve.
-                    The proof computation and verification is formally specified in
+                    The proof computation and verification, and the proof-to-hash
+                    function is formally specified in
                     <xref target="ecvrf" />.
                     The curve parameters are specified in
                     <xref target="FIPS-186-3" /> (Section D.1.2.3) and
@@ -563,7 +560,7 @@
     <section title="The NSEC5KEY Resource Record">
 
         <t>
-            The NSEC5KEY RR stores an NSEC5 public key. The key allows clients to
+            The NSEC5KEY RR stores an public NSEC5 key. The key allows clients to
             validate an NSEC5 proof sent by a server.
         </t>
 
@@ -734,9 +731,8 @@
 
     <section title="The NSEC5PROOF Resource Record">
         <t>
-            The NSEC5PROOF record is not to be included in the zone file and is synthesized by
-            the authoritative server on the fly. It
-            contains the NSEC5 proof, proving the position of the owner name in an
+            The NSEC5PROOF record is not to be included in the zone file.
+            It contains the NSEC5 proof, proving the position of the owner name in an
             NSEC5 chain.
         </t>
 
@@ -1084,11 +1080,10 @@
             be precomputed and stored as part of zone signing.  
             </t>
             
-            <t>Precomputing NSEC5PROOF RRs halves the number of online 
+            <t>Precomputing NSEC5PROOF RRs can halve the number of online 
             cryptographic computations required when responding to a negative 
             query. NSEC5PROOF RRs MAY be precomputed as part of zone signing
-            as follows: 
-            For each NSEC5 RR, compute an NSEC5PROOF RR corresponding to 
+            as follows:  For each NSEC5 RR, compute an NSEC5PROOF RR corresponding to 
             the original owner name of the NSEC5 RR. The content of the 
             precomputed NSEC5PROOF record MUST be the 
             same as if the record was computed on the fly when serving the zone.
@@ -1107,21 +1102,10 @@
             </t>
 
             <t>
-                The authenticated denial of existence proofs in NSEC5 are almost the same
-                as in NSEC3. Because of the Wildcard flag in NSEC5 RRs, the
-                NSEC5 proof consists of one or two NSEC5 RRs, instead of up to three as
-                originally described in <xref target="I-D.gieben-nsec4" /> Section 7.2.1.
-            </t>
-
-            <t>
                 According to the type of a response, an authoritative server MUST include NSEC5 RRs
                 in a response as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
                 in the response, a corresponding RRSIG RRset and an NSEC5PROOF MUST be added
-                as well.
-            </t>
-
-            <t>
-                The NSEC5PROOF RR has the owner name set to a domain name exactly
+                as well. The NSEC5PROOF RR has the owner name set to a domain name exactly
                 matching the name required for the proof. The class and TTL of the RR MUST
                 be the same as the class and TTL value of the corresponding NSEC5 RR. Its RDATA
                 payload is set according to the description in <xref target="nsec5proof_rdata" />.
@@ -1194,16 +1178,16 @@
 
         <section title="Secondary Servers">
             <t>
-                This document does not define mechanism to distribute NSEC5 private keys.
+                This document does not define mechanism to distribute private NSEC5 keys.
                 See <xref target="keyleak" />
-                for discussion on the security requirements for NSEC5 private keys.
+                for security considerations for private NSEC5 keys.
             </t>
         </section>
 
         <section title="Zones Using Unknown NSEC5 Algorithms">
             <t>
-                Zones that are signed with unknown NSEC5 algorithm or by an unavailable NSEC5
-                private key cannot be effectively served. Such zones SHOULD be rejected when
+                Zones that are signed with unknown NSEC5 algorithm or under an unavailable 
+                private NSEC5 key cannot be effectively served. Such zones SHOULD be rejected when
                 loading and servers SHOULD respond with RCODE=2 (Server failure) when handling
                 queries that would fall under such zones.
             </t>
@@ -1261,7 +1245,7 @@
             </t>
 
             <t>
-                To validate a denial of existence, NSEC5 public keys for the zone are required in addition
+                To validate a denial of existence, public NSEC5 keys for the zone are required in addition
                 to DNSSEC public keys. Similarly to DNSKEY RRs, the NSEC5KEY RRs are present at
                 the zone apex.
             </t>
@@ -1271,13 +1255,13 @@
 
                 <list style="numbers">
                     <t>
-                        Select a correct NSEC5 public key to validate the NSEC5 proof. The Key Tag
+                        Select a correct public NSEC5 key to validate the NSEC5 proof. The Key Tag
                         value of the NSEC5PROOF RR must match with the key tag value computed
                         from the NSEC5KEY RDATA.
                     </t>
                     <t>
                         Validate the NSEC5 proof present in the NSEC5PROOF Owner Name Hash field
-                        using the NSEC5 public key. If there are multiple NSEC5KEY RRs matching
+                        using the public NSEC5 key. If there are multiple NSEC5KEY RRs matching
                         the key tag, at least one of the keys must validate the NSEC5 proof.
                     </t>
                     <t>
@@ -1330,9 +1314,9 @@
                 [TODO: The following information will be covered.]
 
                 <list style="symbols">
-                    <t>Transition from NSEC or NSEC3.</t>
+                    <t>Transition to NSEC5 from NSEC/NSEC3</t>
                     <t>Transition from NSEC5 to NSEC/NSEC3</t>
-                    <t>Transition to new VRF algorithms within NSEC5</t>
+                    <t>Transition to new NSEC5 algorithms</t>
                 </list>
             </t>
 
@@ -1358,14 +1342,14 @@
 
         </section>
 
-        <section title="NSEC5 Private Keys">
+        <section title="Private NSEC5 keys">
             <t>
-                This document does not define a format to store NSEC5 private keys. Use of a
-                standardized and adopted format is RECOMMENDED.
+                This document does not define a format to store private NSEC5 keys. Use of a
+                standardized and adopted format is RECOMMENDED.  
             </t>
 
             <t>
-                The NSEC5 private key MAY be shared between multiple zones, however a separate
+                The private NSEC5 key MAY be shared between multiple zones, however a separate
                 key is RECOMMENDED for each zone.
             </t>
         </section>
@@ -1432,7 +1416,6 @@
     </section>
 
 
-
     <section title="Security Considerations">
     
         <section title="Zone Enumeration Attacks" anchor="zea">
@@ -1450,19 +1433,6 @@
         </t>
         </section>
 
-        <section title="Hash Collisions" anchor="hashcol">
-        <t>
-         Hash collisions between QNAME and the owner name of an NSEC5 RR may
-        occur.  When they do, it will be impossible to prove the non-
-        existence of the colliding QNAME.  However, with SHA-256, this is
-        highly unlikely, on the order of 1 in 2^128.  Note that DNSSEC
-        already relies on the presumption that a cryptographic hash function
-        is collision-resistant, since these hash functions are used
-        for generating and validating signatures and DS RRs. See also the
-        discussion on key lengths in <xref target="nsec5" />.
-        </t>
-        </section>
-
         <section title="Compromise of the Private NSEC5 Key" anchor="keyleak">
         <t>
         NSEC5 requires authoritative servers to hold the private NSEC5 key, but
@@ -1473,7 +1443,7 @@
         zone contents are signed using the private zone-signing key. 
         As such, a compromise of the private NSEC5 key does 
         not compromise the integrity of the zone. 
-        An adversary that learn the private NSEC5 key can, however, perform 
+        An adversary that learns the private NSEC5 key can, however, perform 
         offline zone-enumeration attacks.  For this reason, the private NSEC5 key 
         need only be as secure as the DNSSEC records whose privacy (against zone 
         enumeration) is being protected by NSEC5. 
@@ -1481,10 +1451,9 @@
         of this property is in  <xref target="nsec5" /> and <xref target="nsec5ecc" />.
         </t>
 
-        <t>If a zone owner
-        wants to preserve this property of NSEC5, the zone owner SHOULD
-        choose the NSEC5 private key to be different from the private
-        zone-signing keys or key-signing keys for the zone.
+        <t>To preserve this property of NSEC5, the private NSEC5 key 
+        SHOULD be different from the private zone-signing keys or 
+        key-signing keys for the zone.
         </t>
         </section>
 
@@ -1503,6 +1472,20 @@
         need to remain secure only during their lifetime.
         </t>
         </section>
+
+        <section title="Hash Collisions" anchor="hashcol">
+        <t>
+         Hash collisions between QNAME and the owner name of an NSEC5 RR may
+        occur.  When they do, it will be impossible to prove the non-
+        existence of the colliding QNAME.  However, with SHA-256, this is
+        highly unlikely, on the order of 1 in 2^128.  Note that DNSSEC
+        already relies on the presumption that a cryptographic hash function
+        is collision-resistant, since these hash functions are used
+        for generating and validating signatures and DS RRs. See also the
+        discussion on key lengths in <xref target="nsec5" />.
+        </t>
+        </section>
+
 
     </section>
 
@@ -1626,7 +1609,7 @@
 
     <references title="Informative References">
 
-        <reference anchor="nsec5">
+        <reference anchor="nsec5" target="https://eprint.iacr.org/2014/582.pdf">
             <front>
                 <title>NSEC5: Provably Preventing DNSSEC Zone Enumeration</title>
                 <author initials="S." surname="Goldberg"><organization /></author>
@@ -2003,18 +1986,18 @@
                 </t>
                 <t>
                     00 - fix NSEC5KEY rollover mechanism, clarify NSEC5PROOF RDATA, clarify
-                    inputs and outputs for NSEC5 proof and NSEC5 hash computation
+                    inputs and outputs for NSEC5 proof and NSEC5 hash computation.
                 </t>
                 <t>
-                    01 - Add Performance Considerations section
+                    01 - Add Performance Considerations section.
                 </t>
                 <t>
-                    02 - Add elliptic curve based VRF. Ad measurement of 
-                    response sizes based on empirical data
+                    02 - Add elliptic curve based VRF. Add measurement of 
+                    response sizes based on empirical data.
                 </t>
                 <t>
                     03 - Mention precomputed NSEC5PROOF Values in 
-                    Performance Considerations section
+                    Performance Considerations section.
                 </t>
                 <t>
                     04 - Edit Rationale, How NSEC5 Works, and Security Consideration
