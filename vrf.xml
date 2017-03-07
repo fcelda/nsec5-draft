@@ -171,7 +171,7 @@
    obtain the hash output beta directly from the proof value pi 
    <list>
    <t> beta = VRF_PROOF2HASH(pi) </t>
-   </list>
+   </list>  
    For these VRFs, the verification function only needs to take in the public 
    key PK, the VRF input alpha, and the VRF proof pi, so that 
    <list>
@@ -180,6 +180,8 @@
    outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha 
    under key PK, and outputs INVALID otherwise.
    </t>
+   
+   
    </section>
    
    </section>
@@ -188,8 +190,8 @@
             The RSA Full Domain Hash  VRF (FDHVRF) is VRF that satisfies the trusted 
             uniqueness and pseudorandomness security properties. Its security 
             follows from the standard RSA assumption and the random oracle 
-            model.  Formal security proofs are in []. This VRF also satisfies the 
-            compression property, that allows the hash output beta to be 
+            model.  Formal security proofs are in []. This VRF also supports
+            the VRF proof-to-hash property, that allows the hash output beta to be 
             obtained directly from the proof value pi.
         </t>
 
@@ -388,8 +390,8 @@
             The security of this VRF 
             follows from the decisional Diffie-Hellman (DDH) assumption in the 
             cyclic group G  in the random oracle model.  Formal security proofs 
-            are in <xref target="nsec5ecc"></xref>. This VRF also satisfies the compression 
-            property, that allows the hash output beta to be 
+            are in <xref target="nsec5ecc"></xref>. This VRF also supports the 
+            proof-to-hash  property, that allows the hash output beta to be 
             obtained directly from the proof value pi.
         </t>
             
