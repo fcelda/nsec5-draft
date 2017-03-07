@@ -417,7 +417,7 @@
         <t>
             To sign a zone, the private NSEC5 key is used to compute the
             NSEC5 hashes for each name in the zone. These NSEC5 hashes are sorted in  
-            canonical order <xref target="RFC4034"/> , and each consecutive pair forms an NSEC5 RR. 
+            canonical order <xref target="RFC4034"/>, and each consecutive pair forms an NSEC5 RR. 
             Each NSEC5 RR is signed offline using the private zone-signing key. 
             The resulting signed chain of NSEC5 RRs is provided to all 
             authoritative servers for the zone, along with the private
@@ -429,9 +429,9 @@
             response to a query, the server uses the private NSEC5 key 
             to compute the NSEC5 proof and NSEC5 hash corresponding to 
             the queried name. 
-            The server then identifies the NSEC5 RR that covers the NSEC5 hash.
-            The server then responds with 
-            the NSEC5 RR and its corresponding RRSIG signature RRset,
+            The server then identifies the NSEC5 RR that covers the NSEC5 hash,
+            and responds with 
+            this NSEC5 RR and its corresponding RRSIG signature RRset,
             as well as a synthesized NSEC5PROOF RR that contains the 
             NSEC5 proof corresponding to the queried name. 
         </t>
@@ -508,7 +508,7 @@
         </t>
 -->
         <t>
-            This document defines EC-P256-SHA256 NSEC5 algorithm as follows:
+            This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
         </t>
 
         <t>
@@ -517,7 +517,7 @@
                     The NSEC5 proof is computed using an Elliptic Curve VRF with
                     FIPS 186-3 P-256 curve.
                     The proof computation and verification, and the proof-to-hash
-                    function are formally specified in
+                    function, are formally specified in
                     <xref target="ecvrf" />.
                     The curve parameters are specified in
                     <xref target="FIPS-186-3" /> (Section D.1.2.3) and
@@ -572,7 +572,7 @@
 
         <section title="NSEC5KEY RDATA Wire Format">
             <t>
-                The RDATA for NSEC5KEY RR is as shown below:
+                The RDATA for the NSEC5KEY RR is as shown below:
             </t>
 
             <figure align="center">
@@ -622,7 +622,7 @@
 
         <section title="NSEC5 RDATA Wire Format">
             <t>
-                The RDATA for NSEC5 RR is as shown below:
+                The RDATA for the NSEC5 RR is as shown below:
             </t>
 
             <figure align="center">
@@ -745,7 +745,7 @@
 
         <section title="NSEC5PROOF RDATA Wire Format" anchor="nsec5proof_rdata">
             <t>
-                The RDATA for NSEC5PROOF is shown below:
+                The RDATA for the NSEC5PROOF RR is shown below:
             </t>
 
             <figure align="center">
@@ -1197,7 +1197,7 @@
 
         <section title="Zones Using Unknown NSEC5 Algorithms">
             <t>
-                Zones that are signed with unknown NSEC5 algorithm or an unavailable 
+                Zones that are signed with an unknown NSEC5 algorithm or with an unavailable 
                 private NSEC5 key cannot be effectively served. Such zones SHOULD be rejected when
                 loading and servers SHOULD respond with RCODE=2 (Server failure) when handling
                 queries that would fall under such zones.
@@ -1399,13 +1399,13 @@
     <t>NSEC5 has been implemented for the Knot DNS authoritative server 
     (version 1.6.4) and the
     Unbound recursive server (version 1.5.9).
-    The implementation did
+    The implementations did
     not introduce additional library dependencies; all cryptographic
     primitives are already present in OpenSSL
     v1.0.2j, which is used by both implementations. 
-    The implementation supports the full spectrum of negative responses, 
+    The implementations support the full spectrum of negative responses, 
     (i.e., NXDOMAIN, NODATA, Wildcard, Wildcard NODATA, and
-    unsigned delegation). The implementation supports the 
+    unsigned delegation) using the 
     EC-P256-SHA256 algorithm. The code is deliberately modular, 
     so that the EC-ED25519-SHA256 algorithm could be implemented
     by using the Ed25519 elliptic curve <xref target="RFC8080" />
@@ -1476,7 +1476,7 @@
         may be important for a period of time longer than the lifetime of the key.
         For example, an attacker might collect the entire chain of NSEC5 RR for the
         zone over one short period, and then, later (even after the NSEC5 key expires)
-        perform an offline dictionary attack that  attempt to "reverse" the NSEC5
+        perform an offline dictionary attack that attempts to reverse the NSEC5
         hash values present in the NSEC5 RRs.
         This is in contrast to zone-signing and key-signing keys used in DNSSEC; these
         keys, which ensure the authenticity and integrity of the zone contents,
@@ -1490,8 +1490,8 @@
 	owner name of an NSEC5 RR, it will be impossible to prove the 
 	non-existence of the colliding QNAME. However, the NSEC5 VRFs 
 	ensure that obtaining such a collision is as difficult as obtaining 
-	a collision in the SHA-256 hash function (requiring approximately 
-	2^128 effort). Note that DNSSEC already relies on the assumption 
+	a collision in the SHA-256 hash function, requiring approximately 
+	2^128 effort. Note that DNSSEC already relies on the assumption 
 	that a cryptographic hash function is collision-resistant, since 
 	these hash functions are used for generating and validating signatures 
 	and DS RRs. See also the discussion on key lengths in 
