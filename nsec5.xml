@@ -187,7 +187,7 @@
                 names in canonical order present in the zone. 
                 The authoritative server proves the non-existence of 
                 a name by presenting a signed NSEC RR which covers the name.  
-                Because the authoratitive server does not need not 
+                Because the authoritative server does not need not 
                 to know the private zone-signing key,  the integrity of the 
                 zone is protected even if the server is compromised.
                 However, the NSEC chain allows for easy zone enumeration:
@@ -201,7 +201,7 @@
                 When offline signing with NSEC3 is used <xref target="RFC5155" />, 
                 the original names in the NSEC chain are replaced by their cryptographic 
                 hashes. Offline signing ensures that NSEC3 preserves integrity
-                even if an authoratitive server is compromised. However, 
+                even if an authoritative server is compromised. However, 
                 offline zone enumeration is still possible with 
                 NSEC3
                 (see e.g., <xref target="nsec3walker" />, <xref target="nsec3gpu" />), 
@@ -241,7 +241,7 @@
             
             <t>
                 NSEC5 prevents offline zone enumeration and also protects integrity 
-                even if a zone's authoratitive server is compromised. 
+                even if a zone's authoritative server is compromised. 
                 To do this, NSEC5 replaces the unkeyed cryptographic hash 
                 function used in NSEC3 with a verifiable random function 
                 (VRF) <xref target="MRV99" />.  
@@ -262,7 +262,7 @@
                 the corresponding precomputed NSEC5 record(s). In contrast
                 to the online signing approach <xref target="RFC7129" />,
                 the private key that is present 
-                on all authoratitive servers for NSEC5 cannot be used to modify 
+                on all authoritative servers for NSEC5 cannot be used to modify 
                 the zone contents.  
            </t>
                 
@@ -415,7 +415,7 @@
             canonical order <xref target="RFC4034"/> , and each consecutive pair forms an NSEC5 RR. 
             Each NSEC5 RR is signed offline using the private zone-signing key. 
             The resulting signed chain of NSEC5 RRs is provided to all 
-            authoratitive servers for the zone, along with the private
+            authoritative servers for the zone, along with the private
             NSEC5 key. 
         </t>
 
@@ -1070,13 +1070,13 @@
             <section title="Precomputing Closest Provable Encloser Proofs" anchor="precompute">
             
             <t>The worst-case scenario when answering a negative
-            query with NSEC5 requires authoratitive server to respond with
+            query with NSEC5 requires authoritative server to respond with
             two NSEC5PROOF RRs and two NSEC5 RRs. Per 
             <xref target="nsec5_proofs"/>, one pair of NSEC5PROOF and 
             NSEC5 RRs corresponds to the closest provable encloser, and the other
             pair corresponds to the next closer name.  The NSEC5PROOF 
             corresponding to the next closer name MUST be computed on the fly by the 
-            authoratitive server when responding to the query. However, the
+            authoritative server when responding to the query. However, the
             NSEC5PROOF corresponding to the closest provable encloser MAY
             be precomputed and stored as part of zone signing.  
             </t>
@@ -1425,7 +1425,7 @@
          attacker that does not know the private NSEC5 key.  Without the private NSEC5 key,
          that attacker cannot compute the NSEC5 proof that corresponds to a given domain name. 
          The only way it can learn the NSEC5 proof value for a domain name is by querying
-         the authoratitive server for that name. Without the NSEC5 proof value,
+         the authoritative server for that name. Without the NSEC5 proof value,
          the attacker cannot learn the NSEC5 hash value. Thus, even an attacker that
          collects the entire chain of NSEC5 RR for a zone cannot use offline attacks to
          "reverse" that NSEC5 hash values in these NSEC5 RR and thus learn which names are
