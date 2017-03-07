@@ -973,7 +973,7 @@
             <t>
                 Validator checks:
                 <list>
-                    <t>Source of synthesis exactly matches the QNAME.</t>
+                    <t>Source of synthesis matches the QNAME.</t>
                     <t>Source of synthesis does not have QTYPE in the Type Bit Map.</t>
                     <t>Source of synthesis does not have CNAME in the Type Bit Map.</t>
                     <t>Next closer name is derived correctly.</t>
