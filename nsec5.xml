@@ -329,6 +329,9 @@
                     <t hangText="Base64:">
                         The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
+                    <t hangText="QNAME:">
+                        The domain name being queried (query name).
+                    </t>
                     <t hangText="Private NSEC5 key:">
                         The private key for the verifiable random function (VRF). 
                     </t>
