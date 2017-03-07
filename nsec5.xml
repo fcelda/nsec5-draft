@@ -1555,10 +1555,10 @@
             Sachin Vasant (Cisco Systems),
             Leonid Reyzin (Boston University), and
             Asaf Ziv (Weizmann Institute)
-            who contributed to the design of NSEC5, and
+            who contributed to the design of NSEC5. 
             Ondrej Sury (CZ.NIC Labs), and
             Duane Wessels (Verisign Labs)
-            who provided advice on its implementation, and assisted with
+            provided advice on the implementation of NSEC5, and assisted with
             evaluating its performance.
         </t>
     </section>
