@@ -76,10 +76,9 @@
 
        <t>
         A Verifiable Random Function (VRF) is essentially the public-key version of a
-        keyed cryptographic hash. A VRF comes with a public-key pair 
-        (PK, SK). Only the holder of the private key
-        SK can compute the hash, but anyone with public key
-        PK can verify the correctness of the hash.    
+        keyed cryptographic hash. Only the holder of the private key
+        can compute the hash, but anyone with public key
+        can verify the correctness of the hash.    
         VRFs are useful for preventing enumeration of hash-based data structures.
         This document specifies several VRF constructions that are secure in
         the cryptographic random oracle model. One VRF is 
@@ -95,8 +94,11 @@
 
     <section title="Introduction" anchor="intro">
 
+        <section title="Rationale">
+
     <t>
-   A VRF <xref target="MRV99"></xref> is the public-key version of a
+   A verifiable random function 
+   VRF <xref target="MRV99"></xref> is the public-key version of a
    keyed cryptographic hash. Only the holder of the private VRF key
    SK can compute the hash, but anyone with public key
    PK can verify the correctness of the hash. 
@@ -120,6 +122,45 @@
    construction for DNSSEC Authenticated Denial of Existence (see <xref
    target="nsec5ecc"/> and <xref target="I-D.vcelak-nsec5"/>).
    </t>
+   </section>
+   
+        <section title="Requirements">
+            <t>
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+                "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+                document are to be interpreted as described in
+                <xref target="RFC2119" />.
+            </t>
+        </section>
+   
+        <section title="Terminology">
+                
+            <t>
+                The following terminology is used through this document:
+            </t>
+
+            <t>
+                <list style="hanging">
+                    <t hangText="SK:">
+                        The private key for the VRF. 
+                    </t>
+                    <t hangText="PK:">
+                        The public key for the VRF. 
+                    </t>
+                    <t hangText="alpha:">
+                        The input to be hashed by the VRF. 
+                    </t>
+                    <t hangText="beta:">
+                        The VRF hash output. 
+                    </t>
+                    <t hangText="pi:">
+                        The VRF proof. 
+                    </t>
+                </list>
+            </t>
+        </section>
+   
+   </section>
    
    <section title="VRF Algorithms">
    <t> 
@@ -147,7 +188,30 @@
    which outputs VALID when beta is the correct VRF hash of alpha 
    under key PK, and outputs INVALID otherwise.    
    </t>
+   
+   <section title="VRF Proof-to-Hash Property">
+   
+   <t> Some VRFs support an additional property that allows anyone to
+   obtain the hash output beta directly from the proof value pi 
+   <list>
+   <t> beta = VRF_PROOF2HASH(pi) </t>
+   </list>  
+   For these VRFs, the verification function only needs to take in the public 
+   key PK, the VRF input alpha, and the VRF proof pi, so that 
+   <list>
+   <t> VRF_VERIFY(PK, alpha, pi) </t>
+   </list>
+   outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha 
+   under key PK, and outputs INVALID otherwise.
+   </t>   
+   
+   <t>
+   (Notice that any VRF can be made to satisfy this property by redefining the 
+   VRF proof value to include both beta and pi.)
+   </t>
    </section>
+   </section>
+   
    
    <section title="VRF Security Properties">
    
@@ -164,49 +228,30 @@
    VRF hash output beta' which is different than
    beta = VRF_HASH(SK, alpha). 
   </t> 
-   </section>
-   <section title="VRF Proof-to-Hash Property">
-   
-   <t> Some VRFs support an additional property that allows anyone to
-   obtain the hash output beta directly from the proof value pi 
-   <list>
-   <t> beta = VRF_PROOF2HASH(pi) </t>
-   </list>  
-   For these VRFs, the verification function only needs to take in the public 
-   key PK, the VRF input alpha, and the VRF proof pi, so that 
-   <list>
-   <t> VRF_VERIFY(PK, alpha, pi) </t>
-   </list>
-   outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha 
-   under key PK, and outputs INVALID otherwise.
-   </t>
-   
-   
+  
+  <t> Add collision resistance here. </t>
    </section>
    
-   </section>
-    <section title="RSA Full Domain Hash VRF (FDHVRF)" anchor="fdh">
+    <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
         <t>
-            The RSA Full Domain Hash  VRF (FDHVRF) is VRF that satisfies the trusted 
-            uniqueness and pseudorandomness security properties. Its security 
-            follows from the standard RSA assumption and the random oracle 
-            model.  Formal security proofs are in []. This VRF also supports
-            the VRF proof-to-hash property, that allows the hash output beta to be 
+            The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that 
+            satisfies the trusted 
+            uniqueness, pseudorandomness and collision resistance properties. 
+            Its security follows from the standard RSA assumption 
+            in the random oracle model.  Formal security proofs are in []. 
+            This VRF also supports the VRF proof-to-hash property, 
+            that allows the hash output beta to be 
             obtained directly from the proof value pi.
         </t>
 
         <t> The VRF computes the proof pi as a deterministic RSA signature on
-        input alpha using the RSA Full Domain Hash Algorithm 
-        <xref target="RFC3447" /> parametrized with
-        Hash, where Hash is a secure hash algorithm.   RSA signature
-        verification is used to verify the correctness of the proof.
-        The VRF hash output beta is simply given by Hash(pi). 
+            input alpha using the RSA Full Domain Hash Algorithm 
+            <xref target="RFC3447" /> parametrized with
+            Hash, where Hash is a secure hash algorithm.   RSA signature
+            verification is used to verify the correctness of the proof.
+            The VRF hash output beta is simply given by Hash(pi). 
         </t>
-        
-        <t>
-        [TO DO: Add some discussion about the choice of the hash algorithm?
-        Not sure how to do this. The reference implementation uses SHA-256.]
-        </t>
+    
         <t>
             In this document, the notation from <xref target="RFC3447" /> is used.
         </t>
@@ -224,16 +269,14 @@
             Fixed options:
             <list>
                 <t>Hash - secure hash algorithm to be used with MGF1 
-                and FDHVRF_PROOF2HASH. (A US Secure Hash 
-                Function as specified in <xref target="RFC6234" /> MAY by used.)
+                and RSA-FDH-VRF_PROOF2HASH.  The cryptographic strength of this
+                hash algorithm MUST be at least as high 
+                as the cryptographic strength of the RSA key.  
                 </t>
                 
-                <t> 
-                [TODO: Feedback on this language please. <xref target="RFC6234" /> 
-                specifies SHA1 but we do not want to allow this here.
-                The hash function should really be SHA-256, but
-                I don't want to lock this in to the spec!]
-                </t>
+                <!-- <xref target="RFC6234" /> 
+                specifies SHA1 and SHA256 but we do not want to allow SHA1 here.-->
+            
             </list>
         </t>
 
@@ -296,9 +339,6 @@
         </section>
         
         <section title="FDHVRF Proof To Hash">
-            <t>[TODO: SHARON JUST ADDED THIS SECTION, JAN AND DIMITRIS PLS CHECK.]
-            </t>
-            
             <t>
                 FDHVRF_PROOF2HASH(S)
             </t>
@@ -361,6 +401,7 @@
                 </list>
             </t>
         </section>
+ 
     </section>
 
     <section title="Elliptic Curve VRF" anchor="ecvrf">
