@@ -879,16 +879,16 @@
                 <t>
                     Authoritative server proofs:
                     <list>
-                        <t>QNAME.</t>
+                        <t>NSEC5PROOF for the QNAME and matching NSEC5 RR.</t>
                     </list>
                 </t>
 
                 <t>
                     Validator checks:
                     <list>
-                        <t>The NSEC5 RR exactly matches the QNAME.</t>
-                        <t>The NSEC5 RR does not have QTYPE in the Type Bit Map.</t>
-                        <t>The NSEC5 RR does not have CNAME in the Type Bit Map.</t>
+                        <t>The QNAME is in the zone.</t>
+                        <t>The QNAME does not have QTYPE in the Type Bit Map.</t>
+                        <t>The QNAME does not have CNAME in the Type Bit Map.</t>
                     </list>
                 </t>
 
@@ -906,7 +906,7 @@
                 <t>
                     Authoritative server proofs:
                     <list>
-                        <t>Closest provable encloser.</t>
+                        <t>NSEC5PROOF for closest provable encloser and matching NSEC5 RR.</t>
                     </list>
                 </t>
 
@@ -928,7 +928,7 @@
             <t>
                 Facts to prove:
                 <list>
-                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No RRset matching the QNAME exists.</t>
                     <t>No wildcard closer to the QNAME exists.</t>
                 </list>
             </t>
@@ -936,14 +936,14 @@
             <t>
                 Authoritative server proofs:
                 <list>
-                    <t>Next closer name.</t>
+                    <t>NSEC5PROOF for next closer name and covering NSEC5 RR.</t>
                 </list>
             </t>
             <t>
                 Validator checks:
                 <list>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
+                    <t>Next closer name is not in the zone.</t>
                 </list>
             </t>
 
@@ -954,7 +954,7 @@
             <t>
                 Facts to prove:
                 <list>
-                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No RRset matching the QNAME exists.</t>
                     <t>No QTYPE RRset exists at the wildcard matching the QNAME.</t>
                     <t>No CNAME RRset exists at the wildcard matching the QNAME.</t>
                     <t>No wildcard closer to the QNAME exists.</t>
@@ -964,19 +964,20 @@
             <t>
                 Authoritative server proofs:
                 <list>
-                    <t>Source of synthesis (i.e., wildcard at closest encloser).</t>
-                    <t>Next closer name.</t>
+                    <t>NSEC5PROOF for source of synthesis (i.e., wildcard at closest encloser) and
+                    [[IS IT COVERING OR MATCHING? I THINK MATCHING]] NSEC5 RR.</t>
+                    <t>NSEC5PROOF for next closer name and covering NSEC5 RR.</t>
                 </list>
             </t>
 
             <t>
                 Validator checks:
                 <list>
-                    <t>Source of synthesis matches exactly the QNAME.</t>
+                    <t>Source of synthesis exactly matches the QNAME.</t>
                     <t>Source of synthesis does not have QTYPE in the Type Bit Map.</t>
                     <t>Source of synthesis does not have CNAME in the Type Bit Map.</t>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
+                    <t>Next closer name is not in the zone.</t>
                 </list>
             </t>
 
