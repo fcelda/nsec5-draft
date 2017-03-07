@@ -49,15 +49,16 @@
         </author>
 
         <author fullname="Jan Vcelak" initials="J." surname="Vcelak">
-            <organization>ns1</organization>
+            <organization>NS1</organization>
             <address>
                 <postal>
-                    <street>Milesovska 1136/5</street>
-                    <city>Praha</city>
-                    <code>130 00</code>
-                    <country>CZ</country>
+                    <street>16 Beaver St</street>
+                    <city>New York</city>
+                    <region>NY</region>
+                    <code>10004</code>
+                    <country>USA</country>
                 </postal>
-                <email>jan.vcelak@nic.cz</email>
+                <email>jvcelak@ns1.com</email>
             </address>
         </author>
 
