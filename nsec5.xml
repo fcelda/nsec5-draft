@@ -965,7 +965,7 @@
                 Authoritative server proofs:
                 <list>
                     <t>NSEC5PROOF for source of synthesis (i.e., wildcard at closest encloser) and
-                    [[IS IT COVERING OR MATCHING? I THINK MATCHING]] NSEC5 RR.</t>
+                        matching NSEC5 RR.</t>
                     <t>NSEC5PROOF for next closer name and covering NSEC5 RR.</t>
                 </list>
             </t>
