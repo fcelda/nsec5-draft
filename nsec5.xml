@@ -1455,8 +1455,8 @@
         of this property is in  <xref target="nsec5" /> and <xref target="nsec5ecc" />.
         </t>
 
-        <t>To preserve this property of NSEC5, the private NSEC5 key 
-        SHOULD be different from the private zone-signing keys or 
+        <t>To preserve this property of NSEC5, the private NSEC5 key
+        MUST be different from the private zone-signing keys or
         key-signing keys for the zone.
         </t>
         </section>
