@@ -1,20 +1,20 @@
-XML2RFC=xml2rfc
+XML2RFC = xml2rfc
+DOCUMENTS = nsec5 vrf
+OUTPUTS=$(foreach doc,$(DOCUMENTS),$(doc).txt $(doc).html)
 
-.PHONY: all clean release
+.PHONY: all
+all: $(OUTPUTS)
 
-all: nsec5.txt nsec5.html
-
-clean:
-	rm -f nsec5.txt nsec5.html
-
-release: DRAFT=$(shell grep 'docName=' nsec5.xml | grep -o '"[^"]*"' | sed 's@"@@g' | grep draft)
-release: nsec5.txt nsec5.html
-	cp nsec5.xml "$(DRAFT).xml"
-	cp nsec5.txt "$(DRAFT).txt"
-	cp nsec5.html "$(DRAFT).html"
-
-nsec5.txt: nsec5.xml
+%.txt: %.xml
 	$(XML2RFC) -o $@ --text $^
 
-nsec5.html: nsec5.xml
+%.html: %.xml
 	$(XML2RFC) -o $@ --html $^
+
+.PHONY: clean
+clean:
+	rm -f $(OUTPUTS)
+
+release_doc = $(foreach format,xml txt html,cp -vf $(1).$(format) $(2).$(format);)
+release: $(OUTPUTS)
+	$(foreach doc,$(DOCUMENTS),$(call release_doc,$(doc),$(shell grep 'docName=' $(doc).xml | grep -o '"[^"]*"' | sed 's@"@@g' | grep draft)))
