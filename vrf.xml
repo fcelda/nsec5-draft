@@ -5,7 +5,8 @@
 <!ENTITY rfc5114 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5114.xml">
 <!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
-<!ENTITY draft-dnskey-ed25519 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-curdle-dnskey-ed25519-01.xml">
+<!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
+<!ENTITY I-D.gieben-nsec4 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gieben-nsec4.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -95,35 +96,29 @@
     <section title="Introduction" anchor="intro">
 
     <t>
-   A VRF <xref target="MRV99"></xref> is essentially the public-key version of a
-   keyed cryptographic hash. A VRF comes with a public-key pair 
-   (PK, SK). Only the holder of the private key
+   A VRF <xref target="MRV99"></xref> is the public-key version of a
+   keyed cryptographic hash. Only the holder of the private VRF key
    SK can compute the hash, but anyone with public key
    PK can verify the correctness of the hash. 
    </t>
-   <t>
-   VRFs have many applications. 
-   </t>
    
    <t>
-   One application involves preventing offline 
-   enumeration of the data stored in a hash-based data structure. For instance,
-   suppose that a Prover holds the VRF secret key SK and uses VRF hashing to 
+   One application of the VRF is to prevent offline 
+   enumeration of the data stored in a hash-based data structure. 
+   For instance, a Prover holds the VRF secret key SK and uses VRF hashing to 
    construct a hash-based data structure on some input data.  
    
    Because hashing is done with the VRF, only 
    the Prover can answer queries about whether or not some data is stored 
-   in the data structure.   Anyone that knows the VRF public key PK can 
+   in the data structure.   Anyone that knows the  public VRF key PK can 
    verify that the Prover has answered queries correctly. However, because
-   these other parties do not know the VRF secret key SK, they cannot 
+   these other parties do not know the private VRF key SK, they cannot 
    make offline inferences (that do not involve querying the Prover) about 
    which data is stored in the data structure. This prevents offline 
-   enumeration of the data in the data structure.</t>
-   
-   <t>
-   VRFs are used for this purpose
-   in the NSEC5 construction for DNSSEC Authenticated Denial of Existence <xref
-   target="nsec5ecc"></xref>.
+   enumeration of the data in the data structure.
+   VRFs are used for this purpose in the NSEC5 
+   construction for DNSSEC Authenticated Denial of Existence <xref
+   target="nsec5ecc"/>.
    [TODO: Should we also cite the NSEC5 ID here?]
    </t>
    
@@ -172,9 +167,9 @@
    VRF hash output beta' which is different from beta = VRF_HASH(SK, alpha). 
   </t> 
    </section>
-   <section title="VRF Compression Property">
+   <section title="VRF Proof-to-Hash Property">
    
-   <t> Some VRFs have an additional compression property that allows anyone to
+   <t> Some VRFs support an additional property that allows anyone to
    obtain the hash output beta directly from the proof value pi 
    <list>
    <t> beta = VRF_PROOF2HASH(pi) </t>
@@ -696,6 +691,7 @@
         &rfc5114;
         &rfc6234;
         &rfc7748;
+        &rfc8080;
         &draft-dnskey-ed25519;
 
         <reference anchor="FIPS-186-3">

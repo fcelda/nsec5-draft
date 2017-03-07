@@ -823,7 +823,7 @@
             <t>
                 Facts to prove:
                 <list>
-                    <t>No RRset matching the QNAME exactly exists.</t>
+                    <t>No RRset matching the QNAME exists.</t>
                     <t>No RRset matching the QNAME via wildcard expansion exists.</t>
                     <t>The QNAME does not fall into a delegation.</t>
                     <t>The QNAME does not fall into a DNAME redirection.</t>
@@ -833,20 +833,20 @@
             <t>
                 Authoritative server proofs:
                 <list>
-                    <t>Closest encloser.</t>
-                    <t>Next closer name.</t>
+                    <t>NSEC5PROOF for closest encloser and matching NSEC5 RR.</t>
+                    <t>NSEC5PROOF for next closer name and covering NSEC5 RR.</t>
                 </list>
             </t>
 
             <t>
                 Validator checks:
                 <list>
-                    <t>Closest encloser belongs to the zone.</t>
+                    <t>Closest encloser is in the zone.</t>
                     <t>Closest encloser has the Wildcard flag cleared.</t>
                     <t>Closest encloser does not have NS without SOA in the Type Bit Map.</t>
                     <t>Closest encloser does not have DNAME in the Type Bit Maps.</t>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
+                    <t>Next closer name is not in the zone.</t>
                 </list>
             </t>
 
