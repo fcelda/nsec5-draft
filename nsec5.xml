@@ -339,7 +339,7 @@
                         A VRF proof. The holder of 
                         the private NSEC5 key (e.g., authoritative server) can 
                         compute the NSEC5 proof for an input domain name. 
-                        Anyone who knows the the public VRF key can verify 
+                        Anyone who knows the public VRF key can verify 
                         that the NSEC5 proof corresponds to the input domain name. 
                     </t>
                     <t hangText="NSEC5 hash:">
@@ -420,7 +420,7 @@
         </t>
 
         <t>
-            To prove an non-existence of a particular domain name in 
+            To prove non-existence of a particular domain name in 
             response to a query, the server uses the private NSEC5 key 
             to compute the NSEC5 proof and NSEC5 hash corresponding to 
             the queried name. 
@@ -488,7 +488,7 @@
                 <t>
                     NSEC5 proof is computed using an RSA based Full Domain Hash (FDH) signature
                     with SHA-256 hash function used internally for input preprocessing. The
-                    signature and verification is formally specified in <xref target="fdh" />.
+                    signature and verification are formally specified in <xref target="fdh" />.
                 </t>
                 <t>
                     NSEC5 hash is computed by hashing the NSEC5 proof with the SHA-256 hash
@@ -512,7 +512,7 @@
                     The NSEC5 proof is computed using an Elliptic Curve VRF with
                     FIPS 186-3 P-256 curve.
                     The proof computation and verification, and the proof-to-hash
-                    function is formally specified in
+                    function are formally specified in
                     <xref target="ecvrf" />.
                     The curve parameters are specified in
                     <xref target="FIPS-186-3" /> (Section D.1.2.3) and
@@ -560,7 +560,7 @@
     <section title="The NSEC5KEY Resource Record">
 
         <t>
-            The NSEC5KEY RR stores an public NSEC5 key. The key allows clients to
+            The NSEC5KEY RR stores a public NSEC5 key. The key allows clients to
             validate an NSEC5 proof sent by a server.
         </t>
 
@@ -739,7 +739,7 @@
 
         <section title="NSEC5PROOF RDATA Wire Format" anchor="nsec5proof_rdata">
             <t>
-                The RDATA for NSEC5PROOF is as as shown below:
+                The RDATA for NSEC5PROOF is shown below:
             </t>
 
             <figure align="center">
@@ -1201,7 +1201,7 @@
             changes to the zone MUST be performed in a way that ensures that the zone
             satisfies the properties specified in <xref target="zone_signing" /> at any time.  The
             process described in <xref target="RFC5155" /> Section 7.5 describes how to handle
-            the issues surrouding the handling of empty non-terminals as well as
+            the issues surrounding the handling of empty non-terminals as well as
             Opt-Out.
             </t>
             
@@ -1278,7 +1278,7 @@
 
             <t>
                 If the NSEC5 RR fails to validate, it MUST be ignored. If some of the conditions
-                required for an NSEC5 proof is not satisfied, the response MUST be treated as
+                required for an NSEC5 proof are not satisfied, the response MUST be treated as
                 bogus.
             </t>
 
@@ -1430,7 +1430,7 @@
          collects the entire chain of NSEC5 RR for a zone cannot use offline attacks to
          "reverse" that NSEC5 hash values in these NSEC5 RR and thus learn which names are
          present in the zone.  A formal cryptographic proof of this property is in
-         <xref target="nsec5" /> and <xref target="nsec5ecc" /> .
+         <xref target="nsec5" /> and <xref target="nsec5ecc" />.
         </t>
         </section>
 
@@ -1440,7 +1440,7 @@
         not the private zone-signing keys or the private key-signing keys for the zone.
         </t>
         <t>
-        The private NSEC5 key can not be used to modify zone contents, because
+        The private NSEC5 key cannot be used to modify zone contents, because
         zone contents are signed using the private zone-signing key. 
         As such, a compromise of the private NSEC5 key does 
         not compromise the integrity of the zone. 
