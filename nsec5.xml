@@ -2043,15 +2043,6 @@
                     How to add new NSEC5 hashing algorithm. We will need to add new DNSSEC
                     algorithm identifiers again.
                 </t>
-                <t>
-                    NSEC and NSEC3 define optional steps for hash collisions detection. We don't
-                    have a way to avoid them if they really appear (unlikely). We would have
-                    to drop the signing key and generate a new one. Which cannot be done
-                    instantly.
-                </t>
-                <t>
-                    Write Special Considerations section.
-                </t>
             </list>
         </t>
     </section>
