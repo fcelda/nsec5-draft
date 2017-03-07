@@ -6,7 +6,7 @@
 <!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
 <!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
-<!ENTITY I-D.gieben-nsec4 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gieben-nsec4.xml">
+<!ENTITY draft-vcelak-nsec5 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.vcelak-nsec5.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -117,12 +117,11 @@
    which data is stored in the data structure. This prevents offline 
    enumeration of the data in the data structure.
    VRFs are used for this purpose in the NSEC5 
-   construction for DNSSEC Authenticated Denial of Existence <xref
-   target="nsec5ecc"/>.
-   [TODO: Should we also cite the NSEC5 ID here?]
+   construction for DNSSEC Authenticated Denial of Existence (see <xref
+   target="nsec5ecc"/> and <xref target="draft-vcelak-nsec5"/>).
    </t>
    
-   <section title="VRF Functions">
+   <section title="VRF Algorithms">
    <t> 
    A VRF hashes an input alpha using the private key SK to obtain
    
@@ -130,7 +129,7 @@
     <t> beta = VRF_HASH(SK, alpha) </t>
     </list>
    
-   The VRF_HASH function MUST be deterministic, in 
+   The VRF_HASH algorithm MUST be deterministic, in 
    the sense that it will always produce the same output beta given a 
    pair of inputs (SK, alpha).
    
@@ -141,7 +140,7 @@
    </list>
    The proof pi is allows anyone holding the public key 
    to verify that indeed beta is the correct hash of alpha
-   under key PK. Thus, the VRF also comes with a function
+   under key PK. Thus, the VRF also comes with an algorithm
    <list>
    <t>   VRF_VERIFY(PK, alpha, beta, pi)</t>
    </list>
@@ -158,13 +157,12 @@
    know the private key SK.    
    </t>
    <t>
-   The VRF MUST have a trusted uniqueness property that 
-   requires that, given the public key PK, each 
-   input alpha corresponds to a unique hash output 
-   beta.  More precisely, trusted uniqueness guarantees 
-   that, given a validly-generated PK, even an adversary 
+   The VRF MUST have a trusted uniqueness property that guarantees 
+   that, for a validly-generated PK and any input alpha, 
+   even an adversary 
    that knows SK cannot produce a valid proof for a fake 
-   VRF hash output beta' which is different from beta = VRF_HASH(SK, alpha). 
+   VRF hash output beta' which is different than
+   beta = VRF_HASH(SK, alpha). 
   </t> 
    </section>
    <section title="VRF Proof-to-Hash Property">
@@ -692,7 +690,7 @@
         &rfc6234;
         &rfc7748;
         &rfc8080;
-        &draft-dnskey-ed25519;
+        &draft-vcelak-nsec5;
 
         <reference anchor="FIPS-186-3">
             <front>
