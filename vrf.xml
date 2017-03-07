@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY rfc3447 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml">
+<!ENTITY rfc5114 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5114.xml">
+<!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
+<!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
+<!ENTITY draft-dnskey-ed25519 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-curdle-dnskey-ed25519-01.xml">
+]>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<?rfc strict="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+
+<rfc category="std" docName="draft-goldbe-vrf-00" ipr="trust200902">
+    <front>
+        <title abbrev="VRF">Verfiable Random Functions (VRFs)</title>
+
+        <author fullname="Sharon Goldberg" initials="S." surname="Goldberg">
+            <organization>Boston University</organization>
+            <address>
+                <postal>
+                    <street>111 Cummington St, MCS135</street>
+                    <city>Boston</city>
+                    <region>MA</region>
+                    <code>02215</code>
+                    <country>USA</country>
+                </postal>
+                <email>goldbe@cs.bu.edu</email>
+            </address>
+        </author>
+
+        <author fullname="Dimitrios Papadopoulos" initials="D." surname="Papadopoulos">
+            <organization>University of Maryland</organization>
+            <address>
+                <postal>
+                    <street>8223 Paint Branch Dr</street>
+                    <city>College Park</city>
+                    <region>MD</region>
+                    <code>20740</code>
+                    <country>USA</country>
+                </postal>
+                <email>dipapado@bu.edu</email>
+            </address>
+        </author>
+
+        <author fullname="Jan Vcelak" initials="J." surname="Vcelak">
+            <organization>ns1</organization>
+            <address>
+                <postal>
+                    <street>Milesovska 1136/5</street>
+                    <city>Praha</city>
+                    <code>130 00</code>
+                    <country>CZ</country>
+                </postal>
+                <email>jan.vcelak@nic.cz</email>
+            </address>
+        </author>
+
+        <date year="2017" />
+
+        <!-- <workgroup></workgroup> -->
+
+        <keyword>DNS</keyword>
+        <keyword>DNSSEC</keyword>
+        <keyword>NSEC</keyword>
+        <keyword>authenticated denial</keyword>
+
+    <abstract>
+
+       <t>
+        A Verifiable Random Function (VRF) is essentially the public-key version of a
+        keyed cryptographic hash. A VRF comes with a public-key pair 
+        (PK, SK). Only the holder of the private key
+        SK can compute the hash, but anyone with public key
+        PK can verify the correctness of the hash.    
+        VRFs are useful for preventing enumeration of hash-based data structures.
+        This document specifies several VRF constructions that are secure in
+        the cryptographic random oracle model. One VRF is 
+        based on RSA, and the other is based on Eliptic Curve Cryptography 
+        (ECC). 
+        </t>
+
+    </abstract>
+
+</front>
+
+<middle>
+
+    <section title="Introduction" anchor="intro">
+
+    <t>
+   A VRF <xref target="MRV99"></xref> is essentially the public-key version of a
+   keyed cryptographic hash. A VRF comes with a public-key pair 
+   (PK, SK). Only the holder of the private key
+   SK can compute the hash, but anyone with public key
+   PK can verify the correctness of the hash. 
+   </t>
+   <t>
+   VRFs have many applications. 
+   </t>
+   
+   <t>
+   One application involves preventing offline 
+   enumeration of the data stored in a hash-based data structure. For instance,
+   suppose that a Prover holds the VRF secret key SK and uses VRF hashing to 
+   construct a hash-based data structure on some input data.  
+   
+   Because hashing is done with the VRF, only 
+   the Prover can answer queries about whether or not some data is stored 
+   in the data structure.   Anyone that knows the VRF public key PK can 
+   verify that the Prover has answered queries correctly. However, because
+   these other parties do not know the VRF secret key SK, they cannot 
+   make offline inferences (that do not involve querying the Prover) about 
+   which data is stored in the data structure. This prevents offline 
+   enumeration of the data in the data structure.</t>
+   
+   <t>
+   VRFs are used for this purpose
+   in the NSEC5 construction for DNSSEC Authenticated Denial of Existence <xref
+   target="nsec5ecc"></xref>.
+   [TODO: Should we also cite the NSEC5 ID here?]
+   </t>
+   
+   <section title="VRF Functions">
+   <t> 
+   A VRF hashes an input alpha using the private key SK to obtain
+   
+    <list>
+    <t> beta = VRF_HASH(SK, alpha) </t>
+    </list>
+   
+   The VRF_HASH function MUST be deterministic, in 
+   the sense that it will always produce the same output beta given a 
+   pair of inputs (SK, alpha).
+   
+   The private key SK is also used to construct a 
+   proof pi that beta is the correct hash output 
+   <list>
+        <t>pi = VRF_PROVE(SK, alpha)</t>
+   </list>
+   The proof pi is allows anyone holding the public key 
+   to verify that indeed beta is the correct hash of alpha
+   under key PK. Thus, the VRF also comes with a function
+   <list>
+   <t>   VRF_VERIFY(PK, alpha, beta, pi)</t>
+   </list>
+   which outputs VALID when beta is the correct VRF hash of alpha 
+   under key PK, and outputs INVALID otherwise.    
+   </t>
+   </section>
+   
+   <section title="VRF Security Properties">
+   
+   <t>
+   The VRF MUST satisfy a pseudorandomness property that ensures that the hash 
+   output beta is indistinguishable from random by anyone who does not 
+   know the private key SK.    
+   </t>
+   <t>
+   The VRF MUST have a trusted uniqueness property that 
+   requires that, given the public key PK, each 
+   input alpha corresponds to a unique hash output 
+   beta.  More precisely, trusted uniqueness guarantees 
+   that, given a validly-generated PK, even an adversary 
+   that knows SK cannot produce a valid proof for a fake 
+   VRF hash output beta' which is different from beta = VRF_HASH(SK, alpha). 
+  </t> 
+   </section>
+   <section title="VRF Compression Property">
+   
+   <t> Some VRFs have an additional compression property that allows anyone to
+   obtain the hash output beta directly from the proof value pi 
+   <list>
+   <t> beta = VRF_PROOF2HASH(pi) </t>
+   </list>
+   For these VRFs, the verification function only needs to take in the public 
+   key PK, the VRF input alpha, and the VRF proof pi, so that 
+   <list>
+   <t> VRF_VERIFY(PK, alpha, pi) </t>
+   </list>
+   outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha 
+   under key PK, and outputs INVALID otherwise.
+   </t>
+   </section>
+   
+   </section>
+    <section title="RSA Full Domain Hash VRF (FDHVRF)" anchor="fdh">
+        <t>
+            The RSA Full Domain Hash  VRF (FDHVRF) is VRF that satisfies the trusted 
+            uniqueness and pseudorandomness security properties. Its security 
+            follows from the standard RSA assumption and the random oracle 
+            model.  Formal security proofs are in []. This VRF also satisfies the 
+            compression property, that allows the hash output beta to be 
+            obtained directly from the proof value pi.
+        </t>
+
+        <t> The VRF computes the proof pi as a deterministic RSA signature on
+        input alpha using the RSA Full Domain Hash Algorithm 
+        <xref target="RFC3447" /> parametrized with
+        Hash, where Hash is a secure hash algorithm.   RSA signature
+        verification is used to verify the correctness of the proof.
+        The VRF hash output beta is simply given by Hash(pi). 
+        </t>
+        
+        <t>
+        [TO DO: Add some discussion about the choice of the hash algorithm?
+        Not sure how to do this. The reference implementation uses SHA-256.]
+        </t>
+        <t>
+            In this document, the notation from <xref target="RFC3447" /> is used.
+        </t>
+
+        <t>
+            Used parameters:
+            <list>
+                <t>(n, e) - RSA public key</t>
+                <t>K - RSA private key</t>
+                <t>k - length of the RSA modulus n in octets</t>
+            </list>
+        </t>
+
+        <t>
+            Fixed options:
+            <list>
+                <t>Hash - secure hash algorithm to be used with MGF1 
+                and FDHVRF_PROOF2HASH. (A US Secure Hash 
+                Function as specified in <xref target="RFC6234" /> MAY by used.)
+                </t>
+                
+                <t> 
+                [TODO: Feedback on this language please. <xref target="RFC6234" /> 
+                specifies SHA1 but we do not want to allow this here.
+                The hash function should really be SHA-256, but
+                I don't want to lock this in to the spec!]
+                </t>
+            </list>
+        </t>
+
+        <t>
+            Used primitives:
+            <list>
+                <t>
+                    I2OSP - Coversion of a nonnegative integer to an octet string as defined in
+                    Section 4.1 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    OS2IP - Coversion of an octet string to a nonnegative integer as defined in
+                    Section 4.2 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    RSASP1 - RSA signature primitive as defined in
+                    Section 5.2.1 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    RSAVP1 - RSA verification primitive as defined in
+                    Section 5.2.2 of <xref target="RFC3447" />
+                </t>
+                <t>
+                    MGF1 - Mask Generation Function based on a hash function as defined in
+                    Section B.2.1 of <xref target="RFC3447" />
+                </t>
+            </list>
+        </t>
+
+        <section title="FDHVRF Proving">
+            <t>
+                FDHVRF_PROVE(K, alpha)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>K - RSA private key</t>
+                    <t>alpha - VRF hash input, an octet string</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>S - signature, an octet string of length k</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>EM = MGF1(alpha, k - 1)</t>
+                    <t>m = OS2IP(EM)</t>
+                    <t>s = RSASP1(K, m)</t>
+                    <t>S = I2OSP(s, k)</t>
+                    <t>Output S</t>
+                </list>
+            </t>
+        </section>
+        
+        <section title="FDHVRF Proof To Hash">
+            <t>[TODO: SHARON JUST ADDED THIS SECTION, JAN AND DIMITRIS PLS CHECK.]
+            </t>
+            
+            <t>
+                FDHVRF_PROOF2HASH(S)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>S - signature, an octet string of length k</t>
+                </list>
+            </t>
+            
+            <t>
+                Output:
+                <list>
+                    <t>beta - VRF hash output</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>beta = Hash(S)</t>
+                    <t>Output beta</t>
+                </list>
+            </t>
+        </section>
+
+        <section title="FDHVRF Verifying">
+            <t>
+                FDHVRF_VERIFY((n, e), alpha, S)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>(n, e) - RSA public key</t>
+                    <t>alpha - VRF hash input, an octet string</t>
+                    <t>S - signature to be verified, an octet string of length k</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>"VALID" or "INVALID"</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>s = OS2IP(S)</t>
+                    <t>m = RSAVP1((n, e), s)</t>
+                    <t>EM = I2OSP(m, k - 1)</t>
+                    <t>EM' = MGF1(alpha, k - 1)</t>
+                    <t>
+                        If EM and EM' are the same, output "VALID";
+                        else output "INVALID".
+                    </t>
+                </list>
+            </t>
+        </section>
+    </section>
+
+    <section title="Elliptic Curve VRF" anchor="ecvrf">
+        
+        <t> [TODO: DO WE WANT TO SPECIFY A PARTICULAR GROUP HERE? OR DO WE 
+        WANT TO MAKE THIS MODULAR, SO THAT ANY GROUP G OF PRIME ORDER IS OK?
+        I TRIED TO USE "MUST" and "SHOULD" TO MAKE THIS MODULAR. FEEDBACK
+        PLEASE.]
+        </t>
+        
+        
+        <t> [TODO: THE DESCRIPTION BELOW USES SHA-256 AS THE HASH FUNCTION.
+        WE PROBABLY WANT TO MAKE THIS MODULAR, BUT AGAIN I AM NOT SURE 
+        HOW TO DO THIS.] </t>
+        
+        <t>
+            The Elliptic Curve Verifiable Random Function (ECVRF) is VRF that 
+            satisfies the trusted uniqueness and pseudorandomness security 
+            properties. This VRF MUST operate in a cyclic group G of prime order 
+            with generator g, where the cyclic group is an elliptic curve group. 
+            The group G MAY be the NIST-P256 elliptic curve, with curve parameters
+            as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
+            and <xref target="RFC5114"></xref>  (Section 2.6).
+            The group G MAY alternatively be the using Ed25519
+            elliptic curve with parameters defined in 
+            <xref target="RFC7748"></xref> (Section 4.1).
+            The security of this VRF 
+            follows from the decisional Diffie-Hellman (DDH) assumption in the 
+            cyclic group G  in the random oracle model.  Formal security proofs 
+            are in <xref target="nsec5ecc"></xref>. This VRF also satisfies the compression 
+            property, that allows the hash output beta to be 
+            obtained directly from the proof value pi.
+        </t>
+            
+        <t>    
+            This VRF adapts the Chaum-Pederson protocol <xref target="CP92"></xref>
+            for proving that two cyclic group elements g^x and h^x have the 
+            same discrete logarithm x base g and h, respectively.  
+        </t>
+
+        <t>
+            Fixed options:
+            <list>
+                <t>G - EC group</t>
+            </list>
+        </t>
+
+        <t>
+            Used parameters:
+            <list>
+                <t>g^x - EC public key</t>
+                <t>x - EC private key</t>
+                <t>q - prime order of group G</t>
+                <t>g - generator of group G</t>
+            </list>
+        </t>
+
+        <t>
+            Used primitives:
+            <list>
+                <t>"" - empty octet string</t>
+                <t>|| - octet string concatenation</t>
+                <t>p^k - EC point multiplication</t>
+                <t>p1*p2 - EC point addition</t>
+                <t>SHA256 - hash function SHA-256 as specified in <xref target="RFC6234" /></t>
+                <t>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <xref target="SECG1" /></t>
+                <t>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <xref target="SECG1" /></t>
+            </list>
+        </t>
+
+        <section title="ECVRF Hash To Curve">
+            <t>
+                ECVRF_hash_to_curve(m)
+            </t>
+            <t>
+                Input:
+                <list>
+                    <t>m - value to be hashed, an octet string</t>
+                </list>
+            </t>
+            <t>
+                Output:
+                <list>
+                    <t>h - hashed value, EC point</t>
+                </list>
+            </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>c = 0</t>
+                    <t>C = I2OSP(c, 4)</t>
+                    <t>xc = SHA256(m || C)</t>
+                    <t>p = 0x02 || xc</t>
+                    <t>If p is not a valid octet string representing encoded compressed point in G:
+                        <list style="letters">
+                            <t>c = c + 1</t>
+                            <t>Go to step 2.</t>
+                        </list>
+                    </t>
+                    <t>h = OS2ECP(p)</t>
+                    <t>Output h</t>
+                </list>
+            </t>
+
+        </section>
+
+        <section title="ECVRF Auxiliary Functions">
+
+        <section title="ECVRF Hash Points">
+            <t>
+                ECVRF_hash_points(p_1, p_2, ..., p_n)
+            </t>
+            <t>
+                Input:
+                <list>
+                    <t>p_x - EC point in G</t>
+                </list>
+            </t>
+            <t>
+                Output:
+                <list>
+                    <t>h - hash value, integer between 0 and 2^128-1</t>
+                </list>
+            </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>P = ""</t>
+                    <t>for p in [p_1, p_2, ... p_n]:
+                       <vspace/>P = P || ECP2OS(p)
+                    </t>
+                    <t>h' = SHA256(P)</t>
+                    <t>h = OS2IP(first 16 octets of h')</t>
+                    <t>Output h</t>
+                </list>
+            </t>
+        </section>
+
+        <section title="ECVRF Proof To Hash">
+            <t>
+                ECVRF_PROOF2HASH(gamma)
+            </t>
+            <t>
+                Input:
+                <list>
+                    <t>gamma - VRF proof, EC point in G with coordinates (x, y)</t>
+                </list>
+            </t>
+            <t>
+                Output:
+                <list>
+                    <t>beta - VRF hash output, octet string (32 octets)</t>
+                </list>
+            </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>beta = I2OSP(x, 32)</t>
+                    <t>Output beta</t>
+                </list>
+            </t>
+            <t>
+                Note: Because of the format of compressed form of an elliptic curve, the hash can
+                be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
+            </t>
+        </section>
+
+        <section title="ECVRF Decode Proof">
+            <t>
+                ECVRF_decode_proof(pi)
+            </t>
+            <t>
+                Input:
+                <list>
+                    <t>pi - VRF proof, octet string (81 octets)</t>
+                </list>
+            </t>
+            <t>
+                Output:
+                <list>
+                    <t>gamma - EC point</t>
+                    <t>c - integer between 0 and 2^128-1</t>
+                    <t>s - integer between 0 and 2^256-1</t>
+                </list>
+            </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>let gamma', c', s' be pi split after 33-rd and 49-th octet</t>
+                    <t>gamma = OS2ECP(gamma')</t>
+                    <t>c = OS2IP(c')</t>
+                    <t>s = OS2IP(s')</t>
+                    <t>Output gamma, c, and s</t>
+                </list>
+            </t>
+        </section>
+
+        </section><!-- Auxiliary Functions -->
+
+        <section title="ECVRF Proving">
+            <t>
+                ECVRF_PROVE(g^x, x, alpha)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>g^x - EC public key</t>
+                    <t>x - EC private key</t>
+                    <t>alpha - VRF input, octet string</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>pi - VRF proof, octet string (81 octets)</t>
+                    <t>beta - VRF hash output, octet string (32 octets)</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>gamma = h^x</t>
+                    <t>choose a nonce k from [0, q-1]</t>
+                    <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
+                    <t>s = k - c*q mod q</t>
+                    <t>pi = ECP2OS(gamma) || I2OSP(c, 16) || I2OSP(s, 32)</t>
+                    <t>beta = h2(gamma)</t>
+                    <t>Output pi and beta</t>
+                </list>
+            </t>
+        </section>
+
+        <section title="ECVRF Verifying">
+            <t>
+                ECVRF_VERIFY(g^x, pi, alpha)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>g^x - EC public key</t>
+                    <t>pi - VRF proof, octet string</t>
+                    <t>alpha - VRF input, octet string</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>"VALID" or "INVALID"</t>
+                    <t>beta - VRF hash output, octet string (32 octets)</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
+                    <t>u = (g^x)^c * g^s</t>
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>v = gamma^c * h^s</t>
+                    <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
+                    <t>beta = ECVRF_proof_to_hash(gamma)</t>
+                    <t>
+                        If c and c' are the same, output "VALID";
+                        else output "INVALID". Output beta.
+                    </t>
+                </list>
+            </t>
+
+            <t><cref source="Jan">TODO: check validity of gamma before hashing</cref></t>
+        </section>
+
+    </section>
+
+    <section title="Change Log">
+        <t>
+            Note to RFC Editor: if this document does not obsolete an existing RFC,
+            please remove this appendix before publication as an RFC.
+        </t>
+
+        <t>
+            <list>
+                <t>
+                    pre 00 - initial version of the document submitted to mailing list only
+                </t>
+            </list>
+        </t>
+    </section>
+
+    <section title="IANA Considerations" anchor="iana_considerations">
+
+        <t> [TODO: DOES SOMETHING NEED TO GO HERE?] </t>
+    </section>
+
+    <section title="Contributors">
+        <t>
+            This document would not be possible without help of
+            Moni Naor (Weizmann Institute),
+            Sachin Vasant (Cisco Systems),
+            Leonid Reyzin (Boston University), and
+            Asaf Ziv (Facebook).
+        </t>
+    </section>
+
+</middle>
+
+<back>
+    <!-- References Section -->
+
+<!--
+     Section 4.7f of [RFC2223bis] specifies the requirements for the
+     references sections.  In particular, there MUST be separate lists of
+     normative and informative references, each in a separate section.
+     The style SHOULD follow that of recently published RFCs.
+
+     In general, each normative reference SHOULD reference the most recent
+     version of the specification in question.
+-->
+
+    <references title="Normative References">
+        &rfc2119;
+        &rfc3447;
+        &rfc5114;
+        &rfc6234;
+        &rfc7748;
+        &draft-dnskey-ed25519;
+
+        <reference anchor="FIPS-186-3">
+            <front>
+                <title>Digital Signature Standard (DSS)</title>
+                <author><organization>National Institute for Standards and Technology</organization></author>
+                <date year="2009" month="June" />
+            </front>
+            <seriesInfo name="FIPS" value="PUB 186-3" />
+        </reference>
+
+        <reference anchor="SECG1" target="http://www.secg.org/sec1-v2.pdf">
+            <front>
+                <title>SEC 1: Elliptic Curve Cryptography</title>
+                <author><organization>Standards for Efficient Cryptography Group (SECG)</organization></author>
+                <date year="2009" month="May" />
+            </front>
+            <seriesInfo name="Version" value="2.0" />
+        </reference>
+
+    </references>
+
+    <references title="Informative References">
+
+        <reference anchor="nsec5ecc">
+            <front>
+                <title>NSEC5 from Elliptic Curves</title>
+                <author initials="D." surname="Papadopoulos"><organization /></author>
+                <author initials="D." surname="Wessels"><organization /></author>
+                <author initials="S." surname="Huque"><organization /></author>
+                <author initials="J." surname="Vcelak"><organization /></author>
+                <author initials="M." surname="Naor"><organization /></author>
+                <author initials="L." surname="Reyzin"><organization /></author>
+                <author initials="S." surname="Goldberg"><organization /></author>
+                <date year="2017" month="February" />
+            </front>
+            <seriesInfo name="in" value="ePrint Cryptology Archive 2017/099" />
+        </reference>
+
+        <reference anchor="MRV99">
+            <front>
+                <title>Verifiable Random Functions</title>
+                <author initials="S." surname="Michali"><organization /></author>
+                <author initials="M." surname="Rabin"><organization /></author>
+                <author initials="S." surname="Vadhan"><organization /></author>
+                <date year="1999" />
+            </front>
+            <seriesInfo name="in" value="FOCS" />
+        </reference>
+
+        <reference anchor="CP92">
+            <front>
+                <title>Wallet databases with observers</title>
+                <author initials="D." surname="Chaum"><organization /></author>
+                <author initials="C." surname="Pederson"><organization /></author>
+                <date year="1992" />
+            </front>
+            <seriesInfo name="in" value="FOCS" />
+        </reference>
+
+
+    </references>
+
+
+    <section title="Open Issues">
+        <t>
+            Note to RFC Editor: please remove this appendix before publication as an RFC.
+        </t>
+
+        <t>
+            <list style="numbers">
+                <t>Open issues</t>
+            </list>
+        </t>
+    </section>
+  </back>
+</rfc>
+<!-- vim: et ts=4 sts=4 sw=4 colorcolumn=100 spell :
+-->
