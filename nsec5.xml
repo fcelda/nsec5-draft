@@ -1474,16 +1474,18 @@
         </t>
         </section>
 
-        <section title="Hash Collisions" anchor="hashcol">
+        <section title="NSEC5 Hash Collisions" anchor="hashcol">
         <t>
-         Hash collisions between QNAME and the owner name of an NSEC5 RR may
-        occur.  When they do, it will be impossible to prove the non-
-        existence of the colliding QNAME.  However, with SHA-256, this is
-        highly unlikely, on the order of 1 in 2^128.  Note that DNSSEC
-        already relies on the presumption that a cryptographic hash function
-        is collision-resistant, since these hash functions are used
-        for generating and validating signatures and DS RRs. See also the
-        discussion on key lengths in <xref target="nsec5" />.
+        If the NSEC5 hash of a QNAME collides with the NSEC5 hash of the 
+	owner name of an NSEC5 RR, it will be impossible to prove the 
+	non-existence of the colliding QNAME. However, the NSEC5 VRFs 
+	ensure that obtaining such a collision is as difficult as obtaining 
+	a collision in the SHA-256 hash function (requiring approximately 
+	2^128 effort). Note that DNSSEC already relies on the assumption 
+	that a cryptographic hash function is collision-resistant, since 
+	these hash functions are used for generating and validating signatures 
+	and DS RRs. See also the discussion on key lengths in 
+	<xref target="nsec5" />.
         </t>
         </section>
 
