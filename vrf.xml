@@ -6,7 +6,7 @@
 <!ENTITY rfc6234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6234.xml">
 <!ENTITY rfc7748 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7748.xml">
 <!ENTITY rfc8080 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8080.xml">
-<!ENTITY draft-vcelak-nsec5 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.vcelak-nsec5.xml">
+<!ENTITY I-D.vcelak-nsec5 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.vcelak-nsec5.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -118,7 +118,7 @@
    enumeration of the data in the data structure.
    VRFs are used for this purpose in the NSEC5 
    construction for DNSSEC Authenticated Denial of Existence (see <xref
-   target="nsec5ecc"/> and <xref target="draft-vcelak-nsec5"/>).
+   target="nsec5ecc"/> and <xref target="I-D.vcelak-nsec5"/>).
    </t>
    
    <section title="VRF Algorithms">
@@ -690,7 +690,7 @@
         &rfc6234;
         &rfc7748;
         &rfc8080;
-        &draft-vcelak-nsec5;
+        &I-D.vcelak-nsec5;
 
         <reference anchor="FIPS-186-3">
             <front>
