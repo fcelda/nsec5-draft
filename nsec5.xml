@@ -125,7 +125,7 @@
             authenticated denial of existence.  This document introduces NSEC5
             as an alternative mechanism for DNSSEC authenticated denial of existence. 
             NSEC5 uses verifiable random functions (VRFs) to prevent
-            offline enumeration of zone contents. NSEC5 protects the integrity of the
+            offline enumeration of zone contents. NSEC5 also protects the integrity of the
             zone contents even if an adversary compromises one of the
             authoritative servers for the zone.  Integrity is
             preserved because NSEC5 does not require
@@ -200,7 +200,7 @@
             <t>
                 When offline signing with NSEC3 is used <xref target="RFC5155" />, 
                 the original names in the NSEC chain are replaced by their cryptographic 
-                hashes. Offline signing ensures that NSEC preserves integrity
+                hashes. Offline signing ensures that NSEC3 preserves integrity
                 even if an authoratitive server is compromised. However, 
                 offline zone enumeration is still possible with 
                 NSEC3
@@ -211,7 +211,7 @@
             
             <t>
                 When online signing is used, the authoritative server holds the private 
-                zone-signing key and use this key to synthesize 
+                zone-signing key and uses this key to synthesize 
                 NSEC or NSEC3 responses on the fly 
                 (e.g. 
                 NSEC3 White Lies (NSEC3-WL) or Minimally-Covering NSEC,
@@ -329,17 +329,27 @@
                     <t hangText="Base64:">
                         The "Base 64 Encoding" as specified in <xref target="RFC4648" />.
                     </t>
+                    <t hangText="Private NSEC5 key:">
+                        The private key for the verifiable random function (VRF). 
+                    </t>
+                    <t hangText="Public NSEC5 key:">
+                        The public key for the VRF. 
+                    </t>
                     <t hangText="NSEC5 proof:">
-                        A verifiable random function (VRF) proof. A holder of the private key 
-                        (e.g., authoritative server) can compute the proof. Anyone
-                        knowing the public key (e.g., client) can verify it's validity.
+                        A VRF proof. The holder of 
+                        the private NSEC5 key (e.g., authoritative server) can 
+                        compute the NSEC5 proof for an input domain name. 
+                        Anyone who knows the the public VRF key can verify 
+                        that the NSEC5 proof corresponds to the input domain name. 
                     </t>
                     <t hangText="NSEC5 hash:">
-                        A cryptographic hash (digest) of an NSEC5 proof. If the NSEC5
-                        proof is known, anyone can compute and verify it's NSEC5 hash.
+                        A cryptographic digest of an NSEC5 proof. If the NSEC5
+                        proof is known, anyone can compute its corresponding NSEC5 hash.
                     </t>
                     <t hangText="NSEC5 algorithm:">
-                        A pair of algorithms used to compute NSEC5 proofs and NSEC5 hashes.
+                        A triple of VRF algorithms that compute an NSEC5 proof,
+                        verify an NSEC5 proof, and process an NSEC5 proof to 
+                        obtain its NSEC5 hash.
                     </t>
                 </list>
             </t>
@@ -1190,7 +1200,7 @@
             </t>
         </section>
 
-        <section title="Zones Using Unknown Hash Algorithms">
+        <section title="Zones Using Unknown NSEC5 Algorithms">
             <t>
                 Zones that are signed with unknown NSEC5 algorithm or by an unavailable NSEC5
                 private key cannot be effectively served. Such zones SHOULD be rejected when
@@ -1303,7 +1313,7 @@
             </t>
         </section>
 
-        <section title="Responses With Unknown Hash Algorithms">
+        <section title="Responses With Unknown NSEC5 Algorithms">
             <t>
                 A validator MUST ignore NSEC5KEY RRs with unknown NSEC5 algorithms. The
                 practical result of this is that zones signed with unknown algorithms will
