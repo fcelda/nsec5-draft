@@ -544,13 +544,14 @@
         <t>
             <list style="symbols">
                 <t>
-                    The NSEC5 proof is the same as with EC-P256-SHA256 but using Ed25519
+                    The NSEC5 proof and NSEC5 hash are the same as with EC-P256-SHA256 
+                    but using Ed25519
                     elliptic curve with parameters defined in <xref target="RFC7748" />
                     Section 4.1.
                 </t>
-                <t>
+                <!--<t>
                     The NSEC5 hash is the same as with EC-P256-SHA256.
-                </t>
+                </t>-->
                 <t>
                     The public key format to be used in the NSEC5KEY RR is defined in Section 3 of
                     <xref target="RFC8080" /> and thus is the same as the
