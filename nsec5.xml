@@ -799,8 +799,9 @@
                     valid.
                 </t>
                 <t>
-                    Authoritative server proofs: the NSEC5 RRs that an authoritative server must include
-                    in a response to prove the listed facts.
+                    Authoritative server proofs: the names for which the NSEC5PROOF RRs are synthesized
+                    and added into the response along the NSEC5 RRs matching or covering each such
+                    name. These records together prove the listed facts.
                 </t>
                 <t>
                     Validator checks: the individual checks that a validating server is required to
@@ -845,6 +846,7 @@
                     <t>Closest encloser does not have NS without SOA in the Type Bit Map.</t>
                     <t>Closest encloser does not have DNAME in the Type Bit Maps.</t>
                     <t>Next closer name is derived correctly.</t>
+                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
                 </list>
             </t>
 
@@ -941,7 +943,7 @@
                 Validator checks:
                 <list>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name covers (not matches).</t>
+                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
                 </list>
             </t>
 
@@ -974,7 +976,7 @@
                     <t>Source of synthesis does not have QTYPE in the Type Bit Map.</t>
                     <t>Source of synthesis does not have CNAME in the Type Bit Map.</t>
                     <t>Next closer name is derived correctly.</t>
-                    <t>Next closer name covers (not matches).</t>
+                    <t>Next closer name is covered (not matched) by the NSEC5 record.</t>
                 </list>
             </t>
 
