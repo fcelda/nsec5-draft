@@ -240,7 +240,7 @@
 
             
             <t>
-                NSEC5 prevents offline zone enumeration and protects integrity 
+                NSEC5 prevents offline zone enumeration and also protects integrity 
                 even if a zone's authoratitive server is compromised. 
                 To do this, NSEC5 replaces the unkeyed cryptographic hash 
                 function used in NSEC3 with a verifiable random function 
@@ -732,7 +732,8 @@
     <section title="The NSEC5PROOF Resource Record">
         <t>
             The NSEC5PROOF record is not to be included in the zone file.
-            It contains the NSEC5 proof, proving the position of the owner name in an
+            The NSEC5PROOF record contains the NSEC5 proof, proving the 
+            position of the owner name in an
             NSEC5 chain.
         </t>
 
@@ -1186,7 +1187,7 @@
 
         <section title="Zones Using Unknown NSEC5 Algorithms">
             <t>
-                Zones that are signed with unknown NSEC5 algorithm or under an unavailable 
+                Zones that are signed with unknown NSEC5 algorithm or an unavailable 
                 private NSEC5 key cannot be effectively served. Such zones SHOULD be rejected when
                 loading and servers SHOULD respond with RCODE=2 (Server failure) when handling
                 queries that would fall under such zones.
