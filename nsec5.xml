@@ -122,7 +122,7 @@
         <-->
 
         <t>
-            The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource
+            The Domain Name System Security Extensions (DNSSEC) introduced the NSEC resource
             record (RR) for authenticated denial of existence and the NSEC3 RR for hashed
             authenticated denial of existence.  This document introduces NSEC5
             as an alternative mechanism for DNSSEC authenticated denial of existence. 
