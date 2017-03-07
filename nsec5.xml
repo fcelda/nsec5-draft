@@ -1113,12 +1113,13 @@
 
             <t>
                 According to the type of a response, an authoritative server MUST include NSEC5 RRs
-                in a response as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
+                in the response, as defined in <xref target="nsec5_proofs" />. For each NSEC5 RR
                 in the response, a corresponding RRSIG RRset and an NSEC5PROOF MUST be added
-                as well. The NSEC5PROOF RR has the owner name set to a domain name exactly
-                matching the name required for the proof. The class and TTL of the RR MUST
-                be the same as the class and TTL value of the corresponding NSEC5 RR. Its RDATA
-                payload is set according to the description in <xref target="nsec5proof_rdata" />.
+                as well. The NSEC5PROOF RR has its owner name set to the domain name 
+                required according to <xref target="nsec5_proofs" />. The class and TTL of the 
+                NSEC5PROOF RR MUST
+                be the same as the class and TTL value of the corresponding NSEC5 RR. The RDATA
+                payload of the NSEC5PROOF is set according to the description in <xref target="nsec5proof_rdata" />.
             </t>
 
             <t>
