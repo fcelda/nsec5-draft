@@ -1,0 +1,1051 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Verfiable Random Functions (VRFs)</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents"/>
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 VRF Algorithms"/>
+<link href="#rfc.section.1.2" rel="Chapter" title="1.2 VRF Security Properties"/>
+<link href="#rfc.section.1.3" rel="Chapter" title="1.3 VRF Proof-to-Hash Property"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 RSA Full Domain Hash VRF (FDHVRF)"/>
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 FDHVRF Proving"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 FDHVRF Proof To Hash"/>
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 FDHVRF Verifying"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 Elliptic Curve VRF"/>
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 ECVRF Hash To Curve"/>
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 ECVRF Auxiliary Functions"/>
+<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 ECVRF Hash Points"/>
+<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 ECVRF Proof To Hash"/>
+<link href="#rfc.section.3.2.3" rel="Chapter" title="3.2.3 ECVRF Decode Proof"/>
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 ECVRF Proving"/>
+<link href="#rfc.section.3.4" rel="Chapter" title="3.4 ECVRF Verifying"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 Change Log"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 IANA Considerations"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Contributors"/>
+<link href="#rfc.references" rel="Chapter" title="7 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="7.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="7.2 Informative References"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A Open Issues"/>
+<link href="#rfc.authors" rel="Chapter"/>
+
+
+  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Goldberg, S., Papadopoulos, D., and J. Vcelak" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-goldbe-vrf-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-7" />
+  <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is essentially the public-key version of a keyed cryptographic hash. A VRF comes with a public-key pair (PK, SK). Only the holder of the private key SK can compute the hash, but anyone with public key PK can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One VRF is based on RSA, and the other is based on Eliptic Curve Cryptography (ECC).  " />
+  <meta name="description" content="A Verifiable Random Function (VRF) is essentially the public-key version of a keyed cryptographic hash. A VRF comes with a public-key pair (PK, SK). Only the holder of the private key SK can compute the hash, but anyone with public key PK can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One VRF is based on RSA, and the other is based on Eliptic Curve Cryptography (ECC).  " />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+  <td class="left">Network Working Group</td>
+  <td class="right">S. Goldberg</td>
+</tr>
+<tr>
+  <td class="left">Internet-Draft</td>
+  <td class="right">Boston University</td>
+</tr>
+<tr>
+  <td class="left">Intended status: Standards Track</td>
+  <td class="right">D. Papadopoulos</td>
+</tr>
+<tr>
+  <td class="left">Expires: September 8, 2017</td>
+  <td class="right">University of Maryland</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">J. Vcelak</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">NS1</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">March 7, 2017</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Verfiable Random Functions (VRFs)<br />
+  <span class="filename">draft-goldbe-vrf-00</span></p>
+  
+  <h1 id="rfc.abstract">
+  <a href="#rfc.abstract">Abstract</a>
+</h1>
+<p>A Verifiable Random Function (VRF) is essentially the public-key version of a keyed cryptographic hash. A VRF comes with a public-key pair (PK, SK). Only the holder of the private key SK can compute the hash, but anyone with public key PK can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One VRF is based on RSA, and the other is based on Eliptic Curve Cryptography (ECC).  </p>
+<h1 id="rfc.status">
+  <a href="#rfc.status">Status of This Memo</a>
+</h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on September 8, 2017.</p>
+<h1 id="rfc.copyrightnotice">
+  <a href="#rfc.copyrightnotice">Copyright Notice</a>
+</h1>
+<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">VRF Algorithms</a></li>
+<li>1.2.   <a href="#rfc.section.1.2">VRF Security Properties</a></li>
+<li>1.3.   <a href="#rfc.section.1.3">VRF Proof-to-Hash Property</a></li>
+</ul><li>2.   <a href="#rfc.section.2">RSA Full Domain Hash VRF (FDHVRF)</a></li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">FDHVRF Proving</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">FDHVRF Proof To Hash</a></li>
+<li>2.3.   <a href="#rfc.section.2.3">FDHVRF Verifying</a></li>
+</ul><li>3.   <a href="#rfc.section.3">Elliptic Curve VRF</a></li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">ECVRF Hash To Curve</a></li>
+<li>3.2.   <a href="#rfc.section.3.2">ECVRF Auxiliary Functions</a></li>
+<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">ECVRF Hash Points</a></li>
+<li>3.2.2.   <a href="#rfc.section.3.2.2">ECVRF Proof To Hash</a></li>
+<li>3.2.3.   <a href="#rfc.section.3.2.3">ECVRF Decode Proof</a></li>
+</ul><li>3.3.   <a href="#rfc.section.3.3">ECVRF Proving</a></li>
+<li>3.4.   <a href="#rfc.section.3.4">ECVRF Verifying</a></li>
+</ul><li>4.   <a href="#rfc.section.4">Change Log</a></li>
+<li>5.   <a href="#rfc.section.5">IANA Considerations</a></li>
+<li>6.   <a href="#rfc.section.6">Contributors</a></li>
+<li>7.   <a href="#rfc.references">References</a></li>
+<ul><li>7.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>7.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Open Issues</a></li>
+<li><a href="#rfc.authors">Authors' Addresses</a></li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
+<p id="rfc.section.1.p.1">A VRF <a href="#MRV99">[MRV99]</a> is the public-key version of a keyed cryptographic hash. Only the holder of the private VRF key SK can compute the hash, but anyone with public key PK can verify the correctness of the hash.  </p>
+<p id="rfc.section.1.p.2">One application of the VRF is to prevent offline enumeration of the data stored in a hash-based data structure.  For instance, a Prover holds the VRF secret key SK and uses VRF hashing to construct a hash-based data structure on some input data.  Because hashing is done with the VRF, only the Prover can answer queries about whether or not some data is stored in the data structure.   Anyone that knows the  public VRF key PK can verify that the Prover has answered queries correctly. However, because these other parties do not know the private VRF key SK, they cannot make offline inferences (that do not involve querying the Prover) about which data is stored in the data structure. This prevents offline enumeration of the data in the data structure.  VRFs are used for this purpose in the NSEC5 construction for DNSSEC Authenticated Denial of Existence (see <a href="#nsec5ecc">[nsec5ecc]</a> and <a href="#I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</a>).  </p>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> VRF Algorithms</h1>
+<p id="rfc.section.1.1.p.1">A VRF hashes an input alpha using the private key SK to obtain </p>
+
+<ul class="empty">
+  <li>beta = VRF_HASH(SK, alpha) </li>
+</ul>
+
+<p> The VRF_HASH algorithm MUST be deterministic, in the sense that it will always produce the same output beta given a pair of inputs (SK, alpha).  The private key SK is also used to construct a proof pi that beta is the correct hash output </p>
+
+<ul class="empty">
+  <li>pi = VRF_PROVE(SK, alpha)</li>
+</ul>
+
+<p> The proof pi is allows anyone holding the public key to verify that indeed beta is the correct hash of alpha under key PK. Thus, the VRF also comes with an algorithm </p>
+
+<ul class="empty">
+  <li>VRF_VERIFY(PK, alpha, beta, pi)</li>
+</ul>
+
+<p> which outputs VALID when beta is the correct VRF hash of alpha under key PK, and outputs INVALID otherwise.  </p>
+<h1 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a> VRF Security Properties</h1>
+<p id="rfc.section.1.2.p.1">The VRF MUST satisfy a pseudorandomness property that ensures that the hash output beta is indistinguishable from random by anyone who does not know the private key SK.  </p>
+<p id="rfc.section.1.2.p.2">The VRF MUST have a trusted uniqueness property that guarantees that, for a validly-generated PK and any input alpha, even an adversary that knows SK cannot produce a valid proof for a fake VRF hash output beta' which is different than beta = VRF_HASH(SK, alpha).  </p>
+<h1 id="rfc.section.1.3"><a href="#rfc.section.1.3">1.3.</a> VRF Proof-to-Hash Property</h1>
+<p id="rfc.section.1.3.p.1">Some VRFs support an additional property that allows anyone to obtain the hash output beta directly from the proof value pi </p>
+
+<ul class="empty">
+  <li>beta = VRF_PROOF2HASH(pi) </li>
+</ul>
+
+<p> For these VRFs, the verification function only needs to take in the public key PK, the VRF input alpha, and the VRF proof pi, so that </p>
+
+<ul class="empty">
+  <li>VRF_VERIFY(PK, alpha, pi) </li>
+</ul>
+
+<p> outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha under key PK, and outputs INVALID otherwise.  </p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#fdh" id="fdh">RSA Full Domain Hash VRF (FDHVRF)</a></h1>
+<p id="rfc.section.2.p.1">The RSA Full Domain Hash  VRF (FDHVRF) is VRF that satisfies the trusted uniqueness and pseudorandomness security properties. Its security follows from the standard RSA assumption and the random oracle model.  Formal security proofs are in []. This VRF also supports the VRF proof-to-hash property, that allows the hash output beta to be obtained directly from the proof value pi.  </p>
+<p id="rfc.section.2.p.2">The VRF computes the proof pi as a deterministic RSA signature on input alpha using the RSA Full Domain Hash Algorithm <a href="#RFC3447">[RFC3447]</a> parametrized with Hash, where Hash is a secure hash algorithm.   RSA signature verification is used to verify the correctness of the proof.  The VRF hash output beta is simply given by Hash(pi).  </p>
+<p id="rfc.section.2.p.3">[TO DO: Add some discussion about the choice of the hash algorithm? Not sure how to do this. The reference implementation uses SHA-256.] </p>
+<p id="rfc.section.2.p.4">In this document, the notation from <a href="#RFC3447">[RFC3447]</a> is used.  </p>
+<p id="rfc.section.2.p.5">Used parameters: </p>
+
+<ul class="empty">
+  <li>(n, e) - RSA public key</li>
+  <li>K - RSA private key</li>
+  <li>k - length of the RSA modulus n in octets</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.p.6">Fixed options: </p>
+
+<ul class="empty">
+  <li>Hash - secure hash algorithm to be used with MGF1 and FDHVRF_PROOF2HASH. (A US Secure Hash Function as specified in <a href="#RFC6234">[RFC6234]</a> MAY by used.) </li>
+  <li>[TODO: Feedback on this language please. <a href="#RFC6234">[RFC6234]</a> specifies SHA1 but we do not want to allow this here.  The hash function should really be SHA-256, but I don't want to lock this in to the spec!] </li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.p.7">Used primitives: </p>
+
+<ul class="empty">
+  <li>I2OSP - Coversion of a nonnegative integer to an octet string as defined in Section 4.1 of <a href="#RFC3447">[RFC3447]</a> </li>
+  <li>OS2IP - Coversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC3447">[RFC3447]</a> </li>
+  <li>RSASP1 - RSA signature primitive as defined in Section 5.2.1 of <a href="#RFC3447">[RFC3447]</a> </li>
+  <li>RSAVP1 - RSA verification primitive as defined in Section 5.2.2 of <a href="#RFC3447">[RFC3447]</a> </li>
+  <li>MGF1 - Mask Generation Function based on a hash function as defined in Section B.2.1 of <a href="#RFC3447">[RFC3447]</a> </li>
+</ul>
+
+<p> </p>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> FDHVRF Proving</h1>
+<p id="rfc.section.2.1.p.1">FDHVRF_PROVE(K, alpha) </p>
+<p id="rfc.section.2.1.p.2">Input: </p>
+
+<ul class="empty">
+  <li>K - RSA private key</li>
+  <li>alpha - VRF hash input, an octet string</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.1.p.3">Output: </p>
+
+<ul class="empty">
+  <li>S - signature, an octet string of length k</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.1.p.4">Steps: </p>
+
+<ol>
+  <li>EM = MGF1(alpha, k - 1)</li>
+  <li>m = OS2IP(EM)</li>
+  <li>s = RSASP1(K, m)</li>
+  <li>S = I2OSP(s, k)</li>
+  <li>Output S</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> FDHVRF Proof To Hash</h1>
+<p id="rfc.section.2.2.p.1">[TODO: SHARON JUST ADDED THIS SECTION, JAN AND DIMITRIS PLS CHECK.] </p>
+<p id="rfc.section.2.2.p.2">FDHVRF_PROOF2HASH(S) </p>
+<p id="rfc.section.2.2.p.3">Input: </p>
+
+<ul class="empty">
+  <li>S - signature, an octet string of length k</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.2.p.4">Output: </p>
+
+<ul class="empty">
+  <li>beta - VRF hash output</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.2.p.5">Steps: </p>
+
+<ol>
+  <li>beta = Hash(S)</li>
+  <li>Output beta</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> FDHVRF Verifying</h1>
+<p id="rfc.section.2.3.p.1">FDHVRF_VERIFY((n, e), alpha, S) </p>
+<p id="rfc.section.2.3.p.2">Input: </p>
+
+<ul class="empty">
+  <li>(n, e) - RSA public key</li>
+  <li>alpha - VRF hash input, an octet string</li>
+  <li>S - signature to be verified, an octet string of length k</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.3.p.3">Output: </p>
+
+<ul class="empty">
+  <li>"VALID" or "INVALID"</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.2.3.p.4">Steps: </p>
+
+<ol>
+  <li>s = OS2IP(S)</li>
+  <li>m = RSAVP1((n, e), s)</li>
+  <li>EM = I2OSP(m, k - 1)</li>
+  <li>EM' = MGF1(alpha, k - 1)</li>
+  <li>If EM and EM' are the same, output "VALID"; else output "INVALID".  </li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#ecvrf" id="ecvrf">Elliptic Curve VRF</a></h1>
+<p id="rfc.section.3.p.1">[TODO: DO WE WANT TO SPECIFY A PARTICULAR GROUP HERE? OR DO WE WANT TO MAKE THIS MODULAR, SO THAT ANY GROUP G OF PRIME ORDER IS OK? I TRIED TO USE "MUST" and "SHOULD" TO MAKE THIS MODULAR. FEEDBACK PLEASE.] </p>
+<p id="rfc.section.3.p.2">[TODO: THE DESCRIPTION BELOW USES SHA-256 AS THE HASH FUNCTION.  WE PROBABLY WANT TO MAKE THIS MODULAR, BUT AGAIN I AM NOT SURE HOW TO DO THIS.] </p>
+<p id="rfc.section.3.p.3">The Elliptic Curve Verifiable Random Function (ECVRF) is VRF that satisfies the trusted uniqueness and pseudorandomness security properties. This VRF MUST operate in a cyclic group G of prime order with generator g, where the cyclic group is an elliptic curve group.  The group G MAY be the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114">[RFC5114]</a>  (Section 2.6).  The group G MAY alternatively be the using Ed25519 elliptic curve with parameters defined in <a href="#RFC7748">[RFC7748]</a> (Section 4.1).  The security of this VRF follows from the decisional Diffie-Hellman (DDH) assumption in the cyclic group G  in the random oracle model.  Formal security proofs are in <a href="#nsec5ecc">[nsec5ecc]</a>. This VRF also supports the proof-to-hash  property, that allows the hash output beta to be obtained directly from the proof value pi.  </p>
+<p id="rfc.section.3.p.4">This VRF adapts the Chaum-Pederson protocol <a href="#CP92">[CP92]</a> for proving that two cyclic group elements g^x and h^x have the same discrete logarithm x base g and h, respectively.  </p>
+<p id="rfc.section.3.p.5">Fixed options: </p>
+
+<ul class="empty">
+  <li>G - EC group</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.p.6">Used parameters: </p>
+
+<ul class="empty">
+  <li>g^x - EC public key</li>
+  <li>x - EC private key</li>
+  <li>q - prime order of group G</li>
+  <li>g - generator of group G</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.p.7">Used primitives: </p>
+
+<ul class="empty">
+  <li>"" - empty octet string</li>
+  <li>|| - octet string concatenation</li>
+  <li>p^k - EC point multiplication</li>
+  <li>p1*p2 - EC point addition</li>
+  <li>SHA256 - hash function SHA-256 as specified in <a href="#RFC6234">[RFC6234]</a></li>
+  <li>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <a href="#SECG1">[SECG1]</a></li>
+  <li>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <a href="#SECG1">[SECG1]</a></li>
+</ul>
+
+<p> </p>
+<h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> ECVRF Hash To Curve</h1>
+<p id="rfc.section.3.1.p.1">ECVRF_hash_to_curve(m) </p>
+<p id="rfc.section.3.1.p.2">Input: </p>
+
+<ul class="empty">
+  <li>m - value to be hashed, an octet string</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.1.p.3">Output: </p>
+
+<ul class="empty">
+  <li>h - hashed value, EC point</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.1.p.4">Steps: </p>
+
+<ol>
+  <li>c = 0</li>
+  <li>C = I2OSP(c, 4)</li>
+  <li>xc = SHA256(m || C)</li>
+  <li>p = 0x02 || xc</li>
+  <li>If p is not a valid octet string representing encoded compressed point in G: <ol style="list-style-type: upper-alpha"><li>c = c + 1</li><li>Go to step 2.</li></ol><p> </p></li>
+  <li>h = OS2ECP(p)</li>
+  <li>Output h</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> ECVRF Auxiliary Functions</h1>
+<h1 id="rfc.section.3.2.1"><a href="#rfc.section.3.2.1">3.2.1.</a> ECVRF Hash Points</h1>
+<p id="rfc.section.3.2.1.p.1">ECVRF_hash_points(p_1, p_2, ..., p_n) </p>
+<p id="rfc.section.3.2.1.p.2">Input: </p>
+
+<ul class="empty">
+  <li>p_x - EC point in G</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.1.p.3">Output: </p>
+
+<ul class="empty">
+  <li>h - hash value, integer between 0 and 2^128-1</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.1.p.4">Steps: </p>
+
+<ol>
+  <li>P = ""</li>
+  <li>for p in [p_1, p_2, ... p_n]: <br/>P = P || ECP2OS(p) </li>
+  <li>h' = SHA256(P)</li>
+  <li>h = OS2IP(first 16 octets of h')</li>
+  <li>Output h</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.3.2.2"><a href="#rfc.section.3.2.2">3.2.2.</a> ECVRF Proof To Hash</h1>
+<p id="rfc.section.3.2.2.p.1">ECVRF_PROOF2HASH(gamma) </p>
+<p id="rfc.section.3.2.2.p.2">Input: </p>
+
+<ul class="empty">
+  <li>gamma - VRF proof, EC point in G with coordinates (x, y)</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.2.p.3">Output: </p>
+
+<ul class="empty">
+  <li>beta - VRF hash output, octet string (32 octets)</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.2.p.4">Steps: </p>
+
+<ol>
+  <li>beta = I2OSP(x, 32)</li>
+  <li>Output beta</li>
+</ol>
+
+<p> </p>
+<p id="rfc.section.3.2.2.p.5">Note: Because of the format of compressed form of an elliptic curve, the hash can be retrieved from an encoded gamma simply by omitting the first octet of the gamma.  </p>
+<h1 id="rfc.section.3.2.3"><a href="#rfc.section.3.2.3">3.2.3.</a> ECVRF Decode Proof</h1>
+<p id="rfc.section.3.2.3.p.1">ECVRF_decode_proof(pi) </p>
+<p id="rfc.section.3.2.3.p.2">Input: </p>
+
+<ul class="empty">
+  <li>pi - VRF proof, octet string (81 octets)</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.3.p.3">Output: </p>
+
+<ul class="empty">
+  <li>gamma - EC point</li>
+  <li>c - integer between 0 and 2^128-1</li>
+  <li>s - integer between 0 and 2^256-1</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.2.3.p.4">Steps: </p>
+
+<ol>
+  <li>let gamma', c', s' be pi split after 33-rd and 49-th octet</li>
+  <li>gamma = OS2ECP(gamma')</li>
+  <li>c = OS2IP(c')</li>
+  <li>s = OS2IP(s')</li>
+  <li>Output gamma, c, and s</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> ECVRF Proving</h1>
+<p id="rfc.section.3.3.p.1">ECVRF_PROVE(g^x, x, alpha) </p>
+<p id="rfc.section.3.3.p.2">Input: </p>
+
+<ul class="empty">
+  <li>g^x - EC public key</li>
+  <li>x - EC private key</li>
+  <li>alpha - VRF input, octet string</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.3.p.3">Output: </p>
+
+<ul class="empty">
+  <li>pi - VRF proof, octet string (81 octets)</li>
+  <li>beta - VRF hash output, octet string (32 octets)</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.3.p.4">Steps: </p>
+
+<ol>
+  <li>h = ECVRF_hash_to_curve(alpha)</li>
+  <li>gamma = h^x</li>
+  <li>choose a nonce k from [0, q-1]</li>
+  <li>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</li>
+  <li>s = k - c*q mod q</li>
+  <li>pi = ECP2OS(gamma) || I2OSP(c, 16) || I2OSP(s, 32)</li>
+  <li>beta = h2(gamma)</li>
+  <li>Output pi and beta</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> ECVRF Verifying</h1>
+<p id="rfc.section.3.4.p.1">ECVRF_VERIFY(g^x, pi, alpha) </p>
+<p id="rfc.section.3.4.p.2">Input: </p>
+
+<ul class="empty">
+  <li>g^x - EC public key</li>
+  <li>pi - VRF proof, octet string</li>
+  <li>alpha - VRF input, octet string</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.4.p.3">Output: </p>
+
+<ul class="empty">
+  <li>"VALID" or "INVALID"</li>
+  <li>beta - VRF hash output, octet string (32 octets)</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.3.4.p.4">Steps: </p>
+
+<ol>
+  <li>gamma, c, s = ECVRF_decode_proof(pi)</li>
+  <li>u = (g^x)^c * g^s</li>
+  <li>h = ECVRF_hash_to_curve(alpha)</li>
+  <li>v = gamma^c * h^s</li>
+  <li>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</li>
+  <li>beta = ECVRF_proof_to_hash(gamma)</li>
+  <li>If c and c' are the same, output "VALID"; else output "INVALID". Output beta.  </li>
+</ol>
+
+<p> </p>
+<p>
+  <a id="CREF1" class="info">[CREF1]<span class="info">Jan: TODO: check validity of gamma before hashing</span></a>
+</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> Change Log</h1>
+<p id="rfc.section.4.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.  </p>
+<p/>
+
+<ul class="empty">
+  <li>pre 00 - initial version of the document submitted to mailing list only </li>
+</ul>
+
+<p> </p>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#iana_considerations" id="iana_considerations">IANA Considerations</a></h1>
+<p id="rfc.section.5.p.1">[TODO: DOES SOMETHING NEED TO GO HERE?] </p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> Contributors</h1>
+<p id="rfc.section.6.p.1">This document would not be possible without help of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), Leonid Reyzin (Boston University), and Asaf Ziv (Facebook).  </p>
+<h1 id="rfc.references"><a href="#rfc.references">7.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">7.1.</a> Normative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="RFC2119">[RFC2119]</b>
+      </td>
+      <td class="top"><a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3447">[RFC3447]</b>
+      </td>
+      <td class="top"><a>Jonsson, J.</a> and <a>B. Kaliski</a>, "<a href="http://tools.ietf.org/html/rfc3447">Public-Key Cryptography Standards (PKCS) #1: RSA Cryptography Specifications Version 2.1</a>", RFC 3447, DOI 10.17487/RFC3447, February 2003.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5114">[RFC5114]</b>
+      </td>
+      <td class="top"><a>Lepinski, M.</a> and <a>S. Kent</a>, "<a href="http://tools.ietf.org/html/rfc5114">Additional Diffie-Hellman Groups for Use with IETF Standards</a>", RFC 5114, DOI 10.17487/RFC5114, January 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6234">[RFC6234]</b>
+      </td>
+      <td class="top"><a>Eastlake 3rd, D.</a> and <a>T. Hansen</a>, "<a href="http://tools.ietf.org/html/rfc6234">US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)</a>", RFC 6234, DOI 10.17487/RFC6234, May 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7748">[RFC7748]</b>
+      </td>
+      <td class="top"><a>Langley, A.</a>, <a>Hamburg, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/rfc7748">Elliptic Curves for Security</a>", RFC 7748, DOI 10.17487/RFC7748, January 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC8080">[RFC8080]</b>
+      </td>
+      <td class="top"><a>Sury, O.</a> and <a>R. Edmonds</a>, "<a href="http://tools.ietf.org/html/rfc8080">Edwards-Curve Digital Security Algorithm (EdDSA) for DNSSEC</a>", RFC 8080, DOI 10.17487/RFC8080, February 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b>
+      </td>
+      <td class="top"><a>Vcelak, J.</a>, <a>Goldberg, S.</a> and <a>D. Papadopoulos</a>, "<a href="http://tools.ietf.org/html/draft-vcelak-nsec5-03">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-03, September 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="FIPS-186-3">[FIPS-186-3]</b>
+      </td>
+      <td class="top"><a>National Institute for Standards and Technology</a>, "<a>Digital Signature Standard (DSS)</a>", FIPS PUB 186-3, June 2009.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="SECG1">[SECG1]</b>
+      </td>
+      <td class="top"><a>Standards for Efficient Cryptography Group (SECG)</a>, "<a href="http://www.secg.org/sec1-v2.pdf">SEC 1: Elliptic Curve Cryptography</a>", Version 2.0, May 2009.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">7.2.</a> Informative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="nsec5ecc">[nsec5ecc]</b>
+      </td>
+      <td class="top"><a>Papadopoulos, D.</a>, <a>Wessels, D.</a>, <a>Huque, S.</a>, <a>Vcelak, J.</a>, <a>Naor, M.</a>, <a>Reyzin, L.</a> and <a>S. Goldberg</a>, "<a>NSEC5 from Elliptic Curves</a>", in ePrint Cryptology Archive 2017/099, February 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="MRV99">[MRV99]</b>
+      </td>
+      <td class="top"><a>Michali, S.</a>, <a>Rabin, M.</a> and <a>S. Vadhan</a>, "<a>Verifiable Random Functions</a>", in FOCS, 1999.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="CP92">[CP92]</b>
+      </td>
+      <td class="top"><a>Chaum, D.</a> and <a>C. Pederson</a>, "<a>Wallet databases with observers</a>", in FOCS, 1992.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> Open Issues</h1>
+<p id="rfc.section.A.p.1">Note to RFC Editor: please remove this appendix before publication as an RFC.  </p>
+<p/>
+
+<ol>
+  <li>Open issues</li>
+</ol>
+
+<p> </p>
+<h1 id="rfc.authors">
+  <a href="#rfc.authors">Authors' Addresses</a>
+</h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Sharon Goldberg</span> 
+	  <span class="n hidden">
+		<span class="family-name">Goldberg</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Boston University</span>
+	<span class="adr">
+	  <span class="vcardline">111 Cummington St, MCS135</span>
+
+	  <span class="vcardline">
+		<span class="locality">Boston</span>,  
+		<span class="region">MA</span> 
+		<span class="code">02215</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:goldbe@cs.bu.edu">goldbe@cs.bu.edu</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Dimitrios Papadopoulos</span> 
+	  <span class="n hidden">
+		<span class="family-name">Papadopoulos</span>
+	  </span>
+	</span>
+	<span class="org vcardline">University of Maryland</span>
+	<span class="adr">
+	  <span class="vcardline">8223 Paint Branch Dr</span>
+
+	  <span class="vcardline">
+		<span class="locality">College Park</span>,  
+		<span class="region">MD</span> 
+		<span class="code">20740</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:dipapado@bu.edu">dipapado@bu.edu</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Jan Vcelak</span> 
+	  <span class="n hidden">
+		<span class="family-name">Vcelak</span>
+	  </span>
+	</span>
+	<span class="org vcardline">NS1</span>
+	<span class="adr">
+	  <span class="vcardline">16 Beaver St</span>
+
+	  <span class="vcardline">
+		<span class="locality">New York</span>,  
+		<span class="region">NY</span> 
+		<span class="code">10004</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:jvcelak@ns1.com">jvcelak@ns1.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>

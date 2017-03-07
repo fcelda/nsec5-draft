@@ -1,12 +1,3 @@
-# Working Copy of the NSEC5 Specification
-
-Run make to generate .txt and .html from .md and .xml.
-
-## Requirements
-
-- [xml2rfc](https://pypi.python.org/pypi/xml2rfc)
-- [kramdown-rfc2620](https://github.com/cabo/kramdown-rfc2629)
-
 # Contributing
 
 Before submitting feedback, please familiarize yourself with our
