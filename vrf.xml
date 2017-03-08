@@ -609,8 +609,11 @@
                     <t>While true:
                     <list style="letters">                
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>p = 0x02 || Hash(m || CTR) 
-                        <cref source="Sharon">Jan, dimitris, why do we prepend 2? Is this arbitrary?</cref>
+                        <t>p = 0x02 || Hash(m || CTR). (Note, 0x02 sets point encoding 
+                        to "compressed", using only the positive value for the y-coefficient.
+                        <cref source="Sharon">Jan, why did you choose on 02, we could 
+                        also try 03 for the negative y coordinate, right? Also, we need a cite for the
+                        0x02 comment above.)</cref>
                         </t>
                         <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
                         <t>ctr = ctr + 1</t>
