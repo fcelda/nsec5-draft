@@ -259,9 +259,9 @@
         <t>
             Used parameters:
             <list>
-                <t>(n, e) - RSA public key</t>
-                <t>K - RSA private key</t>
-                <t>k - length of the RSA modulus n in octets</t>
+                <t>(N, e) - RSA public key</t>
+                <t>SK - RSA private key</t>
+                <t>n - length of the RSA modulus N in octets</t>
             </list>
         </t>
 
@@ -625,6 +625,7 @@
         </section>
 
         <section title="EC-VRF Hash Points">
+                     
             <t>
                 EC-VRF_hash_points(p_1, p_2, ..., p_j)
             </t>
@@ -657,6 +658,26 @@
                     <t>Output h</t>
                 </list>
             </t>
+            
+            
+            <t>
+            This EC-VRF_hash_points algorithm MUST not used in applications where 
+            the VRF input alpha must be kept secret. This is because the running time of 
+            the hashing algorithm depends on alpha, and so it is susceptible to 
+            timing attacks.  (Note: This timing attack is not relevant in the context 
+            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that is hashed in the 
+            query phase for NSEC5 is the queried name alpha itself, which is 
+            already known to the adversary.)
+            </t>
+            
+            <t>[TODO: Specify a hash_points algorithm that is not susceptible 
+            to timing attacks. For instance, for Ed25519, one could use the 
+            Elligator  function.  A hash function that works with 
+            ANY elliptic curve would be more
+            complicated. <cref source="Sharon">Dimitris can you add a cite
+            to the paper that shows how to do this?</cref>]
+            </t>
+                   
         </section>
 
         <section title="EC-VRF Decode Proof">
@@ -737,6 +758,9 @@
         </t>
         </list>
         </t>
+   
+        <t>[TODO: Add an Ed448 ciphersuite.]</t>
+   
         
         </section>
     </section>
@@ -753,16 +777,11 @@
                     00 - Forked this document from draft-vcelak-nsec5-04. 
                     Cleaned up the definitions of VRF algorithms.
                     Added security definitions for VRF.
-                    Parameterized EC-VRF so it supports curves other than 
+                    Parameterized EC-VRF so it could support curves other than 
                     P-256 and Ed25519. 
                 </t>
             </list>
         </t>
-    </section>
-
-    <section title="IANA Considerations" anchor="iana_considerations">
-
-        <t> [TODO: DOES SOMETHING NEED TO GO HERE?] </t>
     </section>
 
     <section title="Contributors">
