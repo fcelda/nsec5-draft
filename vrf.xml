@@ -643,14 +643,19 @@
             However, this EC-VRF_hash_points algorithm MUST NOT used in applications where 
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
-            timing attacks.
+            timing attacks.  That said, the amount of information obtained from
+            such a timing attack is likely to be small, since the algorithm 
+            is expected to find a valid curve point after only two attempts 
+            (i.e., when ctr=1) on average.  See <cref source="Sharon">Dimitris
+            add cite here please!</cref>.
             </t>
             
             <t>
             (Note: This timing attack is not relevant in the context 
-            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that is hashed in the 
-            query phase for NSEC5 is the queried name alpha itself, which is 
-            already known to the adversary.)
+            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that 
+            is processed by the VRF online in response to an adversary's 
+            query with NSEC5 is the queried name alpha itself. Thus 
+            alpha is already known to the adversary.)
             </t>
             
             
