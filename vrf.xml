@@ -67,23 +67,21 @@
 
         <!-- <workgroup></workgroup> -->
 
-        <keyword>DNS</keyword>
-        <keyword>DNSSEC</keyword>
-        <keyword>NSEC</keyword>
+        <keyword>public key cryptography</keyword>
+        <keyword>hashing</keyword>
         <keyword>authenticated denial</keyword>
-
+        
     <abstract>
 
        <t>
-        A Verifiable Random Function (VRF) is essentially the public-key version of a
+        A Verifiable Random Function (VRF) is the public-key version of a
         keyed cryptographic hash. Only the holder of the private key
         can compute the hash, but anyone with public key
         can verify the correctness of the hash.    
         VRFs are useful for preventing enumeration of hash-based data structures.
         This document specifies several VRF constructions that are secure in
-        the cryptographic random oracle model. One VRF is 
-        based on RSA, and the other is based on Eliptic Curve Cryptography 
-        (ECC). 
+        the cryptographic random oracle model. One  VRF uses RSA and the other
+        VRF uses Eliptic Curves (EC). 
         </t>
 
     </abstract>
@@ -107,7 +105,8 @@
    <t>
    One application of the VRF is to prevent offline 
    enumeration of the data stored in a hash-based data structure. 
-   For instance, a Prover holds the VRF secret key SK and uses VRF hashing to 
+   In this application, 
+   a Prover holds the VRF secret key SK and uses VRF hashing to 
    construct a hash-based data structure on some input data.  
    
    Because hashing is done with the VRF, only 
@@ -195,6 +194,10 @@
    obtain the hash output beta directly from the proof value pi 
    <list>
    <t> beta = VRF_proof2hash(pi) </t>
+   </list>
+      The VRF_hash function is therefore given by
+   <list>
+        <t>beta = VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))</t>
    </list>  
    For these VRFs, the verification function only needs to take in the public 
    key PK, the VRF input alpha, and the VRF proof pi, so that 
@@ -207,7 +210,7 @@
    
    <t>
    (Notice that any VRF can be made to satisfy this property by redefining the 
-   VRF proof value to include both beta and pi.)
+   VRF proof value to include both beta and pi. )
    </t>
    </section>
    </section>
@@ -216,20 +219,60 @@
    <section title="VRF Security Properties">
    
    <t>
-   The VRF MUST satisfy a pseudorandomness property that ensures that the hash 
-   output beta is indistinguishable from random by anyone who does not 
-   know the private key SK.    
+   This document defines VRFs that satisfies the following security properties:
    </t>
+   
    <t>
-   The VRF MUST have a trusted uniqueness property that guarantees 
-   that, for a validly-generated PK and any input alpha, 
-   even an adversary 
-   that knows SK cannot produce a valid proof for a fake 
-   VRF hash output beta' which is different than
-   beta = VRF_hash(SK, alpha). 
-  </t> 
+   <list style="hanging">
+        <t hangText="Trusted uniqueness:">
+        Suppose the public and private VRF keys (PK, SK) were generated
+        in a trustworthy manner. Then, for any VRF input alpha,
+        even an adversary that knows SK cannot produce a valid proof pi, for 
+        an incorrect VRF hash output beta', where beta' is different than
+        beta = VRF_hash(SK, alpha).  This implies that, for a fixed public VRF
+        key PK, there is a unique VRF output beta for each VRF input alpha.
+        </t>
+        
+        <t hangText="Pseudorandomness:">
+             Roughly speaking, pseudorandomness ensures that every VRF output 
+             beta looks random to anyone who knows the corresponding
+             VRF input alpha, but who does not know the secret VRF key SK 
+             or a valid VRF proof pi corresponding to alpha.
+             That is, suppose the public and private VRF keys (PK, SK)
+             were generated in a trustworthy manner, and consider an adversary 
+             that knows PK but not SK.
+             Then, for any VRF input alpha that is known by the 
+             adversary, the adversary cannot distinguish its corresponding 
+             valid VRF output beta from a random value. 
+             <cref source="Sharon">Leo to rewrite
+             this to make sure it says the right think about selective vs adaptive 
+             security</cref> 
+        </t>
+        <t> It is important to remember that the VRF output beta does not 
+        look random to a party that knows the private VRF key SK!  Such a party
+        can easily distinguish beta from a random value by comparing it to 
+        the result of VRF_hash(SK, alpha).           
+        </t>
+        <t> Also, the VRF output beta does not look random to any party that
+        knows valid VRF proof pi corresponding to the VRF input alpha, even 
+        if that party does not know the private VRF key SK.
+        Such a party can easily distinguish beta from a random value by checking 
+        whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
+        </t>
   
-  <t> Add collision resistance here. </t>
+        <t hangText="Collison resistence:">
+            [LEO TO ADD TEXT HERE.]    
+        </t>
+   </list>
+   </t> 
+  
+    <t> Applications that use the VRFs defined in this 
+    document MUST ensure that that the VRF key is generated in a
+    trustworthy manner. See <xref target="securitycons"/> for more discussion.
+    </t>
+   
+  
+  
    </section>
    
     <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
@@ -238,7 +281,8 @@
             satisfies the trusted 
             uniqueness, pseudorandomness and collision resistance properties. 
             Its security follows from the standard RSA assumption 
-            in the random oracle model.  Formal security proofs are in []. 
+            in the random oracle model.  Formal security proofs are in 
+            <xref target="nsec5ecc" />. 
             This VRF also supports the VRF proof-to-hash property, 
             that allows the hash output beta to be 
             obtained directly from the proof value pi.
@@ -794,6 +838,11 @@
         
         
         </section>
+    </section>
+
+    <section title="Security Considerations" anchor="securitycons">
+    
+    <t> aaaaaaaa </t>
     </section>
 
     <section title="Change Log">
