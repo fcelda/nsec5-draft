@@ -238,15 +238,18 @@
              beta looks random to anyone who knows the corresponding
              VRF input alpha, but who does not know the secret VRF key SK 
              or a valid VRF proof pi corresponding to alpha.
-             That is, suppose the public and private VRF keys (PK, SK)
+        </t>  
+        <t>
+             <cref source="Sharon">Leo to rewrite
+             this to make sure it says the right thing about selective vs adaptive 
+             security. Here is some candidate text: 
+             Suppose the public and private VRF keys (PK, SK)
              were generated in a trustworthy manner, and consider an adversary 
              that knows PK but not SK.
              Then, for any VRF input alpha that is known by the 
              adversary, the adversary cannot distinguish its corresponding 
              valid VRF output beta from a random value. 
-             <cref source="Sharon">Leo to rewrite
-             this to make sure it says the right think about selective vs adaptive 
-             security</cref> 
+             </cref> 
         </t>
         <t> It is important to remember that the VRF output beta does not 
         look random to a party that knows the private VRF key SK!  Such a party
