@@ -797,7 +797,7 @@
         </t>
         
         <t>
-            EC points are represented using point compression as specified in <xref target="SECG1" /> (Section 2.3.4).
+            EC points are represented using point compression as specified in <xref target="SECG1" /> (Section 2.3.3).
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
