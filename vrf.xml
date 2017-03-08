@@ -141,12 +141,12 @@
 
             <t>
                 <list style="hanging">
-                    <t hangText="SK:">
+                    <!--<t hangText="SK:">
                         The private key for the VRF. 
                     </t>
                     <t hangText="PK:">
                         The public key for the VRF. 
-                    </t>
+                    </t>-->
                     <t hangText="alpha:">
                         The input to be hashed by the VRF. 
                     </t>
@@ -167,23 +167,23 @@
    A VRF hashes an input alpha using the private key SK to obtain
    
     <list>
-    <t> beta = VRF_HASH(SK, alpha) </t>
+    <t> beta = VRF_hash(SK, alpha) </t>
     </list>
    
-   The VRF_HASH algorithm MUST be deterministic, in 
+   The VRF_hash algorithm MUST be deterministic, in 
    the sense that it will always produce the same output beta given a 
    pair of inputs (SK, alpha).
    
    The private key SK is also used to construct a 
    proof pi that beta is the correct hash output 
    <list>
-        <t>pi = VRF_PROVE(SK, alpha)</t>
+        <t>pi = VRF_prove(SK, alpha)</t>
    </list>
    The proof pi is allows anyone holding the public key 
    to verify that indeed beta is the correct hash of alpha
    under key PK. Thus, the VRF also comes with an algorithm
    <list>
-   <t>   VRF_VERIFY(PK, alpha, beta, pi)</t>
+   <t>   VRF_verify(PK, alpha, beta, pi)</t>
    </list>
    which outputs VALID when beta is the correct VRF hash of alpha 
    under key PK, and outputs INVALID otherwise.    
@@ -194,14 +194,14 @@
    <t> Some VRFs support an additional property that allows anyone to
    obtain the hash output beta directly from the proof value pi 
    <list>
-   <t> beta = VRF_PROOF2HASH(pi) </t>
+   <t> beta = VRF_proof2hash(pi) </t>
    </list>  
    For these VRFs, the verification function only needs to take in the public 
    key PK, the VRF input alpha, and the VRF proof pi, so that 
    <list>
-   <t> VRF_VERIFY(PK, alpha, pi) </t>
+   <t> VRF_verify(PK, alpha, pi) </t>
    </list>
-   outputs VALID if beta=VRF_PROOF2HASH(pi) is correct VRF hash of alpha 
+   outputs VALID if beta=VRF_proof2hash(pi) is correct VRF hash of alpha 
    under key PK, and outputs INVALID otherwise.
    </t>   
    
@@ -226,7 +226,7 @@
    even an adversary 
    that knows SK cannot produce a valid proof for a fake 
    VRF hash output beta' which is different than
-   beta = VRF_HASH(SK, alpha). 
+   beta = VRF_hash(SK, alpha). 
   </t> 
   
   <t> Add collision resistance here. </t>
@@ -305,7 +305,7 @@
 
         <section title="RSA-FDH-VRF Proving">
             <t>
-                RSA-FDH-VRF_PROVE(SK, alpha)
+                RSA-FDH-VRF_prove(SK, alpha)
             </t>
 
             <t>
@@ -337,7 +337,7 @@
         
         <section title="RSA-FDH-VRF Proof To Hash">
             <t>
-                RSA-FDH-VRF_PROOF2HASH(pi)
+                RSA-FDH-VRF_proof2hash(pi)
             </t>
 
             <t>
@@ -365,7 +365,7 @@
 
         <section title="RSA-FDH-VRF Verifying">
             <t>
-                RSA-FDH-VRF_VERIFY((N, e), alpha, S)
+                RSA-FDH-VRF_verify((N, e), alpha, S)
             </t>
 
             <t>
@@ -461,7 +461,7 @@
 
         <section title="EC-VRF Proving">
             <t>
-                EC-VRF_PROVE(g^x, x, alpha)
+                EC-VRF_prove(g^x, x, alpha)
             </t>
 
             <t>
@@ -502,7 +502,7 @@
 
         <section title="EC-VRF Proof To Hash">
             <t>
-                EC-VRF_PROOF2HASH(pi)
+                EC-VRF_proof2hash(pi)
             </t>
             <t>
                 Input:
@@ -539,7 +539,7 @@
 
         <section title="EC-VRF Verifying">
             <t>
-                EC-VRF_VERIFY(g^x, pi, alpha)
+                EC-VRF_verify(g^x, pi, alpha)
             </t>
 
             <t>
@@ -729,8 +729,11 @@
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
-            and <xref target="RFC5114"></xref>  (Section 2.6).
+            and <xref target="RFC5114"></xref>  (Section 2.6).  For this group,
+            the length in octets of a single coordinate of an EC point is 
+            2n = 32.
         </t>
+        
         <t>
             EC points are represented using point compression, as specified in 
             TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
@@ -748,7 +751,11 @@
         <t>
             The EC group G is the Ed25519
             elliptic curve with parameters defined in 
-            <xref target="RFC7748"></xref> (Section 4.1).        </t>
+            <xref target="RFC7748"></xref> (Section 4.1).      
+            For this group,
+            the length in octets of a single coordinate of an EC point is 
+            2n = 32.
+        </t>
         <t>
             EC points are represented using point compression, as specified in 
             TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
