@@ -427,6 +427,11 @@
                 <t>2n - length, in octets, of a single coordinate of an EC point in G
                 <cref source="Sharon">n is 16 octects for a 256 bit curve. this is probably
                 a better way to word this.</cref></t>
+                <t>Hash - secure cryptographic hash function producing outputs of length 2n.
+                The cryptographic security level
+                of this hash algorithm MUST be at least as high as
+                the cryptographic security level of the EC Group G.                  
+                </t>
             </list>
         </t>
 
@@ -447,11 +452,6 @@
                 <t>|| - octet string concatenation</t>
                 <t>p^k - EC point multiplication</t>
                 <t>p1*p2 - EC point addition</t>
-                <t>Hash - secure cryptographic hash function.
-                The cryptographic security level
-                of this hash algorithm MUST be at least as high as n,
-                the cryptographic security level of the EC Group G.                  
-                </t>
                 <t>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <xref target="SECG1" /></t>
                 <t>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <xref target="SECG1" /></t>
             </list>
@@ -701,14 +701,43 @@
 
         <section title="EC-VRF Ciphersuites">
         
-        <t> 
-            The group G MAY be the NIST-P256 elliptic curve, with curve parameters
+        <t>[Seeking feedback on this section!]</t>
+        
+        <t>This document defines SHA256-P256-EC-VRF as follows: 
+        <list style="symbols">
+        <t>
+            The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
             and <xref target="RFC5114"></xref>  (Section 2.6).
-            The group G MAY alternatively be the using Ed25519
-            elliptic curve with parameters defined in 
-            <xref target="RFC7748"></xref> (Section 4.1).
         </t>
+        <t>
+            EC points are represented using point compression, as specified in 
+            TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
+        </t>
+        <t>
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
+        </t>
+        </list>
+        </t>
+        
+        
+        
+        <t>This document defines SHA256-ED25519-EC-VRF as follows: 
+        <list style="symbols">
+        <t>
+            The EC group G is the Ed25519
+            elliptic curve with parameters defined in 
+            <xref target="RFC7748"></xref> (Section 4.1).        </t>
+        <t>
+            EC points are represented using point compression, as specified in 
+            TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
+        </t>
+        <t>
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
+        </t>
+        </list>
+        </t>
+        
         </section>
     </section>
 
@@ -721,7 +750,11 @@
         <t>
             <list>
                 <t>
-                    pre 00 - initial version of the document submitted to mailing list only
+                    00 - Forked this document from draft-vcelak-nsec5-04. 
+                    Cleaned up the definitions of VRF algorithms.
+                    Added security definitions for VRF.
+                    Parameterized EC-VRF so it supports curves other than 
+                    P-256 and Ed25519. 
                 </t>
             </list>
         </t>
