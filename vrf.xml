@@ -621,6 +621,24 @@
                 </list>
             </t>
 
+        
+            <t>
+            This EC-VRF_hash_points algorithm MUST not used in applications where 
+            the VRF input alpha must be kept secret. This is because the running time of 
+            the hashing algorithm depends on alpha, and so it is susceptible to 
+            timing attacks.  (Note: This timing attack is not relevant in the context 
+            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that is hashed in the 
+            query phase for NSEC5 is the queried name alpha itself, which is 
+            already known to the adversary.)
+            </t>
+            
+            <t>[TODO: Specify a hash_points algorithm that is not susceptible 
+            to timing attacks. For instance, for Ed25519, one could use the 
+            Elligator  function.  A hash function that works with 
+            ANY elliptic curve would be more
+            complicated. <cref source="Sharon">Dimitris can you add a cite
+            to the paper that shows how to do this?</cref>]
+            </t>
             
         </section>
 
@@ -660,23 +678,6 @@
             </t>
             
             
-            <t>
-            This EC-VRF_hash_points algorithm MUST not used in applications where 
-            the VRF input alpha must be kept secret. This is because the running time of 
-            the hashing algorithm depends on alpha, and so it is susceptible to 
-            timing attacks.  (Note: This timing attack is not relevant in the context 
-            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that is hashed in the 
-            query phase for NSEC5 is the queried name alpha itself, which is 
-            already known to the adversary.)
-            </t>
-            
-            <t>[TODO: Specify a hash_points algorithm that is not susceptible 
-            to timing attacks. For instance, for Ed25519, one could use the 
-            Elligator  function.  A hash function that works with 
-            ANY elliptic curve would be more
-            complicated. <cref source="Sharon">Dimitris can you add a cite
-            to the paper that shows how to do this?</cref>]
-            </t>
                    
         </section>
 
