@@ -268,15 +268,12 @@
         <t>
             Fixed options:
             <list>
-                <t>Hash - secure hash algorithm to be used with MGF1 
-                and RSA-FDH-VRF_PROOF2HASH.  The cryptographic strength of this
-                hash algorithm MUST be at least as high 
-                as the cryptographic strength of the RSA key.  
+                <t>Hash - secure cryptographic hash algorithm.  
+                The cryptographic security level
+                of this hash algorithm MUST be at least as high as 
+                the cryptographic security level of the RSA key.  
                 </t>
                 
-                <!-- <xref target="RFC6234" /> 
-                specifies SHA1 and SHA256 but we do not want to allow SHA1 here.-->
-            
             </list>
         </t>
 
@@ -322,7 +319,7 @@
             <t>
                 Output:
                 <list>
-                    <t>S - signature, an octet string of length k</t>
+                    <t>S - proof, an octet string of length k</t>
                 </list>
             </t>
 
@@ -346,7 +343,7 @@
             <t>
                 Input:
                 <list>
-                    <t>S - signature, an octet string of length k</t>
+                    <t>S - proof, an octet string of length k</t>
                 </list>
             </t>
             
@@ -376,7 +373,7 @@
                 <list>
                     <t>(n, e) - RSA public key</t>
                     <t>alpha - VRF hash input, an octet string</t>
-                    <t>S - signature to be verified, an octet string of length k</t>
+                    <t>S - proof to be verified, an octet string of length k</t>
                 </list>
             </t>
 
@@ -406,46 +403,25 @@
 
     <section title="Elliptic Curve VRF" anchor="ecvrf">
         
-        <t> [TODO: DO WE WANT TO SPECIFY A PARTICULAR GROUP HERE? OR DO WE 
-        WANT TO MAKE THIS MODULAR, SO THAT ANY GROUP G OF PRIME ORDER IS OK?
-        I TRIED TO USE "MUST" and "SHOULD" TO MAKE THIS MODULAR. FEEDBACK
-        PLEASE.]
-        </t>
-        
-        
-        <t> [TODO: THE DESCRIPTION BELOW USES SHA-256 AS THE HASH FUNCTION.
-        WE PROBABLY WANT TO MAKE THIS MODULAR, BUT AGAIN I AM NOT SURE 
-        HOW TO DO THIS.] </t>
-        
         <t>
-            The Elliptic Curve Verifiable Random Function (ECVRF) is VRF that 
-            satisfies the trusted uniqueness and pseudorandomness security 
-            properties. This VRF MUST operate in a cyclic group G of prime order 
-            with generator g, where the cyclic group is an elliptic curve group. 
-            The group G MAY be the NIST-P256 elliptic curve, with curve parameters
-            as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
-            and <xref target="RFC5114"></xref>  (Section 2.6).
-            The group G MAY alternatively be the using Ed25519
-            elliptic curve with parameters defined in 
-            <xref target="RFC7748"></xref> (Section 4.1).
-            The security of this VRF 
-            follows from the decisional Diffie-Hellman (DDH) assumption in the 
+            The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that 
+            satisfies the trusted uniqueness, pseudorandomness and collision 
+            resistance properties. This VRF operate in a cyclic group G of prime order 
+            with generator g, where the cyclic group is an elliptic curve group.
+            The security of this VRF  follows from the decisional 
+            Diffie-Hellman (DDH) assumption in the 
             cyclic group G  in the random oracle model.  Formal security proofs 
-            are in <xref target="nsec5ecc"></xref>. This VRF also supports the 
+            are in <xref target="nsec5ecc" />. This VRF also supports the 
             proof-to-hash  property, that allows the hash output beta to be 
             obtained directly from the proof value pi.
         </t>
             
-        <t>    
-            This VRF adapts the Chaum-Pederson protocol <xref target="CP92"></xref>
-            for proving that two cyclic group elements g^x and h^x have the 
-            same discrete logarithm x base g and h, respectively.  
-        </t>
-
         <t>
             Fixed options:
             <list>
                 <t>G - EC group</t>
+                <t>2n - length, in octets, of one coordinate of an EC point in G
+                <cref>n is 16 for a 256 bit curve</cref></t>
             </list>
         </t>
 
@@ -456,7 +432,7 @@
                 <t>x - EC private key</t>
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
-            </list>
+             </list>
         </t>
 
         <t>
@@ -466,11 +442,143 @@
                 <t>|| - octet string concatenation</t>
                 <t>p^k - EC point multiplication</t>
                 <t>p1*p2 - EC point addition</t>
-                <t>SHA256 - hash function SHA-256 as specified in <xref target="RFC6234" /></t>
+                <t>Hash - secure cryptographic hash function.
+                The cryptographic security level
+                of this hash algorithm MUST be at least as high as n,
+                the cryptographic security level of the EC Group G.                  
+                </t>
                 <t>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <xref target="SECG1" /></t>
                 <t>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <xref target="SECG1" /></t>
             </list>
         </t>
+
+
+
+        <section title="ECVRF Proving">
+            <t>
+                ECVRF_PROVE(g^x, x, alpha)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>g^x - EC public key</t>
+                    <t>x - EC private key</t>
+                    <t>alpha - VRF input, octet string</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>pi - VRF proof, octet string (5n+1 octets)
+                    <cref source="Sharon">this is 81 octects for a 256-bit 
+                    EC</cref></t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>gamma = h^x</t>
+                    <t>choose a random nonce k from [0, q-1]</t>
+                    <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
+                    <t>s = k - c*q mod q</t>
+                    <t>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
+                    <t>Output pi</t>
+                </list>
+            </t>
+        
+            
+        </section>
+
+
+        <section title="ECVRF Proof To Hash">
+            <t>
+                ECVRF_PROOF2HASH(pi)
+            </t>
+            <t>
+                Input:
+                <list>
+                    <t>pi - VRF proof</t> 
+                </list>
+            </t>
+            <t>
+                Output:
+                <list>
+                    <t>beta - VRF hash output, octet string (n octets)</t>
+                </list>
+            </t>
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
+                    <t>gamma is an EC point in G with coordinates (x, y)</t>
+                    <t><cref source="Sharon">DO WE WANT TO CHECK VALIDITY OF GAMMA HERE?</cref></t>
+                    <t>beta = I2OSP(x, n)</t>
+                    <t>Output beta</t>
+                </list>
+            </t>
+            <t>
+                Note: Because of the format of compressed form of an elliptic curve, the hash can
+                be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
+            </t>
+        </section>
+
+
+        <section title="ECVRF Verifying">
+            <t>
+                ECVRF_VERIFY(g^x, pi, alpha)
+            </t>
+
+            <t>
+                Input:
+                <list>
+                    <t>g^x - EC public key</t>
+                    <t>pi - VRF proof, octet string</t>
+                    <t>alpha - VRF input, octet string</t>
+                </list>
+            </t>
+
+            <t>
+                Output:
+                <list>
+                    <t>"VALID" or "INVALID"</t>
+                    <t>beta - VRF hash output, octet string (n octets)</t>
+                </list>
+            </t>
+
+            <t>
+                Steps:
+                <list style="numbers">
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
+                    <t>
+                        If gamma is not a valid EC point in G,
+                        stop and output "INVALID".
+                        
+                        <cref source="Jan">TODO: check validity of gamma before hashing</cref>
+                        <cref source="Sharon">I added this item on the list 
+                        above to deal with this todo</cref>
+ 
+                    </t>
+                    <t>u = (g^x)^c * g^s</t>
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>v = gamma^c * h^s</t>
+                    <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
+                    <t>beta = ECVRF_proof_to_hash(gamma)</t>
+                    <t>
+                        If c and c' are the same, output "VALID";
+                        else output "INVALID". Output beta.
+                    </t>
+                </list>
+            </t>
+
+            <t></t>
+        </section>
+
+
+        <section title="ECVRF Auxiliary Functions">
 
         <section title="ECVRF Hash To Curve">
             <t>
@@ -485,30 +593,28 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, EC point</t>
+                    <t>h - hashed value, EC point in G</t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>c = 0</t>
-                    <t>C = I2OSP(c, 4)</t>
-                    <t>xc = SHA256(m || C)</t>
-                    <t>p = 0x02 || xc</t>
-                    <t>If p is not a valid octet string representing encoded compressed point in G:
-                        <list style="letters">
-                            <t>c = c + 1</t>
-                            <t>Go to step 2.</t>
-                        </list>
+                    <t>ctr = 0</t>
+                    <t>While true:
+                    <list style="letters">                
+                        <t>CTR = I2OSP(ctr, 4)</t>
+                        <t>p = 0x02 || Hash(m || CTR)</t>
+                        <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
+                        <t>ctr = ctr + 1</t>
+                    </list>
                     </t>
                     <t>h = OS2ECP(p)</t>
                     <t>Output h</t>
                 </list>
             </t>
 
+            
         </section>
-
-        <section title="ECVRF Auxiliary Functions">
 
         <section title="ECVRF Hash Points">
             <t>
@@ -537,35 +643,6 @@
                     <t>h = OS2IP(first 16 octets of h')</t>
                     <t>Output h</t>
                 </list>
-            </t>
-        </section>
-
-        <section title="ECVRF Proof To Hash">
-            <t>
-                ECVRF_PROOF2HASH(gamma)
-            </t>
-            <t>
-                Input:
-                <list>
-                    <t>gamma - VRF proof, EC point in G with coordinates (x, y)</t>
-                </list>
-            </t>
-            <t>
-                Output:
-                <list>
-                    <t>beta - VRF hash output, octet string (32 octets)</t>
-                </list>
-            </t>
-            <t>
-                Steps:
-                <list style="numbers">
-                    <t>beta = I2OSP(x, 32)</t>
-                    <t>Output beta</t>
-                </list>
-            </t>
-            <t>
-                Note: Because of the format of compressed form of an elliptic curve, the hash can
-                be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
             </t>
         </section>
 
@@ -601,84 +678,17 @@
 
         </section><!-- Auxiliary Functions -->
 
-        <section title="ECVRF Proving">
-            <t>
-                ECVRF_PROVE(g^x, x, alpha)
-            </t>
-
-            <t>
-                Input:
-                <list>
-                    <t>g^x - EC public key</t>
-                    <t>x - EC private key</t>
-                    <t>alpha - VRF input, octet string</t>
-                </list>
-            </t>
-
-            <t>
-                Output:
-                <list>
-                    <t>pi - VRF proof, octet string (81 octets)</t>
-                    <t>beta - VRF hash output, octet string (32 octets)</t>
-                </list>
-            </t>
-
-            <t>
-                Steps:
-                <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(alpha)</t>
-                    <t>gamma = h^x</t>
-                    <t>choose a nonce k from [0, q-1]</t>
-                    <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
-                    <t>s = k - c*q mod q</t>
-                    <t>pi = ECP2OS(gamma) || I2OSP(c, 16) || I2OSP(s, 32)</t>
-                    <t>beta = h2(gamma)</t>
-                    <t>Output pi and beta</t>
-                </list>
-            </t>
+        <section title="EC VRF Ciphersuites">
+        
+        <t> 
+            The group G MAY be the NIST-P256 elliptic curve, with curve parameters
+            as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
+            and <xref target="RFC5114"></xref>  (Section 2.6).
+            The group G MAY alternatively be the using Ed25519
+            elliptic curve with parameters defined in 
+            <xref target="RFC7748"></xref> (Section 4.1).
+        </t>
         </section>
-
-        <section title="ECVRF Verifying">
-            <t>
-                ECVRF_VERIFY(g^x, pi, alpha)
-            </t>
-
-            <t>
-                Input:
-                <list>
-                    <t>g^x - EC public key</t>
-                    <t>pi - VRF proof, octet string</t>
-                    <t>alpha - VRF input, octet string</t>
-                </list>
-            </t>
-
-            <t>
-                Output:
-                <list>
-                    <t>"VALID" or "INVALID"</t>
-                    <t>beta - VRF hash output, octet string (32 octets)</t>
-                </list>
-            </t>
-
-            <t>
-                Steps:
-                <list style="numbers">
-                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
-                    <t>u = (g^x)^c * g^s</t>
-                    <t>h = ECVRF_hash_to_curve(alpha)</t>
-                    <t>v = gamma^c * h^s</t>
-                    <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
-                    <t>beta = ECVRF_proof_to_hash(gamma)</t>
-                    <t>
-                        If c and c' are the same, output "VALID";
-                        else output "INVALID". Output beta.
-                    </t>
-                </list>
-            </t>
-
-            <t><cref source="Jan">TODO: check validity of gamma before hashing</cref></t>
-        </section>
-
     </section>
 
     <section title="Change Log">
