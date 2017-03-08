@@ -240,7 +240,7 @@
              or a valid VRF proof pi corresponding to alpha.
         </t>  
         <t>
-             <cref source="Sharon">Leo to rewrite
+             [Leo to write
              this to make sure it says the right thing about selective vs adaptive 
              security. Here is some candidate text: 
              Suppose the public and private VRF keys (PK, SK)
@@ -248,10 +248,11 @@
              that knows PK but not SK.
              Then, for any VRF input alpha that is known by the 
              adversary, the adversary cannot distinguish its corresponding 
-             valid VRF output beta from a random value. 
-             </cref> 
+             valid VRF output beta from a random value. ]
         </t>
-        <t> It is important to remember that the VRF output beta does not 
+        
+        <t> 
+        It is important to remember that the VRF output beta does not 
         look random to a party that knows the private VRF key SK!  Such a party
         can easily distinguish beta from a random value by comparing it to 
         the result of VRF_hash(SK, alpha).           
@@ -274,9 +275,7 @@
     trustworthy manner. See <xref target="securitycons"/> for more discussion.
     </t>
    
-  
-  
-   </section>
+     </section>
    
     <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
         <t>
