@@ -214,59 +214,93 @@
    
    <section title="VRF Security Properties">
     
-    <t> Applications that use the VRFs defined in this
-    document MUST ensure that that the VRF key is generated
-    correctly. (See <xref target="securitycons"/> for a more detailed discussion.)
-    When this holds, the VRFs defined in this document
-    satisfy the following security properties:
+    <t> VRFs are designed to ensure the following security properties.
    </t>
    
    <t>
    <list style="hanging">
-        <t hangText="Trusted uniqueness:">
-        Suppose the public and private VRF keys (PK, SK) were generated
-        in a trustworthy manner. Then, for any VRF input alpha,
-        even an adversary that knows SK cannot produce a valid proof pi, for 
-        an incorrect VRF hash output beta', where beta' is different than
-        beta = VRF_hash(SK, alpha).  Thus, for a fixed public
-        VRF key, there is a unique VRF 
-        output beta for each VRF input alpha.
-        </t>
-        
-        <t hangText="Pseudorandomness:">
-             Roughly speaking, pseudorandomness ensures that every VRF output 
-             beta looks random even to a party that knows the corresponding
-             VRF input alpha, but does not know the secret VRF key SK 
-             or a valid VRF proof pi corresponding to alpha.
-        </t>  
-        <t>
-             [Leo to write
-             this to make sure it says the right thing about selective vs adaptive 
-             security. Here is some candidate text: 
-             Suppose the public and private VRF keys (PK, SK)
-             were generated in a trustworthy manner, and consider an adversary 
-             that knows PK but not SK.
-             Then, for any VRF input alpha that is known by the 
-             adversary, the adversary cannot distinguish its corresponding 
-             valid VRF output beta from a random value. ]
-        </t>
-        
-        <t> 
-        It is important to remember that the VRF output beta does not 
-        look random to a party that knows the private VRF key SK!  Such a party
-        can easily distinguish beta from a random value by comparing it to 
-        the result of VRF_hash(SK, alpha).           
-        </t>
-        <t> Also, the VRF output beta does not look random to any party that
-        knows valid VRF proof pi corresponding to the VRF input alpha, even 
-        if this party does not know the private VRF key SK.
-        Such a party can easily distinguish beta from a random value by checking 
-        whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
-        </t>
+	<t hangText="Full Uniqueness or Trusted Uniqueness:">
+	Uniqueness states that a computationally bounded adversary cannot
+	produce a VRF public key PK, input alpha, two different VRF hash
+outputs beta1 and beta2, and
+	two proofs pi1 and pi2 such that VRF_verify(PK, alpha, beta1, pi1)
+and VRF_verify(PK, alpha, beta2, pi2)
+	are both VALID. Thus, for any fixed public
+	VRF key and for any input alpha, there is a unique VRF
+	output beta that can be proven valid by a computationally bounded
+	adversary. For most applications, a slightly weaker security
+property called "trusted uniquness"
+	is sufficient: it is the same as uniqueness, but is required to
+hold only if PK and SK
+	were generated in a trustworthy manner (i.e., it may not hold for
+invalidly generated keys).
+	</t>
+	
+	<t hangText="Full Pseudorandomness or Selective Pseudorandomness:">
+	     Suppose the public and private VRF keys (PK, SK) were
+generated
+	     in a trustworthy manner.
+	     Pseudorandomness ensures that the VRF hash output beta
+(without the corresponding proof) on
+	     any adversarially chosen input alpha
+	     looks indistinguishable from random
+	     for any computationally bounded adversary who does not know
+SK. It holds even
+	     if the adversary also gets to observe VRF hash outputs and
+proofs
+	     for arbitrary other inputs of the adversary's choice. In its
+strong form,
+	     the definition of pseudorandomness permits the adversary to
+choose
+	     the target input alpha adaptively, after seeing VRF outputs
+and proofs on a variety
+	     of chosen inputs.
+	     A slightly weaker form called "selective pseudorandomness",
+which suffices in many applications,
+	     limits the adversary to choosing the target input alpha
+independently of the VRF PK and input/output behavior.
+	</t>
+	
+	<t> 
+	It is important to remember that the VRF output beta does not 
+	look random to a party that knows the private VRF key SK!  Such a
+party
+	can easily distinguish beta from a random value by comparing it to 
+	the result of VRF_hash(SK, alpha).	     
+	</t>
+	<t>
+	    The VRF output beta does may not look random if the key
+generation
+	    was not trustworthy--for example, if key generation did not use
+good randomness.
+	</t>
+	<t> Also, the VRF output beta does not look random to any party
+that
+	knows valid VRF proof pi corresponding to the VRF input alpha, even
+
+	if this party does not know the private VRF key SK.
+	Such a party can easily distinguish beta from a random value by
+checking 
+	whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
+	</t>
   
-        <t hangText="Collison resistance:">
-            [LEO TO ADD TEXT HERE.]    
-        </t>
+	<t hangText="Full Collison Resistance or Trusted Collision
+Resistance:">
+	    Finally, like cryprographic hash functions, VRFs need to be
+collision resistant.
+	    Specifically,
+	    it should be computationally infeasible, even with the
+knowledge of SK,
+	    to come up with two distinct VRF
+	    inputs alpha1 and alpha2 for which the VRF hash outputs are the
+same.
+	    For most applications, a slightly weaker security property
+called "trusted collision resistance"
+	    is sufficient: it is the same as collision resistance, but is
+required to hold only if PK and SK
+	    were generated in a trustworthy manner (i.e., it may not hold
+for invalidly generated keys).
+	</t>
    </list>
    </t> 
   
@@ -274,17 +308,18 @@
      </section>
    
     <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
-        <t>
-            The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that 
-            satisfies the trusted 
-            uniqueness, pseudorandomness and collision resistance properties. 
-            Its security follows from the standard RSA assumption 
-            in the random oracle model.  Formal security proofs are in 
-            <xref target="nsec5ecc" />. 
-            This VRF also supports the VRF proof-to-hash property, 
-            that allows the hash output beta to be 
-            obtained directly from the proof value pi.
-        </t>
+	<t>
+	    The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that 
+	    satisfies the trusted 
+	    uniqueness, full pseudorandomness, and trusted collision
+resistance properties.
+	    Its security follows from the standard RSA assumption 
+	    in the random oracle model.  Formal security proofs are in 
+	    <xref target="nsec5ecc" />. 
+	    This VRF also supports the VRF proof-to-hash property, 
+	    that allows the hash output beta to be 
+	    obtained directly from the proof value pi.
+	</t>
 
         <t>
             This VRF is parametrized by a hash function. The chosen
@@ -449,13 +484,6 @@
 
     <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
         
-        <t>
-            The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that 
-            satisfies the trusted uniqueness, pseudorandomness and collision 
-            resistance properties. This VRF operates in a cyclic group G of prime order
-            with generator g, where the cyclic group is an elliptic curve group.
-            EC points in group G are encoded using point compression.
-            </t>
             
         <t>
             The security of this VRF  follows from the decisional 
@@ -616,6 +644,17 @@
                         <cref source="Jan">TODO: check validity of gamma before hashing</cref>
                         <cref source="Sharon">I added this item on the list 
                         above to deal with this todo</cref>
+	<t>
+	    The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF
+that 
+	    satisfies the trusted uniqueness, full pseudorandomness, and
+trusted collision
+	    resistance properties. This VRF operates in a cyclic group G of
+prime order
+	    with generator g, where the cyclic group is an elliptic curve
+group.
+	    EC points in group G are encoded using point compression.
+	    </t>
  
                     </t>
                     <t>u = (g^x)^c * g^s</t>
@@ -881,21 +920,42 @@
 
     <section title="Security Considerations" anchor="securitycons">
     
-    <t>Applications that use the VRFs defined in this 
-    document MUST ensure that that the VRF key is generated correctly.
-    For the RSA-FDH-VRF,  public VRF key (N, e) MUST be a valid RSA key. 
-    For the EC-VRF, the  public key g^x MUST be a valid EC point in 
-    group G. <cref source="Sharon"> 
-    Leo please check this last sentence.</cref>
+    <t>
+	It is important that the random nonce k in Algorithm EC-VRF proving
+be chosen
+	with good randomness. If not, an adversary may be able to recover
+the private key
+	x (and thus break pseudorandomness of the VRF) upon seeing several
+proofs
+	pi.
+    </t>
+    
+    <t>Applications that use the VRFs defined in this
+    document MUST ensure that that the VRF key is generated correctly,
+    using good randomness. Without good randomness, pseudorandomness
+    properties of the VRF may not hold. Moreover, if the keys are generated
+adversarially
+    (e.g., the RSA modulus is not a product of two primes
+    for the RSA-FDH-VRF or the public key g^x is not valid point in the
+prime-order
+    group G), then trusted uniqueness and trusted collision-resistance
+properties
+    may also not hold.
     </t>
     
     <t>
-    One way to do this is to ensure that VRF keys are generated correctly
-    is to require a trusted party to generate them.
-    (This is what is done in the NSEC5 application.)
-    In cases where the party that generated that VRF keys
-    is not trusted, then the public VRF key could be provided along with a 
-    cryptographic proof that VRF keys were generated correctly. 
+    Full uniqueness and full collision-resistance (as opposed to trusted
+uniqueness and trusted collision-resistance)
+    are properties that hold even when keys are adversarially generated.
+While VRFs defined in this document
+    do not possess these properties, they may be modifed to have these
+properties if adversarial key generation
+    is a concern. The modification consists of additional cryptographic
+proofs that keys
+    are of the correct form and is left to a future specification. [TODO:
+is this okay?] However,
+    no modification can ensure pseudorandomness in case of adversarially
+generated keys.
     </t>
     
     <t>[TODO: Specify ways to do this? Or is this out-of-scope for this draft?
@@ -916,7 +976,30 @@
     can be used to learn information about alpha. 
     </t>
     
-    <t>Leo to add some text here about selective versus adaptive pseudorandomness?
+    <t>The VRFs specificied in this section are believed to possess full 
+pseudorandomness.
+	However, their selective pseudorandomness is quantitavely stronger
+than their full pseudorandomness,
+	in the sense that the cryptographic reduction to the underlying
+computationally hard problem--factoring
+	or decisional Diffie-Hellman--is tighter for selective
+pseudorandomness. Therefore,
+	applications that are concerned about tightness of cryptographic
+reductions have two options. First,
+	they may  ensure that selective pseudorandomness is sufficient for
+the application--that is, that
+	pseudorandomness of outputs matters only for inputs that are
+independent of the VRF key. This is the case, for example,
+	in a typical NSEC5 application, in which pseudorandomness of
+outputs matters only for the names in the
+	zone. Second, if they need full pseudorandomness, they may increase
+security parameters
+	to make up for the loose security reduction. [TODO: should we
+provide some guidance on this security parameter issue? Honestly, this is
+well above and beyond what normal crypto standards do, because
+	no one really considers tightness of reductions in crypto
+standards, because ECDSA isn't even provable at all -- can't even talk
+about tightness, because there is simply no reduction.]
     </t>
     </section>
 
