@@ -177,7 +177,8 @@
    <list>
    <t>   VRF_verify(PK, alpha, beta, pi)</t>
    </list>
-   which outputs VALID when beta is the correct VRF hash of alpha 
+   which outputs VALID when pi is a valid proof that 
+   beta is the correct VRF hash of alpha 
    under key PK, and outputs INVALID otherwise.    
    </t>
    
@@ -213,11 +214,9 @@
     
     <t> Applications that use the VRFs defined in this 
     document MUST ensure that that the VRF key is generated in a
-    trustworthy manner. See <xref target="securitycons"/> for more discussion.
-    </t>
-   
-   <t>
-   This document defines VRFs that satisfies the following security properties:
+    correctly. (See <xref target="securitycons"/> for more discussion.)
+    When this holds, the VRFs defined in this document
+    satisfy the following security properties:
    </t>
    
    <t>
@@ -227,14 +226,15 @@
         in a trustworthy manner. Then, for any VRF input alpha,
         even an adversary that knows SK cannot produce a valid proof pi, for 
         an incorrect VRF hash output beta', where beta' is different than
-        beta = VRF_hash(SK, alpha).  This implies that, for a fixed public VRF
-        key PK, there is a unique VRF output beta for each VRF input alpha.
+        beta = VRF_hash(SK, alpha).  Thus, for a fixed public
+        VRF key, there is a unique VRF 
+        output beta for each VRF input alpha.
         </t>
         
         <t hangText="Pseudorandomness:">
              Roughly speaking, pseudorandomness ensures that every VRF output 
              beta looks random to anyone who knows the corresponding
-             VRF input alpha, but who does not know the secret VRF key SK 
+             VRF input alpha, but does not know the secret VRF key SK 
              or a valid VRF proof pi corresponding to alpha.
         </t>  
         <t>
@@ -257,7 +257,7 @@
         </t>
         <t> Also, the VRF output beta does not look random to any party that
         knows valid VRF proof pi corresponding to the VRF input alpha, even 
-        if that party does not know the private VRF key SK.
+        if this party does not know the private VRF key SK.
         Such a party can easily distinguish beta from a random value by checking 
         whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
         </t>
@@ -397,7 +397,9 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>beta = Hash(pi)</t>
+                    <t>beta = Hash(pi) <cref source="Sharon">Jan, Dimitris, 
+                    make sure I didn't miss some kind of string-to-int 
+                    conversion here...</cref></t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -405,7 +407,7 @@
 
         <section title="RSA-FDH-VRF Verifying">
             <t>
-                RSA-FDH-VRF_verify((N, e), alpha, S)
+                RSA-FDH-VRF_verify((N, e), alpha, pi)
             </t>
 
             <t>
@@ -535,7 +537,7 @@
             </t>
         
             <t>Note: gamma is an EC point in G encoded with point compression.
-            gamma has length 2n+1 octets.</t>
+            ECP2OS(gamma) has length 2n+1 octets.</t>
             
         </section>
 
@@ -572,7 +574,7 @@
                 be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
                 <cref source="Sharon">This is probably true for p-256 curve,
                 since Jan wrote this in an earlier verion, but it is true 
-                for the Ed25519 and Ed488 curves?</cref>
+                for the Ed25519 and Ed448 curves?</cref>
             </t>
         </section>
 
@@ -604,7 +606,7 @@
                     <t>gamma, c, s = EC-VRF_decode_proof(pi)</t>
                     <t>
                         If gamma is not a valid EC point in G,
-                        stop and output "INVALID".
+                        output "INVALID" and stop.
                         
                         <cref source="Jan">TODO: check validity of gamma before hashing</cref>
                         <cref source="Sharon">I added this item on the list 
@@ -626,7 +628,7 @@
 
         <section title="EC-VRF Auxiliary Functions">
 
-        <section title="EC-VRF Hash To Curve">
+        <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>
             The following EC-VRF_hash_points algorithm provides a simple and 
@@ -676,11 +678,15 @@
                     <list style="letters">                
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>p = 0x02 || Hash(m || CTR). (Note, 0x02 sets point encoding 
-                        to "compressed", using only the positive value for the y-coefficient.)
-                        <cref source="Sharon">Jan, why did you choose on 02, we could 
-                        also try 03 for the negative y coordinate, right? Also, Dimitris,
-                        we need a cite for the
+                        to "compressed", using only the positive value for the y-coefficient
+                        of the EC point.)
+                        <cref source="Sharon">Jan, Dimitris, we need a cite for the
                         0x02 comment above.</cref>
+                        </t>
+                        <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
+                        <t>p = 0x03 || Hash(m || CTR). (Note, 0x03 sets point encoding 
+                        to "compressed", using only the negative value for the y-coefficient
+                        of the EC point.)
                         </t>
                         <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
                         <t>ctr = ctr + 1</t>
@@ -694,14 +700,14 @@
             <t>For applications where VRF input alpha must be kept secret,
             the following EC-VRF_hash_points algorithm MAY be used to used as  
             generic way to hash an octet string onto any elliptic curve.
-            </t>
             
-
-            <t>[TODO: Specify a generic hash_to_curve algorithm that is not susceptible 
+            [TODO:        
+            Specify a generic hash_to_curve algorithm that is not susceptible 
             to timing attacks. <cref source="Sharon">Dimitris can you add a cite
             to the research paper that shows how to do this? I don't think we need to 
-            add the full spec for this version of the draft.</cref>]
+            add the full spec for this version of the draft.</cref>
             </t>
+            
         </section>
 
         <section title="EC-VRF Hash Points">
@@ -801,8 +807,12 @@
             EC points are represented using point compression as specified in <xref target="SECG1" /> (Section 2.3.3).
         </t>
         <t>
+            The EC-VRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+        </t>
+        <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
+        
         </list>
         </t>
         
@@ -823,14 +833,16 @@
             TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
         </t>
         <t>
+            The EC-VRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+        </t>
+        <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
         </list>
         </t>
    
-        <t>[TODO: We could have an SHA256-Elligator-ED25519-EC-VRF 
-        ciphersuite where the Elligator hash function is used for EC-VRF_hash-to-curve.
-        Thoughts?]
+        <t>[TODO: Add an SHA256-Elligator-ED25519-EC-VRF 
+        ciphersuite where the Elligator hash function is used for EC-VRF_hash-to-curve?]
         </t>
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
@@ -839,42 +851,67 @@
         
         </section>
     </section>
+    
+    
+    <section title="Implementation Status" anchor="imp">
+    
+    <t>  An implementation of the RSA-FDH-VRF, where 
+    the hash function is instantiated with SHA-256 was developed as part of
+    the NSEC5 project <xref target="I-D.vcelak-nsec5"/> and is available at 
+    [JAN GIVE THE POINTER]. An implementation of SHA256-P256-EC-VRF 
+    was also developed as part of this project, and is available [JAN
+    GIVE THE POINTER].  
+    </t>
+    
+    <t>
+    The Key Transparency project at Google
+    uses a VRF implemention that is almost identical to
+    the SHA256-P256-EC-VRF specified here, with a few minor changes
+    including the use of SHA-512 instead of SHA-256. Its implementation
+    is available 
+    https://github.com/google/keytransparency/blob/master/core/vrf/p256/p256
+    </t>
+    
+    <t>
+    Open Whisper Systems also uses a VRF very similar to 
+    SHA512-Elligator-ED25519-EC-VRF, called VXEdDSA, and specified here:
+    https://whispersystems.org/docs/specifications/xeddsa/
+    </t> 
+    </section>    
 
     <section title="Security Considerations" anchor="securitycons">
     
     <t>Applications that use the VRFs defined in this 
-    document MUST ensure that that the VRF key is generated in a
-    trustworthy manner.</t>
-    
-    <t>    
-    For the RSA-FDH-VRF, 
-    public VRF key (N, e) MUST be a valid RSA key. For the EC-VRF, the 
-    public key g^x MUST be a valid EC point in group G. <cref source="Sharon">
+    document MUST ensure that that the VRF key is generated correctly.
+    For the RSA-FDH-VRF,  public VRF key (N, e) MUST be a valid RSA key. 
+    For the EC-VRF, the  public key g^x MUST be a valid EC point in 
+    group G. <cref source="Sharon"> 
     Leo please check this last sentence.</cref>
     </t>
     
     <t>
-    One way to do this is to ensure that the VRF keys are generated by a
-    trusted party. (This is the case for the NSEC5 application.)
-     In cases where the party that generated that VRF keys
+    One way to do this is to ensure that VRF keys are generated correctly
+    is to require a trusted party to generate them.
+    (This is what is done in the NSEC5 application.)
+    In cases where the party that generated that VRF keys
     is not trusted, then the public VRF key could be provided along with a 
     cryptographic proof that VRF keys were generated correctly. 
     </t>
     
-    <t>For the 
-    RSA-FDH-VRF, such a proof could be using the GQ identification protocol
-    [CQ88] made non-interactive using the Fiat-Shamir heuristic 
-    in the random oracle model. [The [CQ] paper is:
+    <t>[TODO: Specify ways to do this? Or is this out-of-scope for this draft?
+    In any case, we solve this problem in a later version of the draft.
+    Note that for the RSA-FDH-VRF, such a proof could be constructed using the [GQ99]
+    identification protocol made non-interactive using the Fiat-Shamir heuristic 
+    in the random oracle model. 
     Louis C. Guillou and Jean-Jacques Quisquater. A practical
     zero-knowledge protocol fitted to security microprocessor minimizing
     both transmission and memory. In EUROCRYPT, 1988]
-     <cref source="Sharon">Need to write this better.
-    </cref>
     </t>
     
-    <t>[TODO: Figure out how to do this with EC-VRF.]</t>
-        
-    <t>Write about timing attacks here. </t>
+    <t>Sharon to write about timing attacks here. </t>
+    
+    <t>Leo to add some text here about selective versus adaptive pseudorandomness?
+    </t>
     </section>
 
     <section title="Change Log">
