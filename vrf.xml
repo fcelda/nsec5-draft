@@ -909,7 +909,13 @@
     both transmission and memory. In EUROCRYPT, 1988]
     </t>
     
-    <t>Sharon to write about timing attacks here. </t>
+    <t>The EC-VRF_hash_to_curve() algorithm defined in 
+    <xref target="ecvrfH2C" /> should not be used in applications where
+    the VRF input alpha is secret and is hashed by the VRF on-the-fly.
+    This is because the EC-VRF_hash_to_curve() algorithm's running time depends
+    on the VRF input alpha, and thus creates a timing channel that 
+    can be used to learn information about alpha. 
+    </t>
     
     <t>Leo to add some text here about selective versus adaptive pseudorandomness?
     </t>
