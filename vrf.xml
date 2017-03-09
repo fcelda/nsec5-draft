@@ -443,7 +443,7 @@
  
     </section>
 
-    <section title="Elliptic Curve VRF" anchor="ecvrf">
+    <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
         
         <t>
             The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that 
