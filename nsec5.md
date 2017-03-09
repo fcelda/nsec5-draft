@@ -1254,11 +1254,11 @@ To do this, the server returns:
 
 ## No Data Example, Opt-Out In Effect  
 
-[Sharon has no idea how to make such an example. Jan, want to try?]
+\[Sharon has no idea how to make such an example. Jan, want to try?]
 
 ## Wildcard Example
 
-[Sharon is not sure this is correct. Please check my work!]
+\[Sharon is not sure this is correct. Please check my work!]
 
 Consider a query for a type TXT record for foo.a.example.org. 
 
@@ -1270,7 +1270,7 @@ The server must prove the following facts:
 
 To do this, the server returns:
 
-* A signed TXT record for *.a.example.org.  [Garr this is not exactly correct
+* A signed TXT record for *.a.example.org.  \[Garr this is not exactly correct
     its the crazy DNSSEC label match thing. But its a distraction here...! 
     Maybe we should just cite the RFC that shows how to do this. 
     If someone knows what RFC that is, please go ahead and cite it.]
@@ -1283,7 +1283,7 @@ To do this, the server returns:
 
 ## Wildcard No Data Example
 
-[Sharon is not sure this is correct. Please check my work!]
+\[Sharon is not sure this is correct. Please check my work!]
 
 Consider a query for a type MX record for foo.a.example.org. 
 
