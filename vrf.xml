@@ -858,27 +858,24 @@
     
     <section title="Implementation Status" anchor="imp">
     
-    <t>  An implementation of the RSA-FDH-VRF, where 
-    the hash function is instantiated with SHA-256 was developed as part of
-    the NSEC5 project <xref target="I-D.vcelak-nsec5"/> and is available at 
-    [JAN GIVE THE POINTER]. An implementation of SHA256-P256-EC-VRF 
-    was also developed as part of this project, and is available [JAN
-    GIVE THE POINTER].  
-    </t>
+        <t>
+            An implementation of the RSA-FDH-VRF (SHA-256) and SHA256-P256-EC-VRF was developed
+            as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
+            at <eref target="http://github.com/fcelda/nsec5-crypto" />.
+        </t>
     
     <t>
     The Key Transparency project at Google
     uses a VRF implemention that is almost identical to
     the SHA256-P256-EC-VRF specified here, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
-    is available 
-    https://github.com/google/keytransparency/blob/master/core/vrf/p256/p256
+    is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/p256/p256" />
     </t>
     
     <t>
     Open Whisper Systems also uses a VRF very similar to 
     SHA512-Elligator-ED25519-EC-VRF, called VXEdDSA, and specified here:
-    https://whispersystems.org/docs/specifications/xeddsa/
+    <eref target="https://whispersystems.org/docs/specifications/xeddsa/" />
     </t> 
     </section>    
 
