@@ -1189,6 +1189,55 @@ evaluating its performance.
 
 --- back
 
+# Examples
+
+We use small DNS zone with three names and four types (SOA, NS, A, and TXT)
+to illustrate how denying responses are handled with NSEC5.  For brevity,
+the class is not shown (defaults to IN) and the SOA record is shortened, 
+resulting in the following zone file:
+
+> example.org.        SOA ( ... )
+
+> example.org.        NS  a.example.org.
+
+> c.example.org.      A 192.0.2.1
+
+> c.example.org.      TXT "c record"
+
+> g.example.org.      A 192.0.2.1
+
+> g.example.org.      TXT "g record"
+
+> *.a.example.org.    TXT "wildcard record"
+
+## Name Error Example
+
+Consider a query for a type A record for a.b.c.example.org.
+
+The server must prove the following facts:
+
+* Existence of closest encloser c.example.com. 
+
+* Non-existence of wildcard at closest encloser *.c.example.com
+
+* Non-existence of next closer b.c.example.com
+
+To do this, the server returns:
+
+* An NSEC5PROOF RR for c.example.com and an NSEC5 RR "matching" c.example.com 
+  its with Wildcard flag cleared. (Note: the "matching" NSEC5 RR has its owner 
+  name equal to the NSEC5 hash of c.example.com.)  Per {{precompute}}, this 
+  NSEC5PROOF RR may be precomputed.
+ 
+* An NSEC5PROOF RR for b.c.example.com and NSEC5 RR "covering" b.c.example.com 
+  (The NSEC5 hash of b.c.example.com sorts in canonical order between the 
+  "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.) This 
+  NSEC5PROOF RR must be computed on-the-fly.
+
+
+
+
+
 # Change Log
 
 Note to RFC Editor: if this document does not obsolete an existing
