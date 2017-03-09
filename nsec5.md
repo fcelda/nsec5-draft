@@ -88,6 +88,13 @@ normative:
   rfc6605: 
   rfc7748: 
   rfc8080: 
+  ID.goldbe-vrf:
+    title: Verifiable Random Functions (VRFs)
+    author:
+      - ins: S. Goldberg
+      - ins: D. Papadopoulos
+      - ins: J. Vcelak
+    date: 2017-03
   FIPS-186-3:
     title: Digital Signature Standard (DSS)
     author:
@@ -95,14 +102,6 @@ normative:
     date: 2009-06
     seriesinfo:
       FIPS: PUB 186-3
-  SECG1:
-    target: http://www.secg.org/sec1-v2.pdf
-    title: 'SEC 1: Elliptic Curve Cryptography'
-    author:
-      org: Standards for Efficient Cryptography Group (SECG)
-    date: 2009-05
-    seriesinfo:
-      Version: '2.0'
 
 informative:
   rfc6781: 
@@ -202,16 +201,19 @@ zone-signing keys to be present on all authoritative servers for the
 zone, in contrast to DNSSEC online signing schemes like NSEC3 White
 Lies.
 
+--- note_Ed_note
+
+Text inside square brackets (\[\]) is additional background
+information, answers to frequently asked questions, general musings,
+etc.  They will be removed before publication.  This document is being
+collaborated on in Github at
+\<https://github.com/fcelda/nsec5-draft\>.  The most recent version of
+the document, open issues, etc should all be available here.  The
+authors gratefully accept pull requests.
+
 --- middle
 
 # Introduction
-
-[Ed note: Text inside square brackets [] is background
-information, answers to frequently asked questions, general musings,
-etc. They will be removed before publication. 
-The most recent version of the document, open issues, etc are 
-available at https://github.com/fcelda/nsec5-draft/
-The authors (gratefully) accept pull requests.]
 
 ## Rationale
 
@@ -318,7 +320,7 @@ concepts described in {{RFC1034}}, {{RFC1035}}, {{RFC4033}},
 and DNS terms in {{RFC7719}}.
 
 The reader should also be familiar with verifiable random functions (VRFs)
-as defined in [I-D.goldbe-vrf]. 
+as defined in {{ID.goldbe-vrf}}.
 
 The following terminology is used through this document:
 
@@ -371,7 +373,7 @@ zone as insecure.
 
 # How NSEC5 Works
 
-With NSEC5, the original domain name is hashed using a VRF [I-D.goldbe-vrf]
+With NSEC5, the original domain name is hashed using a VRF {{ID.goldbe-vrf}}
 using the following steps:
 
 1. The domain name is processed using a VRF keyed with the private
@@ -420,16 +422,19 @@ The algorithms used for NSEC5 authenticated denial are independent of
 the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
-An NSEC5 proof is computed using VRF_prove(), as specified in [I-D.goldbe-vrf].
+An NSEC5 proof is computed using VRF_prove(), as specified in
+{{ID.goldbe-vrf}}.
 The input is a private NSEC5 key followed by
 an RR owner name in {{RFC4034}} canonical wire format.
 The output NSEC5 proof is an octet string.
 
-An NSEC5 hash is computed using VRF_proof2hash(), as specified in [I-D.goldbe-vrf].
+An NSEC5 hash is computed using VRF_proof2hash(), as specified in
+{{ID.goldbe-vrf}}.
 The input NSEC5 proof is an octet string; 
 the output NSEC5 hash is an octet string.
 
-An NSEC5 proof is verified using VRF_verify(), as specified in [I-D.goldbe-vrf].
+An NSEC5 proof is verified using VRF_verify(), as specified in
+{{ID.goldbe-vrf}}.
 The input is the NSEC5 public key, 
 followed by an RR owner name in {{RFC4034}} canonical wire format,
 followed by an NSEC5 proof as an octet string; 
@@ -437,7 +442,8 @@ the output is either VALID or INVALID.
 
 This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf] (Section X) where
+* The VRF is the EC-VRF algorithm specified in {{ID.goldbe-vrf}}
+  (Section X) where
   the secure hash function Hash is SHA-256 and 
   the EC group G is the FIPS 186-3 P-256 curve. 
   SHA-256 is specified in {{RFC6234}}.
@@ -450,7 +456,8 @@ This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf] (Section X) where
+* The VRF is the EC-VRF algorithm specified in {{ID.goldbe-vrf}}
+  (Section X) where
   the secure hash function Hash is SHA-256 and 
   the EC group G is the Ed25519 curve. 
   SHA-256 is specified in {{RFC6234}}.
