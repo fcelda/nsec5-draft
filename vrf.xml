@@ -157,6 +157,7 @@
    <section title="VRF Algorithms">
    <t>
    <cref source="Dimitris">Don't we need a KeyGen algorithm?</cref>'
+   <cref source="Jan">Can we put only the requirements here. And then have a separate subsection about additional possibly used properties that some VRFs have (e.g. proof to hash)?</cref>'
    A VRF hashes an input alpha using the private key SK to obtain
    
     <list>
