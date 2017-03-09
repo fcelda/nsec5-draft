@@ -12,7 +12,7 @@
 
 <rfc category="std" docName="draft-goldbe-vrf-00" ipr="trust200902">
     <front>
-        <title abbrev="VRF">Verfiable Random Functions (VRFs)</title>
+        <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
         <author fullname="Sharon Goldberg" initials="S." surname="Goldberg">
             <organization>Boston University</organization>
@@ -155,7 +155,8 @@
    </section>
    
    <section title="VRF Algorithms">
-   <t> 
+   <t>
+   <cref source="Dimitris">Don't we need a KeyGen algorithm?</cref>'
    A VRF hashes an input alpha using the private key SK to obtain
    
     <list>
@@ -212,9 +213,9 @@
    
    <section title="VRF Security Properties">
     
-    <t> Applications that use the VRFs defined in this 
-    document MUST ensure that that the VRF key is generated in a
-    correctly. (See <xref target="securitycons"/> for more discussion.)
+    <t> Applications that use the VRFs defined in this
+    document MUST ensure that that the VRF key is generated
+    correctly. (See <xref target="securitycons"/> for a more detailed discussion.)
     When this holds, the VRFs defined in this document
     satisfy the following security properties:
    </t>
@@ -233,7 +234,7 @@
         
         <t hangText="Pseudorandomness:">
              Roughly speaking, pseudorandomness ensures that every VRF output 
-             beta looks random to anyone who knows the corresponding
+             beta looks random even to a party that knows the corresponding
              VRF input alpha, but does not know the secret VRF key SK 
              or a valid VRF proof pi corresponding to alpha.
         </t>  
@@ -262,7 +263,7 @@
         whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
         </t>
   
-        <t hangText="Collison resistence:">
+        <t hangText="Collison resistance:">
             [LEO TO ADD TEXT HERE.]    
         </t>
    </list>
@@ -448,7 +449,7 @@
         <t>
             The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that 
             satisfies the trusted uniqueness, pseudorandomness and collision 
-            resistance properties. This VRF operate in a cyclic group G of prime order 
+            resistance properties. This VRF operates in a cyclic group G of prime order
             with generator g, where the cyclic group is an elliptic curve group.
             EC points in group G are encoded using point compression.
             </t>
@@ -489,6 +490,7 @@
 
         <t>
             Used primitives:
+            <cref source="Dimitris"> Should we use the more natural additive notation? Also, capital letters for curve points?</cref>
             <list>
                 <t>"" - empty octet string</t>
                 <t>|| - octet string concatenation</t>
@@ -563,7 +565,7 @@
                 <list style="numbers">
                     <t>gamma, c, s = EC-VRF_decode_proof(pi)</t>
                     <t>gamma is an EC point in G with coordinates (x, y)</t>
-                    <t><cref source="Sharon">DO WE WANT TO CHECK THAT "gamma is a valid EC point in G" HERE?</cref></t>
+                    <t><cref source="Sharon">DO WE WANT TO CHECK THAT "gamma is a valid EC point in G" HERE?</cref><cref source="Dimitris"> Yes. Jan, does a "test-on-curve" appear at an RFC anywhere?</cref></t>
                     <t>beta = I2OSP(x, 2n)</t>
                     <t>Output beta</t>
                 </list>
@@ -571,7 +573,7 @@
             <t>
                 Note: Because of the format of the point-compressed form of an 
                 elliptic curve, the hash can
-                be retrieved from an encoded gamma simply by omitting the first octet of the gamma.
+                be retrieved from an encoded gamma simply by omitting the first octet of gamma.
                 <cref source="Sharon">This is probably true for p-256 curve,
                 since Jan wrote this in an earlier verion, but it is true 
                 for the Ed25519 and Ed448 curves?</cref>
@@ -636,14 +638,13 @@
             </t>
             
             <t>
-            However, this EC-VRF_hash_points algorithm MUST NOT used in applications where 
+            However, this EC-VRF_hash_points algorithm MUST NOT be used in applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
             timing attacks.  That said, the amount of information obtained from
             such a timing attack is likely to be small, since the algorithm 
             is expected to find a valid curve point after only two attempts 
-            (i.e., when ctr=1) on average.  See <cref source="Sharon">Dimitris
-            add cite here please!</cref>.
+            (i.e., when ctr=1) on average (see <xref target="Icart09"/>).
             </t>
             
             <t>
@@ -700,12 +701,10 @@
             <t>For applications where VRF input alpha must be kept secret,
             the following EC-VRF_hash_points algorithm MAY be used to used as  
             generic way to hash an octet string onto any elliptic curve.
+            <cref source="Dimitris"> Is the above a typo? The EC-VRF_hash_points algorithm is from points to octet.</cref>
             
-            [TODO:        
-            Specify a generic hash_to_curve algorithm that is not susceptible 
-            to timing attacks. <cref source="Sharon">Dimitris can you add a cite
-            to the research paper that shows how to do this? I don't think we need to 
-            add the full spec for this version of the draft.</cref>
+            For applications where VRF input alpha must be kept secret,
+            the deterministic-time hash algorithm of <xref target="I-D.vcelak-nsec5"/> MAY be used as a generic way to hash an octet string onto any elliptic curve.
             </t>
             
         </section>
@@ -843,6 +842,7 @@
    
         <t>[TODO: Add an SHA256-Elligator-ED25519-EC-VRF 
         ciphersuite where the Elligator hash function is used for EC-VRF_hash-to-curve?]
+        <cref source="Dimitris"> IMHO if we specify by the generic hash only by a reference, we should do the same for Elligator until we have a better understanding of its properties (maybe reach out to Trevor Perin?).</cref>
         </t>
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
@@ -1024,6 +1024,15 @@
             <seriesInfo name="in" value="FOCS" />
         </reference>
 
+
+        <reference anchor="Icart09">
+            <front>
+                <title>How to Hash into Elliptic Curves</title>
+                <author initials= "T." surname="Icart"><organization /></author>
+                <date year="2009" />
+            </front>
+            <seriesInfo name="in" value="CRYPTO" />
+        </reference>
 
     </references>
 
