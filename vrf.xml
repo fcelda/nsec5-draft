@@ -88,32 +88,32 @@
         <section title="Rationale">
 
     <t>
-   A verifiable random function 
-   VRF <xref target="MRV99"></xref> is the public-key version of a
+   A Verifiable Random Function
+   (VRF) <xref target="MRV99"></xref> is the public-key version of a
    keyed cryptographic hash. Only the holder of the private VRF key
-   SK can compute the hash, but anyone with public key
-   PK can verify the correctness of the hash. 
+   can compute the hash, but anyone with corresponding public key
+   can verify the correctness of the hash.
    </t>
-   
+
    <t>
-   One application of the VRF is to prevent offline 
-   enumeration of the data stored in a hash-based data structure. 
-   In this application, 
-   a Prover holds the VRF secret key SK and uses VRF hashing to 
-   construct a hash-based data structure on some input data.  
-   
-   Because hashing is done with the VRF, only 
-   the Prover can answer queries about whether or not some data is stored 
-   in the data structure.   Anyone that knows the  public VRF key PK can 
-   verify that the Prover has answered queries correctly. However, because
-   these other parties do not know the private VRF key SK, they cannot 
-   make offline inferences (that do not involve querying the Prover) about 
-   which data is stored in the data structure. This prevents offline 
-   enumeration of the data in the data structure.
-   VRFs are used for this purpose in the NSEC5 
-   construction for DNSSEC Authenticated Denial of Existence (see <xref
-   target="nsec5ecc"/> and <xref target="I-D.vcelak-nsec5"/>).
+   One application of the VRF is to prevent enumeration of data stored in a
+   hash-based data structure.  In this application, a prover holds the VRF
+   secret key and uses the VRF hashing to construct a hash-based data structure
+   on the input data.
+
+   Due to the nature of the VRF hashing, only the prover can answer queries
+   about whether or not some data is stored in the data structure.  Anyone who
+   knows the public VRF key can verify that the prover has answered the queries
+   correctly. However no offline inferences (i.e. inferences without querying
+   the prover) can be made about the data stored in the data strucuture.
    </t>
+
+   <t>
+       VRFs are used for this purpose to prevent zone content enumeration in
+       Domain Name System Security Extensions (DNSSEC) with NSEC5 Authenticated
+       Denial of Existence <xref target="I-D.vcelak-nsec5"/>.
+   </t>
+
    </section>
    
         <section title="Requirements">
@@ -133,12 +133,12 @@
 
             <t>
                 <list style="hanging">
-                    <!--<t hangText="SK:">
+                    <t hangText="SK:">
                         The private key for the VRF. 
                     </t>
                     <t hangText="PK:">
                         The public key for the VRF. 
-                    </t>-->
+                    </t>
                     <t hangText="alpha:">
                         The input to be hashed by the VRF. 
                     </t>
