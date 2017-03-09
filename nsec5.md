@@ -1216,27 +1216,97 @@ Consider a query for a type A record for a.b.c.example.org.
 
 The server must prove the following facts:
 
-* Existence of closest encloser c.example.com. 
+* Existence of closest encloser c.example.org. 
 
-* Non-existence of wildcard at closest encloser *.c.example.com
+* Non-existence of wildcard at closest encloser *.c.example.org.
 
-* Non-existence of next closer b.c.example.com
+* Non-existence of next closer b.c.example.org.
 
 To do this, the server returns:
 
-* An NSEC5PROOF RR for c.example.com and an NSEC5 RR "matching" c.example.com 
+* An NSEC5PROOF RR for c.example.com and a signed 
+  NSEC5 RR "matching" c.example.org 
   its with Wildcard flag cleared. (Note: the "matching" NSEC5 RR has its owner 
-  name equal to the NSEC5 hash of c.example.com.)  Per {{precompute}}, this 
-  NSEC5PROOF RR may be precomputed.
+  name equal to the NSEC5 hash of c.example.org.)  Per {{precompute}}, this 
+  NSEC5PROOF RR may be precomputed. NSEC5 RRs are always precomputed.
  
-* An NSEC5PROOF RR for b.c.example.com and NSEC5 RR "covering" b.c.example.com 
-  (The NSEC5 hash of b.c.example.com sorts in canonical order between the 
-  "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.) This 
-  NSEC5PROOF RR must be computed on-the-fly.
+* An NSEC5PROOF RR for b.c.example.org and a signed 
+  NSEC5 RR "covering" b.c.example.org 
+  (The NSEC5 hash of b.c.example.org sorts in canonical order between the 
+  "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.) This  
+  NSEC5PROOF RR must be computed on-the-fly. NSEC5 RRs are always precomputed.
 
 
+## No Data Example, Opt-Out Not In Effect
 
+Consider a query for a type MX record for c.example.org.
 
+The server must prove the following facts:
+
+* Existence of c.example.org. for any type other than MX or CNAME
+
+To do this, the server returns:
+
+* An NSEC5PROOF RR for c.example.com and a signed NSEC5 RR "matching" c.example.org 
+  its with CNAME and MX Type Bits cleared. (Note: the "matching" NSEC5 RR has its owner 
+  name equal to the NSEC5 hash of c.example.org.)  Per {{precompute}}, this 
+  NSEC5PROOF RR may be precomputed.  NSEC5 RRs are always precomputed.
+
+## No Data Example, Opt-Out In Effect  
+
+[Sharon has no idea how to make such an example. Jan, want to try?]
+
+## Wildcard Example
+
+[Sharon is not sure this is correct. Please check my work!]
+
+Consider a query for a type TXT record for foo.a.example.org. 
+
+The server must prove the following facts: 
+
+* Existence of the TXT record for the wildcard *.a.example.org 
+
+* Non-existence of the next closer name foo.a.example.org. 
+
+To do this, the server returns:
+
+* A signed TXT record for *.a.example.org.  [Garr this is not exactly correct
+    its the crazy DNSSEC label match thing. But its a distraction here...! 
+    Maybe we should just cite the RFC that shows how to do this. 
+    If someone knows what RFC that is, please go ahead and cite it.]
+
+* An NSEC5PROOF RR for foo.a.example.com and 
+    a signed NSEC5 RR "covering" foo.a.example.com. (The NSEC5 hash of 
+    foo.a.example.org sorts in canonical order between the 
+    "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.) This 
+    NSEC5PROOF RR must be computed on-the-fly. NSEC5 RRs are always precomputed.
+
+## Wildcard No Data Example
+
+[Sharon is not sure this is correct. Please check my work!]
+
+Consider a query for a type MX record for foo.a.example.org. 
+
+The server must prove the following facts: 
+
+* Existence of wildcard at closest encloser 
+  *.a.example.org. for any type other than MX or CNAME.
+
+* Non-existence of the next closer name foo.a.example.org. 
+
+To do this, the server returns:
+
+* An NSEC5PROOF RR for a.example.com and a signed NSEC5 RR "matching" c.example.org 
+  its with its Wildcard flag set and its CNAME and MX Type Bits cleared. 
+  (Note: the "matching" NSEC5 RR has its owner 
+  name equal to the NSEC5 hash of a.example.org.)  Per {{precompute}}, this 
+  NSEC5PROOF RR may be precomputed.  NSEC5 RRs are always precomputed.
+
+* An NSEC5PROOF RR for foo.a.example.com and 
+    a signed NSEC5 RR "covering" foo.a.example.com. (The NSEC5 hash of 
+    foo.a.example.org sorts in canonical order between the 
+    "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.) This 
+    NSEC5PROOF RR must be computed on-the-fly. NSEC5 RRs are always precomputed.
 
 # Change Log
 
