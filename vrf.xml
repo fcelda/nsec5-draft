@@ -347,7 +347,7 @@
 
         <section title="RSA-FDH-VRF Proving">
             <t>
-                RSA-FDH-VRF_prove(SK, alpha)
+                RSAFDHVRF_prove(SK, alpha)
             </t>
 
             <t>
@@ -379,7 +379,7 @@
         
         <section title="RSA-FDH-VRF Proof To Hash">
             <t>
-                RSA-FDH-VRF_proof2hash(pi)
+                RSAFDHVRF_proof2hash(pi)
             </t>
 
             <t>
@@ -409,7 +409,7 @@
 
         <section title="RSA-FDH-VRF Verifying">
             <t>
-                RSA-FDH-VRF_verify((N, e), alpha, pi)
+                RSAFDHVRF_verify((N, e), alpha, pi)
             </t>
 
             <t>
@@ -506,7 +506,7 @@
 
         <section title="EC-VRF Proving">
             <t>
-                EC-VRF_prove(g^x, x, alpha)
+                ECVRF_prove(g^x, x, alpha)
             </t>
 
             <t>
@@ -529,10 +529,10 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = EC-VRF_hash_to_curve(alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
-                    <t>c = EC-VRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
+                    <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
                     <t>s = k - c*q mod q</t>
                     <t>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
@@ -547,7 +547,7 @@
 
         <section title="EC-VRF Proof To Hash">
             <t>
-                EC-VRF_proof2hash(pi)
+                ECVRF_proof2hash(pi)
             </t>
             <t>
                 Input:
@@ -564,7 +564,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>gamma, c, s = EC-VRF_decode_proof(pi)</t>
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
                     <t>gamma is an EC point in G with coordinates (x, y)</t>
                     <t><cref source="Sharon">DO WE WANT TO CHECK THAT "gamma is a valid EC point in G" HERE?</cref><cref source="Dimitris"> Yes. Jan, does a "test-on-curve" appear at an RFC anywhere?</cref></t>
                     <t>beta = I2OSP(x, 2n)</t>
@@ -584,7 +584,7 @@
 
         <section title="EC-VRF Verifying">
             <t>
-                EC-VRF_verify(g^x, pi, alpha)
+                ECVRF_verify(g^x, pi, alpha)
             </t>
 
             <t>
@@ -606,7 +606,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>gamma, c, s = EC-VRF_decode_proof(pi)</t>
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
                     <t>
                         If gamma is not a valid EC point in G,
                         output "INVALID" and stop.
@@ -617,9 +617,9 @@
  
                     </t>
                     <t>u = (g^x)^c * g^s</t>
-                    <t>h = EC-VRF_hash_to_curve(alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(alpha)</t>
                     <t>v = gamma^c * h^s</t>
-                    <t>c' = EC-VRF_hash_points(g, h, g^x, gamma, u, v)</t>
+                    <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
                     <t>
                         If c and c' are the same, output "VALID";
                         else output "INVALID". 
@@ -634,12 +634,12 @@
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>
-            The following EC-VRF_hash_points algorithm provides a simple and 
+            The following ECVRF_hash_points algorithm provides a simple and
             generic way to hash an octet string onto any elliptic curve.  
             </t>
             
             <t>
-            However, this EC-VRF_hash_points algorithm MUST NOT be used in applications where
+            However, this ECVRF_hash_points algorithm MUST NOT be used in applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
             timing attacks.  That said, the amount of information obtained from
@@ -658,7 +658,7 @@
             
             
             <t>
-                EC-VRF_hash_to_curve(m)
+                ECVRF_hash_to_curve(m)
             </t>
             <t>
                 Input:
@@ -700,9 +700,9 @@
             </t>
             
             <t>For applications where VRF input alpha must be kept secret,
-            the following EC-VRF_hash_points algorithm MAY be used to used as  
+            the following ECVRF_hash_points algorithm MAY be used to used as
             generic way to hash an octet string onto any elliptic curve.
-            <cref source="Dimitris"> Is the above a typo? The EC-VRF_hash_points algorithm is from points to octet.</cref>
+            <cref source="Dimitris"> Is the above a typo? The ECVRF_hash_points algorithm is from points to octet.</cref>
             
             For applications where VRF input alpha must be kept secret,
             the deterministic-time hash algorithm of <xref target="I-D.vcelak-nsec5"/> MAY be used as a generic way to hash an octet string onto any elliptic curve.
@@ -713,7 +713,7 @@
         <section title="EC-VRF Hash Points">
                      
             <t>
-                EC-VRF_hash_points(p_1, p_2, ..., p_j)
+                ECVRF_hash_points(p_1, p_2, ..., p_j)
             </t>
             <t>
                 Input:
@@ -751,7 +751,7 @@
 
         <section title="EC-VRF Decode Proof">
             <t>
-                EC-VRF_decode_proof(pi)
+                ECVRF_decode_proof(pi)
             </t>
             <t>
                 Input:
@@ -807,7 +807,7 @@
             EC points are represented using point compression as specified in <xref target="SECG1" /> (Section 2.3.3).
         </t>
         <t>
-            The EC-VRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -833,7 +833,7 @@
             TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
         </t>
         <t>
-            The EC-VRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -842,7 +842,7 @@
         </t>
    
         <t>[TODO: Add an SHA256-Elligator-ED25519-EC-VRF 
-        ciphersuite where the Elligator hash function is used for EC-VRF_hash-to-curve?]
+        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?]
         <cref source="Dimitris"> IMHO if we specify by the generic hash only by a reference, we should do the same for Elligator until we have a better understanding of its properties (maybe reach out to Trevor Perin?).</cref>
         </t>
    
