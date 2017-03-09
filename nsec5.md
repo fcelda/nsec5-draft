@@ -422,18 +422,21 @@ The algorithms used for NSEC5 authenticated denial are independent of
 the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
-An NSEC5 proof is computed using VRF_prove(), as specified in
-{{ID.goldbe-vrf}}.
-The input is a private NSEC5 key followed by
+The NSEC5 proof corresponding to a name is computed using VRF_prove(), 
+as specified in {{ID.goldbe-vrf}}.
+The input to VRF_prove() is 
+a private NSEC5 key followed by
 an RR owner name in {{RFC4034}} canonical wire format.
 The output NSEC5 proof is an octet string.
 
-An NSEC5 hash is computed using VRF_proof2hash(), as specified in
-{{ID.goldbe-vrf}}.
-The input NSEC5 proof is an octet string; 
+An NSEC5 hash corresponding to a name is computed from 
+its NSEC5 proof using VRF_proof2hash(), as specified in {{ID.goldbe-vrf}}.
+The input to VRF_proof2hash() is 
+an NSEC5 proof as an octet string; 
 the output NSEC5 hash is an octet string.
 
-An NSEC5 proof is verified using VRF_verify(), as specified in
+
+An NSEC5 proof for a name is verified using VRF_verify(),  as specified in
 {{ID.goldbe-vrf}}.
 The input is the NSEC5 public key, 
 followed by an RR owner name in {{RFC4034}} canonical wire format,
@@ -504,7 +507,7 @@ allowed within the Base64 text.
 The NSEC5 RR provides authenticated denial of existence for an RRset
 or domain name. One NSEC5 RR represents one piece of an NSEC5 chain,
 proving existence of the owner name and non-existence of other domain
-names in the part of the hashed domain space covered until the next
+names in the part of the hashed domain space that is covered until the next
 owner name hashed in the RDATA.
 
 ## NSEC5 RDATA Wire Format
@@ -525,8 +528,8 @@ The RDATA for the NSEC5 RR is as shown below:
 
 The Key Tag field contains the key tag value of the NSEC5KEY RR that
 validates the NSEC5 RR, in network byte order. The value is computed
-from the NSEC5KEY RDATA using the same algorithm, which is used to
-compute key tag values for DNSKEY RRs. The algorithm is defined in
+from the NSEC5KEY RDATA using the same algorithm used to
+compute key tag values for DNSKEY RRs. This algorithm is defined in
 {{RFC4034}}.
 
 The Flags field is a single octet. The meaning of individual bits of
@@ -569,7 +572,8 @@ the original domain name level (i.e., there is a wildcard node
 immediately descending from the immediate ancestor of the original
 domain name).  The purpose of the Wildcard flag is to reduce the
 maximum number of RRs required for an authenticated denial of
-existence proof, as originally described in {{I-D.gieben-nsec4}}
+existence proof from (at most) three to (at most) two, 
+as originally described in {{I-D.gieben-nsec4}}
 Section 7.2.1.
 
 ## NSEC5 RDATA Presentation Format
@@ -843,9 +847,10 @@ Opt-Out MAY be part of the zone-signing tool configuration.
 
 ### Precomputing Closest Provable Encloser Proofs {#precompute}
 
-The worst-case scenario when answering a negative query with NSEC5
-requires authoritative server to respond with two NSEC5PROOF RRs and
-two NSEC5 RRs. Per {{nsec5_proofs}}, one pair of NSEC5PROOF and NSEC5
+Per {{nsec5_proofs}}, the worst-case scenario when answering a negative 
+query with NSEC5 requires authoritative server to respond with two 
+NSEC5PROOF RRs and
+two NSEC5 RRs. One pair of NSEC5PROOF and NSEC5
 RRs corresponds to the closest provable encloser, and the other pair
 corresponds to the next closer name.  The NSEC5PROOF corresponding to
 the next closer name MUST be computed on the fly by the authoritative
@@ -872,7 +877,8 @@ According to the type of a response, an authoritative server MUST
 include NSEC5 RRs in the response, as defined in {{nsec5_proofs}}. For
 each NSEC5 RR in the response, a corresponding RRSIG RRset and an
 NSEC5PROOF MUST be added as well. The NSEC5PROOF RR has its owner name
-set to the domain name required according to {{nsec5_proofs}}. The
+set to the domain name required according to the description in 
+{{nsec5_proofs}}. The
 class and TTL of the NSEC5PROOF RR MUST be the same as the class and
 TTL value of the corresponding NSEC5 RR. The RDATA payload of the
 NSEC5PROOF is set according to the description in
