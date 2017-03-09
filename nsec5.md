@@ -206,6 +206,13 @@ Lies.
 
 # Introduction
 
+[Ed note: Text inside square brackets [] is background
+information, answers to frequently asked questions, general musings,
+etc. They will be removed before publication. 
+The most recent version of the document, open issues, etc are 
+available at https://github.com/fcelda/nsec5-draft/
+The authors (gratefully) accept pull requests.]
+
 ## Rationale
 
 NSEC5 provides an alternative mechanism for authenticated denial of
