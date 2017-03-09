@@ -308,18 +308,15 @@ for invalidly generated keys).
      </section>
    
     <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
-	<t>
-	    The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that 
-	    satisfies the trusted 
-	    uniqueness, full pseudorandomness, and trusted collision
-resistance properties.
-	    Its security follows from the standard RSA assumption 
-	    in the random oracle model.  Formal security proofs are in 
-	    <xref target="nsec5ecc" />. 
-	    This VRF also supports the VRF proof-to-hash property, 
-	    that allows the hash output beta to be 
-	    obtained directly from the proof value pi.
-	</t>
+        <t>
+            The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that satisfies
+            the trusted uniqueness, full pseudorandomness, and trusted
+            collision resistance properties.  Its security follows from the
+            standard RSA assumption in the random oracle model.  Formal
+            security proofs are in <xref target="nsec5ecc" />.  This VRF also
+            supports the VRF proof-to-hash property, that allows the hash
+            output beta to be obtained directly from the proof value pi.
+        </t>
 
         <t>
             This VRF is parametrized by a hash function. The chosen
@@ -483,29 +480,40 @@ resistance properties.
     </section>
 
     <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
-        
-            
+
+    	<t><cref source="Jan">We repeat these security properties here, although we already said that all VRF functions are required to satisfy these properties. What about removing it here and keep just the rough description, reference to the security proof, and the optional properties (i.e. proof-to-hash)?</cref></t>
+
         <t>
-            The security of this VRF  follows from the decisional 
-            Diffie-Hellman (DDH) assumption in the 
-            cyclic group G  in the random oracle model.  Formal security proofs 
-            are in <xref target="nsec5ecc" />. This VRF also supports the 
-            proof-to-hash  property, that allows the hash output beta to be 
+            The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
+            satisfies the trusted uniqueness, full pseudorandomness, and
+            trusted collision resistance properties.  The security of this VRF
+            follows from the decisional Diffie-Hellman (DDH) assumption in the
+            cyclic group in the random oracle model. Formal security proofs are
+            in <xref target="nsec5ecc" />.  This VRF also supports the
+            proof-to-hash  property, that allows the hash output beta to be
             obtained directly from the proof value pi.
         </t>
-            
+
         <t>
             Fixed options:
             <list>
                 <t>G - EC group</t>
-                <t>2n - length, in octets, of a single coordinate of an EC point in G
-                <cref source="Sharon">n is 16 octects for a 256 bit curve. this is probably
+                <t>q - prime order of group G</t>
+                <t>g - generator of group G</t>
+                <t>2n - length in octets of a single coordinate of an EC point in G</t>
+                 <t><cref source="Sharon">n is 16 octects for a 256 bit curve. this is probably
                 a better way to word this.</cref></t>
-                <t>Hash - secure cryptographic hash function producing outputs of length 2n.
-                The cryptographic security level
-                of this hash algorithm MUST be at least as high as
-                the cryptographic security level of the EC Group G.                  
-                </t>
+                <t><cref source="Jan">n is ceil(log2(q)/8) maybe?</cref></t>
+                <t>Hash - cryptographic hash function</t>
+                <t>hLen - output length in octets of function Hash</t>
+            </list>
+        </t>
+
+        <t>
+            Options constraints:
+            <list>
+            	<t>Cryptographic security of Hash is at least as high as the cryptographic security of G</t>
+            	<t>hLen is equal to 2n</t>
             </list>
         </t>
 
@@ -514,25 +522,21 @@ resistance properties.
             <list>
                 <t>g^x - EC public key</t>
                 <t>x - EC private key</t>
-                <t>q - prime order of group G</t>
-                <t>g - generator of group G</t>
              </list>
         </t>
 
         <t>
             Used primitives:
-            <cref source="Dimitris"> Should we use the more natural additive notation? Also, capital letters for curve points?</cref>
             <list>
                 <t>"" - empty octet string</t>
                 <t>|| - octet string concatenation</t>
                 <t>p^k - EC point multiplication</t>
                 <t>p1*p2 - EC point addition</t>
+                <t>h[i] - the i'th octet of octet string h</t>
                 <t>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <xref target="SECG1" /></t>
                 <t>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <xref target="SECG1" /></t>
             </list>
         </t>
-
-
 
         <section title="EC-VRF Proving">
             <t>
@@ -551,8 +555,7 @@ resistance properties.
             <t>
                 Output:
                 <list>
-                    <t>pi - VRF proof, octet string (5n+1 octets)
-                    <cref source="Sharon">81 octets for a 256-bit EC G</cref></t>
+                    <t>pi - VRF proof, octet string of length 5n+1</t>
                 </list>
             </t>
 
@@ -568,9 +571,6 @@ resistance properties.
                     <t>Output pi</t>
                 </list>
             </t>
-        
-            <t>Note: gamma is an EC point in G encoded with point compression.
-            ECP2OS(gamma) has length 2n+1 octets.</t>
             
         </section>
 
@@ -582,35 +582,23 @@ resistance properties.
             <t>
                 Input:
                 <list>
-                    <t>pi - VRF proof (5n+1 octets)</t> 
+                    <t>pi - VRF proof, octet string of length 5n+1</t> 
                 </list>
             </t>
             <t>
                 Output:
                 <list>
-                    <t>beta - VRF hash output, octet string (2n octets)</t>
+                    <t>beta - VRF hash output, octet string of length 2n</t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
-                    <t>gamma is an EC point in G with coordinates (x, y)</t>
-                    <t><cref source="Sharon">DO WE WANT TO CHECK THAT "gamma is a valid EC point in G" HERE?</cref><cref source="Dimitris"> Yes. Jan, does a "test-on-curve" appear at an RFC anywhere?</cref></t>
-                    <t>beta = I2OSP(x, 2n)</t>
+                    <t>beta = pi[2] || pi[3] || ... pi[2n+1]</t>
                     <t>Output beta</t>
                 </list>
             </t>
-            <t>
-                Note: Because of the format of the point-compressed form of an 
-                elliptic curve, the hash can
-                be retrieved from an encoded gamma simply by omitting the first octet of gamma.
-                <cref source="Sharon">This is probably true for p-256 curve,
-                since Jan wrote this in an earlier verion, but it is true 
-                for the Ed25519 and Ed448 curves?</cref>
-            </t>
         </section>
-
 
         <section title="EC-VRF Verifying">
             <t>
@@ -621,7 +609,7 @@ resistance properties.
                 Input:
                 <list>
                     <t>g^x - EC public key</t>
-                    <t>pi - VRF proof, octet string</t>
+                    <t>pi - VRF proof, octet string of length 5n+1</t>
                     <t>alpha - VRF input, octet string</t>
                 </list>
             </t>
@@ -640,22 +628,6 @@ resistance properties.
                     <t>
                         If gamma is not a valid EC point in G,
                         output "INVALID" and stop.
-                        
-                        <cref source="Jan">TODO: check validity of gamma before hashing</cref>
-                        <cref source="Sharon">I added this item on the list 
-                        above to deal with this todo</cref>
-	<t>
-	    The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF
-that 
-	    satisfies the trusted uniqueness, full pseudorandomness, and
-trusted collision
-	    resistance properties. This VRF operates in a cyclic group G of
-prime order
-	    with generator g, where the cyclic group is an elliptic curve
-group.
-	    EC points in group G are encoded using point compression.
-	    </t>
- 
                     </t>
                     <t>u = (g^x)^c * g^s</t>
                     <t>h = ECVRF_hash_to_curve(alpha)</t>
@@ -690,15 +662,6 @@ group.
             </t>
             
             <t>
-            (Note: This timing attack is not relevant in the context 
-            of NSEC5 <xref target="I-D.vcelak-nsec5"/>. The only value that 
-            is processed by the VRF online in response to an adversary's 
-            query with NSEC5 is the queried name alpha itself. Thus 
-            alpha is already known to the adversary.)
-            </t>
-            
-            
-            <t>
                 ECVRF_hash_to_curve(m)
             </t>
             <t>
@@ -716,28 +679,25 @@ group.
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>ctr = 0</t>
-                    <t>While true:
-                    <list style="letters">                
-                        <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>p = 0x02 || Hash(m || CTR). (Note, 0x02 sets point encoding 
-                        to "compressed", using only the positive value for the y-coefficient
-                        of the EC point.)
-                        <cref source="Sharon">Jan, Dimitris, we need a cite for the
-                        0x02 comment above.</cref>
-                        </t>
-                        <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
-                        <t>p = 0x03 || Hash(m || CTR). (Note, 0x03 sets point encoding 
-                        to "compressed", using only the negative value for the y-coefficient
-                        of the EC point.)
-                        </t>
-                        <t>Break if p is a valid octet string representing encoded compressed point in G.</t>
+                    <t>c = 0</t>
+                    <t>Repeat:<list style="letters">
+                        <t>C = I2OSP(c, 4)</t>
+                        <t>p = 0x02 || Hash(m || C)</t>
+                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
+                        <t>p = 0x03 || Hash(m || C)</t>
+                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
                         <t>ctr = ctr + 1</t>
-                    </list>
-                    </t>
+                    </list></t>
                     <t>h = OS2ECP(p)</t>
                     <t>Output h</t>
                 </list>
+            </t>
+
+            <t>
+                The initial octet 0x02 in the octet string created in step B
+                represents that the point in compressed form has positive
+                y-coefficient <xref target="SECG1" />. Similarly, the 0x03 octet
+                in step D represents negative y-coefficient.
             </t>
             
             <t>For applications where VRF input alpha must be kept secret,
