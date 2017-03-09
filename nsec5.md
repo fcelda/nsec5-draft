@@ -1,7 +1,7 @@
 ---
 title: NSEC5, DNSSEC Authenticated Denial of Existence
 abbrev: NSEC5
-docname: draft-vcelak-nsec5-04
+docname: draft-vcelak-nsec5-05
 date: 2017
 
 ipr: trust200902
@@ -310,6 +310,9 @@ concepts described in {{RFC1034}}, {{RFC1035}}, {{RFC4033}},
 {{RFC2136}}, {{RFC2181}}, {{RFC2308}}, {{RFC5155}}, and {{RFC7129}};
 and DNS terms in {{RFC7719}}.
 
+The reader should also be familiar with verifiable random functions (VRFs)
+as defined in [I-D.goldbe-vrf]. 
+
 The following terminology is used through this document:
 
 Base32hex:
@@ -341,9 +344,10 @@ NSEC5 hash:
   proof is known, anyone can compute its corresponding NSEC5 hash.
 
 NSEC5 algorithm:
-: A triple of VRF algorithms that compute an NSEC5 proof,
-  verify an NSEC5 proof, and process an NSEC5 proof to
-  obtain its NSEC5 hash.
+: A triple of VRF algorithms that 
+    compute an NSEC5 proof (VRF_prove),
+    verify an NSEC5 proof (VRF_verify), 
+    and process an NSEC5 proof to obtain its NSEC5 hash (VRF_proof2hash).
 
 # Backward Compatibility
 
@@ -360,7 +364,7 @@ zone as insecure.
 
 # How NSEC5 Works
 
-With NSEC5, the original domain name is hashed using the VRF
+With NSEC5, the original domain name is hashed using a VRF [I-D.goldbe-vrf]
 using the following steps:
 
 1. The domain name is processed using a VRF keyed with the private
@@ -409,26 +413,29 @@ The algorithms used for NSEC5 authenticated denial are independent of
 the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
-The input for the NSEC5 proof computation is an RR owner name in
-{{RFC4034}} canonical wire format followed by a private NSEC5 key.
-The output is an octet string.
+An NSEC5 proof is computed using VRF_prove(), as specified in [I-D.goldbe-vrf].
+The input is a private NSEC5 key followed by
+an RR owner name in {{RFC4034}} canonical wire format.
+The output NSEC5 proof is an octet string.
 
-The input for the NSEC5 hash computation is the corresponding NSEC5
-proof; the output is an octet string.
+An NSEC5 hash is computed using VRF_proof2hash(), as specified in [I-D.goldbe-vrf].
+The input NSEC5 proof is an octet string; 
+the output NSEC5 hash is an octet string.
+
+An NSEC5 proof is verified using VRF_verify(), as specified in [I-D.goldbe-vrf].
+The input is the NSEC5 public key, 
+followed by an RR owner name in {{RFC4034}} canonical wire format,
+followed by an NSEC5 proof as an octet string; 
+the output is either VALID or INVALID.
 
 This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-* The NSEC5 proof is computed using an Elliptic Curve VRF with FIPS
-  186-3 P-256 curve.  The proof computation and verification, and the
-  proof-to-hash function, are formally specified in {{ecvrf}}.  The
-  curve parameters are specified in {{FIPS-186-3}} (Section D.1.2.3)
-  and {{RFC5114}} (Section 2.6).
-
-* The NSEC5 hash is the x-coordinate of the group element gamma from
-  the NSEC5 proof (specified in {{ecvrf}}), encoded as a 32-octet
-  unsigned integer in network byte order. In practice, the hash is a
-  substring of the proof ranging from 2nd through 33th octet of the
-  proof, inclusive.
+* The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf] (Section X) where
+  the secure hash function Hash is SHA-256 and 
+  the EC group G is the FIPS 186-3 P-256 curve. 
+  SHA-256 is specified in {{RFC6234}}.
+  The curve parameters are specified in {{FIPS-186-3}} (Section D.1.2.3)
+  and {{RFC5114}} (Section 2.6). 
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 4 of {{RFC6605}} and thus is the same as the format used to
@@ -436,9 +443,12 @@ This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
-* The NSEC5 proof and NSEC5 hash are the same as with EC-P256-SHA256
-  but using Ed25519 elliptic curve with parameters defined in
-  {{RFC7748}} Section 4.1.
+* The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf] (Section X) where
+  the secure hash function Hash is SHA-256 and 
+  the EC group G is the Ed25519 curve. 
+  SHA-256 is specified in {{RFC6234}}.
+  The curve parameters are specified in
+  {{RFC7748}} (Section 4.1).
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 3 of {{RFC8080}} and thus is the same as the format used to
@@ -1158,240 +1168,6 @@ provided advice on the implementation of NSEC5, and assisted with
 evaluating its performance.
 
 --- back
-
-# Elliptic Curve VRF {#ecvrf}
-
-The Elliptic Curve Verifiable Random Function (EC-VRF) operates in a
-cyclic group G of prime order with generator g.  The cyclic group G
-MAY be over the NIST-P256 elliptic curve, with curve parameters as
-specified in {{FIPS-186-3}} (Section D.1.2.3) and {{RFC5114}} (Section
-2.6).  The group G MAY alternatively be over the Ed25519 elliptic
-curve with parameters defined in {{RFC7748}} (Section 4.1).  The
-security of this VRF follows from the decisional Diffie-Hellman (DDH)
-assumption in the cyclic group G in the random oracle model. Formal
-security proofs for this VRF are in {{nsec5ecc}}.
-
-Fixed options:
-
-> G - elliptic curve (EC) group
-
-Used parameters:
-
-> g^x - EC public key
-
-> x - EC private key
-
-> q - prime order of group G
-
-> g - generator of group G
-
-Used primitives:
-
-> "" - empty octet string
-
-> \|\| - octet string concatenation
-
-> p^k - EC point multiplication
-
-> p1\*p2 - EC point addition
-
-> SHA256 - hash function SHA-256 as specified in {{RFC6234}}
-
-> ECP2OS - EC point to octet string conversion with point compression as
-specified
-> in Section 2.3.3 of {{SECG1}}
-
-> OS2ECP - octet string to EC point conversion with point compression as
-specified
-> in Section 2.3.4 of {{SECG1}}
-
-
-## EC-VRF Auxiliary Functions
-
-### EC-VRF Hash To Curve
-
-ECVRF_hash_to_curve(m)
-
-Input:
-
-> m - value to be hashed, an octet string
-
-Output:
-
-> h - hashed value, EC point
-
-Steps:
-
-1. c = 0
-
-2. C = I2OSP(c, 4)
-
-3. xc = SHA256(m \|\| C)
-
-4. p = 0x02 \|\| xc
-
-5. If p is not a valid octet string representing encoded compressed point
-  in G:
-
-    {: style="letters"}
-    1. c = c + 1
-
-    1. Go to step 2.
-
-
-6. h = OS2ECP(p)
-
-7. Output h
-
-### EC-VRF Hash Points
-
-ECVRF_hash_points(p_1, p_2, ..., p_n)
-
-Input:
-
-> p_x - EC point in G
-
-Output:
-
-> h - hash value, integer between 0 and 2^128-1
-
-Steps:
-
-1. P = ""
-
-2. for p in \[p_1, p_2, ... p_n]\:  
-   P = P \|\| ECP2OS(p)
-
-3. h' = SHA256(P)
-
-4. h = OS2IP(first 16 octets of h')
-
-5. Output h
-
-### EC-VRF Decode Proof
-
-ECVRF_decode_proof(pi)
-
-Input:
-
-> pi - VRF proof, octet string (81 octets)
-
-Output:
-
-> gamma - EC point
-
-> c - integer between 0 and 2^128-1
-
-> s - integer between 0 and 2^256-1
-
-Steps:
-
-1. let gamma', c', s' be pi split after 33-rd and 49-th octet
-
-2. gamma = OS2ECP(gamma')
-
-3. c = OS2IP(c')
-
-4. s = OS2IP(s')
-
-5. Output gamma, c, and s
-
-## EC-VRF Proving
-
-ECVRF_PROVE(g^x, x, alpha)
-
-Input:
-
-> g^x - EC public key
-
-> x - EC private key
-
-> alpha - message to be signed, octet string
-
-Output:
-
-> pi - VRF proof, octet string (81 octets)
-
-> beta - VRF hash, octet string (32 octets)
-
-Steps:
-
-1. h = ECVRF_hash_to_curve(alpha)
-
-2. gamma = h^x
-
-3. choose a nonce k from \[0, q-1\]
-
-4. c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)
-
-5. s = k - c\*q mod q
-
-6. pi = ECP2OS(gamma) \|\| I2OSP(c, 16) \|\| I2OSP(s, 32)
-
-7. beta = h2(gamma)
-
-8. Output pi and beta
-
-## EC-VRF Proof To Hash
-
-ECVRF_PROOF2HASH(gamma)
-
-Input:
-
-> gamma - VRF proof, EC point in G with coordinates (x, y)
-
-Output:
-
-> beta - VRF hash, octet string (32 octets)
-
-Steps:
-
-1. beta = I2OSP(x, 32)
-
-2. Output beta
-
-Note: Because of the format of the compressed form of an elliptic
-curve, the hash can be retrieved from an encoded gamma simply by
-omitting the first octet of the gamma.
-
-## EC-VRF Verifying
-
-ECVRF_VERIFY(g^x, pi, alpha)
-
-Input:
-
-> g^x - EC public key
-
-> pi - VRF proof, octet string
-
-> alpha - message to verify, octet string
-
-Output:
-
-> "valid signature" or "invalid signature"
-
-> beta - VRF hash, octet string (32 octets)
-
-Steps:
-
-1. gamma, c, s = ECVRF_decode_proof(pi)
-
-2. u = (g^x)^c \* g^s
-
-3. h = ECVRF_hash_to_curve(alpha)
-
-4. v = gamma^c \* h^s
-
-5. c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)
-
-6. beta = ECVRF_PROOF2HASH(gamma)
-
-7. If c and c' are the same, output "valid signature";
-  else output "invalid signature". Output beta.
-
-[^CREF1]{: source="Jan"}
-
-[^CREF1]: TODO: check validity of gamma before hashing
 
 # Change Log
 
