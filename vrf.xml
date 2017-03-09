@@ -286,36 +286,40 @@
             obtained directly from the proof value pi.
         </t>
 
-        <t> The VRF computes the proof pi as a deterministic RSA signature on
-            input alpha using the RSA Full Domain Hash Algorithm 
-            <xref target="RFC3447" /> parametrized with
-            Hash, where Hash is a secure hash algorithm.   RSA signature
-            verification is used to verify the correctness of the proof.
-            The VRF hash output beta is simply given by Hash(pi). 
-        </t>
-    
         <t>
-            In this document, the notation from <xref target="RFC3447" /> is used.
+            This VRF is parametrized by a hash function. The chosen
+            function MUST be secure cryptographic hash function with
+            cryptographic security level at least as high as the cryptographic
+            security level of the RSA key.
+        </t>
+
+        <t>
+            The VRF computes the proof pi as a deterministic RSA signature on
+            input alpha using the RSA Full Domain Hash Algorithm
+            <xref target="RFC8017" /> parametrized with the selected hash algorithm.
+            RSA signature verification is used to verify the correctness of the
+            proof. The VRF hash output beta is simply hashed value of the proof pi.
+        </t>
+
+        <t>
+            In this document, the notation from <xref target="RFC8017" /> is used.
         </t>
 
         <t>
             Used parameters:
             <list>
-                <t>(N, e) - RSA public key</t>
-                <t>SK - RSA private key</t>
-                <t>n - length of the RSA modulus N in octets</t>
+                <!-- do not change the names, these are from RFC8017 -->
+                <t>(n, e) - RSA public key</t>
+                <t>K - RSA private key</t>
+                <t>k - length in octets of the RSA modulus n</t>
             </list>
         </t>
 
         <t>
             Fixed options:
             <list>
-                <t>Hash - secure cryptographic hash algorithm.  
-                The cryptographic security level
-                of this hash algorithm MUST be at least as high as 
-                the cryptographic security level of the RSA key.  
-                </t>
-                
+                <t>Hash - hash function</t>
+                <t>hLen - output length in octets of hash function Hash</t>
             </list>
         </t>
 
@@ -324,36 +328,36 @@
             <list>
                 <t>
                     I2OSP - Coversion of a nonnegative integer to an octet string as defined in
-                    Section 4.1 of <xref target="RFC3447" />
+                    Section 4.1 of <xref target="RFC8017" />
                 </t>
                 <t>
                     OS2IP - Coversion of an octet string to a nonnegative integer as defined in
-                    Section 4.2 of <xref target="RFC3447" />
+                    Section 4.2 of <xref target="RFC8017" />
                 </t>
                 <t>
                     RSASP1 - RSA signature primitive as defined in
-                    Section 5.2.1 of <xref target="RFC3447" />
+                    Section 5.2.1 of <xref target="RFC8017" />
                 </t>
                 <t>
                     RSAVP1 - RSA verification primitive as defined in
-                    Section 5.2.2 of <xref target="RFC3447" />
+                    Section 5.2.2 of <xref target="RFC8017" />
                 </t>
                 <t>
                     MGF1 - Mask Generation Function based on a hash function as defined in
-                    Section B.2.1 of <xref target="RFC3447" />
+                    Section B.2.1 of <xref target="RFC8017" />
                 </t>
             </list>
         </t>
 
         <section title="RSA-FDH-VRF Proving">
             <t>
-                RSAFDHVRF_prove(SK, alpha)
+                RSAFDHVRF_prove(K, alpha)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>SK - RSA private key</t>
+                    <t>K - RSA private key</t>
                     <t>alpha - VRF hash input, an octet string</t>
                 </list>
             </t>
@@ -361,17 +365,17 @@
             <t>
                 Output:
                 <list>
-                    <t>S - proof, an octet string of length n</t>
+                    <t>pi - proof, an octet string of length k</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>EM = MGF1(alpha, n - 1)</t>
+                    <t>EM = MGF1(alpha, k - 1)</t>
                     <t>m = OS2IP(EM)</t>
-                    <t>s = RSASP1(SK, m)</t>
-                    <t>pi = I2OSP(s, n)</t>
+                    <t>s = RSASP1(K, m)</t>
+                    <t>pi = I2OSP(s, k)</t>
                     <t>Output pi</t>
                 </list>
             </t>
@@ -385,23 +389,21 @@
             <t>
                 Input:
                 <list>
-                    <t>pi - proof, an octet string of length n</t>
+                    <t>pi - proof, an octet string of length k</t>
                 </list>
             </t>
             
             <t>
                 Output:
                 <list>
-                    <t>beta - VRF hash output</t>
+                    <t>beta - VRF hash output, an octet string of length hLen</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>beta = Hash(pi) <cref source="Sharon">Jan, Dimitris, 
-                    make sure I didn't miss some kind of string-to-int 
-                    conversion here...</cref></t>
+                    <t>beta = Hash(pi)</t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -409,13 +411,13 @@
 
         <section title="RSA-FDH-VRF Verifying">
             <t>
-                RSAFDHVRF_verify((N, e), alpha, pi)
+                RSAFDHVRF_verify((n, e), alpha, pi)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>(N, e) - RSA public key</t>
+                    <t>(n, e) - RSA public key</t>
                     <t>alpha - VRF hash input, an octet string</t>
                     <t>pi - proof to be verified, an octet string of length n</t>
                 </list>
@@ -432,9 +434,9 @@
                 Steps:
                 <list style="numbers">
                     <t>s = OS2IP(pi)</t>
-                    <t>m = RSAVP1((N, e), s)</t>
-                    <t>EM = I2OSP(m, n - 1)</t>
-                    <t>EM' = MGF1(alpha, n - 1)</t>
+                    <t>m = RSAVP1((n, e), s)</t>
+                    <t>EM = I2OSP(m, k - 1)</t>
+                    <t>EM' = MGF1(alpha, k - 1)</t>
                     <t>
                         If EM and EM' are the same, output "VALID";
                         else output "INVALID".
@@ -967,7 +969,7 @@
 
     <references title="Normative References">
         <?rfc include="reference.RFC.2119.xml"?>
-        <?rfc include="reference.RFC.3447.xml"?>
+        <?rfc include="reference.RFC.8017.xml"?>
         <?rfc include="reference.RFC.5114.xml"?>
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.7748.xml"?>
