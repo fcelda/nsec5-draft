@@ -1023,7 +1023,7 @@ about tightness, because there is simply no reduction.]
                     Added security definitions for VRF and security considerations.
                     Parameterized EC-VRF so it could support curves other than 
                     P-256 and Ed25519. 
-                </t>
+                </t> 
             </list>
         </t>
     </section>
