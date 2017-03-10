@@ -959,18 +959,17 @@
 
     </section>
     
-    <section title="Selective Pseudorandomness">
+    <section title="Selective vs Full Pseudorandomness">
     
     <t>The VRFs specificied in this section are believed to possess full
-pseudorandomness.
-	However, their selective pseudorandomness is quantitavely stronger
-than their full pseudorandomness,
-	in the sense that the cryptographic reduction to the underlying
-computationally hard problem--factoring
-	or decisional Diffie-Hellman--is tighter for selective
-pseudorandomness. Therefore,
-	applications that are concerned about tightness of cryptographic
-reductions have two options. First,
+    pseudorandomness. However, their selective pseudorandomness is quantitavely stronger
+    than their full pseudorandomness, in the sense that the cryptographic reduction to the underlying
+    computationally hard problem--factoring 	or decisional Diffie-Hellman--is tighter for selective
+    pseudorandomness.
+    </t>
+    
+    <t> Therefore, applications that are concerned about tightness of cryptographic
+    reductions have two options. First,
 	they may  ensure that selective pseudorandomness is sufficient for
 the application--that is, that
 	pseudorandomness of outputs matters only for inputs that are
@@ -979,14 +978,16 @@ independent of the VRF key. This is the case, for example,
 outputs matters only for the names in the
 	zone. Second, if they need full pseudorandomness, they may increase
 security parameters
-	to make up for the loose security reduction. [TODO: should we
+	to make up for the loose security reduction. 
+    </t>
+
+    <t> [TODO: should we
 provide some guidance on this security parameter issue? Honestly, this is
 well above and beyond what normal crypto standards do, because
 	no one really considers tightness of reductions in crypto
 standards, because ECDSA isn't even provable at all -- can't even talk
 about tightness, because there is simply no reduction.]
     </t>
-
     </section>
 
     </section>
