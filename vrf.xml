@@ -157,10 +157,11 @@
    <section title="VRF Algorithms">
    
    <t>
-   <cref source="Dimitris">Don't we need a KeyGen algorithm?</cref>
+   A VRF comes with a key generation algorithm that generates a public VRF 
+   key PK and private VRF key SK. 
    </t>
-      
-   <t>   
+   
+   <t>
    A VRF hashes an input alpha using the private VRF key SK to obtain a VRF 
    hash output beta:       
     <list>
@@ -481,14 +482,14 @@
 
     <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
 
-    	<t><cref source="Jan">We repeat these security properties here, 
+    	<!--<t><cref source="Jan">We repeat these security properties here, 
             although we already said that all VRF functions are required 
             to satisfy these properties. What about removing it here and 
             keep just the rough description, reference to the 
             security proof, and the optional properties (i.e. proof-to-hash)?</cref>
             <cref source="Sharon">Relevant because of trusted / full / selective
             qualifiers of the security definitions. </cref>
-        </t>
+        </t>-->
         
         <t>
             The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
@@ -507,7 +508,7 @@
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
                 <t>2n - length in octets of a single coordinate of an EC point in G</t>
-                 <t><cref source="Sharon">n is 16 octects for a 256 bit curve. this is probably
+                 <t><cref source="Sharon">n is 16 octects for a 256 bit curve. there is probably
                 a better way to word this.</cref></t>
                 <t><cref source="Jan">n is ceil(log2(q)/8) maybe?</cref></t>
                 <t><cref source="Dimitris">Technically yes but do we need to specify that? The ceil part might be confusing.</cref></t>
@@ -653,20 +654,20 @@
 
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
-            <t>The ECVRF_hash_to_curve algorithm takes in an octet string m
+            <t>The ECVRF_hash_to_curve algorithm takes in an octet string alpha
             and converts it to h, an EC point in G. </t>
             
-            <section title="ECVRF_hash_to_curve1(m)" anchor="ecvrfH2C1">
-            <cref source="Dimitris">Why introduce the m notation? Let's stick to alpha</cref>
+            <section title="ECVRF_hash_to_curve1" anchor="ecvrfH2C1">
+            
             <t>
-            The following ECVRF_hash_to_curve1(m) algorithm 
+            The following ECVRF_hash_to_curve1(alpha) algorithm 
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve that supports
             point compression.  
             </t>
             
             <t>
-            However, this ECVRF_hash_to_curve1(m) algorithm MUST NOT be used in 
+            However, this algorithm MUST NOT be used in 
             applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
@@ -678,12 +679,12 @@
             
             
             <t>
-                ECVRF_hash_to_curve1(m)
+                ECVRF_hash_to_curve1(alpha)
             </t>
             <t>
                 Input:
                 <list>
-                    <t>m - value to be hashed, an octet string</t>
+                    <t>alpha - value to be hashed, an octet string</t>
                 </list>
             </t>
             <t>
@@ -697,15 +698,16 @@
                 Steps:
                 <list style="numbers">
                     <t>c = 0</t>
-                    <t>Repeat:<list style="letters">
+                    <t>Repeat:
+                    <list style="letters">
                         <t>C = I2OSP(c, 4)</t>
-                        <t>p = 0x02 || Hash(m || C)</t>
-                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
-                        <cref source="Dimitris"> Do we need to provide a concrete algorithm for testing this? (or a reference to an RFC)</cref>
-                        <t>p = 0x03 || Hash(m || C)</t>
+                        <t>p = 0x02 || Hash(alpha || C)</t>
+                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G <cref source="Dimitris"> Do we need to provide a concrete algorithm for testing this?</cref></t>
+                        <t>p = 0x03 || Hash(alpha || C)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
                         <t>ctr = ctr + 1</t>
-                    </list></t>
+                    </list>
+                    </t>
                     <t>h = OS2ECP(p)</t>
                     <t>Output h</t>
                 </list>
@@ -721,7 +723,7 @@
             </section>
             
             
-            <section title="ECVRF_hash_to_curve2(m)">
+            <section title="ECVRF_hash_to_curve2">
             
             <t>For applications where VRF input alpha must be kept secret,
             the following ECVRF_hash_to_curve algorithm MAY be used to used as
@@ -730,9 +732,7 @@
             
             <t>[TODO: If there interest, we could look into specifying the 
             generic deterministic time hash_to_curve algorithm from 
-            <xref target="Icart09"/>.  However, at this point our team
-            does not understand this algorithm well enough to include it
-            in the spec.]
+            <xref target="Icart09"/>. ]
             </t>
             </section>
         </section>
@@ -764,8 +764,6 @@
                        <vspace/>P = P || ECP2OS(p_i)
                     </t>
                     <t>h' = Hash(P) 
-                    <cref source="Sharon">Hash is SHA-256 in the 
-                    P-256 reference implementation</cref>
                     </t>
                     <t>h = OS2IP(first n octets of h')</t>
                     <t>Output h</t>
@@ -859,7 +857,7 @@
         </t>
         <t>
             EC points are represented using point compression, as specified in 
-            TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
+            Section 2.3.3 of <xref target="SECG1" />.
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
@@ -870,9 +868,8 @@
         </list>
         </t>
    
-        <t>[TODO: Add an SHA256-Elligator-ED25519-EC-VRF 
+        <t>[TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF 
         ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?]
-        <cref source="Dimitris"> IMHO if we specify by the generic hash only by a reference, we should do the same for Elligator until we have a better understanding of its properties (maybe reach out to Trevor Perin?).</cref>
         </t>
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
@@ -896,7 +893,7 @@
     uses a VRF implemention that is almost identical to
     the SHA256-P256-EC-VRF specified here, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
-    is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/p256/p256" />
+    is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
     
     <t>
@@ -1049,11 +1046,14 @@ about tightness, because there is simply no reduction.]
 
     <section title="Contributors">
         <t>
-            Leonid Reyzin (Boston University) is an important contributor to this 
-            document. This document also would not be possible without help of
+            Leonid Reyzin (Boston University) made major contributions to this 
+            document. 
+            This document also would not be possible without the work of
             Moni Naor (Weizmann Institute),
             Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
+            Shumon Huque (Salesforce) and David C. Lawerence (Akamai) provided
+            valuable input to this draft.
         </t>
     </section>
 
