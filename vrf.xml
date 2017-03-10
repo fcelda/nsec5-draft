@@ -155,60 +155,40 @@
    </section>
    
    <section title="VRF Algorithms">
-   <t>
-   <cref source="Dimitris">Don't we need a KeyGen algorithm?</cref>'
-   <cref source="Jan">Can we put only the requirements here. And then have a separate subsection about additional possibly used properties that some VRFs have (e.g. proof to hash)?</cref>'
-   A VRF hashes an input alpha using the private key SK to obtain
    
+   <t>
+   <cref source="Dimitris">Don't we need a KeyGen algorithm?</cref>
+   </t>
+      
+   <t>   
+   A VRF hashes an input alpha using the private VRF key SK to obtain a VRF 
+   hash output beta:       
     <list>
     <t> beta = VRF_hash(SK, alpha) </t>
     </list>
-   
    The VRF_hash algorithm MUST be deterministic, in 
    the sense that it will always produce the same output beta given a 
    pair of inputs (SK, alpha).
-   
+      
    The private key SK is also used to construct a 
    proof pi that beta is the correct hash output 
    <list>
         <t>pi = VRF_prove(SK, alpha)</t>
    </list>
-   The proof pi is allows anyone holding the public key 
-   to verify that indeed beta is the correct hash of alpha
+   The VRFs defined in this document allow anyone to deterministically
+   obtain the VRF hash output beta directly from the proof value pi as
+   <list>
+   <t> beta = VRF_proof2hash(pi)</t>
+   </list>
+   The proof pi allows anyone holding the public key PK 
+   to verify that beta is the correct VRF hash of input alpha
    under key PK. Thus, the VRF also comes with an algorithm
    <list>
    <t>   VRF_verify(PK, alpha, beta, pi)</t>
    </list>
-   which outputs VALID when pi is a valid proof that 
-   beta is the correct VRF hash of alpha 
-   under key PK, and outputs INVALID otherwise.    
-   </t>
-   
-   <section title="VRF Proof-to-Hash Property">
-   
-   <t> Some VRFs support an additional property that allows anyone to
-   obtain the hash output beta directly from the proof value pi 
-   <list>
-   <t> beta = VRF_proof2hash(pi) </t>
-   </list>
-      The VRF_hash function is therefore given by
-   <list>
-        <t>beta = VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))</t>
-   </list>  
-   For these VRFs, the verification function only needs to take in the public 
-   key PK, the VRF input alpha, and the VRF proof pi, so that 
-   <list>
-   <t> VRF_verify(PK, alpha, pi) </t>
-   </list>
-   outputs VALID if beta=VRF_proof2hash(pi) is correct VRF hash of alpha 
-   under key PK, and outputs INVALID otherwise.
+   that outputs VALID if beta=VRF_proof2hash(pi) is correct 
+   VRF hash of alpha under key PK, and outputs INVALID otherwise.
    </t>   
-   
-   <t>
-   (Notice that any VRF can be made to satisfy this property by redefining the 
-   VRF proof value to include both beta and pi. )
-   </t>
-   </section>
    </section>
    
    
