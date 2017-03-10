@@ -180,11 +180,15 @@
    <list>
    <t> beta = VRF_proof2hash(pi)</t>
    </list>
+   Notice that this means that 
+   <list>
+   <t> VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))</t>
+   </list>
    The proof pi allows anyone holding the public key PK 
    to verify that beta is the correct VRF hash of input alpha
    under key PK. Thus, the VRF also comes with an algorithm
    <list>
-   <t>   VRF_verify(PK, alpha, beta, pi)</t>
+   <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
    that outputs VALID if beta=VRF_proof2hash(pi) is correct 
    VRF hash of alpha under key PK, and outputs INVALID otherwise.
@@ -199,47 +203,58 @@
    
    <t>
    <list style="hanging">
-	<t hangText="Full Uniqueness or Trusted Uniqueness:">
+   
+	<t hangText="Full Uniqueness:">
 	Uniqueness states that a computationally bounded adversary cannot
 	produce a VRF public key PK, input alpha, two different VRF hash
-outputs beta1 and beta2, and
-	two proofs pi1 and pi2 such that VRF_verify(PK, alpha, beta1, pi1)
-and VRF_verify(PK, alpha, beta2, pi2)
-	are both VALID. Thus, for any fixed public
+    outputs beta1 and beta2, and two proofs pi1 and pi2 such that 
+    VRF_verify(PK, alpha, beta1, pi1)
+    and VRF_verify(PK, alpha, beta2, pi2)
+	both output VALID.
+    </t>
+    
+    <t> Thus, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
-	output beta that can be proven valid by a computationally bounded
-	adversary. For most applications, a slightly weaker security
-property called "trusted uniquness"
-	is sufficient: it is the same as uniqueness, but is required to
-hold only if PK and SK
-	were generated in a trustworthy manner (i.e., it may not hold for
-invalidly generated keys).
+	output beta that can be proved to be valid, even a 
+    computationally-bounded adversary that knows the VRF secret key SK.
+    </t>
+
+    <t hangText="Trusted Uniqueness:">
+     For most applications, a slightly weaker security
+     property called "trusted uniquness" is sufficient: 
+     it is the same as uniqueness, but it must hold only if PK and SK
+	 were generated in a trustworthy manner (i.e., it may not hold if the keys
+     where generated in an invalid manner).
 	</t>
 	
 	<t hangText="Full Pseudorandomness or Selective Pseudorandomness:">
-	     Suppose the public and private VRF keys (PK, SK) were
-generated
-	     in a trustworthy manner.
+	     Suppose the public and private VRF keys (PK, SK) were generated
+	     in a trustworthy manner. 
+    </t>
+    
+    <t>
 	     Pseudorandomness ensures that the VRF hash output beta
-(without the corresponding proof) on
-	     any adversarially chosen input alpha
+         (without its corresponding VRF proof pi) on
+	     any adversarially-chosen VRF input alpha
 	     looks indistinguishable from random
-	     for any computationally bounded adversary who does not know
-SK. It holds even
-	     if the adversary also gets to observe VRF hash outputs and
-proofs
-	     for arbitrary other inputs of the adversary's choice. In its
-strong form,
-	     the definition of pseudorandomness permits the adversary to
-choose
-	     the target input alpha adaptively, after seeing VRF outputs
-and proofs on a variety
-	     of chosen inputs.
+	     for any computationally bounded adversary who does not know the private
+         VRF key SK.  This holds even if the adversary also gets to 
+         observe other VRF hash outputs beta' and corresponding proofs
+         pi' for any other VRF inputs alpha' chosen by the adversary.
+         </t>
+         
+         <t>   
+         Full pseudorandomness permits the adversary to
+         choose the target input alpha adaptively, after seeing VRF outputs
+         and proofs on a variety of chosen inputs.
+         </t>
+         
+         <t>
 	     A slightly weaker form called "selective pseudorandomness",
-which suffices in many applications,
+         which suffices in many applications,
 	     limits the adversary to choosing the target input alpha
-independently of the VRF PK and input/output behavior.
-	</t>
+         independently of the VRF PK and input/output behavior.
+	     </t>
 	
 	<t> 
 	It is important to remember that the VRF output beta does not 
