@@ -652,13 +652,20 @@
 
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
+            <t>The ECVRF_hash_to_curve algorithm takes in an octet string m
+            and converts it to h, an EC point in G. 
+            
+            <section title="ECVRF_hash_to_curve1(m)" anchor="ecvrfH2C1">
+            
             <t>
-            The following ECVRF_hash_to_curve algorithm provides a simple and
-            generic way to hash an octet string onto any elliptic curve.  
+            The following ECVRF_hash_to_curve1(m) algorithm 
+            implements ECVRF_hash_to_curve in a simple and
+            generic way that works for any elliptic curve that supports
+            point compression.  
             </t>
             
             <t>
-            However, this ECVRF_hash_to_curve algorithm MUST NOT be used in 
+            However, this ECVRF_hash_to_curve1(m) algorithm MUST NOT be used in 
             applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
@@ -668,8 +675,9 @@
             (i.e., when ctr=1) on average (see <xref target="Icart09"/>).
             </t>
             
+            
             <t>
-                ECVRF_hash_to_curve(m)
+                ECVRF_hash_to_curve1(m)
             </t>
             <t>
                 Input:
@@ -683,6 +691,7 @@
                     <t>h - hashed value, EC point in G</t>
                 </list>
             </t>
+            
             <t>
                 Steps:
                 <list style="numbers">
@@ -707,20 +716,23 @@
                 in step D represents negative y-coefficient.
             </t>
             
+            </section>
+            
+            
+            <section title="ECVRF_hash_to_curve2(m)">
+            
             <t>For applications where VRF input alpha must be kept secret,
             the following ECVRF_hash_to_curve algorithm MAY be used to used as
             generic way to hash an octet string onto any elliptic curve.
-            <cref source="Dimitris"> Is the above a typo? The ECVRF_hash_points algorithm is from points to octet.</cref>
-            
-            For applications where VRF input alpha must be kept secret,
-            the deterministic-time hash algorithm of 
-            <xref target="I-D.vcelak-nsec5"/> MAY be used 
-            as a generic way to hash an octet string onto any elliptic curve.
-            <cref source="Sharon"> D, I don't understand the above
-            sentence. There is no deterministic-time algo in the NSEC5 draft!?
-            </cref>
             </t>
             
+            <t>[TODO: If there interest, we could look into specifying the 
+            generic deterministic time hash_to_curve algorithm from 
+            <xref target="Icart09"/>.  However, at this point our team
+            does not understand this algorithm well enough to include it
+            in the spec.]
+            </t>
+            </section>
         </section>
 
         <section title="EC-VRF Hash Points">
@@ -817,10 +829,12 @@
         </t>
         
         <t>
-            EC points are represented using point compression as specified in <xref target="SECG1" /> (Section 2.3.3).
+            EC points are represented using point compression as specified in 
+            <xref target="SECG1" /> (Section 2.3.3).
         </t>
         <t>
-            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+            The ECVRF_hash_to_curve function is ECVRF_hash_to_curve1, 
+            as specified in <xref target="ecvrfH2C1"/>.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -846,7 +860,7 @@
             TBD. <cref source="Sharon">Dimitris and Jan to fill this in!</cref>
         </t>
         <t>
-            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -919,10 +933,6 @@
     proofs that keys
     have of the correct form.
     These modifications are left for future specification.
-    However, it is not possible to guarantee pseudorandomness in the face
-    of adversarially generated VRF keys.  This is because an adversary can
-    always use bad randomness to generate the VRF keys, and thus, the VRF 
-    output may not be pseudorandom.
     </t>
 
 
@@ -934,6 +944,13 @@
     zero-knowledge protocol fitted to security microprocessor minimizing
     both transmission and memory. In EUROCRYPT, 1988]
     </t>
+   
+    <t>
+     However, it is not possible to guarantee pseudorandomness in the face
+    of adversarially generated VRF keys.  This is because an adversary can
+    always use bad randomness to generate the VRF keys, and thus, the VRF 
+    output may not be pseudorandom.
+   </t>
     </section>
 
 
@@ -952,7 +969,7 @@
     <section title="Timing attacks">
     
     <t>The EC-VRF_hash_to_curve() algorithm defined in
-    <xref target="ecvrfH2C" /> should not be used in applications where
+    <xref target="ecvrfH2C1" /> should not be used in applications where
     the VRF input alpha is secret and is hashed by the VRF on-the-fly.
     This is because the EC-VRF_hash_to_curve() algorithm's running time depends
     on the VRF input alpha, and thus creates a timing channel that
