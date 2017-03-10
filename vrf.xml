@@ -510,6 +510,7 @@
                  <t><cref source="Sharon">n is 16 octects for a 256 bit curve. this is probably
                 a better way to word this.</cref></t>
                 <t><cref source="Jan">n is ceil(log2(q)/8) maybe?</cref></t>
+                <t><cref source="Dimitris">Technically yes but do we need to specify that? The ceil part might be confusing.</cref></t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of function Hash</t>
             </list>
@@ -656,7 +657,7 @@
             and converts it to h, an EC point in G. </t>
             
             <section title="ECVRF_hash_to_curve1(m)" anchor="ecvrfH2C1">
-            
+            <cref source="Dimitris">Why introduce the m notation? Let's stick to alpha</cref>
             <t>
             The following ECVRF_hash_to_curve1(m) algorithm 
             implements ECVRF_hash_to_curve in a simple and
@@ -700,6 +701,7 @@
                         <t>C = I2OSP(c, 4)</t>
                         <t>p = 0x02 || Hash(m || C)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
+                        <cref source="Dimitris"> Do we need to provide a concrete algorithm for testing this? (or a reference to an RFC)</cref>
                         <t>p = 0x03 || Hash(m || C)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
                         <t>ctr = ctr + 1</t>
@@ -708,7 +710,7 @@
                     <t>Output h</t>
                 </list>
             </t>
-
+            
             <t>
                 The initial octet 0x02 in the octet string created in step B
                 represents that the point in compressed form has positive
