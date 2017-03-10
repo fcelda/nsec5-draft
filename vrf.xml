@@ -570,7 +570,9 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(alpha) <cref source="Leo">Here we should 
+                    also include PK in the hash.  But we need to convert PK to an octet string
+                    first, right? Can someone else write this?</cref></t>
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
@@ -638,7 +640,9 @@
                         output "INVALID" and stop.
                     </t>
                     <t>u = (g^x)^c * g^s</t>
-                    <t>h = ECVRF_hash_to_curve(alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(alpha) <cref source="Leo">Here we should 
+                    also include PK in the hash.  But we need to convert PK to an octet string
+                    first, right? Can someone else write this?</cref></t>
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
                     <t>
