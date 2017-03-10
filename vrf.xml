@@ -987,8 +987,7 @@
     underlying hard problem (e.g. Decisional Diffie Hellman, or the 
     standard RSA assumption) that prove the VRFs specificied in this 
     document possess full pseudorandomness
-    as well as selective pseudorandomness.  However, these cryptographic 
-    reductions used to p
+    as well as selective pseudorandomness. 
     However, the cryptographic reductions are tighter for selective
     pseudorandomness than for full pseudorandomness.  This means the 
     the VRFs have quantitavely stronger security 
