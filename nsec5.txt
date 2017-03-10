@@ -37,7 +37,7 @@ Ed note
    Text inside square brackets ([]) is additional background
    information, answers to frequently asked questions, general musings,
    etc.  They will be removed before publication.  This document is
-   being collaborated on in Github at <https://github.com/fcelda/
+   being collaborated on in GitHub at <https://github.com/fcelda/
    nsec5-draft>.  The most recent version of the document, open issues,
    etc should all be available here.  The authors gratefully accept pull
    requests.
@@ -116,44 +116,44 @@ Internet-Draft                    NSEC5                       March 2017
 
        8.2.2.  No Data Response, Opt-Out In Effect . . . . . . . . .  14
      8.3.  Wildcard Responses  . . . . . . . . . . . . . . . . . . .  14
-     8.4.  Wildcard No Data Responses  . . . . . . . . . . . . . . .  14
-   9.  Authoritative Server Considerations . . . . . . . . . . . . .  15
-     9.1.  Zone Signing  . . . . . . . . . . . . . . . . . . . . . .  15
-       9.1.1.  Precomputing Closest Provable Encloser Proofs . . . .  16
+     8.4.  Wildcard No Data Responses  . . . . . . . . . . . . . . .  15
+   9.  Authoritative Server Considerations . . . . . . . . . . . . .  16
+     9.1.  Zone Signing  . . . . . . . . . . . . . . . . . . . . . .  16
+       9.1.1.  Precomputing Closest Provable Encloser Proofs . . . .  17
      9.2.  Zone Serving  . . . . . . . . . . . . . . . . . . . . . .  17
      9.3.  NSEC5KEY Rollover Mechanism . . . . . . . . . . . . . . .  18
-     9.4.  Secondary Servers . . . . . . . . . . . . . . . . . . . .  18
-     9.5.  Zones Using Unknown NSEC5 Algorithms  . . . . . . . . . .  18
-     9.6.  Dynamic Updates . . . . . . . . . . . . . . . . . . . . .  18
+     9.4.  Secondary Servers . . . . . . . . . . . . . . . . . . . .  19
+     9.5.  Zones Using Unknown NSEC5 Algorithms  . . . . . . . . . .  19
+     9.6.  Dynamic Updates . . . . . . . . . . . . . . . . . . . . .  19
    10. Resolver Considerations . . . . . . . . . . . . . . . . . . .  19
    11. Validator Considerations  . . . . . . . . . . . . . . . . . .  19
      11.1.  Validating Responses . . . . . . . . . . . . . . . . . .  19
      11.2.  Validating Referrals to Unsigned Subzones  . . . . . . .  20
-     11.3.  Responses With Unknown NSEC5 Algorithms  . . . . . . . .  20
-   12. Special Considerations  . . . . . . . . . . . . . . . . . . .  20
-     12.1.  Transition Mechanism . . . . . . . . . . . . . . . . . .  20
-     12.2.  Private NSEC5 keys . . . . . . . . . . . . . . . . . . .  20
+     11.3.  Responses With Unknown NSEC5 Algorithms  . . . . . . . .  21
+   12. Special Considerations  . . . . . . . . . . . . . . . . . . .  21
+     12.1.  Transition Mechanism . . . . . . . . . . . . . . . . . .  21
+     12.2.  Private NSEC5 keys . . . . . . . . . . . . . . . . . . .  21
      12.3.  Domain Name Length Restrictions  . . . . . . . . . . . .  21
-   13. Implementation Status . . . . . . . . . . . . . . . . . . . .  21
-   14. Performance Considerations  . . . . . . . . . . . . . . . . .  21
-   15. Security Considerations . . . . . . . . . . . . . . . . . . .  21
-     15.1.  Zone Enumeration Attacks . . . . . . . . . . . . . . . .  21
+   13. Implementation Status . . . . . . . . . . . . . . . . . . . .  22
+   14. Performance Considerations  . . . . . . . . . . . . . . . . .  22
+   15. Security Considerations . . . . . . . . . . . . . . . . . . .  22
+     15.1.  Zone Enumeration Attacks . . . . . . . . . . . . . . . .  22
      15.2.  Compromise of the Private NSEC5 Key  . . . . . . . . . .  22
-     15.3.  Key Length Considerations  . . . . . . . . . . . . . . .  22
-     15.4.  NSEC5 Hash Collisions  . . . . . . . . . . . . . . . . .  22
+     15.3.  Key Length Considerations  . . . . . . . . . . . . . . .  23
+     15.4.  NSEC5 Hash Collisions  . . . . . . . . . . . . . . . . .  23
    16. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
-   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  23
+   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  24
    18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
      18.1.  Normative References . . . . . . . . . . . . . . . . . .  24
-     18.2.  Informative References . . . . . . . . . . . . . . . . .  25
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  27
-     A.1.  Name Error Example  . . . . . . . . . . . . . . . . . . .  27
-     A.2.  No Data Example, Opt-Out Not In Effect  . . . . . . . . .  28
-     A.3.  No Data Example, Opt-Out In Effect  . . . . . . . . . . .  28
-     A.4.  Wildcard Example  . . . . . . . . . . . . . . . . . . . .  28
-     A.5.  Wildcard No Data Example  . . . . . . . . . . . . . . . .  29
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  29
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
+     18.2.  Informative References . . . . . . . . . . . . . . . . .  26
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  28
+     A.1.  Name Error Example  . . . . . . . . . . . . . . . . . . .  28
+     A.2.  No Data Example, Opt-Out Not In Effect  . . . . . . . . .  29
+     A.3.  No Data Example, Opt-Out In Effect  . . . . . . . . . . .  29
+     A.4.  Wildcard Example  . . . . . . . . . . . . . . . . . . . .  29
+     A.5.  Wildcard No Data Example  . . . . . . . . . . . . . . . .  30
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  30
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 1.  Introduction
 
@@ -655,17 +655,17 @@ Internet-Draft                    NSEC5                       March 2017
 
    Facts to prove:
 
-      No RRset matching the QNAME exists.
+      Non-existence of RRset that explictly matches the QNAME.  [Shumon,
+      Dave, check this terminology.]
 
-      No RRset matching the QNAME via wildcard expansion exists.
+      Non-existence of RRset that matches QNAME via wildcard expansion.
+      [Shumon, Dave, check this terminology.]
 
-      The QNAME does not fall into a delegation.
+      The QNAME does not fall into a delegation.  [Shumon, Dave, check
+      this terminology. "fall into"?]
 
       The QNAME does not fall into a DNAME redirection.
 
-   Authoritative server proofs:
-
-      NSEC5PROOF for closest encloser and matching NSEC5 RR.
 
 
 
@@ -674,19 +674,24 @@ Vcelak, et al.         Expires September 11, 2017              [Page 12]
 Internet-Draft                    NSEC5                       March 2017
 
 
+   Authoritative server proofs:
+
+      NSEC5PROOF for closest encloser and matching NSEC5 RR.
+
       NSEC5PROOF for next closer name and covering NSEC5 RR.
 
    Validator checks:
 
       Closest encloser is in the zone.
 
-      Closest encloser has the Wildcard flag cleared.
+      The NSEC5 RR matching the closest encloser has its Wildcard flag
+      cleared.
 
-      Closest encloser does not have NS without SOA in the Type Bit Map.
+      The NSEC5 RR matching the closest encloser does not have NS
+      without SOA in the Type Bit Map.
 
-      Closest encloser does not have DNAME in the Type Bit Maps.
-
-      Next closer name is derived correctly.
+      The NSEC5 RR matching the closest encloser does not have DNAME in
+      the Type Bit Map.
 
       Next closer name is not in the zone.
 
@@ -703,11 +708,11 @@ Internet-Draft                    NSEC5                       March 2017
 
    Facts to prove:
 
-      An RRset matching the QNAME exists.
+      Existence of an RRset explicitly matching the QNAME.
 
-      No QTYPE RRset matching the QNAME exists.
+      Non-existence of QTYPE RRset matching the QNAME.
 
-      No CNAME RRset matching the QNAME exists.
+      Non-existence of CNAME RRset matching the QNAME.
 
    Authoritative server proofs:
 
@@ -715,12 +720,7 @@ Internet-Draft                    NSEC5                       March 2017
 
    Validator checks:
 
-      The QNAME is in the zone.
-
-      The QNAME does not have QTYPE in the Type Bit Map.
-
-      The QNAME does not have CNAME in the Type Bit Map.
-
+      QNAME is in the zone.
 
 
 
@@ -730,7 +730,14 @@ Vcelak, et al.         Expires September 11, 2017              [Page 13]
 Internet-Draft                    NSEC5                       March 2017
 
 
+      NSEC5 RR matching the QNAME does not have QTYPE in Type Bit Map.
+
+      NSEC5 RR matching the QNAME does not have CNAME in Type Bit Map.
+
 8.2.2.  No Data Response, Opt-Out In Effect
+
+   [Sharon has no idea how this works, someone else should check this
+   for correctness!]
 
    Facts to prove:
 
@@ -744,39 +751,32 @@ Internet-Draft                    NSEC5                       March 2017
 
       Closest provable encloser is in zone.
 
-      Closest provable encloser covers (not matches) the QNAME.
+      Closest provable encloser covers (not matches) the QNAME.  [Sharon
+      says that this terminology "covers (not matches)" is really
+      confusing to me.  What does "covers" mean in the context of a DNS
+      name?  Is this defined in some other RFC?  If so, maybe we should
+      point to that other RFC?]
 
-      Closest provable encloser has the Opt-Out flag set.
+      NSEC5 RR matching the closest provable encloser has Opt-Out flag
+      set.
 
 8.3.  Wildcard Responses
 
    Facts to prove:
 
-      No RRset matching the QNAME exists.
+      Non-existence of RRset matching the QNAME.
 
-      No wildcard closer to the QNAME exists.
+      Non-existence of wildcard closer to the QNAME.  [Sharon says: what
+      does "wildcard closer to the QNAME" actually mean?  Probably there
+      is a better way to say this.]
+
+      Existence of the wildcard expansion of the QNAME.  [Sharon added
+      this.  Check it please!]
 
    Authoritative server proofs:
 
       NSEC5PROOF for next closer name and covering NSEC5 RR.
 
-   Validator checks:
-
-      Next closer name is derived correctly.
-
-      Next closer name is not in the zone.
-
-8.4.  Wildcard No Data Responses
-
-   Facts to prove:
-
-      No RRset matching the QNAME exists.
-
-      No QTYPE RRset exists at the wildcard matching the QNAME.
-
-      No CNAME RRset exists at the wildcard matching the QNAME.
-
-      No wildcard closer to the QNAME exists.
 
 
 
@@ -785,6 +785,36 @@ Vcelak, et al.         Expires September 11, 2017              [Page 14]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+      A signed positive response for the wildcard expansion of the
+      QNAME, as specified in [RFC4035].  [Sharon says: Guys, please
+      check this, both the language and the pointer to the RFC.  I added
+      this based on stuff in that chat window from 3/10/2017.]
+
+   Validator checks:
+
+      Next closer name is not in the zone.
+
+      [Something here about the positive response.  Not sure what.]
+
+8.4.  Wildcard No Data Responses
+
+   [Sharon says: please check again this section, as I am not sure I
+   understand it!]
+
+   Facts to prove:
+
+      Non-existence of RRset that explictly matches the QNAME.  [Shumon,
+      Dave, check this terminology.]
+
+      Non-existence of QTYPE RRset that matches QNAME via wildcard
+      expansion.  [Shumon, Dave, check this terminology.]
+
+      Non-existence of CNAME RRset that matches QNAME via wildcard
+      expansion.
+
+      No wildcard closer to the QNAME exists.  [Sharon says as before I
+      don't understand what this means.]
 
    Authoritative server proofs:
 
@@ -795,13 +825,22 @@ Internet-Draft                    NSEC5                       March 2017
 
    Validator checks:
 
-      Source of synthesis matches the QNAME.
+      Source of synthesis matches the QNAME.  [Sharon says: again, I'm
+      not sure what this means.  Are we saying "Source of synthesis
+      matches QNAME via wildcard expansion." ?]
 
-      Source of synthesis does not have QTYPE in the Type Bit Map.
+      NSEC5 RR matching source of synthesis does not have QTYPE in Type
+      Bit Map.
 
-      Source of synthesis does not have CNAME in the Type Bit Map.
+      NSEC5 RR matching source of synthesis does not have CNAME in Type
+      Bit Map.
 
-      Next closer name is derived correctly.
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 15]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
       Next closer name is not in the zone.
 
@@ -835,13 +874,6 @@ Internet-Draft                    NSEC5                       March 2017
        non-terminal, add an NSEC5 RR.  If Opt-Out is used, owner names
        of unsigned delegations MAY be excluded.
 
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 15]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
        A.  The owner name of the NSEC5 RR is the NSEC5 hash of the
        original owner name encoded in Base32hex without padding,
        prepended as a single label to the zone name.
@@ -858,6 +890,13 @@ Internet-Draft                    NSEC5                       March 2017
 
        D.  Set the Next Length field to a value determined by the used
        NSEC5 algorithm.  Leave the Next Hashed Owner Name field blank.
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 16]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
        E.  Set the Type Bit Maps field based on the RRsets present at
        the original owner name.
@@ -889,15 +928,6 @@ Internet-Draft                    NSEC5                       March 2017
    corresponding to the closest provable encloser MAY be precomputed and
    stored as part of zone signing.
 
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 16]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    Precomputing NSEC5PROOF RRs can halve the number of online
    cryptographic computations required when responding to a negative
    query.  NSEC5PROOF RRs MAY be precomputed as part of zone signing as
@@ -916,6 +946,14 @@ Internet-Draft                    NSEC5                       March 2017
 
    According to the type of a response, an authoritative server MUST
    include NSEC5 RRs in the response, as defined in Section 8.  For each
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 17]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    NSEC5 RR in the response, a corresponding RRSIG RRset and an
    NSEC5PROOF MUST be added as well.  The NSEC5PROOF RR has its owner
    name set to the domain name required according to the description in
@@ -943,17 +981,6 @@ Internet-Draft                    NSEC5                       March 2017
    existence.  The desired behavior caused by this paradox is the same
    as described in Section 7.2.8 of [RFC5155].
 
-
-
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 17]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
 9.3.  NSEC5KEY Rollover Mechanism
 
    Replacement of the NSEC5 key implies generating a new NSEC5 chain.
@@ -975,6 +1002,13 @@ Internet-Draft                    NSEC5                       March 2017
    The minimum delay between steps 1 and 2 MUST be the time it takes for
    the data to propagate to the authoritative servers, plus the TTL
    value of the old NSEC5KEY RRset.
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 18]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    The minimum delay between steps 2 and 3 MUST be the time it takes for
    the data to propagate to the authoritative servers, plus the maximum
@@ -1001,15 +1035,6 @@ Internet-Draft                    NSEC5                       March 2017
    changes to the zone MUST be performed in a way that ensures that the
    zone satisfies the properties specified in Section 9.1 at any time.
    The process described in [RFC5155] Section 7.5 describes how to
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 18]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    handle the issues surrounding the handling of empty non-terminals as
    well as Opt-Out.
 
@@ -1032,6 +1057,14 @@ Internet-Draft                    NSEC5                       March 2017
 
    The validator MUST ignore NSEC5 RRs with Flags field values other
    than the ones defined in Section 6.2.
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 19]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    The validator MAY treat responses as bogus if the response contains
    NSEC5 RRs that refer to a different NSEC5KEY.
@@ -1058,14 +1091,6 @@ Internet-Draft                    NSEC5                       March 2017
 
    3.  Compute the NSEC5 hash value from the NSEC5 proof and check if
        the response contains NSEC5 RR matching or covering the computed
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 19]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
        NSEC5 hash.  The TTL values of the NSEC5 and NSEC5PROOF RRs must
        be the same.
 
@@ -1084,6 +1109,18 @@ Internet-Draft                    NSEC5                       March 2017
 
    The same considerations as defined in Section 8.9 of [RFC5155] for
    NSEC3 apply to NSEC5.
+
+
+
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 20]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
 11.3.  Responses With Unknown NSEC5 Algorithms
 
@@ -1111,17 +1148,6 @@ Internet-Draft                    NSEC5                       March 2017
    The private NSEC5 key MAY be shared between multiple zones, however a
    separate key is RECOMMENDED for each zone.
 
-
-
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 20]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
 12.3.  Domain Name Length Restrictions
 
    NSEC5 creates additional restrictions on domain name lengths.  In
@@ -1139,6 +1165,18 @@ Internet-Draft                    NSEC5                       March 2017
    which includes the length field of a single octet.  The maximum
    length of the zone name in wire format using the 256-bit hash is
    therefore 202 octets (255 - 53).
+
+
+
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 21]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
 13.  Implementation Status
 
@@ -1170,14 +1208,6 @@ Internet-Draft                    NSEC5                       March 2017
    corresponds to a given domain name.  The only way it can learn the
    NSEC5 proof value for a domain name is by querying the authoritative
    server for that name.  Without the NSEC5 proof value, the attacker
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 21]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    cannot learn the NSEC5 hash value.  Thus, even an attacker that
    collects the entire chain of NSEC5 RR for a zone cannot use offline
    attacks to "reverse" that NSEC5 hash values in these NSEC5 RR and
@@ -1196,6 +1226,14 @@ Internet-Draft                    NSEC5                       March 2017
    integrity of the zone.  An adversary that learns the private NSEC5
    key can, however, perform offline zone-enumeration attacks.  For this
    reason, the private NSEC5 key need only be as secure as the DNSSEC
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 22]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    records whose privacy (against zone enumeration) is being protected
    by NSEC5.  A formal cryptographic proof of this property is in
    [nsec5] and [nsec5ecc].
@@ -1226,14 +1264,6 @@ Internet-Draft                    NSEC5                       March 2017
    existence of the colliding QNAME.  However, the NSEC5 VRFs ensure
    that obtaining such a collision is as difficult as obtaining a
    collision in the SHA-256 hash function, requiring approximately 2^128
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 22]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    effort.  Note that DNSSEC already relies on the assumption that a
    cryptographic hash function is collision-resistant, since these hash
    functions are used for generating and validating signatures and DS
@@ -1250,6 +1280,15 @@ Internet-Draft                    NSEC5                       March 2017
       NSEC5 value TBD.
 
       NSEC5PROOF value TBD.
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 23]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    This document creates a new IANA registry for NSEC5 algorithms.  This
    registry is named "DNSSEC NSEC5 Algorithms".  The initial content of
@@ -1279,17 +1318,6 @@ Internet-Draft                    NSEC5                       March 2017
    Duane Wessels (Verisign Labs) provided advice on the implementation
    of NSEC5, and assisted with evaluating its performance.
 
-
-
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 23]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
 18.  References
 
 18.1.  Normative References
@@ -1309,6 +1337,14 @@ Internet-Draft                    NSEC5                       March 2017
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
               November 1987, <http://www.rfc-editor.org/info/rfc1035>.
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 24]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1338,14 +1374,6 @@ Internet-Draft                    NSEC5                       March 2017
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <http://www.rfc-editor.org/info/rfc4034>.
 
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 24]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
@@ -1364,6 +1392,15 @@ Internet-Draft                    NSEC5                       March 2017
               Security (DNSSEC) Hashed Authenticated Denial of
               Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
               <http://www.rfc-editor.org/info/rfc5155>.
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 25]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
@@ -1395,13 +1432,6 @@ Internet-Draft                    NSEC5                       March 2017
               NLNetLabs, "ldns", 2015,
               <http://git.nlnetlabs.nl/ldns/tree/examples/ldns-walk.c>.
 
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 25]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999.
 
@@ -1417,6 +1447,16 @@ Internet-Draft                    NSEC5                       March 2017
               Wander, M., Schwittmann, L., Boelmann, C., and T. Weis,
               "GPU-Based NSEC3 Hash Breaking", in IEEE Symp. Network
               Computing and Applications (NCA), 2014.
+
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 26]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    [nsec3map]
               anonion0, "nsec3map with John the Ripper plugin", 2015,
@@ -1453,7 +1493,23 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 26]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vcelak, et al.         Expires September 11, 2017              [Page 27]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1509,7 +1565,7 @@ A.1.  Name Error Example
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 27]
+Vcelak, et al.         Expires September 11, 2017              [Page 28]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1565,7 +1621,7 @@ A.4.  Wildcard Example
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 28]
+Vcelak, et al.         Expires September 11, 2017              [Page 29]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1621,7 +1677,7 @@ Appendix B.  Change Log
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 29]
+Vcelak, et al.         Expires September 11, 2017              [Page 30]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1677,7 +1733,7 @@ Authors' Addresses
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 30]
+Vcelak, et al.         Expires September 11, 2017              [Page 31]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1733,4 +1789,4 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 31]
+Vcelak, et al.         Expires September 11, 2017              [Page 32]

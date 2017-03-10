@@ -206,7 +206,7 @@ Lies.
 Text inside square brackets (\[\]) is additional background
 information, answers to frequently asked questions, general musings,
 etc.  They will be removed before publication.  This document is being
-collaborated on in Github at
+collaborated on in GitHub at
 \<https://github.com/fcelda/nsec5-draft\>.  The most recent version of
 the document, open issues, etc should all be available here.  The
 authors gratefully accept pull requests.
@@ -654,11 +654,11 @@ and Next Hashed Owner Name.
 
 Facts to prove:
 
-> Non-existence of RRset that explictly matches the QNAME.  [Shumon, Dave, check this terminology.]
+> Non-existence of RRset that explictly matches the QNAME.  \[Shumon, Dave, check this terminology.]
 
-> Non-existence of RRset that matches QNAME via wildcard expansion. [Shumon, Dave, check this terminology.]
+> Non-existence of RRset that matches QNAME via wildcard expansion. \[Shumon, Dave, check this terminology.]
 
-> The QNAME does not fall into a delegation. [Shumon, Dave, check this terminology. "fall into"?]
+> The QNAME does not fall into a delegation. \[Shumon, Dave, check this terminology. "fall into"?]
 
 > The QNAME does not fall into a DNAME redirection.
 
@@ -715,7 +715,7 @@ Validator checks:
 
 ### No Data Response, Opt-Out In Effect
 
-[Sharon has no idea how this works, someone else should check this for correctness!]
+\[Sharon has no idea how this works, someone else should check this for correctness!]
 
 Facts to prove:
 
@@ -729,7 +729,7 @@ Validator checks:
 
 > Closest provable encloser is in zone.
 
-> Closest provable encloser covers (not matches) the QNAME.  [Sharon says that 
+> Closest provable encloser covers (not matches) the QNAME.  \[Sharon says that 
 this terminology "covers (not matches)" is really confusing to me.  What does
 "covers" mean in the context of a DNS name? Is this defined in some other
 RFC? If so, maybe we should point to that other RFC?]
@@ -742,10 +742,10 @@ Facts to prove:
 
 > Non-existence of RRset matching the QNAME.
 
-> Non-existence of wildcard closer to the QNAME.  [Sharon says: what does "wildcard 
+> Non-existence of wildcard closer to the QNAME.  \[Sharon says: what does "wildcard 
 closer to the QNAME" actually mean? Probably there is a better way to say this.]
 
-> Existence of the wildcard expansion of the QNAME. [Sharon added this. Check 
+> Existence of the wildcard expansion of the QNAME. \[Sharon added this. Check 
 it please!]
 
 Authoritative server proofs:
@@ -753,7 +753,7 @@ Authoritative server proofs:
 > NSEC5PROOF for next closer name and covering NSEC5 RR.
 
 > A signed positive response for the wildcard expansion of the QNAME, 
-  as specified in <xref target="RFC4035"/>. [Sharon says: Guys, please check this, 
+  as specified in <xref target="RFC4035"/>. \[Sharon says: Guys, please check this, 
   both the language and the pointer to the RFC. I added this based on 
   stuff in that chat window from 3/10/2017.]
 
@@ -763,21 +763,21 @@ Validator checks:
 
 > Next closer name is not in the zone.
 
-> [Something here about the positive response. Not sure what.]
+> \[Something here about the positive response. Not sure what.]
 
 ## Wildcard No Data Responses
 
-[Sharon says: please check again this section, as I am not sure I understand it!]
+\[Sharon says: please check again this section, as I am not sure I understand it!]
 
 Facts to prove:
 
-> Non-existence of RRset that explictly matches the QNAME.  [Shumon, Dave, check this terminology.]
+> Non-existence of RRset that explictly matches the QNAME.  \[Shumon, Dave, check this terminology.]
 
-> Non-existence of QTYPE RRset that matches QNAME via wildcard expansion. [Shumon, Dave, check this terminology.]
+> Non-existence of QTYPE RRset that matches QNAME via wildcard expansion. \[Shumon, Dave, check this terminology.]
 
 > Non-existence of CNAME RRset that matches QNAME via wildcard expansion. 
 
-> No wildcard closer to the QNAME exists.  [Sharon says as before I don't understand
+> No wildcard closer to the QNAME exists.  \[Sharon says as before I don't understand
 what this means.]
 
 Authoritative server proofs:
@@ -789,7 +789,7 @@ encloser) and matching NSEC5 RR.
 
 Validator checks:
 
-> Source of synthesis matches the QNAME. [Sharon says: again, I'm not sure what 
+> Source of synthesis matches the QNAME. \[Sharon says: again, I'm not sure what 
 this means. Are we saying "Source of synthesis matches QNAME via wildcard expansion." ?]
 
 > NSEC5 RR matching source of synthesis does not have QTYPE in Type Bit Map.
