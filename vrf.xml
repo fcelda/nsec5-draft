@@ -653,7 +653,7 @@
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>The ECVRF_hash_to_curve algorithm takes in an octet string m
-            and converts it to h, an EC point in G. 
+            and converts it to h, an EC point in G. </t>
             
             <section title="ECVRF_hash_to_curve1(m)" anchor="ecvrfH2C1">
             
