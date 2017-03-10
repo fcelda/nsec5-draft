@@ -204,7 +204,7 @@
    <t>
    <list style="hanging">
    
-	<t hangText="Full Uniqueness:">
+	<t hangText="Full Uniqueness and Trusted Uniqueness:">
 	Uniqueness states that a computationally bounded adversary cannot
 	produce a VRF public key PK, input alpha, two different VRF hash
     outputs beta1 and beta2, and two proofs pi1 and pi2 such that 
@@ -215,11 +215,11 @@
     
     <t> Thus, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
-	output beta that can be proved to be valid, even a 
+	output beta that can be proved to be valid, even for a 
     computationally-bounded adversary that knows the VRF secret key SK.
     </t>
 
-    <t hangText="Trusted Uniqueness:">
+    <t>
      For most applications, a slightly weaker security
      property called "trusted uniquness" is sufficient: 
      it is the same as uniqueness, but it must hold only if PK and SK
@@ -308,9 +308,7 @@ for invalidly generated keys).
             the trusted uniqueness, full pseudorandomness, and trusted
             collision resistance properties.  Its security follows from the
             standard RSA assumption in the random oracle model.  Formal
-            security proofs are in <xref target="nsec5ecc" />.  This VRF also
-            supports the VRF proof-to-hash property, that allows the hash
-            output beta to be obtained directly from the proof value pi.
+            security proofs are in <xref target="nsec5ecc" />.  
         </t>
 
         <t>
@@ -325,7 +323,8 @@ for invalidly generated keys).
             input alpha using the RSA Full Domain Hash Algorithm
             <xref target="RFC8017" /> parametrized with the selected hash algorithm.
             RSA signature verification is used to verify the correctness of the
-            proof. The VRF hash output beta is simply hashed value of the proof pi.
+            proof. The VRF hash output beta is simply obtained by hashing 
+            the proof pi with the selected hash algorithm.
         </t>
 
         <t>
@@ -476,17 +475,22 @@ for invalidly generated keys).
 
     <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
 
-    	<t><cref source="Jan">We repeat these security properties here, although we already said that all VRF functions are required to satisfy these properties. What about removing it here and keep just the rough description, reference to the security proof, and the optional properties (i.e. proof-to-hash)?</cref></t>
-
+    	<t><cref source="Jan">We repeat these security properties here, 
+            although we already said that all VRF functions are required 
+            to satisfy these properties. What about removing it here and 
+            keep just the rough description, reference to the 
+            security proof, and the optional properties (i.e. proof-to-hash)?</cref>
+        <cref source="Sharon">Relevant because of trusted / full / selective
+        qualifiers of the security definitions. </cref>
+        </t>
+        
         <t>
             The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
             satisfies the trusted uniqueness, full pseudorandomness, and
             trusted collision resistance properties.  The security of this VRF
             follows from the decisional Diffie-Hellman (DDH) assumption in the
             cyclic group in the random oracle model. Formal security proofs are
-            in <xref target="nsec5ecc" />.  This VRF also supports the
-            proof-to-hash  property, that allows the hash output beta to be
-            obtained directly from the proof value pi.
+            in <xref target="nsec5ecc" />.  
         </t>
 
         <t>
@@ -985,10 +989,10 @@ about tightness, because there is simply no reduction.]
 
     <section title="Contributors">
         <t>
-            This document would not be possible without help of
+            Leonid Reyzin (Boston University) is an important contributor to this 
+            document. This document also would not be possible without help of
             Moni Naor (Weizmann Institute),
-            Sachin Vasant (Cisco Systems),
-            Leonid Reyzin (Boston University), and
+            Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
         </t>
     </section>
