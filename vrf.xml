@@ -919,8 +919,10 @@
     proofs that keys
     have of the correct form.
     These modifications are left for future specification.
-    However, no modification can guarantee pseudorandomness in the face
-    of adversarially generated VRF keys.
+    However, it is not possible to guarantee pseudorandomness in the face
+    of adversarially generated VRF keys.  This is because an adversary can
+    always use bad randomness to generate the VRF keys, and thus, the VRF 
+    output may not be pseudorandom.
     </t>
 
 
@@ -961,26 +963,40 @@
     
     <section title="Selective vs Full Pseudorandomness">
     
-    <t>The VRFs specificied in this section are believed to possess full
-    pseudorandomness. However, their selective pseudorandomness is quantitavely stronger
-    than their full pseudorandomness, in the sense that the cryptographic reduction to the underlying
-    computationally hard problem--factoring 	or decisional Diffie-Hellman--is tighter for selective
-    pseudorandomness.
+    <t><xref target="nsec5ecc"/>presents cryptographic reductions to an 
+    underlying hard problem (e.g. Decisional Diffie Hellman, or the 
+    standard RSA assumption) that prove the VRFs specificied in this 
+    document possess full pseudorandomness
+    as well as selective pseudorandomness.  However, these cryptographic 
+    reductions used to p
+    However, the cryptographic reductions are tighter for selective
+    pseudorandomness than for full pseudorandomness.  This means the 
+    the VRFs have quantitavely stronger security 
+    guarentees for selective pseudorandomness. 
     </t>
     
-    <t> Therefore, applications that are concerned about tightness of cryptographic
-    reductions have two options. First,
-	they may  ensure that selective pseudorandomness is sufficient for
-the application--that is, that
-	pseudorandomness of outputs matters only for inputs that are
-independent of the VRF key. This is the case, for example,
+    <t> Applications that are concerned about tightness of cryptographic
+    reductions therefor have two options.
+    
+    <list style="symbols">
+    <t> They may choose to ensure that selective pseudorandomness is sufficient for
+    the application. That is, that
+	pseudorandomness of outputs matters only for inputs that are chosen
+    independently of the VRF key. This is the case, for example,
 	in a typical NSEC5 application, in which pseudorandomness of
-outputs matters only for the names in the
-	zone. Second, if they need full pseudorandomness, they may increase
-security parameters
-	to make up for the loose security reduction. 
+    outputs matters only for the names in the
+	zone.</t>
+    <t>If full pseudorandomness is required for the application, the application
+    may increase
+    security parameters to make up for the loose security reduction. 
+    For RSA-FDH-VRF, this means increasing the RSA key length. For 
+    EC-VRF, this means increasing the cryptographic strength of the EC group
+    G. For both RSA-FDH-VRF and EC-VRF the cryptographic strength of the 
+    hash function Hash may also potentially need to be increased.
     </t>
-
+    </list>
+    </t>
+    
     <t> [TODO: should we
 provide some guidance on this security parameter issue? Honestly, this is
 well above and beyond what normal crypto standards do, because
@@ -1004,7 +1020,7 @@ about tightness, because there is simply no reduction.]
                 <t>
                     00 - Forked this document from draft-vcelak-nsec5-04. 
                     Cleaned up the definitions of VRF algorithms.
-                    Added security definitions for VRF.
+                    Added security definitions for VRF and security considerations.
                     Parameterized EC-VRF so it could support curves other than 
                     P-256 and Ed25519. 
                 </t>
