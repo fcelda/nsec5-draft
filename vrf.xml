@@ -647,12 +647,13 @@ for invalidly generated keys).
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>
-            The following ECVRF_hash_points algorithm provides a simple and
+            The following ECVRF_hash_to_curve algorithm provides a simple and
             generic way to hash an octet string onto any elliptic curve.  
             </t>
             
             <t>
-            However, this ECVRF_hash_points algorithm MUST NOT be used in applications where
+            However, this ECVRF_hash_to_curve algorithm MUST NOT be used in 
+            applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
             timing attacks.  That said, the amount of information obtained from
@@ -701,12 +702,17 @@ for invalidly generated keys).
             </t>
             
             <t>For applications where VRF input alpha must be kept secret,
-            the following ECVRF_hash_points algorithm MAY be used to used as
+            the following ECVRF_hash_to_curve algorithm MAY be used to used as
             generic way to hash an octet string onto any elliptic curve.
             <cref source="Dimitris"> Is the above a typo? The ECVRF_hash_points algorithm is from points to octet.</cref>
             
             For applications where VRF input alpha must be kept secret,
-            the deterministic-time hash algorithm of <xref target="I-D.vcelak-nsec5"/> MAY be used as a generic way to hash an octet string onto any elliptic curve.
+            the deterministic-time hash algorithm of 
+            <xref target="I-D.vcelak-nsec5"/> MAY be used 
+            as a generic way to hash an octet string onto any elliptic curve.
+            <cref source="Sharon"> D, I don't understand the above
+            sentence. There is no deterministic-time algo in the NSEC5 draft!?
+            </cref>
             </t>
             
         </section>
