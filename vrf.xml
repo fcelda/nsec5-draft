@@ -329,6 +329,11 @@
         </t>
 
         <t>
+            The key pair for RSA-FDH-VRF MUST be generated in a way that it satisfies
+            the conditions specified in Section 3 of <xref target="RFC8017" />.
+        </t>
+
+        <t>
             In this document, the notation from <xref target="RFC8017" /> is used.
         </t>
 
@@ -500,6 +505,11 @@
             follows from the decisional Diffie-Hellman (DDH) assumption in the
             cyclic group in the random oracle model. Formal security proofs are
             in <xref target="nsec5ecc" />.  
+        </t>
+
+        <t>
+            The key pair generation primitive is specified in
+            Section 3.2.1 of <xref target="SECG1" />.
         </t>
 
         <t>
