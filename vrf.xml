@@ -108,11 +108,13 @@
    the prover) can be made about the data stored in the data strucuture.
    </t>
 
+   <!--
    <t>
        VRFs are used for this purpose to prevent zone content enumeration in
        Domain Name System Security Extensions (DNSSEC) with NSEC5 Authenticated
        Denial of Existence <xref target="I-D.vcelak-nsec5"/>.
    </t>
+   -->
 
    </section>
    
@@ -1001,10 +1003,13 @@
     <t> They may choose to ensure that selective pseudorandomness is sufficient for
     the application. That is, that
 	pseudorandomness of outputs matters only for inputs that are chosen
-    independently of the VRF key. This is the case, for example,
+    independently of the VRF key. 
+    
+    <!--This is the case, for example,
 	in a typical NSEC5 application, in which pseudorandomness of
     outputs matters only for the names in the
-	zone.</t>
+	zone.-->
+    </t>
     <t>If full pseudorandomness is required for the application, the application
     may increase
     security parameters to make up for the loose security reduction. 
