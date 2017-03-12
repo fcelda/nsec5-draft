@@ -702,13 +702,13 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>c = 0</t>
+                    <t>ctr = 0</t>
                     <t>Repeat:
                     <list style="letters">
-                        <t>C = I2OSP(c, 4)</t>
-                        <t>p = 0x02 || Hash(alpha || C)</t>
-                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G <cref source="Dimitris"> Do we need to provide a concrete algorithm for testing this?</cref></t>
-                        <t>p = 0x03 || Hash(alpha || C)</t>
+                        <t>CTR = I2OSP(ctr, 4)</t>
+                        <t>p = 0x02 || Hash(alpha || CTR)</t>
+                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
+                        <t>p = 0x03 || Hash(alpha || CTR)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
                         <t>ctr = ctr + 1</t>
                     </list>
