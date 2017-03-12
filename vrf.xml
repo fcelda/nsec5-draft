@@ -1109,7 +1109,7 @@ about tightness, because there is simply no reduction.]
 
     <references title="Informative References">
 
-        <reference anchor="nsec5ecc">
+        <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
                 <title>NSEC5 from Elliptic Curves</title>
                 <author initials="D." surname="Papadopoulos"><organization /></author>
