@@ -768,7 +768,7 @@
                     </t>
                     <t>h' = Hash(P) 
                     </t>
-                    <t>h = OS2IP(first n octets of h')</t>
+                    <t>h = OS2IP(h'[1] || h'[2] || ... h'[n])</t>
                     <t>Output h</t>
                 </list>
             </t>
