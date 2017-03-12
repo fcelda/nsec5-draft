@@ -96,10 +96,10 @@
    </t>
 
    <t>
-   One application of the VRF is to prevent enumeration of data stored in a
-   hash-based data structure.  In this application, a prover holds the VRF
-   secret key and uses the VRF hashing to construct a hash-based data structure
-   on the input data.
+   The main application of the VRF is to protect the privacy of data records
+   stored in a hash-based data structure against a querying adversary. In this
+   application, a prover holds the VRF secret key and uses the VRF hashing to
+   construct a hash-based data structure on the input data.
 
    Due to the nature of the VRF hashing, only the prover can answer queries
    about whether or not some data is stored in the data structure.  Anyone who
