@@ -518,11 +518,7 @@
                 <t>G - EC group</t>
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
-                <t>2n - length in octets of a single coordinate of an EC point in G</t>
-                 <t><cref source="Sharon">n is 16 octects for a 256 bit curve. there is probably
-                a better way to word this.</cref></t>
-                <t><cref source="Jan">n is ceil(log2(q)/8) maybe?</cref></t>
-                <t><cref source="Dimitris">Technically yes but do we need to specify that? The ceil part might be confusing.</cref></t>
+                <t>n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x  and ceil(x) is the smallest integer larger than or equal to the real number x</t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of function Hash</t>
             </list>
