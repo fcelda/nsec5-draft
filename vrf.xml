@@ -920,13 +920,10 @@
     </t>
 
 
-    <t>[Note that for the RSA-FDH-VRF, it might be possible to construct
-    such a proof using the [GQ99]
+    <t>Note that for the RSA-FDH-VRF, it might be possible to construct
+        such a proof using the <xref target="GQ88" />
     identification protocol made non-interactive using the Fiat-Shamir heuristic
     in the random oracle model.
-    Louis C. Guillou and Jean-Jacques Quisquater. A practical
-    zero-knowledge protocol fitted to security microprocessor minimizing
-    both transmission and memory. In EUROCRYPT, 1988]
     </t>
    
     <t>
@@ -1148,6 +1145,16 @@ about tightness, because there is simply no reduction.]
                 <date year="2009" />
             </front>
             <seriesInfo name="in" value="CRYPTO" />
+        </reference>
+
+        <reference anchor="GQ88">
+            <front>
+                <title>A Practical Zero-Knowledge Protocol Fitted to Security Microprocessor Minimizing Both Transmission and Memory</title>
+                <author initials="L. C." surname="Guillou" />
+                <author initials="JJ." surname="Quisquater" />
+                <date year="1988" />
+            </front>
+            <seriesInfo name="in" value="Advances in Cryptology - EUROCRYPT '88" />
         </reference>
 
     </references>
