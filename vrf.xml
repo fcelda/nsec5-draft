@@ -316,7 +316,7 @@
             collision resistance properties defined in <xref target="secdef"/>.  
             Its security follows from the
             standard RSA assumption in the random oracle model.  Formal
-            security proofs are in <xref target="nsec5ecc" />.  
+            security proofs are in <xref target="nsec5rsa" />.  
         </t>
 
         <t>
@@ -1122,6 +1122,21 @@ about tightness, because there is simply no reduction.]
                 <date year="2017" month="February" />
             </front>
             <seriesInfo name="in" value="ePrint Cryptology Archive 2017/099" />
+        </reference>
+
+        <reference anchor="nsec5rsa" target="http://eprint.iacr.org/2014/582.pdf">
+            <front>
+                <title>NSEC5: Provably Preventing DNSSEC Zone Enumeration</title>
+                <author initials="S." surname="Goldberg"><organization /></author>
+                <author initials="M." surname="Naor"><organization /></author>
+                <author initials="D." surname="Papadopoulos"><organization /></author>
+                <author initials="L." surname="Reyzin"><organization /></author>
+                <author initials="S." surname="Vasant"><organization /></author>
+                <author initials="A." surname="Ziv"><organization /></author>
+                <date year="2014" month="July"/>
+            </front>
+            <seriesInfo name="in" value="NDSS'15"/>
+            <!-- <seriesInfo name="in" value="ePrint Cryptology Archive 2014/582" /> -->
         </reference>
 
         <reference anchor="MRV99">
