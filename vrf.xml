@@ -205,9 +205,8 @@
    </t>
    
    
-   <section title= "Full Uniqueness or Trusted Uniqueness:">
+   <section title= "Full Uniqueness or Trusted Uniqueness">
 	
-
     <t> Uniqueness states that, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
 	output beta that can be proved to be valid, even for a 
@@ -261,7 +260,7 @@
          </t>
          
          <t>
-         "Selective pseudorandomness" is a weaker security property that 
+         "Selective pseudorandomness" is a weaker security property
          which suffices in many applications. Here, the adversary must choose
          the target VRF input alpha independently of the public VRF key PK,
          and before it  observes VRF outputs beta'
