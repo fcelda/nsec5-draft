@@ -949,10 +949,10 @@
 
     <section title="Timing attacks">
     
-    <t>The EC-VRF_hash_to_curve() algorithm defined in
+    <t>The EC-VRF_hash_to_curve algorithm defined in
     <xref target="ecvrfH2C1" /> should not be used in applications where
     the VRF input alpha is secret and is hashed by the VRF on-the-fly.
-    This is because the EC-VRF_hash_to_curve() algorithm's running time depends
+    This is because the EC-VRF_hash_to_curve algorithm's running time depends
     on the VRF input alpha, and thus creates a timing channel that
     can be used to learn information about alpha.
     </t>
