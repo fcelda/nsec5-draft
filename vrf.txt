@@ -5,10 +5,10 @@
 Network Working Group                                        S. Goldberg
 Internet-Draft                                         Boston University
 Intended status: Standards Track                         D. Papadopoulos
-Expires: September 10, 2017                       University of Maryland
+Expires: September 13, 2017                       University of Maryland
                                                                J. Vcelak
                                                                      NS1
-                                                           March 9, 2017
+                                                          March 12, 2017
 
 
                    Verifiable Random Functions (VRFs)
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 10, 2017.
+   This Internet-Draft will expire on September 13, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.       Expires September 10, 2017               [Page 1]
+Goldberg, et al.       Expires September 13, 2017               [Page 1]
 
 Internet-Draft                     VRF                        March 2017
 
@@ -66,35 +66,53 @@ Internet-Draft                     VRF                        March 2017
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Rationale . . . . . . . . . . . . . . . . . . . . . . . .   2
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Rationale . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Requirements  . . . . . . . . . . . . . . . . . . . . . .   3
      1.3.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  VRF Algorithms  . . . . . . . . . . . . . . . . . . . . . . .   3
-     2.1.  VRF Proof-to-Hash Property  . . . . . . . . . . . . . . .   4
    3.  VRF Security Properties . . . . . . . . . . . . . . . . . . .   4
-   4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)  . . . . . . . . . . .   5
-     4.1.  RSA-FDH-VRF Proving . . . . . . . . . . . . . . . . . . .   6
+     3.1.  Full Uniqueness or Trusted Uniqueness . . . . . . . . . .   4
+     3.2.  Full Pseudorandomness or Selective Pseudorandomness . . .   5
+     3.3.  Full Collison Resistance or Trusted Collision Resistance    5
+   4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)  . . . . . . . . . . .   6
+     4.1.  RSA-FDH-VRF Proving . . . . . . . . . . . . . . . . . . .   7
      4.2.  RSA-FDH-VRF Proof To Hash . . . . . . . . . . . . . . . .   7
-     4.3.  RSA-FDH-VRF Verifying . . . . . . . . . . . . . . . . . .   7
+     4.3.  RSA-FDH-VRF Verifying . . . . . . . . . . . . . . . . . .   8
    5.  Elliptic Curve VRF (EC-VRF) . . . . . . . . . . . . . . . . .   8
-     5.1.  EC-VRF Proving  . . . . . . . . . . . . . . . . . . . . .   9
+     5.1.  EC-VRF Proving  . . . . . . . . . . . . . . . . . . . . .  10
      5.2.  EC-VRF Proof To Hash  . . . . . . . . . . . . . . . . . .  10
-     5.3.  EC-VRF Verifying  . . . . . . . . . . . . . . . . . . . .  10
+     5.3.  EC-VRF Verifying  . . . . . . . . . . . . . . . . . . . .  11
      5.4.  EC-VRF Auxiliary Functions  . . . . . . . . . . . . . . .  11
        5.4.1.  EC-VRF Hash To Curve  . . . . . . . . . . . . . . . .  11
-       5.4.2.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  12
+       5.4.2.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  13
        5.4.3.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  13
      5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  14
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  15
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  16
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Appendix A.  Open Issues  . . . . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+     7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  15
+     7.2.  Proper randomness for EC-VRF  . . . . . . . . . . . . . .  16
+     7.3.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  16
+     7.4.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  16
+   8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  17
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Open Issues  . . . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+
+
+
+
+
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 2]
+
+Internet-Draft                     VRF                        March 2017
+
 
 1.  Introduction
 
@@ -104,15 +122,6 @@ Table of Contents
    of a keyed cryptographic hash.  Only the holder of the private VRF
    key can compute the hash, but anyone with corresponding public key
    can verify the correctness of the hash.
-
-
-
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 2]
-
-Internet-Draft                     VRF                        March 2017
-
 
    One application of the VRF is to prevent enumeration of data stored
    in a hash-based data structure.  In this application, a prover holds
@@ -124,10 +133,6 @@ Internet-Draft                     VRF                        March 2017
    correctly.  However no offline inferences (i.e. inferences without
    querying the prover) can be made about the data stored in the data
    strucuture.
-
-   VRFs are used for this purpose to prevent zone content enumeration in
-   Domain Name System Security Extensions (DNSSEC) with NSEC5
-   Authenticated Denial of Existence [I-D.vcelak-nsec5].
 
 1.2.  Requirements
 
@@ -151,136 +156,154 @@ Internet-Draft                     VRF                        March 2017
 
 2.  VRF Algorithms
 
-   [[CREF1: Don't we need a KeyGen algorithm? --Dimitris]]' [[CREF2: Can
-   we put only the requirements here.  And then have a separate
-   subsection about additional possibly used properties that some VRFs
-   have (e.g. proof to hash)? --Jan]]' A VRF hashes an input alpha using
-   the private key SK to obtain
+   A VRF comes with a key generation algorithm that generates a public
+   VRF key PK and private VRF key SK.
+
+   A VRF hashes an input alpha using the private VRF key SK to obtain a
+   VRF hash output beta:
+
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 3]
+
+Internet-Draft                     VRF                        March 2017
+
 
       beta = VRF_hash(SK, alpha)
 
    The VRF_hash algorithm MUST be deterministic, in the sense that it
    will always produce the same output beta given a pair of inputs (SK,
-
-
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 3]
-
-Internet-Draft                     VRF                        March 2017
-
-
    alpha).  The private key SK is also used to construct a proof pi that
    beta is the correct hash output
 
       pi = VRF_prove(SK, alpha)
 
-   The proof pi is allows anyone holding the public key to verify that
-   indeed beta is the correct hash of alpha under key PK.  Thus, the VRF
-   also comes with an algorithm
-
-      VRF_verify(PK, alpha, beta, pi)
-
-   which outputs VALID when pi is a valid proof that beta is the correct
-   VRF hash of alpha under key PK, and outputs INVALID otherwise.
-
-2.1.  VRF Proof-to-Hash Property
-
-   Some VRFs support an additional property that allows anyone to obtain
-   the hash output beta directly from the proof value pi
+   The VRFs defined in this document allow anyone to deterministically
+   obtain the VRF hash output beta directly from the proof value pi as
 
       beta = VRF_proof2hash(pi)
 
-   The VRF_hash function is therefore given by
+   Notice that this means that
 
-      beta = VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))
+      VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))
 
-   For these VRFs, the verification function only needs to take in the
-   public key PK, the VRF input alpha, and the VRF proof pi, so that
+   The proof pi allows anyone holding the public key PK to verify that
+   beta is the correct VRF hash of input alpha under key PK.  Thus, the
+   VRF also comes with an algorithm
 
       VRF_verify(PK, alpha, pi)
 
-   outputs VALID if beta=VRF_proof2hash(pi) is correct VRF hash of alpha
-   under key PK, and outputs INVALID otherwise.
-
-   (Notice that any VRF can be made to satisfy this property by
-   redefining the VRF proof value to include both beta and pi. )
+   that outputs VALID if beta=VRF_proof2hash(pi) is correct VRF hash of
+   alpha under key PK, and outputs INVALID otherwise.
 
 3.  VRF Security Properties
 
-   Applications that use the VRFs defined in this document MUST ensure
-   that that the VRF key is generated correctly.  (See Section 7 for a
-   more detailed discussion.)  When this holds, the VRFs defined in this
-   document satisfy the following security properties:
+   VRFs are designed to ensure the following security properties.
 
-   Trusted uniqueness:  Suppose the public and private VRF keys (PK, SK)
-      were generated in a trustworthy manner.  Then, for any VRF input
-      alpha, even an adversary that knows SK cannot produce a valid
-      proof pi, for an incorrect VRF hash output beta', where beta' is
-      different than beta = VRF_hash(SK, alpha).  Thus, for a fixed
+3.1.  Full Uniqueness or Trusted Uniqueness
+
+   Uniqueness states that, for any fixed public VRF key and for any
+   input alpha, there is a unique VRF output beta that can be proved to
+   be valid, even for a computationally-bounded adversary that knows the
+   VRF secret key SK.
+
+   More precisely, full uniqueness states that a computationally bounded
+   adversary cannot choose a VRF public key PK, a VR input alpha, two
+   different VRF hash outputs beta1 and beta2, and two proofs pi1 and
+   pi2 such that VRF_verify(PK, alpha, pi1) and VRF_verify(PK, alpha,
+   pi2) both output VALID.
+
+   A slightly weaker security property called "trusted uniquness"
+   sufficies for many applications.  Trusted uniqueness is the same as
+   full uniqueness, but it must hold only if the VRF keys PK and SK were
 
 
 
-Goldberg, et al.       Expires September 10, 2017               [Page 4]
+
+Goldberg, et al.       Expires September 13, 2017               [Page 4]
 
 Internet-Draft                     VRF                        March 2017
 
 
-      public VRF key, there is a unique VRF output beta for each VRF
-      input alpha.
+   generated in a trustworthy manner.  In otherwords, uniqueness might
+   not hold if keys were generated in an invalid manner.
 
-   Pseudorandomness:  Roughly speaking, pseudorandomness ensures that
-      every VRF output beta looks random even to a party that knows the
-      corresponding VRF input alpha, but does not know the secret VRF
-      key SK or a valid VRF proof pi corresponding to alpha.
+3.2.  Full Pseudorandomness or Selective Pseudorandomness
 
-      [Leo to write this to make sure it says the right thing about
-      selective vs adaptive security.  Here is some candidate text:
-      Suppose the public and private VRF keys (PK, SK) were generated in
-      a trustworthy manner, and consider an adversary that knows PK but
-      not SK.  Then, for any VRF input alpha that is known by the
-      adversary, the adversary cannot distinguish its corresponding
-      valid VRF output beta from a random value. ]
+   Suppose the public and private VRF keys (PK, SK) were generated in a
+   trustworthy manner.
 
-      It is important to remember that the VRF output beta does not look
-      random to a party that knows the private VRF key SK!  Such a party
-      can easily distinguish beta from a random value by comparing it to
-      the result of VRF_hash(SK, alpha).
+   Pseudorandomness ensures that the VRF hash output beta (without its
+   corresponding VRF proof pi) on any adversarially-chosen "target" VRF
+   input alpha looks indistinguishable from random for any
+   computationally bounded adversary who does not know the private VRF
+   key SK.  This holds even if the adversary also gets to choose other
+   VRF inputs alpha' and observe their corresponding VRF hash outputs
+   beta' and proofs pi'.
 
-      Also, the VRF output beta does not look random to any party that
-      knows valid VRF proof pi corresponding to the VRF input alpha,
-      even if this party does not know the private VRF key SK.  Such a
-      party can easily distinguish beta from a random value by checking
-      whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
+   With "full pseudorandomness", the adversary is allowed to choose the
+   target VRF input alpha at any time, even after it observes VRF
+   outputs beta' and proofs pi' on a variety of chosen inputs alpha'.
 
-   Collison resistance:  [LEO TO ADD TEXT HERE.]
+   "Selective pseudorandomness" is a weaker security property which
+   suffices in many applications.  Here, the adversary must choose the
+   target VRF input alpha independently of the public VRF key PK, and
+   before it observes VRF outputs beta' and proofs pi' on inputs alpha'
+   of its choice.
+
+   It is important to remember that the VRF output beta does not look
+   random to a party that knows the private VRF key SK!  Such a party
+   can easily distinguish beta from a random value by comparing it to
+   the result of VRF_hash(SK, alpha).
+
+   Also, the VRF output beta does not look random to any party that
+   knows valid VRF proof pi corresponding to the VRF input alpha, even
+   if this party does not know the private VRF key SK.  Such a party can
+   easily distinguish beta from a random value by checking whether
+   VRF_verify(PK, alpha, beta, pi) returns "VALID".
+
+   Finally, the VRF output beta may not look random if VRF key
+   generation was not done in a trustworthy fashion.  (For example, if
+   VRF keys were not generated with good randomness.)
+
+3.3.  Full Collison Resistance or Trusted Collision Resistance
+
+   Finally, like any cryprographic hash function, VRFs need to be
+   collision resistant.  Specifically, it should be computationally
+   infeasible for an adversary to find two distinct VRF inputs alpha1
+   and alpha2 that have the same VRF hash beta, even if that adversary
+   knows the secret VRF key SK.
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 5]
+
+Internet-Draft                     VRF                        March 2017
+
+
+   For most applications, a slightly weaker security property called
+   "trusted collision resistance" suffices.  Trusted collision
+   resistance is the same as collision resistance, but it holds only if
+   PK and SK were generated in a trustworthy manner.
 
 4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)
 
    The RSA Full Domain Hash VRF (RSA-FDH-VRF) is VRF that satisfies the
-   trusted uniqueness, pseudorandomness and collision resistance
-   properties.  Its security follows from the standard RSA assumption in
-   the random oracle model.  Formal security proofs are in [nsec5ecc].
-   This VRF also supports the VRF proof-to-hash property, that allows
-   the hash output beta to be obtained directly from the proof value pi.
-
-   This VRF is parametrized by a hash function.  The chosen function
-   MUST be secure cryptographic hash function with cryptographic
-   security level at least as high as the cryptographic security level
-   of the RSA key.
+   trusted uniqueness, full pseudorandomness, and trusted collision
+   resistance properties defined in Section 3.  Its security follows
+   from the standard RSA assumption in the random oracle model.  Formal
+   security proofs are in [nsec5ecc].
 
    The VRF computes the proof pi as a deterministic RSA signature on
    input alpha using the RSA Full Domain Hash Algorithm [RFC8017]
    parametrized with the selected hash algorithm.  RSA signature
    verification is used to verify the correctness of the proof.  The VRF
-   hash output beta is simply hashed value of the proof pi.
+   hash output beta is simply obtained by hashing the proof pi with the
+   selected hash algorithm.
 
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 5]
-
-Internet-Draft                     VRF                        March 2017
-
+   The key pair for RSA-FDH-VRF MUST be generated in a way that it
+   satisfies the conditions specified in Section 3 of [RFC8017].
 
    In this document, the notation from [RFC8017] is used.
 
@@ -294,14 +317,26 @@ Internet-Draft                     VRF                        March 2017
 
    Fixed options:
 
-      Hash - hash function
+      Hash - cryptographic hash function
 
       hLen - output length in octets of hash function Hash
+
+   Options constraints:
+
+      Cryptographic security of Hash is at least as high as the
+      cryptographic security level of the RSA key
 
    Used primitives:
 
       I2OSP - Coversion of a nonnegative integer to an octet string as
       defined in Section 4.1 of [RFC8017]
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 6]
+
+Internet-Draft                     VRF                        March 2017
+
 
       OS2IP - Coversion of an octet string to a nonnegative integer as
       defined in Section 4.2 of [RFC8017]
@@ -331,13 +366,6 @@ Internet-Draft                     VRF                        March 2017
 
    Steps:
 
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 6]
-
-Internet-Draft                     VRF                        March 2017
-
-
    1.  EM = MGF1(alpha, k - 1)
 
    2.  m = OS2IP(EM)
@@ -357,6 +385,14 @@ Internet-Draft                     VRF                        March 2017
       pi - proof, an octet string of length k
 
    Output:
+
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 7]
+
+Internet-Draft                     VRF                        March 2017
+
 
       beta - VRF hash output, an octet string of length hLen
 
@@ -386,14 +422,6 @@ Internet-Draft                     VRF                        March 2017
 
    1.  s = OS2IP(pi)
 
-
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 7]
-
-Internet-Draft                     VRF                        March 2017
-
-
    2.  m = RSAVP1((n, e), s)
 
    3.  EM = I2OSP(m, k - 1)
@@ -406,30 +434,50 @@ Internet-Draft                     VRF                        March 2017
 5.  Elliptic Curve VRF (EC-VRF)
 
    The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
-   satisfies the trusted uniqueness, pseudorandomness and collision
-   resistance properties.  This VRF operates in a cyclic group G of
-   prime order with generator g, where the cyclic group is an elliptic
-   curve group.  EC points in group G are encoded using point
-   compression.
+   satisfies the trusted uniqueness, full pseudorandomness, and trusted
+   collision resistance properties defined in Section 3.  The security
+   of this VRF follows from the decisional Diffie-Hellman (DDH)
+   assumption in the cyclic group in the random oracle model.  Formal
+   security proofs are in [nsec5ecc].
 
-   The security of this VRF follows from the decisional Diffie-Hellman
-   (DDH) assumption in the cyclic group G in the random oracle model.
-   Formal security proofs are in [nsec5ecc].  This VRF also supports the
-   proof-to-hash property, that allows the hash output beta to be
-   obtained directly from the proof value pi.
+   The key pair generation primitive is specified in Section 3.2.1 of
+   [SECG1].
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 8]
+
+Internet-Draft                     VRF                        March 2017
+
 
    Fixed options:
 
       G - EC group
 
-      2n - length, in octets, of a single coordinate of an EC point in G
-      [[CREF3: n is 16 octects for a 256 bit curve. this is probably a
+      q - prime order of group G
+
+      g - generator of group G
+
+      2n - length in octets of a single coordinate of an EC point in G
+
+      [[CREF1: n is 16 octects for a 256 bit curve. there is probably a
       better way to word this. --Sharon]]
 
-      Hash - secure cryptographic hash function producing outputs of
-      length 2n.  The cryptographic security level of this hash
-      algorithm MUST be at least as high as the cryptographic security
-      level of the EC Group G.
+      [[CREF2: n is ceil(log2(q)/8) maybe? --Jan]]
+
+      [[CREF3: Technically yes but do we need to specify that?  The ceil
+      part might be confusing. --Dimitris]]
+
+      Hash - cryptographic hash function
+
+      hLen - output length in octets of function Hash
+
+   Options constraints:
+
+      Cryptographic security of Hash is at least as high as the
+      cryptographic security of G
+
+      hLen is equal to 2n
 
    Used parameters:
 
@@ -437,21 +485,7 @@ Internet-Draft                     VRF                        March 2017
 
       x - EC private key
 
-      q - prime order of group G
-
-      g - generator of group G
-
-
-
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 8]
-
-Internet-Draft                     VRF                        March 2017
-
-
-   Used primitives: [[CREF4: Should we use the more natural additive
-   notation?  Also, capital letters for curve points? --Dimitris]]
+   Used primitives:
 
       "" - empty octet string
 
@@ -460,6 +494,17 @@ Internet-Draft                     VRF                        March 2017
       p^k - EC point multiplication
 
       p1*p2 - EC point addition
+
+      h[i] - the i'th octet of octet string h
+
+
+
+
+
+Goldberg, et al.       Expires September 13, 2017               [Page 9]
+
+Internet-Draft                     VRF                        March 2017
+
 
       ECP2OS - EC point to octet string conversion with point
       compression as specified in Section 2.3.3 of [SECG1]
@@ -481,12 +526,11 @@ Internet-Draft                     VRF                        March 2017
 
    Output:
 
-      pi - VRF proof, octet string (5n+1 octets) [[CREF5: 81 octets for
-      a 256-bit EC G --Sharon]]
+      pi - VRF proof, octet string of length 5n+1
 
    Steps:
 
-   1.  h = ECVRF_hash_to_curve(alpha)
+   1.  h = ECVRF_hash_to_curve(alpha, g^x)
 
    2.  gamma = h^x
 
@@ -498,18 +542,7 @@ Internet-Draft                     VRF                        March 2017
 
    6.  pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
 
-
-
-
-Goldberg, et al.       Expires September 10, 2017               [Page 9]
-
-Internet-Draft                     VRF                        March 2017
-
-
    7.  Output pi
-
-   Note: gamma is an EC point in G encoded with point compression.
-   ECP2OS(gamma) has length 2n+1 octets.
 
 5.2.  EC-VRF Proof To Hash
 
@@ -517,31 +550,25 @@ Internet-Draft                     VRF                        March 2017
 
    Input:
 
-      pi - VRF proof (5n+1 octets)
+      pi - VRF proof, octet string of length 5n+1
 
    Output:
 
-      beta - VRF hash output, octet string (2n octets)
+
+
+
+Goldberg, et al.       Expires September 13, 2017              [Page 10]
+
+Internet-Draft                     VRF                        March 2017
+
+
+      beta - VRF hash output, octet string of length 2n
 
    Steps:
 
-   1.  gamma, c, s = ECVRF_decode_proof(pi)
+   1.  beta = pi[2] || pi[3] || ... pi[2n+1]
 
-   2.  gamma is an EC point in G with coordinates (x, y)
-
-   3.  [[CREF6: DO WE WANT TO CHECK THAT "gamma is a valid EC point in
-       G" HERE? --Sharon]][[CREF7: Yes. Jan, does a "test-on-curve"
-       appear at an RFC anywhere? --Dimitris]]
-
-   4.  beta = I2OSP(x, 2n)
-
-   5.  Output beta
-
-   Note: Because of the format of the point-compressed form of an
-   elliptic curve, the hash can be retrieved from an encoded gamma
-   simply by omitting the first octet of gamma.  [[CREF8: This is
-   probably true for p-256 curve, since Jan wrote this in an earlier
-   verion, but it is true for the Ed25519 and Ed448 curves? --Sharon]]
+   2.  Output beta
 
 5.3.  EC-VRF Verifying
 
@@ -551,16 +578,9 @@ Internet-Draft                     VRF                        March 2017
 
       g^x - EC public key
 
-      pi - VRF proof, octet string
+      pi - VRF proof, octet string of length 5n+1
 
       alpha - VRF input, octet string
-
-
-
-Goldberg, et al.       Expires September 10, 2017              [Page 10]
-
-Internet-Draft                     VRF                        March 2017
-
 
    Output:
 
@@ -571,13 +591,10 @@ Internet-Draft                     VRF                        March 2017
    1.  gamma, c, s = ECVRF_decode_proof(pi)
 
    2.  If gamma is not a valid EC point in G, output "INVALID" and stop.
-       [[CREF9: TODO: check validity of gamma before hashing --Jan]]
-       [[CREF10: I added this item on the list above to deal with this
-       todo --Sharon]]
 
    3.  u = (g^x)^c * g^s
 
-   4.  h = ECVRF_hash_to_curve(alpha)
+   4.  h = ECVRF_hash_to_curve(alpha, g^x)
 
    5.  v = gamma^c * h^s
 
@@ -589,34 +606,39 @@ Internet-Draft                     VRF                        March 2017
 
 5.4.1.  EC-VRF Hash To Curve
 
-   The following ECVRF_hash_points algorithm provides a simple and
-   generic way to hash an octet string onto any elliptic curve.
-
-   However, this ECVRF_hash_points algorithm MUST NOT be used in
-   applications where the VRF input alpha must be kept secret.  This is
-   because the running time of the hashing algorithm depends on alpha,
-   and so it is susceptible to timing attacks.  That said, the amount of
-   information obtained from such a timing attack is likely to be small,
-   since the algorithm is expected to find a valid curve point after
-   only two attempts (i.e., when ctr=1) on average (see [Icart09]).
-
-   (Note: This timing attack is not relevant in the context of NSEC5
-   [I-D.vcelak-nsec5].  The only value that is processed by the VRF
-   online in response to an adversary's query with NSEC5 is the queried
-   name alpha itself.  Thus alpha is already known to the adversary.)
-
-   ECVRF_hash_to_curve(m)
-
-   Input:
-
-      m - value to be hashed, an octet string
+   The ECVRF_hash_to_curve algorithm takes in an octet string alpha and
+   converts it to h, an EC point in G.
 
 
 
-Goldberg, et al.       Expires September 10, 2017              [Page 11]
+
+
+Goldberg, et al.       Expires September 13, 2017              [Page 11]
 
 Internet-Draft                     VRF                        March 2017
 
+
+5.4.1.1.  ECVRF_hash_to_curve1
+
+   The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements
+   ECVRF_hash_to_curve in a simple and generic way that works for any
+   elliptic curve that supports point compression.
+
+   However, this algorithm MUST NOT be used in applications where the
+   VRF input alpha must be kept secret.  This is because the running
+   time of the hashing algorithm depends on alpha, and so it is
+   susceptible to timing attacks.  That said, the amount of information
+   obtained from such a timing attack is likely to be small, since the
+   algorithm is expected to find a valid curve point after only two
+   attempts (i.e., when ctr=1) on average (see [Icart09]).
+
+   ECVRF_hash_to_curve1(alpha, g^x)
+
+   Input:
+
+      alpha - value to be hashed, an octet string
+
+      g^x - EC public key
 
    Output:
 
@@ -626,39 +648,47 @@ Internet-Draft                     VRF                        March 2017
 
    1.  ctr = 0
 
-   2.  While true:
+   2.  pk = ECP2OS(g^x)
+
+   3.  Repeat:
 
        A.  CTR = I2OSP(ctr, 4)
 
-       B.  p = 0x02 || Hash(m || CTR).  (Note, 0x02 sets point encoding
-           to "compressed", using only the positive value for the
-           y-coefficient of the EC point.)  [[CREF11: Jan, Dimitris, we
-           need a cite for the 0x02 comment above. --Sharon]]
+       B.  p = 0x02 || Hash(alpha || pk || CTR)
 
-       C.  Break if p is a valid octet string representing encoded
-           compressed point in G.
+       C.  Goto step 3 if OS2ECP(p) is valid EC point in G
 
-       D.  p = 0x03 || Hash(m || CTR).  (Note, 0x03 sets point encoding
-           to "compressed", using only the negative value for the
-           y-coefficient of the EC point.)
+       D.  p = 0x03 || Hash(alpha || pk || CTR)
 
-       E.  Break if p is a valid octet string representing encoded
-           compressed point in G.
+       E.  Goto step 3 if OS2ECP(p) is valid EC point in G
 
        F.  ctr = ctr + 1
 
-   3.  h = OS2ECP(p)
+   4.  h = OS2ECP(p)
 
-   4.  Output h
+
+
+
+Goldberg, et al.       Expires September 13, 2017              [Page 12]
+
+Internet-Draft                     VRF                        March 2017
+
+
+   5.  Output h
+
+   The initial octet 0x02 in the octet string created in step B
+   represents that the point in compressed form has positive
+   y-coefficient [SECG1].  Similarly, the 0x03 octet in step D
+   represents negative y-coefficient.
+
+5.4.1.2.  ECVRF_hash_to_curve2
 
    For applications where VRF input alpha must be kept secret, the
-   following ECVRF_hash_points algorithm MAY be used to used as generic
-   way to hash an octet string onto any elliptic curve.  [[CREF12: Is
-   the above a typo?  The ECVRF_hash_points algorithm is from points to
-   octet. --Dimitris]] For applications where VRF input alpha must be
-   kept secret, the deterministic-time hash algorithm of
-   [I-D.vcelak-nsec5] MAY be used as a generic way to hash an octet
-   string onto any elliptic curve.
+   following ECVRF_hash_to_curve algorithm MAY be used to used as
+   generic way to hash an octet string onto any elliptic curve.
+
+   [TODO: If there interest, we could look into specifying the generic
+   deterministic time hash_to_curve algorithm from [Icart09]. ]
 
 5.4.2.  EC-VRF Hash Points
 
@@ -666,21 +696,11 @@ Internet-Draft                     VRF                        March 2017
 
    Input:
 
-
-
-
-Goldberg, et al.       Expires September 10, 2017              [Page 12]
-
-Internet-Draft                     VRF                        March 2017
-
-
       p_i - EC point in G
 
    Output:
 
-      h - hash value, integer between 0 and 2^(8n)-1 [[CREF13: This is
-      an int between 0 and 2^128-1 for a 256 bit curve.  Remember that
-      n=16 for such a curve --Sharon]]
+      h - hash value, integer between 0 and 2^(8n)-1
 
    Steps:
 
@@ -689,10 +709,9 @@ Internet-Draft                     VRF                        March 2017
    2.  for p_i in [p_1, p_2, ... p_j]:
        P = P || ECP2OS(p_i)
 
-   3.  h' = Hash(P) [[CREF14: Hash is SHA-256 in the P-256 reference
-       implementation --Sharon]]
+   3.  h' = Hash(P)
 
-   4.  h = OS2IP(first n octets of h')
+   4.  h = OS2IP(h'[1] || h'[2] || ... h'[n])
 
    5.  Output h
 
@@ -704,31 +723,27 @@ Internet-Draft                     VRF                        March 2017
 
       pi - VRF proof, octet string (5n+1 octets)
 
+
+
+Goldberg, et al.       Expires September 13, 2017              [Page 13]
+
+Internet-Draft                     VRF                        March 2017
+
+
    Output:
 
       gamma - EC point
 
-      c - integer between 0 and 2^(8n)-1 [[CREF15: 2^128-1 for a 256-bit
-      EC --Sharon]]
+      c - integer between 0 and 2^(8n)-1
 
-      s - integer between 0 and 2^(16n)-1 [[CREF16: 2^256-1 for a
-      256-bit EC --Sharon]]
+      s - integer between 0 and 2^(16n)-1
 
    Steps:
 
-   1.  let gamma', c', s' be pi split after 2n+1-th and 3n+1-th octet
-       [[CREF17: "split after 33-rd and 49-th octet" for a 256-bit EC
-       --Sharon]]
+   1.  let gamma', c', s' be pi split after (2n+1)-th and (3n+1)-th
+       octet
 
    2.  gamma = OS2ECP(gamma')
-
-
-
-
-Goldberg, et al.       Expires September 10, 2017              [Page 13]
-
-Internet-Draft                     VRF                        March 2017
-
 
    3.  c = OS2IP(c')
 
@@ -740,110 +755,148 @@ Internet-Draft                     VRF                        March 2017
 
    [Seeking feedback on this section!]
 
-   This document defines SHA256-P256-EC-VRF as follows:
+   This document defines EC-VRF-P256-SHA256 as follows:
 
    o  The EC group G is the NIST-P256 elliptic curve, with curve
       parameters as specified in [FIPS-186-3] (Section D.1.2.3) and
       [RFC5114]  (Section 2.6).  For this group, the length in octets of
       a single coordinate of an EC point is 2n = 32.
 
-   o  EC points are represented using point compression as specified in
-      [SECG1] (Section 2.3.3).
-
-   o  The ECVRF_hash_to_curve function is as specified in Section 5.4.1.
-
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
-   This document defines SHA256-ED25519-EC-VRF as follows:
+   o  The ECVRF_hash_to_curve function is ECVRF_hash_to_curve1, as
+      specified in Section 5.4.1.1.
+
+   This document defines EC-VRF-ED25519-SHA256 as follows:
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in [RFC7748] (Section 4.1).  For this group, the length in
       octets of a single coordinate of an EC point is 2n = 32.
 
-   o  EC points are represented using point compression, as specified in
-      TBD.  [[CREF18: Dimitris and Jan to fill this in! --Sharon]]
-
-   o  The ECVRF_hash_to_curve function is as specified in Section 5.4.1.
-
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
-   [TODO: Add an SHA256-Elligator-ED25519-EC-VRF ciphersuite where the
-   Elligator hash function is used for ECVRF_hash-to-curve?]  [[CREF19:
-   IMHO if we specify by the generic hash only by a reference, we should
-   do the same for Elligator until we have a better understanding of its
-   properties (maybe reach out to Trevor Perin?). --Dimitris]]
-
-   [TODO: Add an Ed448 ciphersuite?]
+   o  The ECVRF_hash_to_curve function is as specified in
+      Section 5.4.1.1.
 
 
 
 
-
-
-
-Goldberg, et al.       Expires September 10, 2017              [Page 14]
+Goldberg, et al.       Expires September 13, 2017              [Page 14]
 
 Internet-Draft                     VRF                        March 2017
 
 
+   [TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF ciphersuite
+   where the Elligator hash function is used for ECVRF_hash-to-curve?]
+
+   [TODO: Add an Ed448 ciphersuite?]
+
 6.  Implementation Status
 
-   An implementation of the RSA-FDH-VRF (SHA-256) and SHA256-P256-EC-VRF
+   An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256
    was developed as a part of the NSEC5 project [I-D.vcelak-nsec5] and
    is available at <http://github.com/fcelda/nsec5-crypto>.
 
    The Key Transparency project at Google uses a VRF implemention that
-   is almost identical to the SHA256-P256-EC-VRF specified here, with a
+   is almost identical to the EC-VRF-P256-SHA256 specified here, with a
    few minor changes including the use of SHA-512 instead of SHA-256.
    Its implementation is available
-   <https://github.com/google/keytransparency/blob/master/core/vrf/p256/
-   p256>
+   <https://github.com/google/keytransparency/blob/master/core/vrf/
+   vrf.go>
 
-   Open Whisper Systems also uses a VRF very similar to SHA512-
-   Elligator-ED25519-EC-VRF, called VXEdDSA, and specified here:
+   Open Whisper Systems also uses a VRF very similar to EC-VRF-
+   ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
    <https://whispersystems.org/docs/specifications/xeddsa/>
 
 7.  Security Considerations
 
+7.1.  Key Generation
+
    Applications that use the VRFs defined in this document MUST ensure
-   that that the VRF key is generated correctly.  For the RSA-FDH-VRF,
-   public VRF key (N, e) MUST be a valid RSA key.  For the EC-VRF, the
-   public key g^x MUST be a valid EC point in group G.  [[CREF20: Leo
-   please check this last sentence. --Sharon]]
+   that that the VRF key is generated correctly, using good randomness.
+   Without good randomness, pseudorandomness properties of the VRF may
+   not hold.  Also, trusted uniqueness and trusted collision-resistance
+   may also not hold if the keys are generated adversarially (e.g., the
+   RSA modulus is not a product of two primes for the RSA-FDH-VRF or the
+   public key g^x is not valid point in the prime-order group G for the
+   EC).
 
-   One way to do this is to ensure that VRF keys are generated correctly
-   is to require a trusted party to generate them.  (This is what is
-   done in the NSEC5 application.)  In cases where the party that
-   generated that VRF keys is not trusted, then the public VRF key could
-   be provided along with a cryptographic proof that VRF keys were
-   generated correctly.
+   Full uniqueness and full collision-resistance (as opposed to trusted
+   uniqueness and trusted collision-resistance) are properties that hold
+   even if VRF keys are generated by an adversary.  The VRFs defined in
+   this document do not have these properties.  However, they may be
+   modifed to have these properties if adversarial key generation is a
+   concern.  The modification consists of additional cryptographic
+   proofs that keys have of the correct form.  These modifications are
+   left for future specification.
 
-   [TODO: Specify ways to do this?  Or is this out-of-scope for this
-   draft?  In any case, we solve this problem in a later version of the
-   draft.  Note that for the RSA-FDH-VRF, such a proof could be
-   constructed using the [GQ99] identification protocol made non-
-   interactive using the Fiat-Shamir heuristic in the random oracle
-   model.  Louis C.  Guillou and Jean-Jacques Quisquater.  A practical
-   zero-knowledge protocol fitted to security microprocessor minimizing
-   both transmission and memory.  In EUROCRYPT, 1988]
-
-   The EC-VRF_hash_to_curve() algorithm defined in Section 5.4.1 should
-   not be used in applications where the VRF input alpha is secret and
-   is hashed by the VRF on-the-fly.  This is because the EC-
-   VRF_hash_to_curve() algorithm's running time depends on the VRF input
-   alpha, and thus creates a timing channel that can be used to learn
-   information about alpha.
+   Note that for the RSA-FDH-VRF, it might be possible to construct such
+   a proof using the [GQ88] identification protocol made non-interactive
+   using the Fiat-Shamir heuristic in the random oracle model.
 
 
 
 
-Goldberg, et al.       Expires September 10, 2017              [Page 15]
+Goldberg, et al.       Expires September 13, 2017              [Page 15]
 
 Internet-Draft                     VRF                        March 2017
 
 
-   Leo to add some text here about selective versus adaptive
-   pseudorandomness?
+   However, it is not possible to guarantee pseudorandomness in the face
+   of adversarially generated VRF keys.  This is because an adversary
+   can always use bad randomness to generate the VRF keys, and thus, the
+   VRF output may not be pseudorandom.
+
+7.2.  Proper randomness for EC-VRF
+
+   Applications that use the EC-VRF defined in this document MUST ensure
+   that the random nonce k used in the ECVRF_prove algorithm is chosen
+   with proper randomness.  Otherwise, an adversary may be able to
+   recover the private VRF key x (and thus break pseudorandomness of the
+   VRF) after observing several valid VRF proofs pi.
+
+7.3.  Timing attacks
+
+   The EC-VRF_hash_to_curve algorithm defined in Section 5.4.1.1 should
+   not be used in applications where the VRF input alpha is secret and
+   is hashed by the VRF on-the-fly.  This is because the EC-
+   VRF_hash_to_curve algorithm's running time depends on the VRF input
+   alpha, and thus creates a timing channel that can be used to learn
+   information about alpha.
+
+7.4.  Selective vs Full Pseudorandomness
+
+   [nsec5ecc]presents cryptographic reductions to an underlying hard
+   problem (e.g.  Decisional Diffie Hellman, or the standard RSA
+   assumption) that prove the VRFs specificied in this document possess
+   full pseudorandomness as well as selective pseudorandomness.
+   However, the cryptographic reductions are tighter for selective
+   pseudorandomness than for full pseudorandomness.  This means the the
+   VRFs have quantitavely stronger security guarentees for selective
+   pseudorandomness.
+
+   Applications that are concerned about tightness of cryptographic
+   reductions therefor have two options.
+
+   o  They may choose to ensure that selective pseudorandomness is
+      sufficient for the application.  That is, that pseudorandomness of
+      outputs matters only for inputs that are chosen independently of
+      the VRF key.
+
+   o  If full pseudorandomness is required for the application, the
+      application may increase security parameters to make up for the
+      loose security reduction.  For RSA-FDH-VRF, this means increasing
+      the RSA key length.  For EC-VRF, this means increasing the
+      cryptographic strength of the EC group G.  For both RSA-FDH-VRF
+      and EC-VRF the cryptographic strength of the hash function Hash
+      may also potentially need to be increased.
+
+
+
+Goldberg, et al.       Expires September 13, 2017              [Page 16]
+
+Internet-Draft                     VRF                        March 2017
+
 
 8.  Change Log
 
@@ -852,14 +905,16 @@ Internet-Draft                     VRF                        March 2017
 
       00 - Forked this document from draft-vcelak-nsec5-04.  Cleaned up
       the definitions of VRF algorithms.  Added security definitions for
-      VRF.  Parameterized EC-VRF so it could support curves other than
-      P-256 and Ed25519.
+      VRF and security considerations.  Parameterized EC-VRF so it could
+      support curves other than P-256 and Ed25519.
 
 9.  Contributors
 
-   This document would not be possible without help of Moni Naor
-   (Weizmann Institute), Sachin Vasant (Cisco Systems), Leonid Reyzin
-   (Boston University), and Asaf Ziv (Facebook).
+   Leonid Reyzin (Boston University) made major contributions to this
+   document.  This document also would not be possible without the work
+   of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and
+   Asaf Ziv (Facebook).  Shumon Huque (Salesforce) and David C.
+   Lawerence (Akamai) provided valuable input to this draft.
 
 10.  References
 
@@ -893,7 +948,8 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 10, 2017              [Page 16]
+
+Goldberg, et al.       Expires September 13, 2017              [Page 17]
 
 Internet-Draft                     VRF                        March 2017
 
@@ -917,7 +973,7 @@ Internet-Draft                     VRF                        March 2017
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
               Naor, M., Reyzin, L., and S. Goldberg, "NSEC5 from
               Elliptic Curves", in ePrint Cryptology Archive 2017/099,
-              February 2017.
+              February 2017, <https://eprint.iacr.org/2017/099.pdf>.
 
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999.
@@ -928,6 +984,10 @@ Internet-Draft                     VRF                        March 2017
    [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
               2009.
 
+   [GQ88]     Guillou, L. and JJ. Quisquater, "A Practical Zero-
+              Knowledge Protocol Fitted to Security Microprocessor
+              Minimizing Both Transmission and Memory", in Advances in
+              Cryptology - EUROCRYPT '88, 1988.
 
 
 
@@ -945,11 +1005,7 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-
-
-
-
-Goldberg, et al.       Expires September 10, 2017              [Page 17]
+Goldberg, et al.       Expires September 13, 2017              [Page 18]
 
 Internet-Draft                     VRF                        March 2017
 
@@ -1005,4 +1061,4 @@ Authors' Addresses
 
 
 
-Goldberg, et al.       Expires September 10, 2017              [Page 18]
+Goldberg, et al.       Expires September 13, 2017              [Page 19]

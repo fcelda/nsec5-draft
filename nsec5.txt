@@ -5,14 +5,14 @@
 Network Working Group                                          J. Vcelak
 Internet-Draft                                                    CZ.NIC
 Intended status: Standards Track                             S. Goldberg
-Expires: September 11, 2017                            Boston University
+Expires: September 13, 2017                            Boston University
                                                          D. Papadopoulos
                                                   University of Maryland
                                                                 S. Huque
                                                               Salesforce
                                                              D. Lawrence
                                                      Akamai Technologies
-                                                          March 10, 2017
+                                                          March 12, 2017
 
 
             NSEC5, DNSSEC Authenticated Denial of Existence
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 1]
+Vcelak, et al.         Expires September 13, 2017               [Page 1]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -66,7 +66,7 @@ Internet-Draft                    NSEC5                       March 2017
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 11, 2017.
+   This Internet-Draft will expire on September 13, 2017.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 2]
+Vcelak, et al.         Expires September 13, 2017               [Page 2]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -152,7 +152,7 @@ Internet-Draft                    NSEC5                       March 2017
      A.3.  No Data Example, Opt-Out In Effect  . . . . . . . . . . .  29
      A.4.  Wildcard Example  . . . . . . . . . . . . . . . . . . . .  29
      A.5.  Wildcard No Data Example  . . . . . . . . . . . . . . . .  30
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  30
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  31
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 1.  Introduction
@@ -165,7 +165,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 3]
+Vcelak, et al.         Expires September 13, 2017               [Page 3]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -221,7 +221,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 4]
+Vcelak, et al.         Expires September 13, 2017               [Page 4]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -277,7 +277,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 5]
+Vcelak, et al.         Expires September 13, 2017               [Page 5]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -333,7 +333,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 6]
+Vcelak, et al.         Expires September 13, 2017               [Page 6]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -389,7 +389,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 7]
+Vcelak, et al.         Expires September 13, 2017               [Page 7]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -445,7 +445,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 8]
+Vcelak, et al.         Expires September 13, 2017               [Page 8]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -501,7 +501,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017               [Page 9]
+Vcelak, et al.         Expires September 13, 2017               [Page 9]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -557,7 +557,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 10]
+Vcelak, et al.         Expires September 13, 2017              [Page 10]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -613,7 +613,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 11]
+Vcelak, et al.         Expires September 13, 2017              [Page 11]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -669,7 +669,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 12]
+Vcelak, et al.         Expires September 13, 2017              [Page 12]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -725,7 +725,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 13]
+Vcelak, et al.         Expires September 13, 2017              [Page 13]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -781,7 +781,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 14]
+Vcelak, et al.         Expires September 13, 2017              [Page 14]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -837,7 +837,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 15]
+Vcelak, et al.         Expires September 13, 2017              [Page 15]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -893,7 +893,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 16]
+Vcelak, et al.         Expires September 13, 2017              [Page 16]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -949,7 +949,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 17]
+Vcelak, et al.         Expires September 13, 2017              [Page 17]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 18]
+Vcelak, et al.         Expires September 13, 2017              [Page 18]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 19]
+Vcelak, et al.         Expires September 13, 2017              [Page 19]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 20]
+Vcelak, et al.         Expires September 13, 2017              [Page 20]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 21]
+Vcelak, et al.         Expires September 13, 2017              [Page 21]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 22]
+Vcelak, et al.         Expires September 13, 2017              [Page 22]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 23]
+Vcelak, et al.         Expires September 13, 2017              [Page 23]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1341,7 +1341,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 24]
+Vcelak, et al.         Expires September 13, 2017              [Page 24]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 25]
+Vcelak, et al.         Expires September 13, 2017              [Page 25]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1453,7 +1453,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 26]
+Vcelak, et al.         Expires September 13, 2017              [Page 26]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 27]
+Vcelak, et al.         Expires September 13, 2017              [Page 27]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1549,26 +1549,41 @@ A.1.  Name Error Example
 
    To do this, the server returns:
 
-   o  An NSEC5PROOF RR for c.example.com and a signed NSEC5 RR
-      "matching" c.example.org its with Wildcard flag cleared.  (Note:
-      the "matching" NSEC5 RR has its owner name equal to the NSEC5 hash
-      of c.example.org.)  Per Section 9.1.1, this NSEC5PROOF RR may be
-      precomputed.  NSEC5 RRs are always precomputed.
+   o  NSEC5PROOF RR for c.example.com.  The owner name of this
+      NSEC5PROOF RR is c.example.com and the RDATA is the NSEC5 proof
+      corresponding to c.example.com.  Per Section 9.1.1, this
+      NSEC5PROOF RR may be precomputed.
 
-   o  An NSEC5PROOF RR for b.c.example.org and a signed NSEC5 RR
-      "covering" b.c.example.org (The NSEC5 hash of b.c.example.org
-      sorts in canonical order between the "covering" NSEC5 RR's Owner
-      Name and Next Hashed Owner Name.)  This
-      NSEC5PROOF RR must be computed on-the-fly.  NSEC5 RRs are always
+   [stick the dig output for this NSEC5PROOF RR here.]
+
+   o  Signed NSEC5 RR "matching" c.example.org its with Wildcard flag
+      cleared.  The NSEC5 RR has its owner name equal to the NSEC5 hash
+      of c.example.org, which is XXXXX324X.  NSEC5 RRs are always
       precomputed.
 
+   [stick the dig output for this NSEC5 RR here.]
 
 
 
-Vcelak, et al.         Expires September 11, 2017              [Page 28]
+Vcelak, et al.         Expires September 13, 2017              [Page 28]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   o  An NSEC5PROOF RR for b.c.example.org.  This NSEC5PROOF RR must be
+      computed on-the-fly.
+
+   [stick the dig output for this NSEC5PROOF RR here.]
+
+   o  Signed NSEC5 RR "covering" b.c.example.org.  The NSEC5 hash of
+      b.c.example.org, which is XXXXXXXXXXXX, sorts in canonical order
+      between the "covering" NSEC5 RR's Owner Name and Next Hashed Owner
+      Name.
+
+   [stick the dig output for this NSEC5PROOF RR here.]
+
+   [NOTE: ALSO THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME.  SOMEONE
+   MIGHT WANT TO ADD.]
 
 A.2.  No Data Example, Opt-Out Not In Effect
 
@@ -1580,15 +1595,20 @@ A.2.  No Data Example, Opt-Out Not In Effect
 
    To do this, the server returns:
 
-   o  An NSEC5PROOF RR for c.example.com and a signed NSEC5 RR
-      "matching" c.example.org its with CNAME and MX Type Bits cleared.
-      (Note: the "matching" NSEC5 RR has its owner name equal to the
-      NSEC5 hash of c.example.org.)  Per Section 9.1.1, this NSEC5PROOF
-      RR may be precomputed.  NSEC5 RRs are always precomputed.
+   o  NSEC5PROOF RR for c.example.com.  Per Section 9.1.1, this
+      NSEC5PROOF RR may be precomputed.
+
+   [stick the dig output for this NSEC5PROOF RR here.]
+
+   o  Signed NSEC5 RR "matching" c.example.org its with CNAME and MX
+      Type Bits cleared.  This NSEC5 RR has its owner name equal to the
+      NSEC5 hash of c.example.org.  NSEC5 RR are always precomputed.
+
+   [stick the dig output for this NSEC5PROOF RR here.]
 
 A.3.  No Data Example, Opt-Out In Effect
 
-   [Sharon has no idea how to make such an example.  Jan, want to try?]
+   [Sharon has no idea how to make such an example.]
 
 A.4.  Wildcard Example
 
@@ -1598,33 +1618,37 @@ A.4.  Wildcard Example
 
    The server must prove the following facts:
 
-   o  Existence of the TXT record for the wildcard *.a.example.org
-
-   o  Non-existence of the next closer name foo.a.example.org.
-
-   To do this, the server returns:
-
-   o  A signed TXT record for *.a.example.org.  [Garr this is not
-      exactly correct its the crazy DNSSEC label match thing.  But its a
-      distraction here...! Maybe we should just cite the RFC that shows
-      how to do this.  If someone knows what RFC that is, please go
-      ahead and cite it.]
-
-   o  An NSEC5PROOF RR for foo.a.example.com and a signed NSEC5 RR
-      "covering" foo.a.example.com.  (The NSEC5 hash of
-      foo.a.example.org sorts in canonical order between the "covering"
-      NSEC5 RR's Owner Name and Next Hashed Owner Name.)  This
-      NSEC5PROOF RR must be computed on-the-fly.  NSEC5 RRs are always
-      precomputed.
 
 
 
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 29]
+Vcelak, et al.         Expires September 13, 2017              [Page 29]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   o  Existence of the TXT record for the wildcard *.c.example.org
+
+   o  Non-existence of the next closer name foo.c.example.org.
+
+   To do this, the server returns:
+
+   o  Signed TXT record for the wildcard at c.example.org.  [Sharon does
+      not know how to write this text properly, someone else should
+      write this.]
+
+   [Dig output here]
+
+   o  NSEC5PROOF RR for foo.c.example.org.  This NSEC5PROOF RR must be
+      computed on-the-fly.
+
+   [Dig output here]
+
+   o  Signed NSEC5 RR "covering" foo.c.example.org.  The NSEC5 hash of
+      foo.c.example.org is XXXXXXXXXXXXXXXX and sorts in canonical order
+      between the NSEC5 RR's Owner Name and Next Hashed Owner Name.
+      NSEC5 RRs are always precomputed.
+
+   [Dig output here]
 
 A.5.  Wildcard No Data Example
 
@@ -1641,19 +1665,36 @@ A.5.  Wildcard No Data Example
 
    To do this, the server returns:
 
-   o  An NSEC5PROOF RR for a.example.com and a signed NSEC5 RR
-      "matching" c.example.org its with its Wildcard flag set and its
-      CNAME and MX Type Bits cleared.  (Note: the "matching" NSEC5 RR
-      has its owner name equal to the NSEC5 hash of a.example.org.)  Per
-      Section 9.1.1, this NSEC5PROOF RR may be precomputed.  NSEC5 RRs
-      are always precomputed.
+   o  NSEC5PROOF RR for a.example.com.  Per Section 9.1.1, this
+      NSEC5PROOF RR may be precomputed.
 
-   o  An NSEC5PROOF RR for foo.a.example.com and a signed NSEC5 RR
-      "covering" foo.a.example.com.  (The NSEC5 hash of
-      foo.a.example.org sorts in canonical order between the "covering"
-      NSEC5 RR's Owner Name and Next Hashed Owner Name.)  This
-      NSEC5PROOF RR must be computed on-the-fly.  NSEC5 RRs are always
-      precomputed.
+   [Dig output here]
+
+   o  Signed NSEC5 RR "matching" c.example.org its with its Wildcard
+      flag set and its CNAME and MX Type Bits cleared.  This NSEC5 RR
+      has its owner name equal to the NSEC5 hash of a.example.org.)
+      NSEC5 RRs are always precomputed.
+
+
+
+Vcelak, et al.         Expires September 13, 2017              [Page 30]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
+   [Dig output here]
+
+   o  An NSEC5PROOF RR for foo.a.example.com.  This NSEC5PROOF RR must
+      be computed on-the-fly.
+
+   [Dig output here]
+
+   o  Signed NSEC5 RR "covering" foo.a.example.com.  The NSEC5 hash of
+      foo.a.example.org is XXXXXXX, and sorts in canonical order between
+      this covering NSEC5 RR's Owner Name and Next Hashed Owner Name.
+      NSEC5 RRs are always precomputed.
+
+   [Dig output here]
 
 Appendix B.  Change Log
 
@@ -1675,13 +1716,6 @@ Appendix B.  Change Log
       03 - Mention precomputed NSEC5PROOF Values in Performance
       Considerations section.
 
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 30]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
       04 - Edit Rationale, How NSEC5 Works, and Security Consideration
       sections for clarity.  Edit Zone Signing section, adding
       precomputation of NSEC5PROOFs.  Remove RSA-based NSEC5
@@ -1689,6 +1723,20 @@ Internet-Draft                    NSEC5                       March 2017
       Implementation Status sections.
 
 Authors' Addresses
+
+
+
+
+
+
+
+
+
+
+Vcelak, et al.         Expires September 13, 2017              [Page 31]
+
+Internet-Draft                    NSEC5                       March 2017
+
 
    Jan Vcelak
    CZ.NIC
@@ -1726,18 +1774,6 @@ Authors' Addresses
    EMail: shuque@gmail.com
 
 
-
-
-
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 31]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    David C Lawrence
    Akamai Technologies
    150 Broadway
@@ -1753,40 +1789,4 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Vcelak, et al.         Expires September 11, 2017              [Page 32]
+Vcelak, et al.         Expires September 13, 2017              [Page 32]
