@@ -571,9 +571,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(alpha) <cref source="Leo">Here we should 
-                    also include PK in the hash.  But we need to convert PK to an octet string
-                    first, right? Can someone else write this?</cref></t>
+                    <t>h = ECVRF_hash_to_curve(alpha, g^x)</t>
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
@@ -641,9 +639,7 @@
                         output "INVALID" and stop.
                     </t>
                     <t>u = (g^x)^c * g^s</t>
-                    <t>h = ECVRF_hash_to_curve(alpha) <cref source="Leo">Here we should 
-                    also include PK in the hash.  But we need to convert PK to an octet string
-                    first, right? Can someone else write this?</cref></t>
+                    <t>h = ECVRF_hash_to_curve(alpha, g^x)</t>
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
                     <t>
@@ -665,7 +661,7 @@
             <section title="ECVRF_hash_to_curve1" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve1(alpha) algorithm 
+            The following ECVRF_hash_to_curve1(alpha, g^x) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve that supports
             point compression.  
@@ -684,12 +680,13 @@
             
             
             <t>
-                ECVRF_hash_to_curve1(alpha)
+                ECVRF_hash_to_curve1(alpha, g^x)
             </t>
             <t>
                 Input:
                 <list>
                     <t>alpha - value to be hashed, an octet string</t>
+                    <t>g^x - EC public key</t>
                 </list>
             </t>
             <t>
@@ -703,12 +700,13 @@
                 Steps:
                 <list style="numbers">
                     <t>ctr = 0</t>
+                    <t>pk = ECP2OS(g^x)</t>
                     <t>Repeat:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>p = 0x02 || Hash(alpha || CTR)</t>
+                        <t>p = 0x02 || Hash(alpha || pk || CTR)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
-                        <t>p = 0x03 || Hash(alpha || CTR)</t>
+                        <t>p = 0x03 || Hash(alpha || pk || CTR)</t>
                         <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
                         <t>ctr = ctr + 1</t>
                     </list>
