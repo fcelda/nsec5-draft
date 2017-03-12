@@ -320,13 +320,6 @@
         </t>
 
         <t>
-            This VRF is parametrized by a hash function. The chosen
-            function MUST be secure cryptographic hash function with
-            cryptographic security level at least as high as the cryptographic
-            security level of the RSA key.
-        </t>
-
-        <t>
             The VRF computes the proof pi as a deterministic RSA signature on
             input alpha using the RSA Full Domain Hash Algorithm
             <xref target="RFC8017" /> parametrized with the selected hash algorithm.
@@ -352,8 +345,15 @@
         <t>
             Fixed options:
             <list>
-                <t>Hash - hash function</t>
+                <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of hash function Hash</t>
+            </list>
+        </t>
+
+        <t>
+            Options constraints:
+            <list>
+                <t>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key</t>
             </list>
         </t>
 
