@@ -756,9 +756,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hash value, integer between 0 and 2^(8n)-1 
-                    <cref source="Sharon">This is an int between 0 and 2^128-1 for
-                    a 256 bit curve. Remember that n=16 for such a curve</cref></t>
+                    <t>h - hash value, integer between 0 and 2^(8n)-1</t>
                 </list>
             </t>
             <t>
@@ -795,20 +793,16 @@
                     <t>gamma - EC point</t>
                     <t>
                     c - integer between 0 and 2^(8n)-1
-                    <cref source="Sharon">2^128-1 for a 256-bit EC</cref>
                     </t>
                     <t>
                     s - integer between 0 and 2^(16n)-1
-                    <cref source="Sharon">2^256-1 for a 256-bit EC</cref>
                     </t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>let gamma', c', s' be pi split after 2n+1-th and 3n+1-th octet
-                    <cref source="Sharon">"split after 33-rd and 49-th octet" for a 256-bit EC</cref>
-                    </t>
+                    <t>let gamma', c', s' be pi split after (2n+1)-th and (3n+1)-th octet</t>
                     <t>gamma = OS2ECP(gamma')</t>
                     <t>c = OS2IP(c')</t>
                     <t>s = OS2IP(s')</t>
