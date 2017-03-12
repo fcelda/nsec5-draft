@@ -826,19 +826,13 @@
             the length in octets of a single coordinate of an EC point is 
             2n = 32.
         </t>
-        
         <t>
-            EC points are represented using point compression as specified in 
-            <xref target="SECG1" /> (Section 2.3.3).
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
         <t>
             The ECVRF_hash_to_curve function is ECVRF_hash_to_curve1, 
             as specified in <xref target="ecvrfH2C1"/>.
         </t>
-        <t>
-            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
-        </t>
-        
         </list>
         </t>
         
@@ -853,14 +847,10 @@
             2n = 32.
         </t>
         <t>
-            EC points are represented using point compression, as specified in 
-            Section 2.3.3 of <xref target="SECG1" />.
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
-        </t>
-        <t>
-            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
         </list>
         </t>
@@ -870,8 +860,6 @@
         </t>
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
-   
-        
         
         </section>
     </section>
