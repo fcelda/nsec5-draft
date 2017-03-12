@@ -980,11 +980,6 @@
     the application. That is, that
 	pseudorandomness of outputs matters only for inputs that are chosen
     independently of the VRF key. 
-    
-    <!--This is the case, for example,
-	in a typical NSEC5 application, in which pseudorandomness of
-    outputs matters only for the names in the
-	zone.-->
     </t>
     <t>If full pseudorandomness is required for the application, the application
     may increase
@@ -995,14 +990,6 @@
     hash function Hash may also potentially need to be increased.
     </t>
     </list>
-    </t>
-    
-    <t> [TODO: should we
-provide some guidance on this security parameter issue? Honestly, this is
-well above and beyond what normal crypto standards do, because
-	no one really considers tightness of reductions in crypto
-standards, because ECDSA isn't even provable at all -- can't even talk
-about tightness, because there is simply no reduction.]
     </t>
     </section>
 
