@@ -817,7 +817,7 @@
         
         <t>[Seeking feedback on this section!]</t>
         
-        <t>This document defines SHA256-P256-EC-VRF as follows: 
+        <t>This document defines EC-VRF-P256-SHA256 as follows: 
         <list style="symbols">
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
@@ -842,9 +842,7 @@
         </list>
         </t>
         
-        
-        
-        <t>This document defines SHA256-ED25519-EC-VRF as follows: 
+        <t>This document defines EC-VRF-ED25519-SHA256 as follows: 
         <list style="symbols">
         <t>
             The EC group G is the Ed25519
@@ -882,7 +880,7 @@
     <section title="Implementation Status" anchor="imp">
     
         <t>
-            An implementation of the RSA-FDH-VRF (SHA-256) and SHA256-P256-EC-VRF was developed
+            An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256 was developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
             at <eref target="http://github.com/fcelda/nsec5-crypto" />.
         </t>
@@ -890,14 +888,14 @@
     <t>
     The Key Transparency project at Google
     uses a VRF implemention that is almost identical to
-    the SHA256-P256-EC-VRF specified here, with a few minor changes
+    the EC-VRF-P256-SHA256 specified here, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
     is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
     
     <t>
     Open Whisper Systems also uses a VRF very similar to 
-    SHA512-Elligator-ED25519-EC-VRF, called VXEdDSA, and specified here:
+    EC-VRF-ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
     <eref target="https://whispersystems.org/docs/specifications/xeddsa/" />
     </t> 
     </section>    
