@@ -123,16 +123,16 @@ Internet-Draft                     VRF                        March 2017
    key can compute the hash, but anyone with corresponding public key
    can verify the correctness of the hash.
 
-   One application of the VRF is to prevent enumeration of data stored
-   in a hash-based data structure.  In this application, a prover holds
-   the VRF secret key and uses the VRF hashing to construct a hash-based
-   data structure on the input data.  Due to the nature of the VRF
-   hashing, only the prover can answer queries about whether or not some
-   data is stored in the data structure.  Anyone who knows the public
-   VRF key can verify that the prover has answered the queries
-   correctly.  However no offline inferences (i.e. inferences without
-   querying the prover) can be made about the data stored in the data
-   strucuture.
+   The main application of the VRF is to protect the privacy of data
+   records stored in a hash-based data structure against a querying
+   adversary.  In this application, a prover holds the VRF secret key
+   and uses the VRF hashing to construct a hash-based data structure on
+   the input data.  Due to the nature of the VRF hashing, only the
+   prover can answer queries about whether or not some data is stored in
+   the data structure.  Anyone who knows the public VRF key can verify
+   that the prover has answered the queries correctly.  However no
+   offline inferences (i.e. inferences without querying the prover) can
+   be made about the data stored in the data strucuture.
 
 1.2.  Requirements
 
@@ -458,15 +458,9 @@ Internet-Draft                     VRF                        March 2017
 
       g - generator of group G
 
-      2n - length in octets of a single coordinate of an EC point in G
-
-      [[CREF1: n is 16 octects for a 256 bit curve. there is probably a
-      better way to word this. --Sharon]]
-
-      [[CREF2: n is ceil(log2(q)/8) maybe? --Jan]]
-
-      [[CREF3: Technically yes but do we need to specify that?  The ceil
-      part might be confusing. --Dimitris]]
+      n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x
+      and ceil(x) is the smallest integer larger than or equal to the
+      real number x
 
       Hash - cryptographic hash function
 
@@ -497,6 +491,12 @@ Internet-Draft                     VRF                        March 2017
 
       h[i] - the i'th octet of octet string h
 
+      ECP2OS - EC point to octet string conversion with point
+      compression as specified in Section 2.3.3 of [SECG1]
+
+      OS2ECP - octet string to EC point conversion with point
+      compression as specified in Section 2.3.4 of [SECG1]
+
 
 
 
@@ -505,12 +505,6 @@ Goldberg, et al.       Expires September 13, 2017               [Page 9]
 
 Internet-Draft                     VRF                        March 2017
 
-
-      ECP2OS - EC point to octet string conversion with point
-      compression as specified in Section 2.3.3 of [SECG1]
-
-      OS2ECP - octet string to EC point conversion with point
-      compression as specified in Section 2.3.4 of [SECG1]
 
 5.1.  EC-VRF Proving
 
@@ -554,6 +548,12 @@ Internet-Draft                     VRF                        March 2017
 
    Output:
 
+      beta - VRF hash output, octet string of length 2n
+
+   Steps:
+
+   1.  beta = pi[2] || pi[3] || ... pi[2n+1]
+
 
 
 
@@ -561,12 +561,6 @@ Goldberg, et al.       Expires September 13, 2017              [Page 10]
 
 Internet-Draft                     VRF                        March 2017
 
-
-      beta - VRF hash output, octet string of length 2n
-
-   Steps:
-
-   1.  beta = pi[2] || pi[3] || ... pi[2n+1]
 
    2.  Output beta
 
@@ -609,6 +603,12 @@ Internet-Draft                     VRF                        March 2017
    The ECVRF_hash_to_curve algorithm takes in an octet string alpha and
    converts it to h, an EC point in G.
 
+5.4.1.1.  ECVRF_hash_to_curve1
+
+   The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements
+   ECVRF_hash_to_curve in a simple and generic way that works for any
+   elliptic curve that supports point compression.
+
 
 
 
@@ -617,12 +617,6 @@ Goldberg, et al.       Expires September 13, 2017              [Page 11]
 
 Internet-Draft                     VRF                        March 2017
 
-
-5.4.1.1.  ECVRF_hash_to_curve1
-
-   The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements
-   ECVRF_hash_to_curve in a simple and generic way that works for any
-   elliptic curve that supports point compression.
 
    However, this algorithm MUST NOT be used in applications where the
    VRF input alpha must be kept secret.  This is because the running
@@ -666,6 +660,12 @@ Internet-Draft                     VRF                        March 2017
 
    4.  h = OS2ECP(p)
 
+   5.  Output h
+
+   The initial octet 0x02 in the octet string created in step B
+   represents that the point in compressed form has positive
+   y-coefficient [SECG1].  Similarly, the 0x03 octet in step D
+   represents negative y-coefficient.
 
 
 
@@ -673,13 +673,6 @@ Goldberg, et al.       Expires September 13, 2017              [Page 12]
 
 Internet-Draft                     VRF                        March 2017
 
-
-   5.  Output h
-
-   The initial octet 0x02 in the octet string created in step B
-   represents that the point in compressed form has positive
-   y-coefficient [SECG1].  Similarly, the 0x03 octet in step D
-   represents negative y-coefficient.
 
 5.4.1.2.  ECVRF_hash_to_curve2
 
@@ -723,18 +716,19 @@ Internet-Draft                     VRF                        March 2017
 
       pi - VRF proof, octet string (5n+1 octets)
 
+   Output:
+
+      gamma - EC point
+
+      c - integer between 0 and 2^(8n)-1
+
+
 
 
 Goldberg, et al.       Expires September 13, 2017              [Page 13]
 
 Internet-Draft                     VRF                        March 2017
 
-
-   Output:
-
-      gamma - EC point
-
-      c - integer between 0 and 2^(8n)-1
 
       s - integer between 0 and 2^(16n)-1
 
@@ -778,6 +772,12 @@ Internet-Draft                     VRF                        March 2017
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
 
+   [TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF ciphersuite
+   where the Elligator hash function is used for ECVRF_hash-to-curve?]
+
+   [TODO: Add an Ed448 ciphersuite?]
+
+
 
 
 
@@ -785,11 +785,6 @@ Goldberg, et al.       Expires September 13, 2017              [Page 14]
 
 Internet-Draft                     VRF                        March 2017
 
-
-   [TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF ciphersuite
-   where the Elligator hash function is used for ECVRF_hash-to-curve?]
-
-   [TODO: Add an Ed448 ciphersuite?]
 
 6.  Implementation Status
 
@@ -834,6 +829,11 @@ Internet-Draft                     VRF                        March 2017
    a proof using the [GQ88] identification protocol made non-interactive
    using the Fiat-Shamir heuristic in the random oracle model.
 
+   However, it is not possible to guarantee pseudorandomness in the face
+   of adversarially generated VRF keys.  This is because an adversary
+   can always use bad randomness to generate the VRF keys, and thus, the
+   VRF output may not be pseudorandom.
+
 
 
 
@@ -841,11 +841,6 @@ Goldberg, et al.       Expires September 13, 2017              [Page 15]
 
 Internet-Draft                     VRF                        March 2017
 
-
-   However, it is not possible to guarantee pseudorandomness in the face
-   of adversarially generated VRF keys.  This is because an adversary
-   can always use bad randomness to generate the VRF keys, and thus, the
-   VRF output may not be pseudorandom.
 
 7.2.  Proper randomness for EC-VRF
 
@@ -890,6 +885,11 @@ Internet-Draft                     VRF                        March 2017
       cryptographic strength of the EC group G.  For both RSA-FDH-VRF
       and EC-VRF the cryptographic strength of the hash function Hash
       may also potentially need to be increased.
+
+
+
+
+
 
 
 

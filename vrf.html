@@ -527,7 +527,7 @@
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> Rationale</h1>
 <p id="rfc.section.1.1.p.1">A Verifiable Random Function (VRF) <a href="#MRV99">[MRV99]</a> is the public-key version of a keyed cryptographic hash. Only the holder of the private VRF key can compute the hash, but anyone with corresponding public key can verify the correctness of the hash.  </p>
-<p id="rfc.section.1.1.p.2">One application of the VRF is to prevent enumeration of data stored in a hash-based data structure.  In this application, a prover holds the VRF secret key and uses the VRF hashing to construct a hash-based data structure on the input data.  Due to the nature of the VRF hashing, only the prover can answer queries about whether or not some data is stored in the data structure.  Anyone who knows the public VRF key can verify that the prover has answered the queries correctly. However no offline inferences (i.e. inferences without querying the prover) can be made about the data stored in the data strucuture.  </p>
+<p id="rfc.section.1.1.p.2">The main application of the VRF is to protect the privacy of data records stored in a hash-based data structure against a querying adversary. In this application, a prover holds the VRF secret key and uses the VRF hashing to construct a hash-based data structure on the input data.  Due to the nature of the VRF hashing, only the prover can answer queries about whether or not some data is stored in the data structure.  Anyone who knows the public VRF key can verify that the prover has answered the queries correctly. However no offline inferences (i.e. inferences without querying the prover) can be made about the data stored in the data strucuture.  </p>
 <h1 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a> Requirements</h1>
 <p id="rfc.section.1.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.  </p>
 <h1 id="rfc.section.1.3"><a href="#rfc.section.1.3">1.3.</a> Terminology</h1>
@@ -728,16 +728,7 @@
   <li>G - EC group</li>
   <li>q - prime order of group G</li>
   <li>g - generator of group G</li>
-  <li>2n - length in octets of a single coordinate of an EC point in G</li>
-  <li>
-    <a id="CREF1" class="info">[CREF1]<span class="info">Sharon: n is 16 octects for a 256 bit curve. there is probably a better way to word this.</span></a>
-  </li>
-  <li>
-    <a id="CREF2" class="info">[CREF2]<span class="info">Jan: n is ceil(log2(q)/8) maybe?</span></a>
-  </li>
-  <li>
-    <a id="CREF3" class="info">[CREF3]<span class="info">Dimitris: Technically yes but do we need to specify that? The ceil part might be confusing.</span></a>
-  </li>
+  <li>n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x  and ceil(x) is the smallest integer larger than or equal to the real number x</li>
   <li>Hash - cryptographic hash function</li>
   <li>hLen - output length in octets of function Hash</li>
 </ul>
