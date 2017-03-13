@@ -670,7 +670,8 @@ Validator checks:
 
 > The NSEC5 RR matching the closest encloser does not have NS without SOA in the Type Bit Map.
 
-> The NSEC5 RR matching the closest encloser does not have DNAME in the Type Bit Map.
+> The NSEC5 RR matching the closest encloser does not have DNAME in
+  the Type Bit Map.
 
 <!--> Next closer name is derived correctly.-->
 
@@ -1209,27 +1210,26 @@ to illustrate how denying responses are handled with NSEC5.  For brevity,
 the class is not shown (defaults to IN) and the SOA record is shortened,
 resulting in the following zone file:
 
-> example.org.        SOA ( ... )
+    example.org.        SOA ( ... )  
+    example.org.        NS  a.example.org
 
-> example.org.        NS  a.example.org
+    a.example.org.      A 192.0.2.1  
+    c.example.org.      A 192.0.2.2  
 
-> a.example.org.      A 192.0.2.1
+    c.example.org.      TXT "c record"  
 
-> c.example.org.      A 192.0.2.2
+    d.example.org.      NS ns1.d.example.org
 
-> c.example.org.      TXT "c record"
+    ns1.d.example.org.  A 192.0.2.4
 
-> d.example.org.      NS ns1.d.example.org
+    g.example.org.      A 192.0.2.1  
+    g.example.org.      TXT "g record"
 
-> ns1.d.example.org.  A 192.0.2.4
+    *.a.example.org.    TXT "wildcard record"
 
-> g.example.org.      A 192.0.2.1
-
-> g.example.org.      TXT "g record"
-
-> *.a.example.org.    TXT "wildcard record"
-
-Next we present example responses. All cryptographic values are shortened proportionally and ADDITIONAL sections have been removed.
+Next we present example responses. All cryptographic values are
+shortened as indicated by "..." and ADDITIONAL sections have been
+removed.
 
 ## Name Error Example
 
@@ -1243,47 +1243,51 @@ The server must prove the following facts:
 
 * Non-existence of next closer b.c.example.org.
 
+<!-- tale should figure out the right way to keep this on one page -->
 To do this, the server returns:
 
-;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
-
-;; QUESTION SECTION:
+;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937  
+;; QUESTION SECTION:  
 ;; a.b.c.example.org.           IN      A
 
-;; AUTHORITY SECTION:
-example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400
+;; AUTHORITY SECTION:  
+example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (  
+                          2010111214 21600 3600 604800 86400 )
 
-example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+example.org.         3600 IN RRSIG  SOA 16 2 3600 (  
+        20170412024301 20170313024301 5137 example.org. rT231b1rH... )
 
 * This is an NSEC5PROOF RR for c.example.com.
 The owner name of this NSEC5PROOF RR is c.example.com and the RDATA is
 the NSEC5 proof corresponding to c.example.com. Per {{precompute}}, this
 NSEC5PROOF RR may be precomputed.
 
-c.example.org.          86400   IN      NSEC5PROOF      48566 Amgn22zUiZ9JVyaT
+c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
 
-* This is as signed NSEC5 RR "matching" c.example.org its with Wildcard flag cleared.
-  The NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org,
-  which is O4K89V.
-  NSEC5 RRs are always precomputed.
+* This is as signed NSEC5 RR "matching" c.example.org its with
+  Wildcard flag cleared.  The NSEC5 RR has its owner name equal to the
+  NSEC5 hash of c.example.org, which is O4K89V.  NSEC5 RRs are always
+  precomputed.
 
-o4k89v.example.org. 86400 IN      NSEC5   48566 0 0O49PI A TXT RRSIG
-
-o4k89v.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J
+o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG  
+o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (  
+    20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
 
 * This is an NSEC5PROOF RR for b.c.example.org.  This
   NSEC5PROOF RR must be computed on-the-fly.
 
-b.c.example.org.        86400   IN      NSEC5PROOF      48566 AuvvJqbUcEs8sCpY
+b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
 
 * This is a signed  NSEC5 RR "covering" b.c.example.org.
   The NSEC5 hash of b.c.example.org, which is AO5OF,
   sorts in canonical order between the
   "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.
 
-0o49pi.example.org. 86400 IN      NSEC5   48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY
+0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
+    NS SOA RRSIG DNSKEY NSEC5KEY )
 
-0o49pi.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO
+0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+    20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO
 
 \[NOTE: ALSO THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME. SOMEONE
 MIGHT WANT TO ADD.]
@@ -1348,14 +1352,14 @@ d.example.org.          3600    IN      NS      ns1.d.example.org.
 * This is an NSEC5PROOF RR for example.com.    Per {{precompute}}, this
 NSEC5PROOF RR may be precomputed.
 
-example.org.        	86400	IN	    NSEC5PROOF	    48566 AjwsPCJZ8zH/D0Tr
+example.org.            86400   IN          NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
 
 * This is a signed NSEC5 RR "matching" example.org. This NSEC5 RR has its owner
   name equal to the NSEC5 hash of example.org.  NSEC5 RR are always precomputed.
 
-0o49pi.example.org. 86400	IN	NSEC5	48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY
+0o49pi.example.org. 86400       IN      NSEC5   48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY
 
-0o49pi.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO
+0o49pi.example.org. 86400       IN      RRSIG   NSEC5 16 3 86400 20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO
 
 * This is an NSEC5PROOF RR for d.example.org.  This
 NSEC5PROOF RR must be computed on-the-fly.
