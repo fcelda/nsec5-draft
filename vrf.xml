@@ -278,7 +278,8 @@
 	knows valid VRF proof pi corresponding to the VRF input alpha, even
 	if this party does not know the private VRF key SK.
 	Such a party can easily distinguish beta from a random value by
-    checking whether VRF_verify(PK, alpha, beta, pi) returns "VALID".
+    checking whether VRF_verify(PK, alpha, pi) returns "VALID" and
+    beta = VRF_proof2hash(pi).
 	</t>
 
     
@@ -518,7 +519,10 @@
                 <t>G - EC group</t>
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
-                <t>n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x  and ceil(x) is the smallest integer larger than or equal to the real number x</t>
+                <t>2n - ceil(log2(q)/8); where log2(x) is the binary
+                 logarithm of x and ceil(x) is the smallest integer 
+                 larger than or equal to the real number x. </t>
+                 <!--Remember that n=16 for the P-256 curve-->                 
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of function Hash</t>
             </list>
@@ -859,7 +863,7 @@
         </list>
         </t>
    
-        <t>[TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF 
+        <t>[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator
         ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?]
         </t>
    
@@ -965,7 +969,7 @@
     
     <section title="Selective vs Full Pseudorandomness">
     
-    <t><xref target="nsec5ecc"/>presents cryptographic reductions to an 
+    <t><xref target="nsec5ecc"/> presents cryptographic reductions to an 
     underlying hard problem (e.g. Decisional Diffie Hellman, or the 
     standard RSA assumption) that prove the VRFs specificied in this 
     document possess full pseudorandomness

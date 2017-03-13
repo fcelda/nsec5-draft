@@ -5,14 +5,14 @@
 Network Working Group                                          J. Vcelak
 Internet-Draft                                                    CZ.NIC
 Intended status: Standards Track                             S. Goldberg
-Expires: September 13, 2017                            Boston University
+Expires: September 14, 2017                            Boston University
                                                          D. Papadopoulos
                                                   University of Maryland
                                                                 S. Huque
                                                               Salesforce
                                                              D. Lawrence
                                                      Akamai Technologies
-                                                          March 12, 2017
+                                                          March 13, 2017
 
 
             NSEC5, DNSSEC Authenticated Denial of Existence
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 1]
+Vcelak, et al.         Expires September 14, 2017               [Page 1]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -66,7 +66,7 @@ Internet-Draft                    NSEC5                       March 2017
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 13, 2017.
+   This Internet-Draft will expire on September 14, 2017.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 2]
+Vcelak, et al.         Expires September 14, 2017               [Page 2]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -165,7 +165,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 3]
+Vcelak, et al.         Expires September 14, 2017               [Page 3]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -221,7 +221,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 4]
+Vcelak, et al.         Expires September 14, 2017               [Page 4]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -277,7 +277,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 5]
+Vcelak, et al.         Expires September 14, 2017               [Page 5]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -290,7 +290,7 @@ Internet-Draft                    NSEC5                       March 2017
    [RFC2308], [RFC5155], and [RFC7129]; and DNS terms in [RFC7719].
 
    The reader should also be familiar with verifiable random functions
-   (VRFs) as defined in [ID.goldbe-vrf].
+   (VRFs) as defined in [I-D.goldbe-vrf].
 
    The following terminology is used through this document:
 
@@ -333,7 +333,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 6]
+Vcelak, et al.         Expires September 14, 2017               [Page 6]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -344,7 +344,7 @@ Internet-Draft                    NSEC5                       March 2017
 3.  How NSEC5 Works
 
    With NSEC5, the original domain name is hashed using a VRF
-   [ID.goldbe-vrf] using the following steps:
+   [I-D.goldbe-vrf] using the following steps:
 
    1.  The domain name is processed using a VRF keyed with the private
        NSEC5 key to obtain the NSEC5 proof.  Anyone who knows the public
@@ -389,7 +389,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 7]
+Vcelak, et al.         Expires September 14, 2017               [Page 7]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -401,25 +401,25 @@ Internet-Draft                    NSEC5                       March 2017
    how the NSEC5 proof and the NSEC5 hash are computed and validated.
 
    The NSEC5 proof corresponding to a name is computed using
-   VRF_prove(), as specified in [ID.goldbe-vrf].  The input to
+   VRF_prove(), as specified in [I-D.goldbe-vrf].  The input to
    VRF_prove() is a private NSEC5 key followed by an RR owner name in
    [RFC4034] canonical wire format.  The output NSEC5 proof is an octet
    string.
 
    An NSEC5 hash corresponding to a name is computed from its NSEC5
-   proof using VRF_proof2hash(), as specified in [ID.goldbe-vrf].  The
+   proof using VRF_proof2hash(), as specified in [I-D.goldbe-vrf].  The
    input to VRF_proof2hash() is an NSEC5 proof as an octet string; the
    output NSEC5 hash is an octet string.
 
    An NSEC5 proof for a name is verified using VRF_verify(), as
-   specified in [ID.goldbe-vrf].  The input is the NSEC5 public key,
+   specified in [I-D.goldbe-vrf].  The input is the NSEC5 public key,
    followed by an RR owner name in [RFC4034] canonical wire format,
    followed by an NSEC5 proof as an octet string; the output is either
    VALID or INVALID.
 
    This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-   o  The VRF is the EC-VRF algorithm specified in [ID.goldbe-vrf]
+   o  The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf]
       (Section X) where the secure hash function Hash is SHA-256 and the
       EC group G is the FIPS 186-3 P-256 curve.  SHA-256 is specified in
       [RFC6234].  The curve parameters are specified in [FIPS-186-3]
@@ -432,7 +432,7 @@ Internet-Draft                    NSEC5                       March 2017
    This document defines the EC-ED25519-SHA256 NSEC5 algorithm as
    follows:
 
-   o  The VRF is the EC-VRF algorithm specified in [ID.goldbe-vrf]
+   o  The VRF is the EC-VRF algorithm specified in [I-D.goldbe-vrf]
       (Section X) where the secure hash function Hash is SHA-256 and the
       EC group G is the Ed25519 curve.  SHA-256 is specified in
       [RFC6234].  The curve parameters are specified in [RFC7748]
@@ -445,7 +445,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 8]
+Vcelak, et al.         Expires September 14, 2017               [Page 8]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -501,7 +501,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017               [Page 9]
+Vcelak, et al.         Expires September 14, 2017               [Page 9]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -557,7 +557,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 10]
+Vcelak, et al.         Expires September 14, 2017              [Page 10]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -613,7 +613,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 11]
+Vcelak, et al.         Expires September 14, 2017              [Page 11]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -669,7 +669,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 12]
+Vcelak, et al.         Expires September 14, 2017              [Page 12]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -725,7 +725,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 13]
+Vcelak, et al.         Expires September 14, 2017              [Page 13]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -781,7 +781,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 14]
+Vcelak, et al.         Expires September 14, 2017              [Page 14]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -837,7 +837,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 15]
+Vcelak, et al.         Expires September 14, 2017              [Page 15]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -893,7 +893,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 16]
+Vcelak, et al.         Expires September 14, 2017              [Page 16]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -949,7 +949,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 17]
+Vcelak, et al.         Expires September 14, 2017              [Page 17]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 18]
+Vcelak, et al.         Expires September 14, 2017              [Page 18]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 19]
+Vcelak, et al.         Expires September 14, 2017              [Page 19]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 20]
+Vcelak, et al.         Expires September 14, 2017              [Page 20]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 21]
+Vcelak, et al.         Expires September 14, 2017              [Page 21]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 22]
+Vcelak, et al.         Expires September 14, 2017              [Page 22]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 23]
+Vcelak, et al.         Expires September 14, 2017              [Page 23]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1326,9 +1326,10 @@ Internet-Draft                    NSEC5                       March 2017
               National Institute for Standards and Technology, "Digital
               Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
-   [ID.goldbe-vrf]
+   [I-D.goldbe-vrf]
               Goldberg, S., Papadopoulos, D., and J. Vcelak, "Verifiable
-              Random Functions (VRFs)", March 2017.
+              Random Functions (VRFs)", draft-goldbe-vrf-00 (work in
+              progress), March 2017.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
@@ -1340,8 +1341,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-
-Vcelak, et al.         Expires September 13, 2017              [Page 24]
+Vcelak, et al.         Expires September 14, 2017              [Page 24]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 25]
+Vcelak, et al.         Expires September 14, 2017              [Page 25]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1453,7 +1453,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 26]
+Vcelak, et al.         Expires September 14, 2017              [Page 26]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 27]
+Vcelak, et al.         Expires September 14, 2017              [Page 27]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1565,7 +1565,7 @@ A.1.  Name Error Example
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 28]
+Vcelak, et al.         Expires September 14, 2017              [Page 28]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1621,7 +1621,7 @@ A.4.  Wildcard Example
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 29]
+Vcelak, et al.         Expires September 14, 2017              [Page 29]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1677,7 +1677,7 @@ A.5.  Wildcard No Data Example
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 30]
+Vcelak, et al.         Expires September 14, 2017              [Page 30]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1733,7 +1733,7 @@ Authors' Addresses
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 31]
+Vcelak, et al.         Expires September 14, 2017              [Page 31]
 
 Internet-Draft                    NSEC5                       March 2017
 
@@ -1789,4 +1789,4 @@ Internet-Draft                    NSEC5                       March 2017
 
 
 
-Vcelak, et al.         Expires September 13, 2017              [Page 32]
+Vcelak, et al.         Expires September 14, 2017              [Page 32]
