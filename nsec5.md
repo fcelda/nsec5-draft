@@ -1363,9 +1363,7 @@ The server must prove the following facts:
 thus the NS RR for d.example.org is unsigned).
 
 * Opt-out bit is set in NSEC5 record covering next closer name
- d.example.org. \[Sharon: this used to say 
-"Opt-out bit is set in the closest provable encloser NSEC5 record" but this 
-seems wrong as it is not consistent with the dig output.]
+ d.example.org. 
 
 * Existence of closest provable encloser example.org
 
@@ -1396,7 +1394,6 @@ order between BAPROH and JQBMG4.
 
     baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
                 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
-
 
 This is an NSEC5PROOF RR for example.com. It's RDATA is the NSEC5 proof 
 corresponding to example.com.  Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
