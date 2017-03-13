@@ -863,7 +863,7 @@
         </list>
         </t>
    
-        <t>[TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF 
+        <t>[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator
         ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?]
         </t>
    
@@ -969,7 +969,7 @@
     
     <section title="Selective vs Full Pseudorandomness">
     
-    <t><xref target="nsec5ecc"/>presents cryptographic reductions to an 
+    <t><xref target="nsec5ecc"/> presents cryptographic reductions to an 
     underlying hard problem (e.g. Decisional Diffie Hellman, or the 
     standard RSA assumption) that prove the VRFs specificied in this 
     document possess full pseudorandomness
