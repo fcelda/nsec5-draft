@@ -88,13 +88,7 @@ normative:
   rfc6605: 
   rfc7748: 
   rfc8080: 
-  ID.goldbe-vrf:
-    title: Verifiable Random Functions (VRFs)
-    author:
-      - ins: S. Goldberg
-      - ins: D. Papadopoulos
-      - ins: J. Vcelak
-    date: 2017-03
+  I-D.goldbe-vrf:
   FIPS-186-3:
     title: Digital Signature Standard (DSS)
     author:
@@ -320,7 +314,7 @@ concepts described in {{RFC1034}}, {{RFC1035}}, {{RFC4033}},
 and DNS terms in {{RFC7719}}.
 
 The reader should also be familiar with verifiable random functions (VRFs)
-as defined in {{ID.goldbe-vrf}}.
+as defined in {{I-D.goldbe-vrf}}.
 
 The following terminology is used through this document:
 
@@ -373,7 +367,7 @@ zone as insecure.
 
 # How NSEC5 Works
 
-With NSEC5, the original domain name is hashed using a VRF {{ID.goldbe-vrf}}
+With NSEC5, the original domain name is hashed using a VRF {{I-D.goldbe-vrf}}
 using the following steps:
 
 1. The domain name is processed using a VRF keyed with the private
@@ -423,21 +417,21 @@ the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
 The NSEC5 proof corresponding to a name is computed using VRF_prove(), 
-as specified in {{ID.goldbe-vrf}}.
+as specified in {{I-D.goldbe-vrf}}.
 The input to VRF_prove() is 
 a private NSEC5 key followed by
 an RR owner name in {{RFC4034}} canonical wire format.
 The output NSEC5 proof is an octet string.
 
 An NSEC5 hash corresponding to a name is computed from 
-its NSEC5 proof using VRF_proof2hash(), as specified in {{ID.goldbe-vrf}}.
+its NSEC5 proof using VRF_proof2hash(), as specified in {{I-D.goldbe-vrf}}.
 The input to VRF_proof2hash() is 
 an NSEC5 proof as an octet string; 
 the output NSEC5 hash is an octet string.
 
 
 An NSEC5 proof for a name is verified using VRF_verify(),  as specified in
-{{ID.goldbe-vrf}}.
+{{I-D.goldbe-vrf}}.
 The input is the NSEC5 public key, 
 followed by an RR owner name in {{RFC4034}} canonical wire format,
 followed by an NSEC5 proof as an octet string; 
@@ -445,7 +439,7 @@ the output is either VALID or INVALID.
 
 This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in {{ID.goldbe-vrf}}
+* The VRF is the EC-VRF algorithm specified in {{I-D.goldbe-vrf}}
   (Section X) where
   the secure hash function Hash is SHA-256 and 
   the EC group G is the FIPS 186-3 P-256 curve. 
@@ -459,7 +453,7 @@ This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in {{ID.goldbe-vrf}}
+* The VRF is the EC-VRF algorithm specified in {{I-D.goldbe-vrf}}
   (Section X) where
   the secure hash function Hash is SHA-256 and 
   the EC group G is the Ed25519 curve. 
