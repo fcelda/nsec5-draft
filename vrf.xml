@@ -518,7 +518,7 @@
                 <t>G - EC group</t>
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
-                <t>n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x  and ceil(x) is the smallest integer larger than or equal to the real number x</t>
+                <t>2n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x and ceil(x) is the smallest integer larger than or equal to the real number x</t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of function Hash</t>
             </list>
