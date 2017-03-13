@@ -1,0 +1,95 @@
+;; NXDOMAIN for a.b.c.example.com
+;;===============================
+;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
+;; Flags: qr aa rd; QUERY: 1; ANSWER: 0; AUTHORITY: 8; ADDITIONAL: 1
+
+;; EDNS PSEUDOSECTION:
+;; Version: 0; flags: do; UDP size: 4096 B; ext-rcode: Unused
+
+;; QUESTION SECTION:
+;; a.b.c.example.org.  		IN	A
+
+;; AUTHORITY SECTION:
+example.org.        	3600	IN	SOA	a.example.org. hostmaster.example.org.example.org. 2010111214 21600 3600 604800 86400
+c.example.org.      	86400	IN	NSEC5PROOF	48566 Amgn22zUiZ9JVyaTnkz2hE+OYCGyU4+mLtjRC/4VJqmEkr1FPLoW35d88G043eN/XmT1duKqVzj2gfjPI71hBINftki0N3tnaQUsRkrqUIjA
+o4k89v88eubpqt64kv54vnjcfagdn1fm2idm770de90gabsffq50.example.org. 86400	IN	NSEC5	48566 0 0O49PIR8ELCM3Q7QQ060UBV9MRM0VRBKHH3K185D7CHD7PORGTGG A TXT RRSIG
+b.c.example.org.    	86400	IN	NSEC5PROOF	48566 AuvvJqbUcEs8sCpYqbIXIywJNl+6UDsnY0m6GoWBaHaaKrBYZTvLoIbClnEdL23RsIOaoitWGJ8le4jvjP5bAhR4Rge/1LD1zdCUDRzIuLqz
+0o49pir8elcm3q7qq060ubv9mrm0vrbkhh3k185d7chd7porgtgg.example.org. 86400	IN	NSEC5	48566 0 BAPROHK71KTOLI1NUMQFCRUKHDSOKIS0KPBSO73BHLASERDKVHJG NS SOA RRSIG DNSKEY NSEC5KEY
+example.org.        	3600	IN	RRSIG	SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p7Jb6glYrrkn3CWoPRgfOmz0BR7ZKIhRwGxshszZBVl7+Opt3z1dpJ4dj1U6u+OoDvn7qplvyvA==
+o4k89v88eubpqt64kv54vnjcfagdn1fm2idm770de90gabsffq50.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/JE0/RUsQndZMEereVYcZtQZdBQ3SsdbGIohIzUb0I5F6f51BuUUWL4UCKQ7gcojyMhsl8arpxrg==
+0o49pir8elcm3q7qq060ubv9mrm0vrbkhh3k185d7chd7porgtgg.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzOpe8oTdl1tfVjh+4mpcIU16oPqu7gvI3SBqZKgbSY9JCSCG4HnA6iWfZ1CZRVblNtf76WTvpusg==
+
+;; Received 840 B
+;; Time 2017-03-12 22:44:19 EDT
+;; From 127.0.0.1@2053(UDP) in 0.408 ms
+;;==============================
+
+;; NO DATA for c.example.com MX
+;;============================
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
+;; Flags: qr aa rd; QUERY: 1; ANSWER: 0; AUTHORITY: 5; ADDITIONAL: 1
+
+;; EDNS PSEUDOSECTION:
+;; Version: 0; flags: do; UDP size: 4096 B; ext-rcode: Unused
+
+;; QUESTION SECTION:
+;; c.example.org.      		IN	MX
+
+;; AUTHORITY SECTION:
+example.org.        	3600	IN	SOA	a.example.org. hostmaster.example.org.example.org. 2010111214 21600 3600 604800 86400
+c.example.org.      	86400	IN	NSEC5PROOF	48566 Amgn22zUiZ9JVyaTnkz2hE+OYCGyU4+mLtjRC/4VJqmEkr1FPLoW35d88G043eN/XmT1duKqVzj2gfjPI71hBINftki0N3tnaQUsRkrqUIjA
+o4k89v88eubpqt64kv54vnjcfagdn1fm2idm770de90gabsffq50.example.org. 86400	IN	NSEC5	48566 0 0O49PIR8ELCM3Q7QQ060UBV9MRM0VRBKHH3K185D7CHD7PORGTGG A TXT RRSIG
+example.org.        	3600	IN	RRSIG	SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p7Jb6glYrrkn3CWoPRgfOmz0BR7ZKIhRwGxshszZBVl7+Opt3z1dpJ4dj1U6u+OoDvn7qplvyvA==
+o4k89v88eubpqt64kv54vnjcfagdn1fm2idm770de90gabsffq50.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/JE0/RUsQndZMEereVYcZtQZdBQ3SsdbGIohIzUb0I5F6f51BuUUWL4UCKQ7gcojyMhsl8arpxrg==
+
+;; Received 521 B
+;; Time 2017-03-12 22:48:46 EDT
+;; From 127.0.0.1@2053(UDP) in 0.133 ms
+;;=============================
+
+;; Wildcard expansion for foo.a.example.org (additional section omitted)
+;;=================================
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 53731
+;; Flags: qr aa rd; QUERY: 1; ANSWER: 2; AUTHORITY: 5; ADDITIONAL: 3
+
+;; QUESTION SECTION:
+;; foo.a.example.org.  		IN	TXT
+
+;; ANSWER SECTION:
+foo.a.example.org.  	3600	IN	TXT	"wildcard record"
+foo.a.example.org.  	3600	IN	RRSIG	TXT 16 3 3600 20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98m+SWH7/h0y3/XHr4I4C0qPdmHy7O+9o1KrS68TlTuKji6trxtBXFI2J7uOvOE8bOr8DaRYiUsQ==
+
+;; AUTHORITY SECTION:
+example.org.        	3600	IN	NS	a.example.org.
+foo.a.example.org.  	86400	IN	NSEC5PROOF	48566 AjqF5FGGVso40LdasxH4lYa/jBb8Ucgf/uQ255ZB7FS510HOhCvZPqui4ufdTpZXBnSrCs9yPN8aanny1C5AeXoSTDhKpwMgAOapH0xB2F1j
+baprohk71ktoli1numqfcrukhdsokis0kpbso73bhlaserdkvhjg.example.org. 86400	IN	NSEC5	48566 0 JQBMG47B98EETFK8KTDBV4FRIVFNMHEDJH9TF9JN12847CCGPE80 A TXT RRSIG
+example.org.        	3600	IN	RRSIG	NS 16 2 3600 20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyFym1lazIgny1bJx73DAiV5JRj6eCud89oNxrylKn4v8vYA3A/HxYfS6Apoe32yCjZYFjVswRP4A==
+baprohk71ktoli1numqfcrukhdsokis0kpbso73bhlaserdkvhjg.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1lgXtYF18ZKe1zQT91m50jZWc4iSubCWSpLeTiB9Rt+ypXpkX0eqQ8s8IlyKotc09a8aHp6hn5A==
+
+;; Received 736 B
+;; Time 2017-03-12 22:59:47 EDT
+;; From 127.0.0.1@2053(UDP) in 0.405 ms
+;;==============================
+
+;; Wildcard NO DATA for foo.a.example.org MX
+;;========================================= 
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 17332
+;; Flags: qr aa rd; QUERY: 1; ANSWER: 0; AUTHORITY: 8; ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;; foo.a.example.org.  		IN	MX
+
+;; AUTHORITY SECTION:
+example.org.        	3600	IN	SOA	a.example.org. hostmaster.example.org.example.org. 2010111214 21600 3600 604800 86400
+*.a.example.org.    	86400	IN	NSEC5PROOF	48566 Aq38RWWPhbs/vtih2ZO0u3CMDvuhJSIbz5m+Ne43lGwpWsj+tAc4Q34i1v035fUkMd6IpN03Q62I4ftaHZ5GYVmC5DqpFrFUPORCgFHN3joB
+mpu6c4al6p3ar8o8n949ahal33ebppjv6o0forbc0fgbeicv8iug.example.org. 86400	IN	NSEC5	48566 0 O4K89V88EUBPQT64KV54VNJCFAGDN1FM2IDM770DE90GABSFFQ50 TXT RRSIG
+foo.a.example.org.  	86400	IN	NSEC5PROOF	48566 AjqF5FGGVso40LdasxH4lYa/jBb8Ucgf/uQ255ZB7FS5RXpmPvs8rjbmiOCxATXdIBFfbqTSgtz5/c5MUSGYN5LDM7aAuymEWgnGpDEhghj1
+baprohk71ktoli1numqfcrukhdsokis0kpbso73bhlaserdkvhjg.example.org. 86400	IN	NSEC5	48566 0 JQBMG47B98EETFK8KTDBV4FRIVFNMHEDJH9TF9JN12847CCGPE80 A TXT RRSIG
+example.org.        	3600	IN	RRSIG	SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p7Jb6glYrrkn3CWoPRgfOmz0BR7ZKIhRwGxshszZBVl7+Opt3z1dpJ4dj1U6u+OoDvn7qplvyvA==
+mpu6c4al6p3ar8o8n949ahal33ebppjv6o0forbc0fgbeicv8iug.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. m3I75ttcWwVCQP7QLHaPc5gq3vM1lEaLcEhlHdhu2SY7zShYPl10YBBHybsNLJGmkEH5IIUdhZcZMYJq133eHg==
+baprohk71ktoli1numqfcrukhdsokis0kpbso73bhlaserdkvhjg.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1lgXtYF18ZKe1zQT91m50jZWc4iSubCWSpLeTiB9Rt+ypXpkX0eqQ8s8IlyKotc09a8aHp6hn5A==
+
+;; Received 836 B
+;; Time 2017-03-12 23:05:41 EDT
+;; From 127.0.0.1@2053(UDP) in 0.446 ms
+;;=======================================
