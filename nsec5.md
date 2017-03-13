@@ -1246,51 +1246,54 @@ The server must prove the following facts:
 <!-- tale should figure out the right way to keep this on one page -->
 To do this, the server returns:
 
-;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937  
-;; QUESTION SECTION:  
-;; a.b.c.example.org.           IN      A
+    ;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937 
+ 
+    ;; QUESTION SECTION:  
+    ;; a.b.c.example.org.           IN      A
 
-;; AUTHORITY SECTION:  
-example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (  
-                          2010111214 21600 3600 604800 86400 )
+    ;; AUTHORITY SECTION:  
+    example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (  
+                2010111214 21600 3600 604800 86400 )
 
-example.org.         3600 IN RRSIG  SOA 16 2 3600 (  
-        20170412024301 20170313024301 5137 example.org. rT231b1rH... )
+    example.org.         3600 IN RRSIG  SOA 16 2 3600 (  
+                20170412024301 20170313024301 5137 example.org. rT231b1rH... )
 
-* This is an NSEC5PROOF RR for c.example.com.
-The owner name of this NSEC5PROOF RR is c.example.com and the RDATA is
-the NSEC5 proof corresponding to c.example.com. Per {{precompute}}, this
-NSEC5PROOF RR may be precomputed.
+This is an NSEC5PROOF RR for c.example.com. It's RDATA is the NSEC5 proof 
+corresponding to c.example.com.  (NSEC5 proofs are randomized values,
+because NSEC5 proof values are computed uses the EC-VRF 
+from <xref target="I-D.goldbe-vrf"/>.)
+Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
 
-c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
+    c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
 
-* This is as signed NSEC5 RR "matching" c.example.org its with
-  Wildcard flag cleared.  The NSEC5 RR has its owner name equal to the
-  NSEC5 hash of c.example.org, which is O4K89V.  NSEC5 RRs are always
-  precomputed.
+This is a signed NSEC5 RR "matching" c.example.org.
+The NSEC5 RR has its owner name equal to the
+NSEC5 hash of c.example.org, which is O4K89V.  (NSEC5 hash values are 
+deterministic given the public NSEC5 key.)
+The NSEC5 RR also has its Wildcard flag cleared (see the "0" after the key ID 
+48566).  NSEC5 RRs are always precomputed.
 
-o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG  
-o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (  
-    20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
+    o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG  
+    o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (  
+                20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
 
-* This is an NSEC5PROOF RR for b.c.example.org.  This
-  NSEC5PROOF RR must be computed on-the-fly.
+This is an NSEC5PROOF RR for b.c.example.org. It's RDATA is the NSEC5 proof 
+corresponding to b.c.example.com.  This NSEC5PROOF RR must be computed on-the-fly.
 
-b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
+    b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
 
-* This is a signed  NSEC5 RR "covering" b.c.example.org.
-  The NSEC5 hash of b.c.example.org, which is AO5OF,
-  sorts in canonical order between the
-  "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.
+This is a signed  NSEC5 RR "covering" b.c.example.org. 
+The NSEC5 hash of b.c.example.org, which is AO5OF, sorts in canonical 
+order between the "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.
 
-0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
-    NS SOA RRSIG DNSKEY NSEC5KEY )
+    0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
+            NS SOA RRSIG DNSKEY NSEC5KEY )
 
-0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-    20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO
+    0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO)
 
-\[NOTE: ALSO THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME. SOMEONE
-MIGHT WANT TO ADD.]
+<!-- THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME. SOMEONE
+MIGHT WANT TO ADD.-->
 
 ## No Data Example, Opt-Out Not In Effect
 
@@ -1302,28 +1305,31 @@ The server must prove the following facts:
 
 To do this, the server returns:
 
-;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
+    ;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
 
-;; QUESTION SECTION:
-;; c.example.org.               IN      MX
+    ;; QUESTION SECTION:
+    ;; c.example.org.    IN MX
 
-;; AUTHORITY SECTION:
-example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400
+    ;; AUTHORITY SECTION:
+    example.org.    3600 IN SOA     a.example.org. hostmaster.example.org. (
+                2010111214 21600 3600 604800 86400 )
 
-example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+    example.org.    3600 IN RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
 
-* This is an NSEC5PROOF RR for c.example.com.    Per {{precompute}}, this
-  NSEC5PROOF RR may be precomputed.
+This is an NSEC5PROOF RR for c.example.com. Its RDATA corresponds to the NSEC5
+proof for c.example.com. which is a randomized value.  Per {{precompute}}, this
+NSEC5PROOF RR may be precomputed.
 
-c.example.org.          86400   IN      NSEC5PROOF      48566 Amgn22zUiZ9JVyaT
+    c.example.org. 86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT
 
-* This is a signed NSEC5 RR "matching" c.example.org
-  with CNAME and MX Type Bits cleared. This NSEC5 RR has its owner
-  name equal to the NSEC5 hash of c.example.org.  NSEC5 RR are always precomputed.
+This is a signed NSEC5 RR "matching" c.example.org 
+with CNAME and MX Type Bits cleared. This NSEC5 RR has its owner
+ name equal to the NSEC5 hash of c.example.org.  NSEC5 RR are always precomputed.
 
-o4k89v.example.org. 86400 IN      NSEC5   48566 0 0O49PI A TXT RRSIG
+    o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
 
-o4k89v.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J
+    o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+                20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
 
 ## No Data Example, Opt-Out In Effect
 
