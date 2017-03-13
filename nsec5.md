@@ -1205,7 +1205,7 @@ evaluating its performance.
 
 # Examples
 
-We use small DNS zone with three names and four types (SOA, NS, A, and TXT)
+We use small DNS zone 
 to illustrate how denying responses are handled with NSEC5.  For brevity,
 the class is not shown (defaults to IN) and the SOA record is shortened,
 resulting in the following zone file:
