@@ -1203,7 +1203,7 @@ evaluating its performance.
 --- back
 
 
-# Examples
+# Examples {#examples}
 
 We use small DNS zone 
 to illustrate how denying responses are handled with NSEC5.  For brevity,
@@ -1303,7 +1303,7 @@ and Next Hashed Owner Name (which is BAPROH).
 
     [TODO: Add discussion of CNAME and DNAME to the example?]
 
-## No Data Example, Opt-Out Not In Effect
+## No Data Example
 
 Consider a query for a type MX record for c.example.org.
 
@@ -1341,10 +1341,15 @@ NSEC5 RR are precomputed.
     o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
                 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
 
-## No Data Example, Opt-Out In Effect
+## Delegation to Unisgned Opt-Out Zone Example
 
 \[Dimitris: This case separation reads kind of awkward. 
-I would rather rename this section to Delegation to Unisgned Opt-out zone and the previous to simply No Data]
+I would rather rename this section to Delegation to Unisgned Opt-out zone 
+and the previous to simply No Data] \[Sharon: I agree with this and made the 
+change. Note that this section used to be called 
+"No Data Example, Opt-Out In Effect" and the previous 
+"No Data Example, Opt-Out Not In Effect".]
+
 
 \[Sharon: I took a pass over this but it really needs to be checked by someone
 who is "more dns" than I am.]
@@ -1447,12 +1452,11 @@ This is an NSEC5PROOF RR for foo.a.example.org.  This
 
     foo.a.example.org.     86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
 
-This is a signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of
+This is a signed NSEC5 RR "covering" foo.a.example.org.  The NSEC5 hash of
 foo.a.example.org is FORDMO and sorts in canonical order between the 
 NSEC5 RR's Owner Name (which is BAPROH) and Next Hashed Owner Name 
 (which is JQBMG4). This proves the non-existence of the next closer
-name foo.a.example.com.
-NSEC5 RRs are   precomputed.
+name foo.a.example.com. NSEC5 RRs are precomputed.
 
         baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
         baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
@@ -1539,3 +1543,7 @@ RFC, please remove this appendix before publication as an RFC.
 > precomputation of NSEC5PROOFs.  Remove RSA-based NSEC5
 > specification.  Rewrite Performance Considerations and
 > Implementation Status sections.
+
+
+> 05 - Remove appendix specifying VRFs and add reference to 
+> {{I-D.goldbe-vrf}}.  Add {{examples}}.
