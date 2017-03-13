@@ -203,7 +203,7 @@ Lies.
 
 --- note_Ed_note
 
-Text inside square brackets (\[\]) is additional background
+Text inside square brackets (\[]) is additional background
 information, answers to frequently asked questions, general musings,
 etc.  They will be removed before publication.  This document is being
 collaborated on in GitHub at
@@ -1043,7 +1043,7 @@ unknown algorithms will be considered bogus.
 
 ## Transition Mechanism
 
-\[TODO: The following information will be covered.\]
+\[TODO: The following information will be covered.]
 
 * Transition to NSEC5 from NSEC/NSEC3
 
@@ -1217,17 +1217,25 @@ resulting in the following zone file:
 
 > example.org.        SOA ( ... )
 
-> example.org.        NS  a.example.org.
+> example.org.        NS  a.example.org
 
-> c.example.org.      A 192.0.2.1
+> a.example.org.      A 192.0.2.1
+
+> c.example.org.      A 192.0.2.2
 
 > c.example.org.      TXT "c record"
+
+> d.example.org.      NS ns1.d.example.org
+
+> ns1.d.example.org.  A 192.0.2.4
 
 > g.example.org.      A 192.0.2.1
 
 > g.example.org.      TXT "g record"
 
 > *.a.example.org.    TXT "wildcard record"
+
+Next we present example responses. All cryptographic values are shortened proportionally and ADDITIONAL sections have been removed.
 
 ## Name Error Example
 
@@ -1243,31 +1251,45 @@ The server must prove the following facts:
 
 To do this, the server returns:
 
-* NSEC5PROOF RR for c.example.com.
+;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
+
+;; QUESTION SECTION:
+;; a.b.c.example.org.           IN      A
+
+;; AUTHORITY SECTION:
+example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400
+
+example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+
+* This is an NSEC5PROOF RR for c.example.com.
 The owner name of this NSEC5PROOF RR is c.example.com and the RDATA is
 the NSEC5 proof corresponding to c.example.com. Per {{precompute}}, this
 NSEC5PROOF RR may be precomputed.
 
-\[stick the dig output for this NSEC5PROOF RR here.]
+c.example.org.          86400   IN      NSEC5PROOF      48566 Amgn22zUiZ9JVyaT
 
-* Signed NSEC5 RR "matching" c.example.org its with Wildcard flag cleared.
+* This is as signed NSEC5 RR "matching" c.example.org its with Wildcard flag cleared.
   The NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org,
-  which is XXXXX324X.
+  which is O4K89V.
   NSEC5 RRs are always precomputed.
 
-\[stick the dig output for this NSEC5 RR here.]
+o4k89v.example.org. 86400 IN      NSEC5   48566 0 0O49PI A TXT RRSIG
 
-* An NSEC5PROOF RR for b.c.example.org.  This
+o4k89v.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J
+
+* This is an NSEC5PROOF RR for b.c.example.org.  This
   NSEC5PROOF RR must be computed on-the-fly.
 
-\[stick the dig output for this NSEC5PROOF RR here.]
+b.c.example.org.        86400   IN      NSEC5PROOF      48566 AuvvJqbUcEs8sCpY
 
-* Signed  NSEC5 RR "covering" b.c.example.org.
-  The NSEC5 hash of b.c.example.org, which is XXXXXXXXXXXX,
+* This is a signed  NSEC5 RR "covering" b.c.example.org.
+  The NSEC5 hash of b.c.example.org, which is AO5OF,
   sorts in canonical order between the
   "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.
 
-\[stick the dig output for this NSEC5PROOF RR here.]
+0o49pi.example.org. 86400 IN      NSEC5   48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY
+
+0o49pi.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO
 
 \[NOTE: ALSO THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME. SOMEONE
 MIGHT WANT TO ADD.]
@@ -1282,20 +1304,78 @@ The server must prove the following facts:
 
 To do this, the server returns:
 
-* NSEC5PROOF RR for c.example.com.    Per {{precompute}}, this
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
+
+;; QUESTION SECTION:
+;; c.example.org.               IN      MX
+
+;; AUTHORITY SECTION:
+example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400
+
+example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+
+* This is an NSEC5PROOF RR for c.example.com.    Per {{precompute}}, this
   NSEC5PROOF RR may be precomputed.
 
-\[stick the dig output for this NSEC5PROOF RR here.]
+c.example.org.          86400   IN      NSEC5PROOF      48566 Amgn22zUiZ9JVyaT
 
-* Signed NSEC5 RR "matching" c.example.org
-  its with CNAME and MX Type Bits cleared. This NSEC5 RR has its owner
+* This is a signed NSEC5 RR "matching" c.example.org
+  with CNAME and MX Type Bits cleared. This NSEC5 RR has its owner
   name equal to the NSEC5 hash of c.example.org.  NSEC5 RR are always precomputed.
 
-\[stick the dig output for this NSEC5PROOF RR here.]
+o4k89v.example.org. 86400 IN      NSEC5   48566 0 0O49PI A TXT RRSIG
+
+o4k89v.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J
 
 ## No Data Example, Opt-Out In Effect
 
-\[Sharon has no idea how to make such an example.]
+\[Dimitris: This case separation reads kind of awkward. I would rather rename this section to Delegation to Unisgned Opt-out zone and the previous to simply No Data]
+
+Consider a query for a type A record for foo.d.example.org.
+
+The server must prove the following facts:
+
+* Existence of closest provable encloser example.org
+
+* Non-existence of next closer d.example.org
+
+* Opt-out bit is set in the closest provable encloser NSEC5 record
+
+To do this, the server returns:
+
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 45866
+
+;; QUESTION SECTION:
+;; foo.d.example.org.           IN      A
+
+;; AUTHORITY SECTION:
+d.example.org.          3600    IN      NS      ns1.d.example.org.
+
+* This is an NSEC5PROOF RR for example.com.    Per {{precompute}}, this
+NSEC5PROOF RR may be precomputed.
+
+example.org.        	86400	IN	    NSEC5PROOF	    48566 AjwsPCJZ8zH/D0Tr
+
+* This is a signed NSEC5 RR "matching" example.org. This NSEC5 RR has its owner
+  name equal to the NSEC5 hash of example.org.  NSEC5 RR are always precomputed.
+
+0o49pi.example.org. 86400	IN	NSEC5	48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY
+
+0o49pi.example.org. 86400	IN	RRSIG	NSEC5 16 3 86400 20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO
+
+* This is an NSEC5PROOF RR for d.example.org.  This
+NSEC5PROOF RR must be computed on-the-fly.
+
+d.example.org.          86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
+
+* This is a signed  NSEC5 RR "covering" d.example.org with its Opt-out bit set.
+The NSEC5 hash of d.example.org, which is BLE8LR,
+sorts in canonical order between the
+"covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.
+
+baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG
+
+baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
 
 ## Wildcard Example
 
@@ -1305,28 +1385,41 @@ Consider a query for a type TXT record for foo.a.example.org.
 
 The server must prove the following facts:
 
-* Existence of the TXT record for the wildcard *.c.example.org
+* Existence of the TXT record for the wildcard *.a.example.org
 
-* Non-existence of the next closer name foo.c.example.org.
+* Non-existence of the next closer name foo.a.example.org.
 
 To do this, the server returns:
 
-* Signed TXT record for the wildcard at c.example.org.  \[Sharon does not
-know how to write this text properly, someone else should write this.]
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 53731
 
-\[Dig output here]
+;; QUESTION SECTION:
+;; foo.a.example.org.           IN      TXT
 
-* NSEC5PROOF RR for foo.c.example.org.  This
+* This is a signed TXT record for the wildcard below a.example.org (number of labels is set to 3 in the RRSIG record).
+
+;; ANSWER SECTION:
+foo.a.example.org.      3600    IN      TXT     "wildcard record"
+
+foo.a.example.org.      3600    IN      RRSIG   TXT 16 3 3600 20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98
+
+;; AUTHORITY SECTION:
+example.org.            3600    IN      NS      a.example.org.
+
+example.org.            3600    IN      RRSIG   NS 16 2 3600 20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyF
+
+* NSEC5PROOF RR for foo.a.example.org.  This
     NSEC5PROOF RR must be computed on-the-fly.
 
-\[Dig output here]
+foo.a.example.org.      86400   IN      NSEC5PROOF      48566 AjqF5FGGVso40Lda
 
-* Signed NSEC5 RR "covering" foo.c.example.org. The NSEC5 hash of
-    foo.c.example.org is XXXXXXXXXXXXXXXX and sorts in canonical
+* Signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of
+    foo.a.example.org is FORDMO and sorts in canonical
     order between the NSEC5 RR's Owner Name and Next Hashed Owner Name.
     NSEC5 RRs are always precomputed.
 
-\[Dig output here]
+baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG
+baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
 
 ## Wildcard No Data Example
 
@@ -1343,30 +1436,41 @@ The server must prove the following facts:
 
 To do this, the server returns:
 
-* NSEC5PROOF RR for a.example.com.  Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 17332
 
-\[Dig output here]
+;; QUESTION SECTION:
+;; foo.a.example.org.           IN      MX
 
-* Signed NSEC5 RR "matching" c.example.org
-  its with its Wildcard flag set and its CNAME and MX Type Bits cleared.
-  This NSEC5 RR has its owner name equal to the NSEC5 hash of a.example.org.)
+;; AUTHORITY SECTION:
+example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400
+
+example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+
+* This is an NSEC5PROOF RR for *.a.example.com.  Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
+
+*.a.example.org.        86400   IN      NSEC5PROOF      48566 Aq38RWWPhbs/vtih
+
+* This is a s igned NSEC5 RR "matching" *.a.example.org with its CNAME and MX Type Bits cleared.
+  This NSEC5 RR has its owner name equal to the NSEC5 hash of *.a.example.org.
   NSEC5 RRs are always precomputed.
 
-\[Dig output here]
+mpu6c4.example.org. 86400 IN      NSEC5   48566 0 O4K89V TXT RRSIG
+
+mpu6c4.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. m3I75ttcWwVC
 
 * An NSEC5PROOF RR for foo.a.example.com. This
     NSEC5PROOF RR must be computed on-the-fly.
 
-\[Dig output here]
+foo.a.example.org.      86400   IN      NSEC5PROOF      48566 AjqF5FGGVso40Lda
 
-* Signed NSEC5 RR "covering" foo.a.example.com. The NSEC5 hash of
-    foo.a.example.org is XXXXXXX, and sorts in canonical order between this
+* This is a signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of
+    foo.a.example.org is FORDMO, and sorts in canonical order between this
     covering NSEC5 RR's Owner Name and Next Hashed Owner Name.
     NSEC5 RRs are always precomputed.
 
-\[Dig output here]
+baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG
 
-
+baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
 
 # Change Log
 
