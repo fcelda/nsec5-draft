@@ -1227,6 +1227,10 @@ resulting in the following zone file:
 
     *.a.example.org.    TXT "wildcard record"
 
+Notice the delegation to an unsigned zone d.example.org served 
+by ns1.d.example.org.  (Note: if the d.example.org zone was signed, 
+then the example.org zone have a DS record for d.example.org.)
+
 Next we present example responses. All cryptographic values are
 shortened as indicated by "..." and ADDITIONAL sections have been
 removed.
@@ -1342,16 +1346,23 @@ NSEC5 RR are precomputed.
 \[Dimitris: This case separation reads kind of awkward. 
 I would rather rename this section to Delegation to Unisgned Opt-out zone and the previous to simply No Data]
 
+\[Sharon: I took a pass over this but it really needs to be checked by someone
+who is "more dns" than I am.]
+
 Consider a query for a type A record for foo.d.example.org.
 
 The server must prove the following facts:
 
+* Non-existence of signature on next closer name d.example.org. 
+(Note: d.example.org. is a delegation to an unsigned zone, and 
+thus the NS RR for d.example.org is unsigned).
+
+* Opt-out bit is set in NSEC5 record covering next closer name
+ d.example.org. \[Sharon: this used to say 
+"Opt-out bit is set in the closest provable encloser NSEC5 record" but this 
+seems wrong as it is not consistent with the dig output.]
+
 * Existence of closest provable encloser example.org
-
-* Non-existence of next closer d.example.org  [THIS NEEDS TO BE REWORDED!
-    d.ex.com exists by is unsigned!!!]
-
-* Opt-out bit is set in the closest provable encloser NSEC5 record
 
 To do this, the server returns:
 
@@ -1363,12 +1374,32 @@ To do this, the server returns:
     ;; AUTHORITY SECTION:
     d.example.org.       3600  IN NS      ns1.d.example.org.
 
+This is an NSEC5PROOF RR for d.example.org.  It's RDATA is the NSEC5 proof 
+corresponding to d.example.org. This NSEC5PROOF RR is computed on the fly.
+
+    d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
+
+This is a signed NSEC5 RR "covering" d.example.org with its Opt-out bit set 
+(see the "1" after the key ID 48566). The NSEC5 hash of d.example.org 
+(which is BLE8LR) sorts in canonical order between the
+"covering" NSEC5 RR's Owner Name (BAPROH) and Next Hashed Owner Name (JQBMG4).
+This proves that no signed RR exists for d.example.org, but that the zone
+might contain a unsigned RR for a name whose NSEC5 hash sorts in canonical
+order between BAPROH and JQBMG4.
+
+    baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+
+    baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+                20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
+
+
 This is an NSEC5PROOF RR for example.com. It's RDATA is the NSEC5 proof 
 corresponding to example.com.  Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
 
     example.org.        86400 IN NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
 
-This is a signed NSEC5 RR "matching" example.org. This NSEC5 RR has its owner
+This is a signed NSEC5 RR "matching" example.org which proves the existence
+of a signed RRs for example.org. This NSEC5 RR has its owner
 name equal to the NSEC5 hash of example.org which is 0O49PI.  
 NSEC5 RR are   precomputed.
 
@@ -1378,20 +1409,6 @@ NSEC5 RR are   precomputed.
     0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
                 20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO)
 
-This is an NSEC5PROOF RR for d.example.org.  It's RDATA is the NSEC5 proof 
-corresponding to d.example.org. This NSEC5PROOF RR is computed on the fly.
-
-    d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
-
-This is a signed NSEC5 RR "covering" d.example.org with its Opt-out bit set 
-(see the "1" after the key ID 48566).
-The NSEC5 hash of d.example.org (which is BLE8LR) sorts in canonical order between the
-"covering" NSEC5 RR's Owner Name (BAPROH) and Next Hashed Owner Name (JQBMG4).
-
-    baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
-
-    baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-                20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
 
 ## Wildcard Example
 
