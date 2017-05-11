@@ -416,7 +416,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-goldbe-vrf-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-11" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -440,7 +440,7 @@
   <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 14, 2017</td>
+  <td class="left">Expires: November 12, 2017</td>
   <td class="right">University of Maryland</td>
 </tr>
 <tr>
@@ -453,7 +453,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 13, 2017</td>
+  <td class="right">May 11, 2017</td>
 </tr>
 
     	
@@ -473,7 +473,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 14, 2017.</p>
+<p>This Internet-Draft will expire on November 12, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -593,7 +593,7 @@
 <p id="rfc.section.3.2.p.3">With "full pseudorandomness", the adversary is allowed to choose the target VRF input  alpha at any time, even after it observes VRF outputs beta' and proofs pi' on a variety of chosen inputs alpha'.  </p>
 <p id="rfc.section.3.2.p.4">"Selective pseudorandomness" is a weaker security property which suffices in many applications. Here, the adversary must choose the target VRF input alpha independently of the public VRF key PK, and before it  observes VRF outputs beta' and proofs pi' on inputs alpha' of its choice.  </p>
 <p id="rfc.section.3.2.p.5">It is important to remember that the VRF output beta does not look random to a party that knows the private VRF key SK!  Such a party can easily distinguish beta from a random value by comparing it to the result of VRF_hash(SK, alpha).  </p>
-<p id="rfc.section.3.2.p.6">Also, the VRF output beta does not look random to any party that knows valid VRF proof pi corresponding to the VRF input alpha, even if this party does not know the private VRF key SK.  Such a party can easily distinguish beta from a random value by checking whether VRF_verify(PK, alpha, beta, pi) returns "VALID".  </p>
+<p id="rfc.section.3.2.p.6">Also, the VRF output beta does not look random to any party that knows valid VRF proof pi corresponding to the VRF input alpha, even if this party does not know the private VRF key SK.  Such a party can easily distinguish beta from a random value by checking whether VRF_verify(PK, alpha, pi) returns "VALID" and beta = VRF_proof2hash(pi).  </p>
 <p id="rfc.section.3.2.p.7">Finally, the VRF output beta may not look random if VRF key generation was not done in a trustworthy fashion. (For example, if VRF keys were not generated with good randomness.) </p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> Full Collison Resistance or Trusted Collision Resistance</h1>
 <p id="rfc.section.3.3.p.1">Finally, like any cryprographic hash function, VRFs need to be collision resistant.  Specifically, it should be computationally infeasible for an adversary to find two distinct VRF inputs alpha1 and alpha2 that have the same VRF hash beta, even if that adversary knows the secret VRF key SK.  </p>
@@ -728,7 +728,7 @@
   <li>G - EC group</li>
   <li>q - prime order of group G</li>
   <li>g - generator of group G</li>
-  <li>2n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x and ceil(x) is the smallest integer larger than or equal to the real number x</li>
+  <li>2n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x and ceil(x) is the smallest integer larger than or equal to the real number x. </li>
   <li>Hash - cryptographic hash function</li>
   <li>hLen - output length in octets of function Hash</li>
 </ul>
@@ -788,7 +788,7 @@
   <li>gamma = h^x</li>
   <li>choose a random nonce k from [0, q-1]</li>
   <li>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</li>
-  <li>s = k - c*q mod q</li>
+  <li>s = k - c*x mod q</li>
   <li>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
   <li>Output pi</li>
 </ol>
@@ -962,7 +962,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.4">[TODO: Should we add an SHA256-Elligator-ED25519-EC-VRF ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?] </p>
+<p id="rfc.section.5.5.p.4">[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?] </p>
 <p id="rfc.section.5.5.p.5">[TODO: Add an Ed448 ciphersuite?]</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a></h1>
 <p id="rfc.section.6.p.1">An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256 was developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  </p>
@@ -979,7 +979,7 @@
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> Timing attacks</h1>
 <p id="rfc.section.7.3.p.1">The EC-VRF_hash_to_curve algorithm defined in <a href="#ecvrfH2C1">Section 5.4.1.1</a> should not be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the EC-VRF_hash_to_curve algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Selective vs Full Pseudorandomness</h1>
-<p><a href="#nsec5ecc">[nsec5ecc]</a>presents cryptographic reductions to an underlying hard problem (e.g. Decisional Diffie Hellman, or the standard RSA assumption) that prove the VRFs specificied in this document possess full pseudorandomness as well as selective pseudorandomness.  However, the cryptographic reductions are tighter for selective pseudorandomness than for full pseudorandomness.  This means the the VRFs have quantitavely stronger security guarentees for selective pseudorandomness.  </p>
+<p><a href="#nsec5ecc">[nsec5ecc]</a> presents cryptographic reductions to an underlying hard problem (e.g. Decisional Diffie Hellman, or the standard RSA assumption) that prove the VRFs specificied in this document possess full pseudorandomness as well as selective pseudorandomness.  However, the cryptographic reductions are tighter for selective pseudorandomness than for full pseudorandomness.  This means the the VRFs have quantitavely stronger security guarentees for selective pseudorandomness.  </p>
 <p id="rfc.section.7.4.p.2">Applications that are concerned about tightness of cryptographic reductions therefor have two options.  </p>
 
 <ul>
@@ -1037,7 +1037,7 @@
       <td class="reference">
         <b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b>
       </td>
-      <td class="top"><a>Vcelak, J.</a>, <a>Goldberg, S.</a> and <a>D. Papadopoulos</a>, "<a href="http://tools.ietf.org/html/draft-vcelak-nsec5-03">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-03, September 2016.</td>
+      <td class="top"><a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="http://tools.ietf.org/html/draft-vcelak-nsec5-04">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-04, March 2017.</td>
     </tr>
     <tr>
       <td class="reference">

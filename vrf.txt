@@ -5,10 +5,10 @@
 Network Working Group                                        S. Goldberg
 Internet-Draft                                         Boston University
 Intended status: Standards Track                         D. Papadopoulos
-Expires: September 14, 2017                       University of Maryland
+Expires: November 12, 2017                        University of Maryland
                                                                J. Vcelak
                                                                      NS1
-                                                          March 13, 2017
+                                                            May 11, 2017
 
 
                    Verifiable Random Functions (VRFs)
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 14, 2017.
+   This Internet-Draft will expire on November 12, 2017.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 1]
+Goldberg, et al.        Expires November 12, 2017               [Page 1]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 2]
+Goldberg, et al.        Expires November 12, 2017               [Page 2]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 3]
+Goldberg, et al.        Expires November 12, 2017               [Page 3]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
       beta = VRF_hash(SK, alpha)
@@ -221,9 +221,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 4]
+Goldberg, et al.        Expires November 12, 2017               [Page 4]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    generated in a trustworthy manner.  In otherwords, uniqueness might
@@ -277,9 +277,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 5]
+Goldberg, et al.        Expires November 12, 2017               [Page 5]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    and alpha2 that have the same VRF hash beta, even if that adversary
@@ -333,9 +333,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 6]
+Goldberg, et al.        Expires November 12, 2017               [Page 6]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
       I2OSP - Coversion of a nonnegative integer to an octet string as
@@ -389,9 +389,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 7]
+Goldberg, et al.        Expires November 12, 2017               [Page 7]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    Output:
@@ -445,9 +445,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 8]
+Goldberg, et al.        Expires November 12, 2017               [Page 8]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    The key pair generation primitive is specified in Section 3.2.1 of
@@ -501,9 +501,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017               [Page 9]
+Goldberg, et al.        Expires November 12, 2017               [Page 9]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
       OS2ECP - octet string to EC point conversion with point
@@ -535,7 +535,7 @@ Internet-Draft                     VRF                        March 2017
 
    4.  c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)
 
-   5.  s = k - c*q mod q
+   5.  s = k - c*x mod q
 
    6.  pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
 
@@ -557,9 +557,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 10]
+Goldberg, et al.        Expires November 12, 2017              [Page 10]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    1.  beta = pi[2] || pi[3] || ... pi[2n+1]
@@ -613,9 +613,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 11]
+Goldberg, et al.        Expires November 12, 2017              [Page 11]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    However, this algorithm MUST NOT be used in applications where the
@@ -669,9 +669,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 12]
+Goldberg, et al.        Expires November 12, 2017              [Page 12]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 5.4.1.2.  ECVRF_hash_to_curve2
@@ -725,9 +725,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 13]
+Goldberg, et al.        Expires November 12, 2017              [Page 13]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
       s - integer between 0 and 2^(16n)-1
@@ -781,9 +781,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 14]
+Goldberg, et al.        Expires November 12, 2017              [Page 14]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 6.  Implementation Status
@@ -837,9 +837,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 15]
+Goldberg, et al.        Expires November 12, 2017              [Page 15]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 7.2.  Proper randomness for EC-VRF
@@ -893,9 +893,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 16]
+Goldberg, et al.        Expires November 12, 2017              [Page 16]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 8.  Change Log
@@ -949,15 +949,16 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 17]
+Goldberg, et al.        Expires November 12, 2017              [Page 17]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
    [I-D.vcelak-nsec5]
-              Vcelak, J., Goldberg, S., and D. Papadopoulos, "NSEC5,
-              DNSSEC Authenticated Denial of Existence", draft-vcelak-
-              nsec5-03 (work in progress), September 2016.
+              Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
+              D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
+              Existence", draft-vcelak-nsec5-04 (work in progress),
+              March 2017.
 
    [FIPS-186-3]
               National Institute for Standards and Technology, "Digital
@@ -1004,10 +1005,9 @@ Internet-Draft                     VRF                        March 2017
 
 
 
-
-Goldberg, et al.       Expires September 14, 2017              [Page 18]
+Goldberg, et al.        Expires November 12, 2017              [Page 18]
 
-Internet-Draft                     VRF                        March 2017
+Internet-Draft                     VRF                          May 2017
 
 
 Appendix A.  Open Issues
@@ -1061,4 +1061,4 @@ Authors' Addresses
 
 
 
-Goldberg, et al.       Expires September 14, 2017              [Page 19]
+Goldberg, et al.        Expires November 12, 2017              [Page 19]
