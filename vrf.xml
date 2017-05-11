@@ -585,7 +585,7 @@
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
-                    <t>s = k - c*q mod q</t>
+                    <t>s = k - c*x mod q</t>
                     <t>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
                 </list>
