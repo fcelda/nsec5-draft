@@ -5,10 +5,10 @@
 Network Working Group                                        S. Goldberg
 Internet-Draft                                         Boston University
 Intended status: Standards Track                         D. Papadopoulos
-Expires: November 12, 2017                        University of Maryland
+Expires: November 25, 2017                        University of Maryland
                                                                J. Vcelak
                                                                      NS1
-                                                            May 11, 2017
+                                                            May 24, 2017
 
 
                    Verifiable Random Functions (VRFs)
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 12, 2017.
+   This Internet-Draft will expire on November 25, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 1]
+Goldberg, et al.        Expires November 25, 2017               [Page 1]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -84,9 +84,9 @@ Table of Contents
      5.2.  EC-VRF Proof To Hash  . . . . . . . . . . . . . . . . . .  10
      5.3.  EC-VRF Verifying  . . . . . . . . . . . . . . . . . . . .  11
      5.4.  EC-VRF Auxiliary Functions  . . . . . . . . . . . . . . .  11
-       5.4.1.  EC-VRF Hash To Curve  . . . . . . . . . . . . . . . .  11
+       5.4.1.  EC-VRF Hash To Curve  . . . . . . . . . . . . . . . .  12
        5.4.2.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  13
-       5.4.3.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  13
+       5.4.3.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  14
      5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  14
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  15
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 2]
+Goldberg, et al.        Expires November 25, 2017               [Page 2]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 3]
+Goldberg, et al.        Expires November 25, 2017               [Page 3]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 4]
+Goldberg, et al.        Expires November 25, 2017               [Page 4]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 5]
+Goldberg, et al.        Expires November 25, 2017               [Page 5]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -310,7 +310,7 @@ Internet-Draft                     VRF                          May 2017
 
    In this document, the notation from [RFC8017] is used.
 
-   Used parameters:
+   Parameters used:
 
       (n, e) - RSA public key
 
@@ -324,16 +324,16 @@ Internet-Draft                     VRF                          May 2017
 
       hLen - output length in octets of hash function Hash
 
-   Options constraints:
+   Constraints on options:
 
       Cryptographic security of Hash is at least as high as the
       cryptographic security level of the RSA key
 
-   Used primitives:
+   Primitives used:
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 6]
+Goldberg, et al.        Expires November 25, 2017               [Page 6]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 7]
+Goldberg, et al.        Expires November 25, 2017               [Page 7]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-Goldberg, et al.        Expires November 12, 2017               [Page 8]
+Goldberg, et al.        Expires November 25, 2017               [Page 8]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -461,28 +461,34 @@ Internet-Draft                     VRF                          May 2017
 
       g - generator of group G
 
-      2n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x
-      and ceil(x) is the smallest integer larger than or equal to the
-      real number x.
+      F - finite field over which G is defined
+
+      f - bit-length of a field element, i.e., the binary logarithm of
+      the size of F, rounded up to the nearest integer
+
+      n - half of the byte-length of a field element, i.e., f/8 rounded
+      up to the nearest integer and then divided by 2
 
       Hash - cryptographic hash function
 
       hLen - output length in octets of function Hash
 
-   Options constraints:
+   Constraints on options:
 
       Cryptographic security of Hash is at least as high as the
       cryptographic security of G
 
+      n is an integer
+
       hLen is equal to 2n
 
-   Used parameters:
+   Parameters used:
 
       g^x - EC public key
 
       x - EC private key
 
-   Used primitives:
+   Notation and primitives used:
 
       "" - empty octet string
 
@@ -492,19 +498,18 @@ Internet-Draft                     VRF                          May 2017
 
       p1*p2 - EC point addition
 
+
+
+
+Goldberg, et al.        Expires November 25, 2017               [Page 9]
+
+Internet-Draft                     VRF                          May 2017
+
+
       h[i] - the i'th octet of octet string h
 
       ECP2OS - EC point to octet string conversion with point
       compression as specified in Section 2.3.3 of [SECG1]
-
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017               [Page 9]
-
-Internet-Draft                     VRF                          May 2017
-
 
       OS2ECP - octet string to EC point conversion with point
       compression as specified in Section 2.3.4 of [SECG1]
@@ -549,18 +554,19 @@ Internet-Draft                     VRF                          May 2017
 
       pi - VRF proof, octet string of length 5n+1
 
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 10]
+
+Internet-Draft                     VRF                          May 2017
+
+
    Output:
 
       beta - VRF hash output, octet string of length 2n
 
    Steps:
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 10]
-
-Internet-Draft                     VRF                          May 2017
-
 
    1.  beta = pi[2] || pi[3] || ... pi[2n+1]
 
@@ -600,6 +606,18 @@ Internet-Draft                     VRF                          May 2017
 
 5.4.  EC-VRF Auxiliary Functions
 
+
+
+
+
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 11]
+
+Internet-Draft                     VRF                          May 2017
+
+
 5.4.1.  EC-VRF Hash To Curve
 
    The ECVRF_hash_to_curve algorithm takes in an octet string alpha and
@@ -610,13 +628,6 @@ Internet-Draft                     VRF                          May 2017
    The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements
    ECVRF_hash_to_curve in a simple and generic way that works for any
    elliptic curve that supports point compression.
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 11]
-
-Internet-Draft                     VRF                          May 2017
-
 
    However, this algorithm MUST NOT be used in applications where the
    VRF input alpha must be kept secret.  This is because the running
@@ -636,7 +647,7 @@ Internet-Draft                     VRF                          May 2017
 
    Output:
 
-      h - hashed value, EC point in G
+      h - hashed value, which is an EC point in G
 
    Steps:
 
@@ -648,31 +659,35 @@ Internet-Draft                     VRF                          May 2017
 
        A.  CTR = I2OSP(ctr, 4)
 
-       B.  p = 0x02 || Hash(alpha || pk || CTR)
+       B.  attempted_hash = Hash(alpha || pk || CTR)
 
-       C.  Goto step 3 if OS2ECP(p) is valid EC point in G
+       C.  Set hLen-f*8 leading bits of attempted_hash to 0
 
-       D.  p = 0x03 || Hash(alpha || pk || CTR)
+       D.  p = 0x02 || attempted_hash
 
-       E.  Goto step 3 if OS2ECP(p) is valid EC point in G
-
-       F.  ctr = ctr + 1
-
-   4.  h = OS2ECP(p)
-
-   5.  Output h
-
-   The initial octet 0x02 in the octet string created in step B
-   represents that the point in compressed form has positive
-   y-coefficient [SECG1].  Similarly, the 0x03 octet in step D
-   represents negative y-coefficient.
+       E.  h = OS2ECP(p)
 
 
 
-Goldberg, et al.        Expires November 12, 2017              [Page 12]
+Goldberg, et al.        Expires November 25, 2017              [Page 12]
 
 Internet-Draft                     VRF                          May 2017
 
+
+       F.  ctr = ctr + 1
+
+       until h is not equal to "invalid"
+
+   4.  Output h
+
+   OS2ECP will first test whether attempted_hash is the correct octet-
+   string representation of an element u of F (i.e., attempted_hash is
+   less than the field size).  This will happen with probability at
+   least 1/2 because of Step C (higher if the field size is almost a
+   power of 2).  If this test passes, OS2ECP will succeed whenever u is
+   an x-coordinate of an EC point, which happens with probability close
+   to 1/2.  Of the two possible y-coordinates for h, OS2ECP will choose
+   one deterministically because of the 0x02 octet in step D.
 
 5.4.1.2.  ECVRF_hash_to_curve2
 
@@ -708,6 +723,13 @@ Internet-Draft                     VRF                          May 2017
 
    5.  Output h
 
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 13]
+
+Internet-Draft                     VRF                          May 2017
+
+
 5.4.3.  EC-VRF Decode Proof
 
    ECVRF_decode_proof(pi)
@@ -721,14 +743,6 @@ Internet-Draft                     VRF                          May 2017
       gamma - EC point
 
       c - integer between 0 and 2^(8n)-1
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 13]
-
-Internet-Draft                     VRF                          May 2017
-
 
       s - integer between 0 and 2^(16n)-1
 
@@ -763,6 +777,15 @@ Internet-Draft                     VRF                          May 2017
 
    This document defines EC-VRF-ED25519-SHA256 as follows:
 
+
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 14]
+
+Internet-Draft                     VRF                          May 2017
+
+
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in [RFC7748] (Section 4.1).  For this group, the length in
       octets of a single coordinate of an EC point is 2n = 32.
@@ -776,15 +799,6 @@ Internet-Draft                     VRF                          May 2017
    where the Elligator hash function is used for ECVRF_hash-to-curve?]
 
    [TODO: Add an Ed448 ciphersuite?]
-
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 14]
-
-Internet-Draft                     VRF                          May 2017
-
 
 6.  Implementation Status
 
@@ -820,6 +834,14 @@ Internet-Draft                     VRF                          May 2017
    uniqueness and trusted collision-resistance) are properties that hold
    even if VRF keys are generated by an adversary.  The VRFs defined in
    this document do not have these properties.  However, they may be
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 15]
+
+Internet-Draft                     VRF                          May 2017
+
+
    modifed to have these properties if adversarial key generation is a
    concern.  The modification consists of additional cryptographic
    proofs that keys have of the correct form.  These modifications are
@@ -833,14 +855,6 @@ Internet-Draft                     VRF                          May 2017
    of adversarially generated VRF keys.  This is because an adversary
    can always use bad randomness to generate the VRF keys, and thus, the
    VRF output may not be pseudorandom.
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 15]
-
-Internet-Draft                     VRF                          May 2017
-
 
 7.2.  Proper randomness for EC-VRF
 
@@ -875,6 +889,15 @@ Internet-Draft                     VRF                          May 2017
 
    o  They may choose to ensure that selective pseudorandomness is
       sufficient for the application.  That is, that pseudorandomness of
+
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 16]
+
+Internet-Draft                     VRF                          May 2017
+
+
       outputs matters only for inputs that are chosen independently of
       the VRF key.
 
@@ -885,18 +908,6 @@ Internet-Draft                     VRF                          May 2017
       cryptographic strength of the EC group G.  For both RSA-FDH-VRF
       and EC-VRF the cryptographic strength of the hash function Hash
       may also potentially need to be increased.
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 16]
-
-Internet-Draft                     VRF                          May 2017
-
 
 8.  Change Log
 
@@ -935,6 +946,14 @@ Internet-Draft                     VRF                          May 2017
               DOI 10.17487/RFC5114, January 2008,
               <http://www.rfc-editor.org/info/rfc5114>.
 
+
+
+
+Goldberg, et al.        Expires November 25, 2017              [Page 17]
+
+Internet-Draft                     VRF                          May 2017
+
+
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
               DOI 10.17487/RFC6234, May 2011,
@@ -943,16 +962,6 @@ Internet-Draft                     VRF                          May 2017
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
               2016, <http://www.rfc-editor.org/info/rfc7748>.
-
-
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 17]
-
-Internet-Draft                     VRF                          May 2017
-
 
    [I-D.vcelak-nsec5]
               Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
@@ -996,16 +1005,7 @@ Internet-Draft                     VRF                          May 2017
 
 
 
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires November 12, 2017              [Page 18]
+Goldberg, et al.        Expires November 25, 2017              [Page 18]
 
 Internet-Draft                     VRF                          May 2017
 
@@ -1061,4 +1061,4 @@ Authors' Addresses
 
 
 
-Goldberg, et al.        Expires November 12, 2017              [Page 19]
+Goldberg, et al.        Expires November 25, 2017              [Page 19]

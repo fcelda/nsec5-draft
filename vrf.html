@@ -416,7 +416,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-goldbe-vrf-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-24" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -440,7 +440,7 @@
   <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
-  <td class="left">Expires: November 12, 2017</td>
+  <td class="left">Expires: November 25, 2017</td>
   <td class="right">University of Maryland</td>
 </tr>
 <tr>
@@ -453,7 +453,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">May 11, 2017</td>
+  <td class="right">May 24, 2017</td>
 </tr>
 
     	
@@ -473,7 +473,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 12, 2017.</p>
+<p>This Internet-Draft will expire on November 25, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -603,7 +603,7 @@
 <p id="rfc.section.4.p.2">The VRF computes the proof pi as a deterministic RSA signature on input alpha using the RSA Full Domain Hash Algorithm <a href="#RFC8017">[RFC8017]</a> parametrized with the selected hash algorithm.  RSA signature verification is used to verify the correctness of the proof. The VRF hash output beta is simply obtained by hashing the proof pi with the selected hash algorithm.  </p>
 <p id="rfc.section.4.p.3">The key pair for RSA-FDH-VRF MUST be generated in a way that it satisfies the conditions specified in Section 3 of <a href="#RFC8017">[RFC8017]</a>.  </p>
 <p id="rfc.section.4.p.4">In this document, the notation from <a href="#RFC8017">[RFC8017]</a> is used.  </p>
-<p id="rfc.section.4.p.5">Used parameters: </p>
+<p id="rfc.section.4.p.5">Parameters used: </p>
 
 <ul class="empty">
   <li>(n, e) - RSA public key</li>
@@ -620,14 +620,14 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.4.p.7">Options constraints: </p>
+<p id="rfc.section.4.p.7">Constraints on options: </p>
 
 <ul class="empty">
   <li>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.4.p.8">Used primitives: </p>
+<p id="rfc.section.4.p.8">Primitives used: </p>
 
 <ul class="empty">
   <li>I2OSP - Coversion of a nonnegative integer to an octet string as defined in Section 4.1 of <a href="#RFC8017">[RFC8017]</a> </li>
@@ -728,21 +728,24 @@
   <li>G - EC group</li>
   <li>q - prime order of group G</li>
   <li>g - generator of group G</li>
-  <li>2n - ceil(log2(q)/8); where log2(x) is the binary logarithm of x and ceil(x) is the smallest integer larger than or equal to the real number x. </li>
+  <li>F - finite field over which G is defined</li>
+  <li>f - bit-length of a field element, i.e., the binary logarithm of the size of F, rounded up to the nearest integer</li>
+  <li>n - half of the byte-length of a field element, i.e., f/8 rounded up to the nearest integer and then divided by 2 </li>
   <li>Hash - cryptographic hash function</li>
   <li>hLen - output length in octets of function Hash</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.p.4">Options constraints: </p>
+<p id="rfc.section.5.p.4">Constraints on options: </p>
 
 <ul class="empty">
   <li>Cryptographic security of Hash is at least as high as the cryptographic security of G</li>
+  <li>n is an integer</li>
   <li>hLen is equal to 2n</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.p.5">Used parameters: </p>
+<p id="rfc.section.5.p.5">Parameters used: </p>
 
 <ul class="empty">
   <li>g^x - EC public key</li>
@@ -750,7 +753,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.p.6">Used primitives: </p>
+<p id="rfc.section.5.p.6">Notation and primitives used: </p>
 
 <ul class="empty">
   <li>"" - empty octet string</li>
@@ -867,7 +870,7 @@
 <p id="rfc.section.5.4.1.1.p.5">Output: </p>
 
 <ul class="empty">
-  <li>h - hashed value, EC point in G</li>
+  <li>h - hashed value, which is an EC point in G</li>
 </ul>
 
 <p> </p>
@@ -876,13 +879,12 @@
 <ol>
   <li>ctr = 0</li>
   <li>pk = ECP2OS(g^x)</li>
-  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>p = 0x02 || Hash(alpha || pk || CTR)</li><li>Goto step 3 if OS2ECP(p) is valid EC point in G</li><li>p = 0x03 || Hash(alpha || pk || CTR)</li><li>Goto step 3 if OS2ECP(p) is valid EC point in G</li><li>ctr = ctr + 1</li></ol><p> </p></li>
-  <li>h = OS2ECP(p)</li>
+  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>attempted_hash = Hash(alpha || pk || CTR)</li><li>Set hLen-f*8 leading bits of attempted_hash to 0</li><li>p = 0x02 || attempted_hash</li><li>h = OS2ECP(p)</li><li>ctr = ctr + 1</li></ol><p> until h is not equal to "invalid" </p></li>
   <li>Output h</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.1.p.7">The initial octet 0x02 in the octet string created in step B represents that the point in compressed form has positive y-coefficient <a href="#SECG1">[SECG1]</a>. Similarly, the 0x03 octet in step D represents negative y-coefficient.  </p>
+<p id="rfc.section.5.4.1.1.p.7">OS2ECP will first test whether attempted_hash is the correct octet-string representation of an element u of F (i.e., attempted_hash is less than the field size).  This will happen with probability at least 1/2 because of Step C (higher if the field size is almost a power of 2).  If this test passes, OS2ECP will succeed whenever u is an x-coordinate of an EC point, which happens with probability close to 1/2.  Of the two possible y-coordinates for h, OS2ECP will choose one deterministically because of the 0x02 octet in step D.  </p>
 <h1 id="rfc.section.5.4.1.2"><a href="#rfc.section.5.4.1.2">5.4.1.2.</a> ECVRF_hash_to_curve2</h1>
 <p id="rfc.section.5.4.1.2.p.1">For applications where VRF input alpha must be kept secret, the following ECVRF_hash_to_curve algorithm MAY be used to used as generic way to hash an octet string onto any elliptic curve.  </p>
 <p id="rfc.section.5.4.1.2.p.2">[TODO: If there interest, we could look into specifying the generic deterministic time hash_to_curve algorithm from <a href="#Icart09">[Icart09]</a>. ] </p>

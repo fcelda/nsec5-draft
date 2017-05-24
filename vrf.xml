@@ -339,7 +339,7 @@
         </t>
 
         <t>
-            Used parameters:
+            Parameters used:
             <list>
                 <!-- do not change the names, these are from RFC8017 -->
                 <t>(n, e) - RSA public key</t>
@@ -357,14 +357,14 @@
         </t>
 
         <t>
-            Options constraints:
+            Constraints on options:
             <list>
                 <t>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key</t>
             </list>
         </t>
 
         <t>
-            Used primitives:
+            Primitives used:
             <list>
                 <t>
                     I2OSP - Coversion of a nonnegative integer to an octet string as defined in
@@ -519,9 +519,9 @@
                 <t>G - EC group</t>
                 <t>q - prime order of group G</t>
                 <t>g - generator of group G</t>
-                <t>2n - ceil(log2(q)/8); where log2(x) is the binary
-                 logarithm of x and ceil(x) is the smallest integer 
-                 larger than or equal to the real number x. </t>
+                <t>F - finite field over which G is defined</t>
+                <t>f - bit-length of a field element, i.e., the binary logarithm of the size of F, rounded up to the nearest integer</t>
+                <t>n - half of the byte-length of a field element, i.e., f/8 rounded up to the nearest integer and then divided by 2 </t>
                  <!--Remember that n=16 for the P-256 curve-->                 
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of function Hash</t>
@@ -529,15 +529,16 @@
         </t>
 
         <t>
-            Options constraints:
+            Constraints on options:
             <list>
             	<t>Cryptographic security of Hash is at least as high as the cryptographic security of G</t>
+                <t>n is an integer</t>
             	<t>hLen is equal to 2n</t>
             </list>
         </t>
 
         <t>
-            Used parameters:
+            Parameters used:
             <list>
                 <t>g^x - EC public key</t>
                 <t>x - EC private key</t>
@@ -545,7 +546,7 @@
         </t>
 
         <t>
-            Used primitives:
+            Notation and primitives used:
             <list>
                 <t>"" - empty octet string</t>
                 <t>|| - octet string concatenation</t>
@@ -702,7 +703,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, EC point in G</t>
+                    <t>h - hashed value, which is an EC point in G</t>
                 </list>
             </t>
             
@@ -714,23 +715,29 @@
                     <t>Repeat:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>p = 0x02 || Hash(alpha || pk || CTR)</t>
-                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
-                        <t>p = 0x03 || Hash(alpha || pk || CTR)</t>
-                        <t>Goto step 3 if OS2ECP(p) is valid EC point in G</t>
+                        <t>attempted_hash = Hash(alpha || pk || CTR)</t>
+                        <t>Set hLen-f*8 leading bits of attempted_hash to 0</t>
+                        <t>p = 0x02 || attempted_hash</t>
+                        <t>h = OS2ECP(p)</t>
                         <t>ctr = ctr + 1</t>
                     </list>
+                    until h is not equal to "invalid"
                     </t>
-                    <t>h = OS2ECP(p)</t>
                     <t>Output h</t>
                 </list>
             </t>
             
             <t>
-                The initial octet 0x02 in the octet string created in step B
-                represents that the point in compressed form has positive
-                y-coefficient <xref target="SECG1" />. Similarly, the 0x03 octet
-                in step D represents negative y-coefficient.
+                OS2ECP will first test whether attempted_hash
+                is the correct octet-string representation of an element u of F
+                (i.e., attempted_hash is less than the field size).
+                This will happen with probability at least 1/2 because of Step C (higher if
+                the field size is almost a power of 2).
+                If this test passes, OS2ECP will succeed whenever
+                u is an x-coordinate of an EC point, which happens with
+                probability close to 1/2.
+                Of the two possible y-coordinates for h,
+                OS2ECP will choose one deterministically because of the 0x02 octet in step D.
             </t>
             
             </section>
