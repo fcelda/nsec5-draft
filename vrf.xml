@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-goldbe-vrf-00" ipr="trust200902">
+<rfc category="std" docName="draft-goldbe-vrf-01" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -516,15 +516,16 @@
         <t>
             Fixed options:
             <list>
-                <t>G - EC group</t>
-                <t>q - prime order of group G</t>
-                <t>g - generator of group G</t>
-                <t>F - finite field over which G is defined</t>
+                <t>F - finite field</t>
                 <t>f - bit-length of a field element, i.e., the binary logarithm of the size of F, rounded up to the nearest integer</t>
-                <t>n - half of the byte-length of a field element, i.e., f/8 rounded up to the nearest integer and then divided by 2 </t>
-                 <!--Remember that n=16 for the P-256 curve-->                 
+                <t>n - half of the byte-length of a field element, i.e., f/8 rounded up to the nearest integer and then divided by 2; must be an integer </t>
+                <t>E - elliptic curve defined over F</t>
+                <t>G - subgroup of E of large prime order</t>
+                <t>q - prime order of group G</t>
+                <t>cofactor - number of points on E divided by q</t>
+                <t>g - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
-                <t>hLen - output length in octets of function Hash</t>
+                <t>hLen - output length in octets of function Hash; must be equal to 2n</t>
             </list>
         </t>
 
@@ -532,8 +533,6 @@
             Constraints on options:
             <list>
             	<t>Cryptographic security of Hash is at least as high as the cryptographic security of G</t>
-                <t>n is an integer</t>
-            	<t>hLen is equal to 2n</t>
             </list>
         </t>
 
@@ -703,7 +702,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, which is an EC point in G</t>
+                    <t>h - hashed value, which is a finite EC point in G</t>
                 </list>
             </t>
             
@@ -719,9 +718,10 @@
                         <t>Set hLen-f*8 leading bits of attempted_hash to 0</t>
                         <t>p = 0x02 || attempted_hash</t>
                         <t>h = OS2ECP(p)</t>
+                        <t>If h is not equal to "invalid" and cofactor>1, set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
                     </list>
-                    until h is not equal to "invalid"
+                    until (h is not equal to "invalid") and (cofactor = 1 or h is not equal to the EC point at infinity)
                     </t>
                     <t>Output h</t>
                 </list>
@@ -738,6 +738,8 @@
                 probability close to 1/2.
                 Of the two possible y-coordinates for h,
                 OS2ECP will choose one deterministically because of the 0x02 octet in step D.
+                Once we succeed in finding h on the curve, we raise it to the power of cofactor to make sure
+                we are in G.
             </t>
             
             </section>
@@ -1024,8 +1026,11 @@
                     Cleaned up the definitions of VRF algorithms.
                     Added security definitions for VRF and security considerations.
                     Parameterized EC-VRF so it could support curves other than 
-                    P-256 and Ed25519. 
-                </t> 
+                    P-256 and Ed25519.
+                </t>
+                <t>
+                    01 - Fixed VRF_proof_to_hash to work when hash length is greater than length of q and when cofactor >1
+                </t>
             </list>
         </t>
     </section>
