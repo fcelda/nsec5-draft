@@ -416,7 +416,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-goldbe-vrf-01" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-28" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -440,7 +440,7 @@
   <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
-  <td class="left">Expires: November 27, 2017</td>
+  <td class="left">Expires: November 29, 2017</td>
   <td class="right">University of Maryland</td>
 </tr>
 <tr>
@@ -453,7 +453,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">May 26, 2017</td>
+  <td class="right">May 28, 2017</td>
 </tr>
 
     	
@@ -473,7 +473,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 27, 2017.</p>
+<p>This Internet-Draft will expire on November 29, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -879,7 +879,7 @@
 <ol>
   <li>ctr = 0</li>
   <li>pk = ECP2OS(g^x)</li>
-  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>attempted_hash = Hash(alpha || pk || CTR)</li><li>Set hLen-f*8 leading bits of attempted_hash to 0</li><li>p = 0x02 || attempted_hash</li><li>h = OS2ECP(p)</li><li>If h is not equal to "invalid" and cofactor&gt;1, set h = h^cofactor</li><li>ctr = ctr + 1</li></ol><p> until (h is not equal to "invalid") and (cofactor = 1 or h is not equal to the EC point at infinity) </p></li>
+  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>attempted_hash = Hash(alpha || pk || CTR)</li><li>Set hLen-f*8 leading bits of attempted_hash to 0</li><li>p = 0x02 || attempted_hash</li><li>h = OS2ECP(p)</li><li>If h is not equal to "invalid" and cofactor&gt;1, set h = h^cofactor</li><li>ctr = ctr + 1</li></ol><p> until (h is not equal to "invalid") and (h is not equal to the EC point at infinity) </p></li>
   <li>Output h</li>
 </ol>
 
@@ -996,7 +996,7 @@
 
 <ul class="empty">
   <li>00 - Forked this document from draft-vcelak-nsec5-04.  Cleaned up the definitions of VRF algorithms.  Added security definitions for VRF and security considerations.  Parameterized EC-VRF so it could support curves other than P-256 and Ed25519.  </li>
-  <li>01 - Fixed VRF_proof_to_hash to work when hash length is greater than length of q and when cofactor &gt;1 </li>
+  <li>01 - Fixed ECVRF_hash_to_curve1 to work when hash length is greater than length of q and when cofactor &gt;1 </li>
 </ul>
 
 <p> </p>

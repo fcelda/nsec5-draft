@@ -721,7 +721,7 @@
                         <t>If h is not equal to "invalid" and cofactor>1, set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
                     </list>
-                    until (h is not equal to "invalid") and (cofactor = 1 or h is not equal to the EC point at infinity)
+                    until (h is not equal to "invalid") and (h is not equal to the EC point at infinity)
                     </t>
                     <t>Output h</t>
                 </list>
@@ -1029,7 +1029,7 @@
                     P-256 and Ed25519.
                 </t>
                 <t>
-                    01 - Fixed VRF_proof_to_hash to work when hash length is greater than length of q and when cofactor >1
+                    01 - Fixed ECVRF_hash_to_curve1 to work when hash length is greater than length of q and when cofactor >1
                 </t>
             </list>
         </t>
