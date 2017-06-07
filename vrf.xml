@@ -879,8 +879,8 @@
         <list style="symbols">
         <t>
             The EC group G is the Ed25519
-            elliptic curve with parameters defined in 
-            <xref target="RFC7748"></xref> (Section 4.1).      
+            elliptic curve with parameters defined in Table 1 of
+             <xref target="RFC8032"></xref>.      
             For this group,
             the cofactor = 8,
             the length in octets of a single coordinate of an EC point is 
@@ -894,6 +894,8 @@
         <t> ECP2OS is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
         
         <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
+        <cref source="Sharon">need to confirm that os2ecp outputs INVALID 
+        (or something like that) if conversion fails!!</cref>
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
