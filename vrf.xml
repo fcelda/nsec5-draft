@@ -611,7 +611,7 @@
             <t>
                 Input:
                 <list>
-                    <t>pi - VRF proof, octet string of length 5n+1</t> 
+                    <t>pi - VRF proof, octet string of length m+3n</t> 
                 </list>
             </t>
             <t>
@@ -623,8 +623,10 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>NEEDS MAJOR CLEANUP TBD IN NEXT COMMIT</t>
-                    <t>beta = pi[2] || pi[3] || ... pi[2n+1]</t>
+                    <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
+                    <t>gamma = gamma^cofactor</t>
+                    <t>beta = Hash(gamma)  [MAJOR CHANGE HERE! Hash-ing gamma rather than 
+                    just grabbing the x-coordinate of the EC point!]</t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -1058,7 +1060,9 @@
                     P-256 and Ed25519.
                 </t>
                 <t>
-                    01 - Fixed ECVRF to work when cofactor >1
+                    01 - Fixed ECVRF to work when cofactor > 1.  Changed 
+                    ECVRF_proof2hash(pi) so that it outputs a value processed
+                    by the cryptographic hash function Hash.
                 </t>
             </list>
         </t>
