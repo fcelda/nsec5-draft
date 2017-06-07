@@ -518,12 +518,6 @@
         </t>
 
         <t>
-            The key pair generation primitive is specified in
-            Section 3.2.1 of <xref target="SECG1" />.
-            <cref source="Sharon">Need to make this work for all curves</cref>
-        </t>
-
-        <t>
             Fixed options:
             <list>
                 <t>F - finite field</t>
