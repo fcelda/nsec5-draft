@@ -1080,7 +1080,9 @@
                 <t>
                     01 - Fixed ECVRF to work when cofactor > 1.  Changed 
                     ECVRF_proof2hash(pi) so that it outputs a value processed
-                    by the cryptographic hash function Hash.
+                    by the cryptographic hash function Hash. Cleaned up 
+                    ciphersuites and ECVRF description so that it works with
+                    EC point encodings for both P256 and Ed25519 curves.
                 </t>
             </list>
         </t>
