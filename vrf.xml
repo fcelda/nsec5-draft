@@ -824,6 +824,7 @@
             <t>
                 Output:
                 <list>
+                    <t> "INVALID", or </t>
                     <t>gamma - EC point</t>
                     <t>
                     c - integer between 0 and 2^(8n)-1
