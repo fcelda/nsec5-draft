@@ -833,6 +833,7 @@
                 <list style="numbers">
                     <t>let gamma', c', s' be pi split after m-th and m+n-th octet</t>
                     <t>gamma = OS2ECP(gamma')</t>
+                    <t>if gamma = "INVALID" output "INVALID" and stop.</t>
                     <t>c = OS2IP(c')</t>
                     <t>s = OS2IP(s')</t>
                     <t>Output gamma, c, and s</t>
@@ -869,8 +870,7 @@
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
         <t>
-            The ECVRF_hash_to_curve function is ECVRF_hash_to_curve1, 
-            as specified in <xref target="ecvrfH2C1"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
         </t>
         </list>
         </t>
@@ -882,8 +882,18 @@
             elliptic curve with parameters defined in 
             <xref target="RFC7748"></xref> (Section 4.1).      
             For this group,
+            the cofactor = 8,
             the length in octets of a single coordinate of an EC point is 
-            2n = 32 and the cofactor = 8.
+            2n = 32, and
+            the length in octets of a EC point with point compression is 
+            m = 2n = 32. 
+        </t>
+        <t> The key pair generation primitive is specified in Section 5.1.5 
+        of <xref target="RFC8032" /></t>
+        
+        <t> ECP2OS is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
+        
+        <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -1085,6 +1095,7 @@
         <?rfc include="reference.RFC.5114.xml"?>
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.7748.xml"?>
+        <?rfc include="reference.RFC.8032.xml"?>
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
         <reference anchor="FIPS-186-3">
