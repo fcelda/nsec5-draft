@@ -850,9 +850,7 @@
         </section><!-- Auxiliary Functions -->
 
         <section title="EC-VRF Ciphersuites" anchor="suites">
-        
-        <t>[Seeking feedback on this section!]</t>
-        
+                
         <t>This document defines EC-VRF-P256-SHA256 as follows: 
         <list style="symbols">
         <t>
@@ -1034,7 +1032,7 @@
     </t>
     
     <t> Applications that are concerned about tightness of cryptographic
-    reductions therefor have two options.
+    reductions therefore have two options.
     
     <list style="symbols">
     <t> They may choose to ensure that selective pseudorandomness is sufficient for
@@ -1118,8 +1116,7 @@
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.7748.xml"?>
         <?rfc include="reference.RFC.8032.xml"?>
-        <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
-
+        
         <reference anchor="FIPS-186-3">
             <front>
                 <title>Digital Signature Standard (DSS)</title>
@@ -1187,17 +1184,10 @@
             </front>
             <seriesInfo name="in" value="CRYPTO" />
         </reference>
+        
+        <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
-        <reference anchor="GQ88">
-            <front>
-                <title>A Practical Zero-Knowledge Protocol Fitted to Security Microprocessor Minimizing Both Transmission and Memory</title>
-                <author initials="L. C." surname="Guillou" />
-                <author initials="JJ." surname="Quisquater" />
-                <date year="1988" />
-            </front>
-            <seriesInfo name="in" value="Advances in Cryptology - EUROCRYPT '88" />
-        </reference>
-
+        
     </references>
 
 
