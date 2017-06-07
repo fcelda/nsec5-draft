@@ -520,32 +520,28 @@
         <t>
             The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />.
+            <cref source="Sharon">Need to make this work for all curves</cref>
         </t>
 
         <t>
             Fixed options:
             <list>
                 <t>F - finite field</t>
-                <t>f - bit-length of a field element, i.e., the binary logarithm of the size of F, rounded up to the nearest integer</t>
-                <t>n - half of the byte-length of a field element, i.e., f/8 rounded up to the nearest integer and then divided by 2; must be an integer </t>
-                <t>E - elliptic curve defined over F</t>
+                <t>2n - length, in octets, of a field element in F. 
+                (This specification assumes that field elements in F 
+                have bit lengths that are divisible by 16.)</t>
+                <t>E - elliptic curve (EC) defined over F</t>
+                <t>m - length, in octets, of a EC point with point compression</t>
                 <t>G - subgroup of E of large prime order</t>
                 <t>q - prime order of group G</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>g - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
-                <t>hLen - output length in octets of function Hash; must be equal to 2n</t>
+                <t>hLen - output length, in octets, of function Hash; must be equal to 2n</t>
             </list>
         </t>
 
-        <t>
-            Constraints on options:
-            <list>
-            	<t>Cryptographic security of Hash is at least as high as the cryptographic security of G</t>
-            </list>
-        </t>
-
-        <t>
+          <t>
             Parameters used:
             <list>
                 <t>g^x - EC public key</t>
@@ -561,8 +557,13 @@
                 <t>p^k - EC point multiplication</t>
                 <t>p1*p2 - EC point addition</t>
                 <t>h[i] - the i'th octet of octet string h</t>
-                <t>ECP2OS - EC point to octet string conversion with point compression as specified in Section 2.3.3 of <xref target="SECG1" /></t>
-                <t>OS2ECP - octet string to EC point conversion with point compression as specified in Section 2.3.4 of <xref target="SECG1" /></t>
+                <t>ECP2OS - EC point to octet string conversion with point compression</t>
+                <t>OS2ECP - octet string to EC point conversion with point compression.
+                OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
+                <t>I2OSP - nonnegative integer conversion to octet string as defined in
+                    Section 4.1 of <xref target="RFC8017" /></t>
+                <t> OS2IP - Coversion of an octet string to a nonnegative integer as defined in
+                    Section 4.2 of <xref target="RFC8017" /></t>
             </list>
         </t>
 
@@ -583,7 +584,7 @@
             <t>
                 Output:
                 <list>
-                    <t>pi - VRF proof, octet string of length 5n+1</t>
+                    <t>pi - VRF proof, octet string of length m+3n</t>
                 </list>
             </t>
 
@@ -622,6 +623,7 @@
             <t>
                 Steps:
                 <list style="numbers">
+                    <t>NEEDS MAJOR CLEANUP TBD IN NEXT COMMIT</t>
                     <t>beta = pi[2] || pi[3] || ... pi[2n+1]</t>
                     <t>Output beta</t>
                 </list>
@@ -652,11 +654,9 @@
             <t>
                 Steps:
                 <list style="numbers">
+                    <t>If ECVRF_decode_proof(pi) outputs "INVALID", 
+                    then output "INVALID" and stop.</t>
                     <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
-                    <t>
-                        If gamma is not a valid EC point in G,
-                        output "INVALID" and stop.
-                    </t>
                     <t>u = (g^x)^c * g^s</t>
                     <t>h = ECVRF_hash_to_curve(alpha, g^x)</t>
                     <t>v = gamma^c * h^s</t>
@@ -687,7 +687,7 @@
             </t>
             
             <t>
-            However, this algorithm MUST NOT be used in 
+            However, this algorithm SHOULD NOT be used in 
             applications where
             the VRF input alpha must be kept secret. This is because the running time of 
             the hashing algorithm depends on alpha, and so it is susceptible to 
@@ -724,13 +724,15 @@
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>attempted_hash = Hash(alpha || pk || CTR)</t>
-                        <t>Set hLen-f*8 leading bits of attempted_hash to 0</t>
-                        <t>p = 0x02 || attempted_hash</t>
+                        <t>p = 0x02 || attempted_hash 
+                        <cref source="sharon">FIX: This step is specific to P256 encoding.</cref></t>
                         <t>h = OS2ECP(p)</t>
-                        <t>If h is not equal to "invalid" and cofactor>1, set h = h^cofactor</t>
+                        <t>If h is not equal to "INVALID" and cofactor>1, 
+                            set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
                     </list>
-                    until (h is not equal to "invalid") and (h is not equal to the EC point at infinity)
+                    until (h is not equal to "INVALID") and 
+                    (h is not equal to the EC point at infinity)
                     </t>
                     <t>Output h</t>
                 </list>
@@ -740,8 +742,9 @@
                 OS2ECP will first test whether attempted_hash
                 is the correct octet-string representation of an element u of F
                 (i.e., attempted_hash is less than the field size).
-                This will happen with probability at least 1/2 because of Step C (higher if
-                the field size is almost a power of 2).
+                This will happen with probability at least 1/2 because the range
+                of Hash is 2n, and the number of field elements in F is no less
+                than 2^(2n-1). <cref source="sharon">more text here</cref>
                 If this test passes, OS2ECP will succeed whenever
                 u is an x-coordinate of an EC point, which happens with
                 probability close to 1/2.
@@ -794,7 +797,7 @@
                     </t>
                     <t>h' = Hash(P) 
                     </t>
-                    <t>h = OS2IP(h'[1] || h'[2] || ... h'[n])</t>
+                    <t>h = OS2IP(h'[1] || h'[2] || ... || h'[n])</t>
                     <t>Output h</t>
                 </list>
             </t>
@@ -810,7 +813,7 @@
             <t>
                 Input:
                 <list>
-                    <t>pi - VRF proof, octet string (5n+1 octets)</t>
+                    <t>pi - VRF proof, octet string (m+3n octets)</t>
                 </list>
             </t>
             <t>
@@ -828,7 +831,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>let gamma', c', s' be pi split after (2n+1)-th and (3n+1)-th octet</t>
+                    <t>let gamma', c', s' be pi split after m-th and m+n-th octet</t>
                     <t>gamma = OS2ECP(gamma')</t>
                     <t>c = OS2IP(c')</t>
                     <t>s = OS2IP(s')</t>
@@ -839,7 +842,7 @@
 
         </section><!-- Auxiliary Functions -->
 
-        <section title="EC-VRF Ciphersuites">
+        <section title="EC-VRF Ciphersuites" anchor="suites">
         
         <t>[Seeking feedback on this section!]</t>
         
@@ -849,9 +852,19 @@
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
             and <xref target="RFC5114"></xref>  (Section 2.6).  For this group,
-            the length in octets of a single coordinate of an EC point is 
-            2n = 32.
+            the cofactor = 1, 
+            the length in octets of a single coordinate of an EC point is 2n = 32,
+            the length in octets of compressed EC point is m = 2n+1 = 33.  
         </t>
+        
+        <t> The key pair generation primitive is specified in
+            Section 3.2.1 of <xref target="SECG1" />. </t>
+        
+        <t> ECP2OS is specified in Section 2.3.3 of <xref target="SECG1" />.</t>
+        
+        <t> OS2ECP is specified in Section 2.3.4 of <xref target="SECG1" />.
+        </t>
+        
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
         </t>
@@ -870,7 +883,7 @@
             <xref target="RFC7748"></xref> (Section 4.1).      
             For this group,
             the length in octets of a single coordinate of an EC point is 
-            2n = 32.
+            2n = 32 and the cofactor = 8.
         </t>
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
