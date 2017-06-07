@@ -96,12 +96,13 @@
    </t>
 
    <t>
-   The main application of the VRF is to protect the privacy of data records
-   stored in a hash-based data structure against a querying adversary. In this
-   application, a prover holds the VRF secret key and uses the VRF hashing to
+   A key application of the VRF is to provide privacy against 
+   offline enumeration (e.g. dictionary attacks) on data  stored in a 
+   hash-based data structure. 
+   In this application, a prover holds the VRF secret key and uses the VRF hashing to
    construct a hash-based data structure on the input data.
 
-   Due to the nature of the VRF hashing, only the prover can answer queries
+   Due to the nature of the VRF, only the prover can answer queries
    about whether or not some data is stored in the data structure.  Anyone who
    knows the public VRF key can verify that the prover has answered the queries
    correctly. However no offline inferences (i.e. inferences without querying
@@ -207,15 +208,15 @@
    
    <section title= "Full Uniqueness or Trusted Uniqueness">
 	
-    <t> Uniqueness states that, for any fixed public
+    <t> Uniqueness means that, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
-	output beta that can be proved to be valid, even for a 
-    computationally-bounded adversary that knows the VRF secret key SK.
+	output beta that can be proved to be valid.  Uniqueness must hold
+    even for an adversarial prover that knows the VRF secret key SK.
     </t>
 
     <t>
     More precisely, full uniqueness states that 
-    a computationally bounded adversary cannot
+    a computationally-bounded adversary cannot
 	choose 
     a VRF public key PK, 
     a VR input alpha, 
@@ -235,14 +236,39 @@
      generated in an invalid manner.
 	</t>
 	</section>
-    <section title="Full Pseudorandomness or Selective Pseudorandomness">
+
+	<section title="Full Collison Resistance or Trusted Collision Resistance">
+
+    <t>Like any cryprographic hash function, VRFs need to be
+        collision resistant.  Collison resistance must hold
+    even for an adversarial prover that knows the VRF secret key SK.
+    </t>
     
-    <t>
-	     Suppose the public and private VRF keys (PK, SK) were generated
-	     in a trustworthy manner. 
+    <t> More percisely, full collision resistance states that
+        it should be computationally 
+        infeasible for an adversary to find two distinct VRF
+	    inputs alpha1 and alpha2 that have the same VRF hash beta, 
+        even if that adversary knows the secret VRF key SK.
     </t>
     
     <t>
+	    For most applications, a slightly weaker security property
+        called "trusted collision resistance" suffices. 
+        Trusted collision resistance is the same as collision resistance, 
+        but it holds only if PK and SK were generated in a trustworthy manner.
+    </t>
+   </section>
+
+
+    <section title="Full Pseudorandomness or Selective Pseudorandomness">
+    
+    <t> Pseudorandomness ensures that when an adversarial verifier sees 
+        a VRF hash output beta without its corresponding VRF proof pi, 
+        then beta is indistinguishable from a random value.
+    </t>
+    
+    <t>  More percisely, suppose the public and private VRF keys (PK, SK) were generated
+	     in a trustworthy manner.
 	     Pseudorandomness ensures that the VRF hash output beta
          (without its corresponding VRF proof pi) on
 	     any adversarially-chosen "target" VRF input alpha
@@ -255,7 +281,7 @@
     
     <t>   
          With "full pseudorandomness", the adversary is allowed to choose the 
-         target VRF input  alpha at any time, even after it observes VRF outputs beta'
+         "target" VRF input  alpha at any time, even after it observes VRF outputs beta'
          and proofs pi' on a variety of chosen inputs alpha'.
          </t>
          
@@ -268,10 +294,10 @@
 	     </t>
          
 	<t> 
-	It is important to remember that the VRF output beta does not 
-	look random to a party that knows the private VRF key SK!  Such a party
-	can easily distinguish beta from a random value by comparing it to 
-	the result of VRF_hash(SK, alpha).	     
+	   It is important to remember that the VRF output beta does not 
+	   look random to the prover, or to any other party that knows the private 
+       VRF key SK!  Such a party can easily distinguish beta from 
+       a random value by comparing it to the result of VRF_hash(SK, alpha).	     
 	</t>
 
 	<t> Also, the VRF output beta does not look random to any party that
@@ -284,28 +310,11 @@
 
     
 	<t>
-    Finally, the VRF output beta may not look random if VRF key generation
+    Also, the VRF output beta may not look random if VRF key generation
     was not done in a trustworthy fashion. (For example, if VRF keys were 
-    not generated with good randomness.)
+    generated with bad randomness.)
 	</t>
 
-    </section>
-
-	<section title="Full Collison Resistance or Trusted Collision Resistance">
-
-    <t>Finally, like any cryprographic hash function, VRFs need to be
-        collision resistant.  Specifically, it should be computationally 
-        infeasible for an adversary to find two distinct VRF
-	    inputs alpha1 and alpha2 that have the same VRF hash beta, 
-        even if that adversary knows the secret VRF key SK.
-    </t>
-    
-    <t>
-	    For most applications, a slightly weaker security property
-        called "trusted collision resistance" suffices. 
-        Trusted collision resistance is the same as collision resistance, 
-        but it holds only if PK and SK were generated in a trustworthy manner.
-    </t>
    </section>
    </section>
   
@@ -493,7 +502,7 @@
             although we already said that all VRF functions are required 
             to satisfy these properties. What about removing it here and 
             keep just the rough description, reference to the 
-            security proof, and the optional properties (i.e. proof-to-hash)?</cref>
+            security proof?</cref>
             <cref source="Sharon">Relevant because of trusted / full / selective
             qualifiers of the security definitions. </cref>
         </t>-->
@@ -502,8 +511,8 @@
             The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
             satisfies the trusted uniqueness, full pseudorandomness, and
             trusted collision resistance properties defined in <xref target="secdef"/>. 
-            The security of this VRF
-            follows from the decisional Diffie-Hellman (DDH) assumption in the
+            The security of this VRF follows from the decisional 
+            Diffie-Hellman (DDH) assumption in the
             cyclic group in the random oracle model. Formal security proofs are
             in <xref target="nsec5ecc" />.  
         </t>
@@ -917,7 +926,8 @@
     properties of the VRF may not hold. Also, trusted uniqueness and trusted collision-resistance
     may also not hold if the keys are generated
     adversarially  (e.g., the RSA modulus is not a product of two primes
-    for the RSA-FDH-VRF or the public key g^x is not valid point in the
+    or if RSA is not permutation for the RSA-FDH-VRF,  
+    or the public key g^x is not valid point in the
     prime-order group G for the EC).
     </t>
 
@@ -936,13 +946,6 @@
     These modifications are left for future specification.
     </t>
 
-
-    <t>Note that for the RSA-FDH-VRF, it might be possible to construct
-        such a proof using the <xref target="GQ88" />
-    identification protocol made non-interactive using the Fiat-Shamir heuristic
-    in the random oracle model.
-    </t>
-   
     <t>
      However, it is not possible to guarantee pseudorandomness in the face
     of adversarially generated VRF keys.  This is because an adversary can
@@ -1029,7 +1032,7 @@
                     P-256 and Ed25519.
                 </t>
                 <t>
-                    01 - Fixed ECVRF_hash_to_curve1 to work when hash length is greater than length of q and when cofactor >1
+                    01 - Fixed ECVRF to work when cofactor >1
                 </t>
             </list>
         </t>
