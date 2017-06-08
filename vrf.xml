@@ -321,9 +321,9 @@
    
     <section title="RSA Full Domain Hash VRF (RSA-FDH-VRF)" anchor="fdh">
         <t>
-            The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is VRF that satisfies
-            the trusted uniqueness, full pseudorandomness, and trusted
-            collision resistance properties defined in <xref target="secdef"/>.  
+            The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is a VRF that satisfies
+            the trusted uniqueness, trusted
+            collision resistance, and full pseudorandomness properties defined in <xref target="secdef"/>.
             Its security follows from the
             standard RSA assumption in the random oracle model.  Formal
             security proofs are in <xref target="nsec5ecc" />.  
@@ -508,12 +508,11 @@
         </t>-->
         
         <t>
-            The Elliptic Curve Verifiable Random Function (EC-VRF) is VRF that
-            satisfies the trusted uniqueness, full pseudorandomness, and
-            trusted collision resistance properties defined in <xref target="secdef"/>. 
+            The Elliptic Curve Verifiable Random Function (EC-VRF) is a VRF that
+            satisfies the trusted uniqueness, trusted collision resistance,
+            and full pseudorandomness properties defined in <xref target="secdef"/>.
             The security of this VRF follows from the decisional 
-            Diffie-Hellman (DDH) assumption in the
-            cyclic group in the random oracle model. Formal security proofs are
+            Diffie-Hellman (DDH) assumption in the random oracle model. Formal security proofs are
             in <xref target="nsec5ecc" />.  
         </t>
 
@@ -530,8 +529,7 @@
                 <t>q - prime order of group G</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>g - generator of group G</t>
-                <t>Hash - cryptographic hash function</t>
-                <t>hLen - output length, in octets, of function Hash; must be equal to 2n</t>
+                <t>Hash - cryptographic hash function with output length 2n octets</t>
             </list>
         </t>
 
