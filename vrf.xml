@@ -553,7 +553,7 @@
                     Section 4.1 of <xref target="RFC8017" /></t>
                 <t> OS2IP - Coversion of an octet string to a nonnegative integer as defined in
                     Section 4.2 of <xref target="RFC8017" /></t>
-                <t>ECP2OS - conversion of EC point to an m-octet string 
+                <t>EC2OSP - conversion of EC point to an m-octet string 
                 as specified in <xref target="suites"/></t>
                 <t>OS2ECP - conversion of an m-octet string to EC point
                 as specified in <xref target="suites"/>.
@@ -594,7 +594,7 @@
                     <t>choose a random nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
                     <t>s = k - c*x mod q</t>
-                    <t>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
+                    <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
                 </list>
             </t>
@@ -623,7 +623,7 @@
                 <list style="numbers">
                     <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
                     <t>gamma = gamma^cofactor</t>
-                    <t>beta = Hash(gamma)  [MAJOR CHANGE HERE! Hash-ing gamma rather than 
+                    <t>beta = Hash(EC2OSP(gamma))  [MAJOR CHANGE HERE! Hash-ing gamma rather than 
                     just grabbing the x-coordinate of the EC point!]</t>
                     <t>Output beta</t>
                 </list>
@@ -721,7 +721,7 @@
                 Steps:
                 <list style="numbers">
                     <t>ctr = 0</t>
-                    <t>pk = ECP2OS(g^x)</t>
+                    <t>pk = EC2OSP(g^x)</t>
                     <t>Repeat:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
@@ -778,7 +778,7 @@
                 <list style="numbers">
                     <t>P = ""</t>
                     <t>for p_i in [p_1, p_2, ... p_j]:
-                       <vspace/>P = P || ECP2OS(p_i)
+                       <vspace/>P = P || EC2OSP(p_i)
                     </t>
                     <t>h' = Hash(P) 
                     </t>
@@ -849,7 +849,7 @@
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />. </t>
         
-        <t> ECP2OS is specified in Section 2.3.3 of <xref target="SECG1" />.</t>
+        <t> EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" />.</t>
         
         <t> OS2ECP is specified in Section 2.3.4 of <xref target="SECG1" />.
         </t>
@@ -882,7 +882,7 @@
         <t> The key pair generation primitive is specified in Section 5.1.5 
         of <xref target="RFC8032" /></t>
         
-        <t> ECP2OS is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
+        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
         
         <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
         <cref source="Sharon">need to confirm that os2ecp outputs INVALID 
