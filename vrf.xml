@@ -589,7 +589,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(alpha, g^x)</t>
+                    <t>h = ECVRF_hash_to_curve(g^x, alpha)</t>
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
@@ -658,7 +658,7 @@
                     then output "INVALID" and stop.</t>
                     <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
                     <t>u = (g^x)^c * g^s</t>
-                    <t>h = ECVRF_hash_to_curve(alpha, g^x)</t>
+                    <t>h = ECVRF_hash_to_curve(g^x, alpha)</t>
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
                     <t>
@@ -680,27 +680,28 @@
             <section title="ECVRF_hash_to_curve1" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve1(alpha, g^x) algorithm
+            The following ECVRF_hash_to_curve1(g^x, alpha) algorithm
             implements ECVRF_hash_to_curve in a simple and
-            generic way that works for any elliptic curve that supports
-            point compression.  
+            generic way that works for any elliptic curve. 
             </t>
             
             <t>
-            However, this algorithm SHOULD be avoid used in 
+            The running time of this algorithm depends on alpha. 
+            For the ciphersuites specified 
+            in <xref target="suites"/>, this algorithm 
+            is expected to find a valid curve point after approximately two attempts 
+            (i.e., when ctr=1) on average. See also <xref target="Icart09"/>.
+            </t>
+            
+            <t>
+            However, because the running time of algorithm depends on alpha, 
+            this algorithm SHOULD be avoided in 
             applications where it is important that
-            the VRF input alpha is secret. This is because the running time of 
-            the hashing algorithm depends on alpha, and so it is susceptible to 
-            timing attacks.  That said, the amount of information obtained from
-            such a timing attack is likely to be small, since the algorithm 
-            is expected to find a valid curve point after only two attempts 
-            (i.e., when ctr=1) on average (see <xref target="Icart09"/>
-            and the explanation below).
+            the VRF input alpha remain secret. 
             </t>
             
-            
             <t>
-                ECVRF_hash_to_curve1(alpha, g^x)
+                ECVRF_hash_to_curve1(g^x, alpha)
             </t>
             <t>
                 Input:
@@ -724,7 +725,7 @@
                     <t>Repeat:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>attempted_hash = Hash(alpha || pk || CTR)</t>
+                        <t>attempted_hash = Hash( pk || alpha  || CTR)</t>
                         <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not equal to "INVALID" and cofactor>1, 
                             set h = h^cofactor</t>
@@ -737,22 +738,6 @@
                 </list>
             </t>
             
-            <t>
-                OS2ECP tests whether p is the correct octet-string 
-                representation of an EC point with point compression.
-                OS2ECP succeeds whenever attempted_hash is a valid x-coordinate 
-                for an EC point. This happens whenever attempted_hash
-                (viewed as an integer) is smaller than the number of field 
-                elements in F. Since the range
-                of Hash is 2n, and the number of field elements in F is no less
-                than 2^(2n-1), this happens with probability at least 1/2.
-                In step C, one of the two possible y-coordinates for p
-                is chosen deterministically using xC2xyC as specified in 
-                <xref target="suites"/>. 
-                Once a valid EC point h is found, it is raised 
-                to the power of cofactor to ensure that the result is in G 
-                (rather than just on the elliptic curve E).
-            </t>
             
             </section>
             
