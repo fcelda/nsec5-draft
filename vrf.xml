@@ -536,8 +536,8 @@
           <t>
             Parameters used:
             <list>
-                <t>g^x - EC public key</t>
-                <t>x - EC private key</t>
+                <t>y = g^x - VRF public key, an EC point</t>
+                <t>x - VRF private key, an integer where 0 &lt; x &lt; q</t>
              </list>
         </t>
 
@@ -567,15 +567,15 @@
 
         <section title="EC-VRF Proving">
             <t>
-                ECVRF_prove(g^x, x, alpha)
+                ECVRF_prove(y, x, alpha)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>g^x - EC public key</t>
-                    <t>x - EC private key</t>
-                    <t>alpha - VRF input, octet string</t>
+                    <t>y - public key, an EC point</t>
+                    <t>x - private key, an integer</t>
+                    <t>alpha - VRF input, an octet string</t>
                 </list>
             </t>
 
@@ -589,10 +589,10 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(g^x, alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>gamma = h^x</t>
                     <t>choose a random nonce k from [0, q-1]</t>
-                    <t>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</t>
+                    <t>c = ECVRF_hash_points(g, h, y, h^x, g^k, h^k)</t>
                     <t>s = k - c*x mod q</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
@@ -632,13 +632,13 @@
 
         <section title="EC-VRF Verifying">
             <t>
-                ECVRF_verify(g^x, pi, alpha)
+                ECVRF_verify(y, pi, alpha)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>g^x - EC public key</t>
+                    <t>y -  public key, an EC point</t>
                     <t>pi - VRF proof, octet string of length 5n+1</t>
                     <t>alpha - VRF input, octet string</t>
                 </list>
@@ -657,10 +657,10 @@
                     <t>If ECVRF_decode_proof(pi) outputs "INVALID", 
                     then output "INVALID" and stop.</t>
                     <t>gamma, c, s = ECVRF_decode_proof(pi)</t>
-                    <t>u = (g^x)^c * g^s</t>
-                    <t>h = ECVRF_hash_to_curve(g^x, alpha)</t>
+                    <t>u = (y)^c * g^s</t>
+                    <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>v = gamma^c * h^s</t>
-                    <t>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</t>
+                    <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are the same, output "VALID";
                         else output "INVALID". 
@@ -680,7 +680,7 @@
             <section title="ECVRF_hash_to_curve1" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve1(g^x, alpha) algorithm
+            The following ECVRF_hash_to_curve1(y, alpha) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve. 
             </t>
@@ -701,13 +701,13 @@
             </t>
             
             <t>
-                ECVRF_hash_to_curve1(g^x, alpha)
+                ECVRF_hash_to_curve1(y, alpha)
             </t>
             <t>
                 Input:
                 <list>
                     <t>alpha - value to be hashed, an octet string</t>
-                    <t>g^x - EC public key</t>
+                    <t>y - public key, an EC point</t>
                 </list>
             </t>
             <t>
@@ -721,7 +721,7 @@
                 Steps:
                 <list style="numbers">
                     <t>ctr = 0</t>
-                    <t>pk = EC2OSP(g^x)</t>
+                    <t>pk = EC2OSP(y)</t>
                     <t>Repeat:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
