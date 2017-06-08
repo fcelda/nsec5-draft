@@ -524,7 +524,7 @@
                 (This specification assumes that field elements in F 
                 have bit lengths that are divisible by 16.)</t>
                 <t>E - elliptic curve (EC) defined over F</t>
-                <t>m - length, in octets, of a EC point with point compression</t>
+                <t>m - length, in octets, of an EC point encoded as an octet string</t>
                 <t>G - subgroup of E of large prime order</t>
                 <t>q - prime order of group G</t>
                 <t>cofactor - number of points on E divided by q</t>
@@ -553,17 +553,15 @@
                     Section 4.1 of <xref target="RFC8017" /></t>
                 <t> OS2IP - Coversion of an octet string to a nonnegative integer as defined in
                     Section 4.2 of <xref target="RFC8017" /></t>
-                <t>ECP2OS - conversion of EC point with point compression to octet string 
+                <t>ECP2OS - conversion of EC point to an m-octet string 
                 as specified in <xref target="suites"/></t>
-                <t>OS2ECP - conversion of octet string to EC point with point compression
+                <t>OS2ECP - conversion of an m-octet string to EC point
                 as specified in <xref target="suites"/>.
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>xC2xyC - conversion from octet string representation of 
-                x-coordinate of EC point to octet string representation of an
-                EC point with point compression 
-                as specified in <xref target="suites"/>.
-                [NOTE: SHARON JUST MADE THIS UP! IS THERE A STANDARD NAME/API FOR THIS?]
-                </t>
+                <t>RS2ECP - conversion of a random 2n-octet string to an 
+                EC point as specified in <xref target="suites"/>.
+                RS2ECP returns INVALID if the octet string does not convert 
+                to a valid EC point.</t>
             </list>
         </t>
 
@@ -727,8 +725,7 @@
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>attempted_hash = Hash(alpha || pk || CTR)</t>
-                        <t>p = xC2xyC(attempted_hash)</t>
-                        <t>h = OS2ECP(p)</t>
+                        <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not equal to "INVALID" and cofactor>1, 
                             set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
@@ -854,10 +851,14 @@
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
-            and <xref target="RFC5114"></xref>  (Section 2.6).  For this group,
+            and <xref target="RFC5114"></xref>  (Section 2.6). 
+            <cref source="Sharon">Seeking feedback on what is the right 
+            source to cite!</cref>
+            For this group,
             the cofactor = 1, 
             the length in octets of a single coordinate of an EC point is 2n = 32,
-            the length in octets of compressed EC point is m = 2n+1 = 33.  
+            and EC points are encoded with point compression as octet strings
+            of length m = 2n+1 = 33.  
         </t>
         
         <t> The key pair generation primitive is specified in
@@ -868,8 +869,8 @@
         <t> OS2ECP is specified in Section 2.3.4 of <xref target="SECG1" />.
         </t>
         
-        <t> xC2xyC(h) takes in a 32-octet string h and 
-        returns a 33-octet string 0x02 || h </t>
+        <t> RS2ECP(h) = OS2ECP(0x02 || h). The input h is a 32-octet string
+        and the output is either an EC point or "INVALID". </t>
         
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
@@ -885,13 +886,13 @@
         <t>
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
-             <xref target="RFC8032"></xref>.      
+             <xref target="RFC8032"></xref>.       
             For this group,
             the cofactor = 8,
             the length in octets of a single coordinate of an EC point is 
             2n = 32, and
-            the length in octets of a EC point with point compression is 
-            m = 2n = 32. 
+            and EC points are encoded with point compression as octet strings
+            of length m = 2n+1 = 33. 
         </t>
         <t> The key pair generation primitive is specified in Section 5.1.5 
         of <xref target="RFC8032" /></t>
@@ -903,8 +904,8 @@
         (or something like that) if conversion fails!!</cref>
         </t>
 
-        <t> xC2xyC(h) takes in a 32-octet string h and 
-        returns a 32-octet string h.</t>
+        <t> RS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />. 
+        (Note: RS2ECP is the same as OS2ECP.)</t>
 
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
