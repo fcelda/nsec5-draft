@@ -487,7 +487,7 @@
                     <t>EM = I2OSP(m, k - 1)</t>
                     <t>EM' = MGF1(alpha, k - 1)</t>
                     <t>
-                        If EM and EM' are the same, output "VALID";
+                        If EM and EM' are equal, output "VALID";
                         else output "INVALID".
                     </t>
                 </list>
@@ -544,11 +544,9 @@
         <t>
             Notation and primitives used:
             <list>
-                <t>"" - empty octet string</t>
+                <t>We use multiplicative notation for the elliptic curve. p1*p2 denotes the group operation on two EC points p1 and p2 (sometimes called "point addition"),
+                    and p^k denotes k repetitions of the group operation on the point p (sometimes called "point multiplication")</t>
                 <t>|| - octet string concatenation</t>
-                <t>p^k - EC point multiplication</t>
-                <t>p1*p2 - EC point addition</t>
-                <t>h[i] - the i'th octet of octet string h</t>
                 <t>I2OSP - nonnegative integer conversion to octet string as defined in
                     Section 4.1 of <xref target="RFC8017" /></t>
                 <t> OS2IP - Coversion of an octet string to a nonnegative integer as defined in
@@ -591,7 +589,7 @@
                 <list style="numbers">
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>gamma = h^x</t>
-                    <t>choose a random nonce k from [0, q-1]</t>
+                    <t>choose a random integer nonce k from [0, q-1]</t>
                     <t>c = ECVRF_hash_points(g, h, y, h^x, g^k, h^k)</t>
                     <t>s = k - c*x mod q</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
@@ -665,7 +663,7 @@
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
-                        If c and c' are the same, output "VALID";
+                        If c and c' are equal, output "VALID";
                         else output "INVALID". 
                     </t>
                 </list>
@@ -779,13 +777,13 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>P = ""</t>
+                    <t>P = empty octet string</t>
                     <t>for p_i in [p_1, p_2, ... p_j]:
                        <vspace/>P = P || EC2OSP(p_i)
                     </t>
-                    <t>h' = Hash(P) 
-                    </t>
-                    <t>h = OS2IP(h'[1] || h'[2] || ... || h'[n])</t>
+                    <t>h1 = Hash(P)</t>
+                    <t>h2 = first n octets of h1</t>
+                    <t>h = OS2IP(h2)</t>
                     <t>Output h</t>
                 </list>
             </t>

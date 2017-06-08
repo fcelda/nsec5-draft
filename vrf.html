@@ -716,7 +716,7 @@
   <li>m = RSAVP1((n, e), s)</li>
   <li>EM = I2OSP(m, k - 1)</li>
   <li>EM' = MGF1(alpha, k - 1)</li>
-  <li>If EM and EM' are the same, output "VALID"; else output "INVALID".  </li>
+  <li>If EM and EM' are equal, output "VALID"; else output "INVALID".  </li>
 </ol>
 
 <p> </p>
@@ -728,7 +728,7 @@
   <li>F - finite field</li>
   <li>2n - length, in octets, of a field element in F.  (This specification assumes that field elements in F have bit lengths that are divisible by 16.)</li>
   <li>E - elliptic curve (EC) defined over F</li>
-  <li>m - length, in octets, of a EC point with point compression</li>
+  <li>m - length, in octets, of an EC point encoded as an octet string</li>
   <li>G - subgroup of E of large prime order</li>
   <li>q - prime order of group G</li>
   <li>cofactor - number of points on E divided by q</li>
@@ -740,35 +740,32 @@
 <p id="rfc.section.5.p.3">Parameters used: </p>
 
 <ul class="empty">
-  <li>g^x - EC public key</li>
-  <li>x - EC private key</li>
+  <li>y = g^x - VRF public key, an EC point</li>
+  <li>x - VRF private key, an integer where 0 &lt; x &lt; q</li>
 </ul>
 
 <p> </p>
 <p id="rfc.section.5.p.4">Notation and primitives used: </p>
 
 <ul class="empty">
-  <li>"" - empty octet string</li>
+  <li>We use multiplicative notation for the elliptic curve. p1*p2 denotes the group operation on two EC points p1 and p2 (sometimes called "point addition"), and p^k denotes k repetitions of the group operation on the point p (sometimes called "point multiplication")</li>
   <li>|| - octet string concatenation</li>
-  <li>p^k - EC point multiplication</li>
-  <li>p1*p2 - EC point addition</li>
-  <li>h[i] - the i'th octet of octet string h</li>
   <li>I2OSP - nonnegative integer conversion to octet string as defined in Section 4.1 of <a href="#RFC8017">[RFC8017]</a></li>
   <li>OS2IP - Coversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC8017">[RFC8017]</a></li>
-  <li>ECP2OS - conversion of EC point with point compression to octet string as specified in <a href="#suites">Section 5.5</a></li>
-  <li>OS2ECP - conversion of octet string to EC point with point compression as specified in <a href="#suites">Section 5.5</a>.  OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</li>
-  <li>xC2xyC - conversion from octet string representation of x-coordinate of EC point to octet string representation of an EC point with point compression as specified in <a href="#suites">Section 5.5</a>.  [NOTE: SHARON JUST MADE THIS UP! IS THERE A STANDARD NAME/API FOR THIS?] </li>
+  <li>EC2OSP - conversion of EC point to an m-octet string as specified in <a href="#suites">Section 5.5</a></li>
+  <li>OS2ECP - conversion of an m-octet string to EC point as specified in <a href="#suites">Section 5.5</a>.  OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</li>
+  <li>RS2ECP - conversion of a random 2n-octet string to an EC point as specified in <a href="#suites">Section 5.5</a>.  RS2ECP returns INVALID if the octet string does not convert to a valid EC point.</li>
 </ul>
 
 <p> </p>
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> EC-VRF Proving</h1>
-<p id="rfc.section.5.1.p.1">ECVRF_prove(g^x, x, alpha) </p>
+<p id="rfc.section.5.1.p.1">ECVRF_prove(y, x, alpha) </p>
 <p id="rfc.section.5.1.p.2">Input: </p>
 
 <ul class="empty">
-  <li>g^x - EC public key</li>
-  <li>x - EC private key</li>
-  <li>alpha - VRF input, octet string</li>
+  <li>y - public key, an EC point</li>
+  <li>x - private key, an integer</li>
+  <li>alpha - VRF input, an octet string</li>
 </ul>
 
 <p> </p>
@@ -782,12 +779,12 @@
 <p id="rfc.section.5.1.p.4">Steps: </p>
 
 <ol>
-  <li>h = ECVRF_hash_to_curve(alpha, g^x)</li>
+  <li>h = ECVRF_hash_to_curve(y, alpha)</li>
   <li>gamma = h^x</li>
-  <li>choose a random nonce k from [0, q-1]</li>
-  <li>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</li>
+  <li>choose a random integer nonce k from [0, q-1]</li>
+  <li>c = ECVRF_hash_points(g, h, y, h^x, g^k, h^k)</li>
   <li>s = k - c*x mod q</li>
-  <li>pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
+  <li>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
   <li>Output pi</li>
 </ol>
 
@@ -811,19 +808,18 @@
 <p id="rfc.section.5.2.p.4">Steps: </p>
 
 <ol>
-  <li>gamma, c, s = ECVRF_decode_proof(pi)</li>
-  <li>gamma = gamma^cofactor</li>
-  <li>beta = Hash(gamma)  [MAJOR CHANGE HERE! Hash-ing gamma rather than just grabbing the x-coordinate of the EC point!]</li>
+  <li>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", then output "INVALID" and stop. Else it outputs (gamma, c, s) where gamma is an EC point, c is an integer and s is an integer.</li>
+  <li>beta = Hash(EC2OSP(gamma^cofactor))  [MAJOR CHANGE HERE! Hash-ing gamma rather than just grabbing the x-coordinate of the EC point!]</li>
   <li>Output beta</li>
 </ol>
 
 <p> </p>
 <h1 id="rfc.section.5.3"><a href="#rfc.section.5.3">5.3.</a> EC-VRF Verifying</h1>
-<p id="rfc.section.5.3.p.1">ECVRF_verify(g^x, pi, alpha) </p>
+<p id="rfc.section.5.3.p.1">ECVRF_verify(y, pi, alpha) </p>
 <p id="rfc.section.5.3.p.2">Input: </p>
 
 <ul class="empty">
-  <li>g^x - EC public key</li>
+  <li>y -  public key, an EC point</li>
   <li>pi - VRF proof, octet string of length 5n+1</li>
   <li>alpha - VRF input, octet string</li>
 </ul>
@@ -839,13 +835,12 @@
 <p id="rfc.section.5.3.p.4">Steps: </p>
 
 <ol>
-  <li>If ECVRF_decode_proof(pi) outputs "INVALID", then output "INVALID" and stop.</li>
-  <li>gamma, c, s = ECVRF_decode_proof(pi)</li>
-  <li>u = (g^x)^c * g^s</li>
-  <li>h = ECVRF_hash_to_curve(alpha, g^x)</li>
+  <li>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", then output "INVALID" and stop. Else it outputs (gamma, c, s) where gamma is an EC point, c is an integer and s is an integer. </li>
+  <li>u = y^c * g^s</li>
+  <li>h = ECVRF_hash_to_curve(y, alpha)</li>
   <li>v = gamma^c * h^s</li>
-  <li>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</li>
-  <li>If c and c' are the same, output "VALID"; else output "INVALID".  </li>
+  <li>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</li>
+  <li>If c and c' are equal, output "VALID"; else output "INVALID".  </li>
 </ol>
 
 <p> </p>
@@ -853,35 +848,35 @@
 <h1 id="rfc.section.5.4.1"><a href="#rfc.section.5.4.1">5.4.1.</a> <a href="#ecvrfH2C" id="ecvrfH2C">EC-VRF Hash To Curve</a></h1>
 <p id="rfc.section.5.4.1.p.1">The ECVRF_hash_to_curve algorithm takes in an octet string alpha and converts it to h, an EC point in G. </p>
 <h1 id="rfc.section.5.4.1.1"><a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve1</a></h1>
-<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve that supports point compression.  </p>
-<p id="rfc.section.5.4.1.1.p.2">However, this algorithm SHOULD be avoid used in applications where it is important that the VRF input alpha is secret. This is because the running time of the hashing algorithm depends on alpha, and so it is susceptible to timing attacks.  That said, the amount of information obtained from such a timing attack is likely to be small, since the algorithm is expected to find a valid curve point after only two attempts (i.e., when ctr=1) on average (see <a href="#Icart09">[Icart09]</a> and the explanation below).  </p>
-<p id="rfc.section.5.4.1.1.p.3">ECVRF_hash_to_curve1(alpha, g^x) </p>
-<p id="rfc.section.5.4.1.1.p.4">Input: </p>
+<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve1(y, alpha) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
+<p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha.  For the ciphersuites specified in <a href="#suites">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09">[Icart09]</a>.  </p>
+<p id="rfc.section.5.4.1.1.p.3">However, because the running time of algorithm depends on alpha, this algorithm SHOULD be avoided in applications where it is important that the VRF input alpha remain secret.  </p>
+<p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_curve1(y, alpha) </p>
+<p id="rfc.section.5.4.1.1.p.5">Input: </p>
 
 <ul class="empty">
   <li>alpha - value to be hashed, an octet string</li>
-  <li>g^x - EC public key</li>
+  <li>y - public key, an EC point</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.4.1.1.p.5">Output: </p>
+<p id="rfc.section.5.4.1.1.p.6">Output: </p>
 
 <ul class="empty">
   <li>h - hashed value, which is a finite EC point in G</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.4.1.1.p.6">Steps: </p>
+<p id="rfc.section.5.4.1.1.p.7">Steps: </p>
 
 <ol>
   <li>ctr = 0</li>
-  <li>pk = ECP2OS(g^x)</li>
-  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>attempted_hash = Hash(alpha || pk || CTR)</li><li>p = xC2xyC(attempted_hash)</li><li>h = OS2ECP(p)</li><li>If h is not equal to "INVALID" and cofactor&gt;1, set h = h^cofactor</li><li>ctr = ctr + 1</li></ol><p> until (h is not equal to "INVALID") and (h is not equal to the EC point at infinity) </p></li>
+  <li>pk = EC2OSP(y)</li>
+  <li>Repeat: <ol style="list-style-type: upper-alpha"><li>CTR = I2OSP(ctr, 4)</li><li>attempted_hash = Hash( pk || alpha  || CTR)</li><li>h = RS2ECP(attempted_hash)</li><li>If h is not equal to "INVALID" and cofactor&gt;1, set h = h^cofactor</li><li>ctr = ctr + 1</li></ol><p> until (h is not equal to "INVALID") and (h is not equal to the EC point at infinity) </p></li>
   <li>Output h</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.1.p.7">OS2ECP tests whether p is the correct octet-string representation of an EC point with point compression.  OS2ECP succeeds whenever attempted_hash is a valid x-coordinate for an EC point. This happens whenever attempted_hash (viewed as an integer) is smaller than the number of field elements in F. Since the range of Hash is 2n, and the number of field elements in F is no less than 2^(2n-1), this happens with probability at least 1/2.  In step C, one of the two possible y-coordinates for p is chosen deterministically using xC2xyC as specified in <a href="#suites">Section 5.5</a>.  Once a valid EC point h is found, it is raised to the power of cofactor to ensure that the result is in G (rather than just on the elliptic curve E).  </p>
 <h1 id="rfc.section.5.4.1.2"><a href="#rfc.section.5.4.1.2">5.4.1.2.</a> ECVRF_hash_to_curve2</h1>
 <p id="rfc.section.5.4.1.2.p.1">For applications where VRF input alpha must be kept secret, the following ECVRF_hash_to_curve algorithm MAY be used to used as generic way to hash an octet string onto any elliptic curve.  </p>
 <p id="rfc.section.5.4.1.2.p.2">[TODO: If there interest, we could look into specifying the generic deterministic time hash_to_curve algorithm from <a href="#Icart09">[Icart09]</a>. ] </p>
@@ -904,10 +899,11 @@
 <p id="rfc.section.5.4.2.p.4">Steps: </p>
 
 <ol>
-  <li>P = ""</li>
-  <li>for p_i in [p_1, p_2, ... p_j]: <br/>P = P || ECP2OS(p_i) </li>
-  <li>h' = Hash(P) </li>
-  <li>h = OS2IP(h'[1] || h'[2] || ... || h'[n])</li>
+  <li>P = empty octet string</li>
+  <li>for p_i in [p_1, p_2, ... p_j]: <br/>P = P || EC2OSP(p_i) </li>
+  <li>h1 = Hash(P)</li>
+  <li>h2 = first n octets of h1</li>
+  <li>h = OS2IP(h2)</li>
   <li>Output h</li>
 </ol>
 
@@ -947,11 +943,11 @@
 <p id="rfc.section.5.5.p.1">This document defines EC-VRF-P256-SHA256 as follows: </p>
 
 <ul>
-  <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114">[RFC5114]</a>  (Section 2.6).  For this group, the cofactor = 1, the length in octets of a single coordinate of an EC point is 2n = 32, the length in octets of compressed EC point is m = 2n+1 = 33.  </li>
+  <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114">[RFC5114]</a>  (Section 2.6).  <a id="CREF1" class="info">[CREF1]<span class="info">Sharon: Seeking feedback on what is the right source to cite!</span></a> For this group, the cofactor = 1, the length in octets of a single coordinate of an EC point is 2n = 32, and EC points are encoded with point compression as octet strings of length m = 2n+1 = 33.  </li>
   <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1">[SECG1]</a>. </li>
-  <li>ECP2OS is specified in Section 2.3.3 of <a href="#SECG1">[SECG1]</a>.</li>
+  <li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1">[SECG1]</a>.</li>
   <li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1">[SECG1]</a>.  </li>
-  <li>xC2xyC(h) takes in a 32-octet string h and returns a 33-octet string 0x02 || h </li>
+  <li>RS2ECP(h) = OS2ECP(0x02 || h). The input h is a 32-octet string and the output is either an EC point or "INVALID". </li>
   <li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234">[RFC6234]</a>.  </li>
   <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -960,11 +956,11 @@
 <p id="rfc.section.5.5.p.2">This document defines EC-VRF-ED25519-SHA256 as follows: </p>
 
 <ul>
-  <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032">[RFC8032]</a>.  For this group, the cofactor = 8, the length in octets of a single coordinate of an EC point is 2n = 32, and the length in octets of a EC point with point compression is m = 2n = 32.  </li>
+  <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032">[RFC8032]</a>.  For this group, the cofactor = 8, the length in octets of a single coordinate of an EC point is 2n = 32, and and EC points are encoded with point compression as octet strings of length m = 2n+1 = 33.  </li>
   <li>The key pair generation primitive is specified in Section 5.1.5 of <a href="#RFC8032">[RFC8032]</a></li>
-  <li>ECP2OS is specified in Section 5.1.2 of <a href="#RFC8032">[RFC8032]</a>.</li>
-  <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032">[RFC8032]</a>.  <a id="CREF1" class="info">[CREF1]<span class="info">Sharon: need to confirm that os2ecp outputs INVALID (or something like that) if conversion fails!!</span></a> </li>
-  <li>xC2xyC(h) takes in a 32-octet string h and returns a 32-octet string h.</li>
+  <li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032">[RFC8032]</a>.</li>
+  <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032">[RFC8032]</a>.  <a id="CREF2" class="info">[CREF2]<span class="info">Sharon: need to confirm that os2ecp outputs INVALID (or something like that) if conversion fails!!</span></a> </li>
+  <li>RS2ECP is specified in Section 5.1.3 of <a href="#RFC8032">[RFC8032]</a>.  (Note: RS2ECP is the same as OS2ECP.)</li>
   <li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234">[RFC6234]</a>.  </li>
   <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1">Section 5.4.1.1</a>.  </li>
 </ul>

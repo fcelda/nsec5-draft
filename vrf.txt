@@ -87,7 +87,7 @@ Table of Contents
        5.4.1.  EC-VRF Hash To Curve  . . . . . . . . . . . . . . . .  12
        5.4.2.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  13
        5.4.3.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  14
-     5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  15
+     5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  14
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  16
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  16
@@ -438,8 +438,8 @@ Internet-Draft                     VRF                         June 2017
 
    4.  EM' = MGF1(alpha, k - 1)
 
-   5.  If EM and EM' are the same, output "VALID"; else output
-       "INVALID".
+   5.  If EM and EM' are equal, output "VALID"; else output "INVALID".
+
 
 
 
@@ -469,7 +469,7 @@ Internet-Draft                     VRF                         June 2017
 
       E - elliptic curve (EC) defined over F
 
-      m - length, in octets, of a EC point with point compression
+      m - length, in octets, of an EC point encoded as an octet string
 
       G - subgroup of E of large prime order
 
@@ -483,21 +483,21 @@ Internet-Draft                     VRF                         June 2017
 
    Parameters used:
 
-      g^x - EC public key
+      y = g^x - VRF public key, an EC point
 
-      x - EC private key
+      x - VRF private key, an integer where 0 < x < q
 
    Notation and primitives used:
 
-      "" - empty octet string
+      We use multiplicative notation for the elliptic curve. p1*p2
+      denotes the group operation on two EC points p1 and p2 (sometimes
+      called "point addition"), and p^k denotes k repetitions of the
+      group operation on the point p (sometimes called "point
+      multiplication")
 
       || - octet string concatenation
 
-      p^k - EC point multiplication
 
-      p1*p2 - EC point addition
-
-      h[i] - the i'th octet of octet string h
 
 
 
@@ -512,29 +512,28 @@ Internet-Draft                     VRF                         June 2017
       OS2IP - Coversion of an octet string to a nonnegative integer as
       defined in Section 4.2 of [RFC8017]
 
-      ECP2OS - conversion of EC point with point compression to octet
-      string as specified in Section 5.5
+      EC2OSP - conversion of EC point to an m-octet string as specified
+      in Section 5.5
 
-      OS2ECP - conversion of octet string to EC point with point
-      compression as specified in Section 5.5.  OS2ECP returns INVALID
-      if the octet string does not convert to a valid EC point.
+      OS2ECP - conversion of an m-octet string to EC point as specified
+      in Section 5.5.  OS2ECP returns INVALID if the octet string does
+      not convert to a valid EC point.
 
-      xC2xyC - conversion from octet string representation of
-      x-coordinate of EC point to octet string representation of an EC
-      point with point compression as specified in Section 5.5.  [NOTE:
-      SHARON JUST MADE THIS UP!  IS THERE A STANDARD NAME/API FOR THIS?]
+      RS2ECP - conversion of a random 2n-octet string to an EC point as
+      specified in Section 5.5.  RS2ECP returns INVALID if the octet
+      string does not convert to a valid EC point.
 
 5.1.  EC-VRF Proving
 
-   ECVRF_prove(g^x, x, alpha)
+   ECVRF_prove(y, x, alpha)
 
    Input:
 
-      g^x - EC public key
+      y - public key, an EC point
 
-      x - EC private key
+      x - private key, an integer
 
-      alpha - VRF input, octet string
+      alpha - VRF input, an octet string
 
    Output:
 
@@ -542,18 +541,19 @@ Internet-Draft                     VRF                         June 2017
 
    Steps:
 
-   1.  h = ECVRF_hash_to_curve(alpha, g^x)
+   1.  h = ECVRF_hash_to_curve(y, alpha)
 
    2.  gamma = h^x
 
-   3.  choose a random nonce k from [0, q-1]
+   3.  choose a random integer nonce k from [0, q-1]
 
-   4.  c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)
+   4.  c = ECVRF_hash_points(g, h, y, h^x, g^k, h^k)
 
    5.  s = k - c*x mod q
 
-   6.  pi = ECP2OS(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
+   6.  pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
 
+   7.  Output pi
 
 
 
@@ -561,8 +561,6 @@ Goldberg, et al.        Expires December 10, 2017              [Page 10]
 
 Internet-Draft                     VRF                         June 2017
 
-
-   7.  Output pi
 
 5.2.  EC-VRF Proof To Hash
 
@@ -578,22 +576,23 @@ Internet-Draft                     VRF                         June 2017
 
    Steps:
 
-   1.  gamma, c, s = ECVRF_decode_proof(pi)
+   1.  Run ECVRF_decode_proof(pi).  If it outputs "INVALID", then output
+       "INVALID" and stop.  Else it outputs (gamma, c, s) where gamma is
+       an EC point, c is an integer and s is an integer.
 
-   2.  gamma = gamma^cofactor
+   2.  beta = Hash(EC2OSP(gamma^cofactor)) [MAJOR CHANGE HERE!  Hash-ing
+       gamma rather than just grabbing the x-coordinate of the EC
+       point!]
 
-   3.  beta = Hash(gamma) [MAJOR CHANGE HERE!  Hash-ing gamma rather
-       than just grabbing the x-coordinate of the EC point!]
-
-   4.  Output beta
+   3.  Output beta
 
 5.3.  EC-VRF Verifying
 
-   ECVRF_verify(g^x, pi, alpha)
+   ECVRF_verify(y, pi, alpha)
 
    Input:
 
-      g^x - EC public key
+      y - public key, an EC point
 
       pi - VRF proof, octet string of length 5n+1
 
@@ -605,10 +604,11 @@ Internet-Draft                     VRF                         June 2017
 
    Steps:
 
-   1.  If ECVRF_decode_proof(pi) outputs "INVALID", then output
-       "INVALID" and stop.
+   1.  Run ECVRF_decode_proof(pi).  If it outputs "INVALID", then output
+       "INVALID" and stop.  Else it outputs (gamma, c, s) where gamma is
+       an EC point, c is an integer and s is an integer.
 
-   2.  gamma, c, s = ECVRF_decode_proof(pi)
+   2.  u = y^c * g^s
 
 
 
@@ -618,15 +618,13 @@ Goldberg, et al.        Expires December 10, 2017              [Page 11]
 Internet-Draft                     VRF                         June 2017
 
 
-   3.  u = (g^x)^c * g^s
+   3.  h = ECVRF_hash_to_curve(y, alpha)
 
-   4.  h = ECVRF_hash_to_curve(alpha, g^x)
+   4.  v = gamma^c * h^s
 
-   5.  v = gamma^c * h^s
+   5.  c' = ECVRF_hash_points(g, h, y, gamma, u, v)
 
-   6.  c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)
-
-   7.  If c and c' are the same, output "VALID"; else output "INVALID".
+   6.  If c and c' are equal, output "VALID"; else output "INVALID".
 
 5.4.  EC-VRF Auxiliary Functions
 
@@ -637,26 +635,26 @@ Internet-Draft                     VRF                         June 2017
 
 5.4.1.1.  ECVRF_hash_to_curve1
 
-   The following ECVRF_hash_to_curve1(alpha, g^x) algorithm implements
+   The following ECVRF_hash_to_curve1(y, alpha) algorithm implements
    ECVRF_hash_to_curve in a simple and generic way that works for any
-   elliptic curve that supports point compression.
+   elliptic curve.
 
-   However, this algorithm SHOULD be avoid used in applications where it
-   is important that the VRF input alpha is secret.  This is because the
-   running time of the hashing algorithm depends on alpha, and so it is
-   susceptible to timing attacks.  That said, the amount of information
-   obtained from such a timing attack is likely to be small, since the
-   algorithm is expected to find a valid curve point after only two
-   attempts (i.e., when ctr=1) on average (see [Icart09] and the
-   explanation below).
+   The running time of this algorithm depends on alpha.  For the
+   ciphersuites specified in Section 5.5, this algorithm is expected to
+   find a valid curve point after approximately two attempts (i.e., when
+   ctr=1) on average.  See also [Icart09].
 
-   ECVRF_hash_to_curve1(alpha, g^x)
+   However, because the running time of algorithm depends on alpha, this
+   algorithm SHOULD be avoided in applications where it is important
+   that the VRF input alpha remain secret.
+
+   ECVRF_hash_to_curve1(y, alpha)
 
    Input:
 
       alpha - value to be hashed, an octet string
 
-      g^x - EC public key
+      y - public key, an EC point
 
    Output:
 
@@ -666,6 +664,8 @@ Internet-Draft                     VRF                         June 2017
 
    1.  ctr = 0
 
+   2.  pk = EC2OSP(y)
+
 
 
 
@@ -674,39 +674,23 @@ Goldberg, et al.        Expires December 10, 2017              [Page 12]
 Internet-Draft                     VRF                         June 2017
 
 
-   2.  pk = ECP2OS(g^x)
-
    3.  Repeat:
 
        A.  CTR = I2OSP(ctr, 4)
 
-       B.  attempted_hash = Hash(alpha || pk || CTR)
+       B.  attempted_hash = Hash( pk || alpha || CTR)
 
-       C.  p = xC2xyC(attempted_hash)
+       C.  h = RS2ECP(attempted_hash)
 
-       D.  h = OS2ECP(p)
-
-       E.  If h is not equal to "INVALID" and cofactor>1, set h =
+       D.  If h is not equal to "INVALID" and cofactor>1, set h =
            h^cofactor
 
-       F.  ctr = ctr + 1
+       E.  ctr = ctr + 1
 
        until (h is not equal to "INVALID") and (h is not equal to the EC
        point at infinity)
 
    4.  Output h
-
-   OS2ECP tests whether p is the correct octet-string representation of
-   an EC point with point compression.  OS2ECP succeeds whenever
-   attempted_hash is a valid x-coordinate for an EC point.  This happens
-   whenever attempted_hash (viewed as an integer) is smaller than the
-   number of field elements in F.  Since the range of Hash is 2n, and
-   the number of field elements in F is no less than 2^(2n-1), this
-   happens with probability at least 1/2.  In step C, one of the two
-   possible y-coordinates for p is chosen deterministically using xC2xyC
-   as specified in Section 5.5.  Once a valid EC point h is found, it is
-   raised to the power of cofactor to ensure that the result is in G
-   (rather than just on the elliptic curve E).
 
 5.4.1.2.  ECVRF_hash_to_curve2
 
@@ -723,13 +707,6 @@ Internet-Draft                     VRF                         June 2017
 
    Input:
 
-
-
-Goldberg, et al.        Expires December 10, 2017              [Page 13]
-
-Internet-Draft                     VRF                         June 2017
-
-
       p_i - EC point in G
 
    Output:
@@ -738,16 +715,26 @@ Internet-Draft                     VRF                         June 2017
 
    Steps:
 
-   1.  P = ""
+   1.  P = empty octet string
 
    2.  for p_i in [p_1, p_2, ... p_j]:
-       P = P || ECP2OS(p_i)
+       P = P || EC2OSP(p_i)
 
-   3.  h' = Hash(P)
+   3.  h1 = Hash(P)
 
-   4.  h = OS2IP(h'[1] || h'[2] || ... || h'[n])
 
-   5.  Output h
+
+
+Goldberg, et al.        Expires December 10, 2017              [Page 13]
+
+Internet-Draft                     VRF                         June 2017
+
+
+   4.  h2 = first n octets of h1
+
+   5.  h = OS2IP(h2)
+
+   6.  Output h
 
 5.4.3.  EC-VRF Decode Proof
 
@@ -779,13 +766,6 @@ Internet-Draft                     VRF                         June 2017
 
    5.  s = OS2IP(s')
 
-
-
-Goldberg, et al.        Expires December 10, 2017              [Page 14]
-
-Internet-Draft                     VRF                         June 2017
-
-
    6.  Output gamma, c, and s
 
 5.5.  EC-VRF Ciphersuites
@@ -794,19 +774,30 @@ Internet-Draft                     VRF                         June 2017
 
    o  The EC group G is the NIST-P256 elliptic curve, with curve
       parameters as specified in [FIPS-186-3] (Section D.1.2.3) and
-      [RFC5114]  (Section 2.6).  For this group, the cofactor = 1, the
-      length in octets of a single coordinate of an EC point is 2n = 32,
-      the length in octets of compressed EC point is m = 2n+1 = 33.
+      [RFC5114]  (Section 2.6).  [[CREF1: Seeking feedback on what is
+      the right source to cite! --Sharon]] For this group, the cofactor
+      = 1, the length in octets of a single coordinate of an EC point is
+
+
+
+
+Goldberg, et al.        Expires December 10, 2017              [Page 14]
+
+Internet-Draft                     VRF                         June 2017
+
+
+      2n = 32, and EC points are encoded with point compression as octet
+      strings of length m = 2n+1 = 33.
 
    o  The key pair generation primitive is specified in Section 3.2.1 of
       [SECG1].
 
-   o  ECP2OS is specified in Section 2.3.3 of [SECG1].
+   o  EC2OSP is specified in Section 2.3.3 of [SECG1].
 
    o  OS2ECP is specified in Section 2.3.4 of [SECG1].
 
-   o  xC2xyC(h) takes in a 32-octet string h and returns a 33-octet
-      string 0x02 || h
+   o  RS2ECP(h) = OS2ECP(0x02 || h).  The input h is a 32-octet string
+      and the output is either an EC point or "INVALID".
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
@@ -818,29 +809,22 @@ Internet-Draft                     VRF                         June 2017
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, the cofactor =
       8, the length in octets of a single coordinate of an EC point is
-      2n = 32, and the length in octets of a EC point with point
-      compression is m = 2n = 32.
+      2n = 32, and and EC points are encoded with point compression as
+      octet strings of length m = 2n+1 = 33.
 
    o  The key pair generation primitive is specified in Section 5.1.5 of
       [RFC8032]
 
-   o  ECP2OS is specified in Section 5.1.2 of [RFC8032].
+   o  EC2OSP is specified in Section 5.1.2 of [RFC8032].
 
-   o  OS2ECP is specified in Section 5.1.3 of [RFC8032].  [[CREF1: need
+   o  OS2ECP is specified in Section 5.1.3 of [RFC8032].  [[CREF2: need
       to confirm that os2ecp outputs INVALID (or something like that) if
       conversion fails!! --Sharon]]
 
-   o  xC2xyC(h) takes in a 32-octet string h and returns a 32-octet
-      string h.
+   o  RS2ECP is specified in Section 5.1.3 of [RFC8032].  (Note: RS2ECP
+      is the same as OS2ECP.)
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
-
-
-
-Goldberg, et al.        Expires December 10, 2017              [Page 15]
-
-Internet-Draft                     VRF                         June 2017
-
 
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
@@ -849,6 +833,14 @@ Internet-Draft                     VRF                         June 2017
    where the Elligator hash function is used for ECVRF_hash-to-curve?]
 
    [TODO: Add an Ed448 ciphersuite?]
+
+
+
+
+Goldberg, et al.        Expires December 10, 2017              [Page 15]
+
+Internet-Draft                     VRF                         June 2017
+
 
 6.  Implementation Status
 
@@ -889,6 +881,14 @@ Internet-Draft                     VRF                         June 2017
    proofs that keys have of the correct form.  These modifications are
    left for future specification.
 
+   However, it is not possible to guarantee pseudorandomness in the face
+   of adversarially generated VRF keys.  This is because an adversary
+   can always use bad randomness to generate the VRF keys, and thus, the
+   VRF output may not be pseudorandom.
+
+
+
+
 
 
 
@@ -897,11 +897,6 @@ Goldberg, et al.        Expires December 10, 2017              [Page 16]
 
 Internet-Draft                     VRF                         June 2017
 
-
-   However, it is not possible to guarantee pseudorandomness in the face
-   of adversarially generated VRF keys.  This is because an adversary
-   can always use bad randomness to generate the VRF keys, and thus, the
-   VRF output may not be pseudorandom.
 
 7.2.  Proper randomness for EC-VRF
 
@@ -946,6 +941,11 @@ Internet-Draft                     VRF                         June 2017
       application may increase security parameters to make up for the
       loose security reduction.  For RSA-FDH-VRF, this means increasing
       the RSA key length.  For EC-VRF, this means increasing the
+      cryptographic strength of the EC group G.  For both RSA-FDH-VRF
+      and EC-VRF the cryptographic strength of the hash function Hash
+      may also potentially need to be increased.
+
+
 
 
 
@@ -953,10 +953,6 @@ Goldberg, et al.        Expires December 10, 2017              [Page 17]
 
 Internet-Draft                     VRF                         June 2017
 
-
-      cryptographic strength of the EC group G.  For both RSA-FDH-VRF
-      and EC-VRF the cryptographic strength of the hash function Hash
-      may also potentially need to be increased.
 
 8.  Change Log
 
@@ -1001,6 +997,10 @@ Internet-Draft                     VRF                         June 2017
               DOI 10.17487/RFC5114, January 2008,
               <http://www.rfc-editor.org/info/rfc5114>.
 
+   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
+              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
+              DOI 10.17487/RFC6234, May 2011,
+              <http://www.rfc-editor.org/info/rfc6234>.
 
 
 
@@ -1009,11 +1009,6 @@ Goldberg, et al.        Expires December 10, 2017              [Page 18]
 
 Internet-Draft                     VRF                         June 2017
 
-
-   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
-              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
-              DOI 10.17487/RFC6234, May 2011,
-              <http://www.rfc-editor.org/info/rfc6234>.
 
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
@@ -1054,6 +1049,11 @@ Internet-Draft                     VRF                         June 2017
               D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
               Existence", draft-vcelak-nsec5-04 (work in progress),
               March 2017.
+
+
+
+
+
 
 
 
