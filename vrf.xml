@@ -1126,7 +1126,7 @@
 
         <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
-                <title>NSEC5 from Elliptic Curves</title>
+                <title>Making NSEC5 Practical for DNSSEC Deployments</title>
                 <author initials="D." surname="Papadopoulos"><organization /></author>
                 <author initials="D." surname="Wessels"><organization /></author>
                 <author initials="S." surname="Huque"><organization /></author>
