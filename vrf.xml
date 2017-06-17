@@ -624,12 +624,10 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", 
-                    then output "INVALID" and stop. Else it outputs 
-                    (gamma, c, s) where gamma is an EC point, c is an integer
-                    and s is an integer.</t>
-                    <t>beta = Hash(EC2OSP(gamma^cofactor))  [MAJOR CHANGE HERE! Hash-ing gamma rather than 
-                    just grabbing the x-coordinate of the EC point!]</t>
+                    <t>D = ECVRF_decode_proof(pi)</t>
+                    <t>If D is "INVALID", output "INVALID" and stop</t>
+                    <t>(gamma, c, s) = D</t>
+                    <t>beta = Hash(EC2OSP(gamma^cofactor))</t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -659,17 +657,16 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", 
-                    then output "INVALID" and stop. Else it outputs 
-                    (gamma, c, s) where gamma is an EC point, c is an integer
-                    and s is an integer. </t>
+                    <t>D = ECVRF_decode_proof(pi)</t>
+                    <t>If D is "INVALID", output "INVALID" and stop</t>
+                    <t>(gamma, c, s) = D</t>
                     <t>u = y^c * g^s</t>
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
-                        else output "INVALID". 
+                        else output "INVALID" 
                     </t>
                 </list>
             </t>
