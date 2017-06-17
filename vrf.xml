@@ -717,7 +717,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, which is a finite EC point in G</t>
+                    <t>h - hashed value, a finite EC point in G</t>
                 </list>
             </t>
             
@@ -726,18 +726,15 @@
                 <list style="numbers">
                     <t>ctr = 0</t>
                     <t>pk = EC2OSP(y)</t>
-                    <t>Repeat:
+                    <t>h = "INVALID"</t>
+                    <t>While h is "INVALID" or h is EC point at infinity:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>attempted_hash = Hash( pk || alpha  || CTR)</t>
-                        <t>h = RS2ECP(attempted_hash)</t>
-                        <t>If h is not equal to "INVALID" and cofactor>1, 
-                            set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
-                    </list>
-                    until (h is not equal to "INVALID") and 
-                    (h is not equal to the EC point at infinity)
-                    </t>
+                        <t>attempted_hash = Hash(pk || alpha || CTR)</t>
+                        <t>h = RS2ECP(attempted_hash)</t>
+                        <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
+                    </list></t>
                     <t>Output h</t>
                 </list>
             </t>
