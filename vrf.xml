@@ -618,6 +618,7 @@
             <t>
                 Output:
                 <list>
+                    <t>"INVALID", or </t>
                     <t>beta - VRF hash output, octet string of length 2n</t>
                 </list>
             </t>
@@ -807,7 +808,7 @@
             <t>
                 Output:
                 <list>
-                    <t> "INVALID", or </t>
+                    <t>"INVALID", or </t>
                     <t>gamma - EC point</t>
                     <t>
                     c - integer between 0 and 2^(8n)-1
