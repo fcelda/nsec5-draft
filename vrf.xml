@@ -520,16 +520,23 @@
             Fixed options:
             <list>
                 <t>F - finite field</t>
-                <t>2n - length, in octets, of a field element in F. 
-                (This specification assumes that field elements in F 
-                have bit lengths that are divisible by 16.)</t>
+                <t>2n - length, in octets, of a field element in F</t>
                 <t>E - elliptic curve (EC) defined over F</t>
-                <t>m - length, in octets, of an EC point encoded as an octet string</t>
+                <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
                 <t>G - subgroup of E of large prime order</t>
                 <t>q - prime order of group G</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>g - generator of group G</t>
-                <t>Hash - cryptographic hash function with output length 2n octets</t>
+                <t>Hash - cryptographic hash function</t>
+                <t>hLen - output length in octets of Hash</t>
+            </list>
+        </t>
+
+        <t>
+            Constraints on options:
+            <list>
+                <t>Field elements in F have bit lengths divisible by 16</t>
+                <t>hLen is equal to 2n</t>
             </list>
         </t>
 
@@ -544,8 +551,8 @@
         <t>
             Notation and primitives used:
             <list>
-                <t>We use multiplicative notation for the elliptic curve. p1*p2 denotes the group operation on two EC points p1 and p2 (sometimes called "point addition"),
-                    and p^k denotes k repetitions of the group operation on the point p (sometimes called "point multiplication")</t>
+                <t>p1*p2 - point addition, i.e. group operation on two EC points p1 and p2</t>
+                <t>p^k - point multiplication, i.e. k repetitions of group operation on EC point p</t>
                 <t>|| - octet string concatenation</t>
                 <t>I2OSP - nonnegative integer conversion to octet string as defined in
                     Section 4.1 of <xref target="RFC8017" /></t>
@@ -554,12 +561,10 @@
                 <t>EC2OSP - conversion of EC point to an m-octet string 
                 as specified in <xref target="suites"/></t>
                 <t>OS2ECP - conversion of an m-octet string to EC point
-                as specified in <xref target="suites"/>.
+                as specified in <xref target="suites"/>
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
                 <t>RS2ECP - conversion of a random 2n-octet string to an 
-                EC point as specified in <xref target="suites"/>.
-                RS2ECP returns INVALID if the octet string does not convert 
-                to a valid EC point.</t>
+                EC point as specified in <xref target="suites"/></t>
             </list>
         </t>
 
