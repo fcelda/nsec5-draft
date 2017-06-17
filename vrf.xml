@@ -166,11 +166,11 @@
    
    <t>
    A VRF hashes an input alpha using the private VRF key SK to obtain a VRF 
-   hash output beta:       
+   hash output beta
     <list>
     <t> beta = VRF_hash(SK, alpha) </t>
     </list>
-   The VRF_hash algorithm MUST be deterministic, in 
+   The VRF_hash algorithm must be deterministic, in 
    the sense that it will always produce the same output beta given a 
    pair of inputs (SK, alpha).
       
@@ -219,7 +219,7 @@
     a computationally-bounded adversary cannot
 	choose 
     a VRF public key PK, 
-    a VR input alpha, 
+    a VRF input alpha, 
     two different VRF hash outputs beta1 and beta2, 
     and two proofs pi1 and pi2 such that 
     VRF_verify(PK, alpha, pi1)
