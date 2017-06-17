@@ -1099,7 +1099,6 @@
         <?rfc include="reference.RFC.8017.xml"?>
         <?rfc include="reference.RFC.5114.xml"?>
         <?rfc include="reference.RFC.6234.xml"?>
-        <?rfc include="reference.RFC.7748.xml"?>
         <?rfc include="reference.RFC.8032.xml"?>
         
         <reference anchor="FIPS-186-3">
@@ -1149,17 +1148,6 @@
             </front>
             <seriesInfo name="in" value="FOCS" />
         </reference>
-
-        <reference anchor="CP92">
-            <front>
-                <title>Wallet databases with observers</title>
-                <author initials="D." surname="Chaum"><organization /></author>
-                <author initials="C." surname="Pederson"><organization /></author>
-                <date year="1992" />
-            </front>
-            <seriesInfo name="in" value="FOCS" />
-        </reference>
-
 
         <reference anchor="Icart09">
             <front>
