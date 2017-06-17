@@ -837,20 +837,16 @@
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
-            and <xref target="RFC5114"></xref>  (Section 2.6). 
-            <cref source="Sharon">Seeking feedback on what is the right 
-            source to cite!</cref>
-            For this group,
-            the cofactor = 1, 
-            the length in octets of a single coordinate of an EC point is 2n = 32,
-            and EC points are encoded with point compression as octet strings
-            of length m = 2n+1 = 33.  
+            and <xref target="RFC5114"></xref>  (Section 2.6). For this group,
+            2n = 32 and cofactor = 1.
         </t>
-        
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />. </t>
         
-        <t> EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" />.</t>
+        <t>
+            EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" /> with point compression on.
+            This implies m = 2n + 1 = 33.
+        </t>
         
         <t> OS2ECP is specified in Section 2.3.4 of <xref target="SECG1" />.
         </t>
@@ -873,25 +869,17 @@
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
              <xref target="RFC8032"></xref>.       
-            For this group,
-            the cofactor = 8,
-            the length in octets of a single coordinate of an EC point is 
-            2n = 32, and
-            and EC points are encoded with point compression as octet strings
-            of length m = 2n+1 = 33. 
+            For this group, 2n = 32 and cofactor = 8.
         </t>
         <t> The key pair generation primitive is specified in Section 5.1.5 
         of <xref target="RFC8032" /></t>
         
-        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
+        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. This implies m = 2n = 32.</t>
         
         <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
-        <cref source="Sharon">need to confirm that os2ecp outputs INVALID 
-        (or something like that) if conversion fails!!</cref>
         </t>
 
-        <t> RS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />. 
-        (Note: RS2ECP is the same as OS2ECP.)</t>
+        <t>RS2ECP is equivalent to OS2ECP.</t>
 
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
