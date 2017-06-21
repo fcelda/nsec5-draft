@@ -950,7 +950,7 @@
                 <list style="numbers">
                     <t>y = OS2ECP(PK)</t>
                     <t>If y is "INVALID", output "INVALID" and stop</t>
-                    <t>If y^q is not an EC point at infinty, output "INVALID" and stop</t>
+                    <t>If y^cofactor is an EC point at infinty, output "INVALID" and stop</t>
                     <t>Output y</t>
                 </list>
             </t>
@@ -1021,7 +1021,7 @@
     
     <t>
     However, if the EC-VRF uses keys that could be generated adversarially, then the 
-    the Verfier MUST perform the validation procedure ECVRF_validate_key(PK)
+    the Verfier MUST first perform the validation procedure ECVRF_validate_key(PK)
     (specified in <xref target="keycheck"/>)  upon receipt of the
     public key PK as an octet string.  If the validation procedure
     outputs "INVALID", then the public key MUST not be used.  
