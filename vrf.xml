@@ -152,7 +152,7 @@
                         The VRF proof. 
                     </t>
                     <t hangText="Prover:">
-                        The Prover holds the private VRF key SK.
+                        The Prover holds the private VRF key SK and public VRF key PK.
                     </t>
                     <t hangText="Verifier:">
                         The Verifier holds the public VRF key PK.
@@ -604,6 +604,11 @@
         </t>
 
         <section title="EC-VRF Proving" anchor="ecvrfprove">
+                
+            <t>Note: this function is made more efficient by taking in the public
+            VRF key y, as well as the private VRF key x.
+            </t>    
+                
             <t>
                 ECVRF_prove(y, x, alpha)
             </t>
