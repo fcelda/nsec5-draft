@@ -586,8 +586,8 @@
         <t>
             Notation and primitives used:
             <list>
-                <t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>
-                <t>p^k - point multiplication, i.e. k repetitions of group operation on EC point p</t>
+                <!--<t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>-->
+                <t>p^k - when p is an EC point: point multiplication, i.e. k repetitions of group operation on EC point p. when p is an integer: exponentiation </t>
                 <t>|| - octet string concatenation</t>
                 <t>I2OSP - nonnegative integer conversion to octet string as defined in
                     Section 4.1 of <xref target="RFC8017" /></t>
@@ -635,8 +635,8 @@
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>gamma = h^x</t>
                     <t>choose a random integer nonce k from [0, q-1]</t>
-                    <t>c = ECVRF_hash_points(g, h, y, h^x, g^k, h^k)</t>
-                    <t>s = k - c*x mod q</t>
+                    <t>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</t>
+                    <t>s = k - c*x mod q (where * denotes integer multiplication)</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
                 </list>
@@ -701,9 +701,9 @@
                     <t>D = ECVRF_decode_proof(pi)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>u = y^c * g^s</t>
+                    <t>u = y^c * g^s (where * denotes EC point addition, i.e. a group operation on two EC points)</t>
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
-                    <t>v = gamma^c * h^s</t>
+                    <t>v = gamma^c * h^s (where * denotes EC point addition)</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
@@ -1017,26 +1017,27 @@
             An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256 was 
             first developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
-            at <eref target="http://github.com/fcelda/nsec5-crypto" />.
+            at <eref target="http://github.com/fcelda/nsec5-crypto" />. 
+            The EC-VRF implementation may be out of date as this spec has evolved.
         </t>
     
     <t>
     The Key Transparency project at Google
-    uses a VRF implemention that is almost identical to
-    the EC-VRF-P256-SHA256 specified here, with a few minor changes
+    uses a VRF implemention that is similar to
+    the EC-VRF-P256-SHA256, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
     is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
     
     
     <t>
-    An implementation by Yahoo! of the EC-VRF specified in this draft is available at 
+    An implementation by Yahoo! similar to the EC-VRF is available at 
     <eref target="https://github.com/r2ishiguro/vrf"/>.
     </t>
     
     
     <t>
-    An implementation of the EC-VRF is available as part of the 
+    An implementation similar to EC-VRF is available as part of the 
     CONIKS implementation in Golang at 
     <eref target="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf"/>.
     </t>
