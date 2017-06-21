@@ -99,14 +99,14 @@
    A key application of the VRF is to provide privacy against 
    offline enumeration (e.g. dictionary attacks) on data  stored in a 
    hash-based data structure. 
-   In this application, a prover holds the VRF secret key and uses the VRF hashing to
+   In this application, a Prover holds the VRF secret key and uses the VRF hashing to
    construct a hash-based data structure on the input data.
 
-   Due to the nature of the VRF, only the prover can answer queries
+   Due to the nature of the VRF, only the Prover can answer queries
    about whether or not some data is stored in the data structure.  Anyone who
-   knows the public VRF key can verify that the prover has answered the queries
+   knows the public VRF key can verify that the Prover has answered the queries
    correctly. However no offline inferences (i.e. inferences without querying
-   the prover) can be made about the data stored in the data strucuture.
+   the Prover) can be made about the data stored in the data strucuture.
    </t>
 
    <!--
@@ -151,6 +151,12 @@
                     <t hangText="pi:">
                         The VRF proof. 
                     </t>
+                    <t hangText="Prover:">
+                        The Prover holds the private VRF key SK.
+                    </t>
+                    <t hangText="Verifier:">
+                        The Verifier holds the public VRF key PK.
+                    </t>
                 </list>
             </t>
         </section>
@@ -170,8 +176,8 @@
     <list>
     <t> beta = VRF_hash(SK, alpha) </t>
     </list>
-   The VRF_hash algorithm must be deterministic, in 
-   the sense that it will always produce the same output beta given a 
+   The VRF_hash algorithm is deterministic, in 
+   the sense that it always produces the same output beta given a 
    pair of inputs (SK, alpha).
       
    The private key SK is also used to construct a 
@@ -188,7 +194,7 @@
    <list>
    <t> VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))</t>
    </list>
-   The proof pi allows anyone holding the public key PK 
+   The proof pi allows a Verifier holding the public key PK 
    to verify that beta is the correct VRF hash of input alpha
    under key PK. Thus, the VRF also comes with an algorithm
    <list>
@@ -211,12 +217,11 @@
     <t> Uniqueness means that, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
 	output beta that can be proved to be valid.  Uniqueness must hold
-    even for an adversarial prover that knows the VRF secret key SK.
+    even for an adversarial Prover that knows the VRF secret key SK.
     </t>
 
     <t>
-    More precisely, full uniqueness states that 
-    a computationally-bounded adversary cannot
+    "Full uniqueness" states that a computationally-bounded adversary cannot
 	choose 
     a VRF public key PK, 
     a VRF input alpha, 
@@ -233,7 +238,7 @@
      Trusted uniqueness is the same as full uniqueness, but it must hold 
      only if the VRF keys PK and SK were generated in a trustworthy 
      manner. In otherwords, uniqueness might not hold if keys were 
-     generated in an invalid manner.
+     generated in an invalid manner or with bad randomness.
 	</t>
 	</section>
 
@@ -241,10 +246,10 @@
 
     <t>Like any cryprographic hash function, VRFs need to be
         collision resistant.  Collison resistance must hold
-    even for an adversarial prover that knows the VRF secret key SK.
+    even for an adversarial Prover that knows the VRF secret key SK.
     </t>
     
-    <t> More percisely, full collision resistance states that
+    <t> More percisely, "full collision resistance" states that
         it should be computationally 
         infeasible for an adversary to find two distinct VRF
 	    inputs alpha1 and alpha2 that have the same VRF hash beta, 
@@ -262,7 +267,7 @@
 
     <section title="Full Pseudorandomness or Selective Pseudorandomness">
     
-    <t> Pseudorandomness ensures that when an adversarial verifier sees 
+    <t> Pseudorandomness ensures that when an adversarial Verifier sees 
         a VRF hash output beta without its corresponding VRF proof pi, 
         then beta is indistinguishable from a random value.
     </t>
@@ -295,9 +300,9 @@
          
 	<t> 
 	   It is important to remember that the VRF output beta does not 
-	   look random to the prover, or to any other party that knows the private 
+	   look random to the Prover, or to any other party that knows the private 
        VRF key SK!  Such a party can easily distinguish beta from 
-       a random value by comparing it to the result of VRF_hash(SK, alpha).	     
+       a random value by comparing beta to the result of VRF_hash(SK, alpha).	     
 	</t>
 
 	<t> Also, the VRF output beta does not look random to any party that
@@ -544,7 +549,8 @@
             Parameters used:
             <list>
                 <t>y = g^x - VRF public key, an EC point</t>
-                <t>x - VRF private key, an integer where 0 &lt; x &lt; q</t>
+                <t>x - VRF private key, an integer where 0 &lt; x &lt; q
+                <cref source="Sharon">check this with leo</cref></t> 
              </list>
         </t>
 
@@ -561,7 +567,7 @@
                 <t>EC2OSP - conversion of EC point to an m-octet string 
                 as specified in <xref target="suites"/></t>
                 <t>OS2ECP - conversion of an m-octet string to EC point
-                as specified in <xref target="suites"/>
+                as specified in <xref target="suites"/>.
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
                 <t>RS2ECP - conversion of a random 2n-octet string to an 
                 EC point as specified in <xref target="suites"/></t>
@@ -752,7 +758,9 @@
             
             <t>[TODO: If there interest, we could look into specifying the 
             generic deterministic time hash_to_curve algorithm from 
-            <xref target="Icart09"/>. ]
+            <xref target="Icart09"/>.  Note also for the Ed25519 curve 
+            (but not the P256 curve), the Elligator algorithm 
+            could be used here.]
             </t>
             </section>
         </section>
@@ -903,7 +911,8 @@
     <section title="Implementation Status" anchor="imp">
     
         <t>
-            An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256 was developed
+            An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256 was 
+            first developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
             at <eref target="http://github.com/fcelda/nsec5-crypto" />.
         </t>
@@ -915,6 +924,20 @@
     including the use of SHA-512 instead of SHA-256. Its implementation
     is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
+    
+    
+    <t>
+    An implementation by Yahoo! of the EC-VRF specified in this draft is available at 
+    <eref target="https://github.com/r2ishiguro/vrf"/>.
+    </t>
+    
+    
+    <t>
+    An implementation of the EC-VRF is available as part of the 
+    CONIKS implementation in Golang at 
+    <eref target="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf"/>.
+    </t>
+    
     
     <t>
     Open Whisper Systems also uses a VRF very similar to 
@@ -931,19 +954,19 @@
 
     <t>Applications that use the VRFs defined in this
     document MUST ensure that that the VRF key is generated correctly,
-    using good randomness. Without good randomness, pseudorandomness
-    properties of the VRF may not hold. Also, trusted uniqueness and trusted collision-resistance
+    using good randomness. Without good randomness, the "pseudorandomness"
+    properties of the VRF may not hold. Also, "trusted uniqueness" and 
+    "trusted collision resistance"
     may also not hold if the keys are generated
-    adversarially  (e.g., the RSA modulus is not a product of two primes
-    or if RSA is not permutation for the RSA-FDH-VRF,  
+    adversarially  (e.g., if RSA is not permutation for the RSA-FDH-VRF,  
     or the public key g^x is not valid point in the
     prime-order group G for the EC).
     </t>
 
 
     <t>
-    Full uniqueness and full collision-resistance (as opposed to trusted
-    uniqueness and trusted collision-resistance) are properties that hold
+    "Full uniqueness" and "full collision resistance" (as opposed to "trusted
+    uniqueness" and "trusted collision resistance") are properties that hold
     even if VRF keys are generated by an adversary.
     The VRFs defined in this document
     do not have these properties.
@@ -984,9 +1007,12 @@
     This is because the EC-VRF_hash_to_curve algorithm's running time depends
     on the VRF input alpha, and thus creates a timing channel that
     can be used to learn information about alpha. 
-    That said, the amount of information obtained from
+    That said, for most inputs the amount of information obtained from
     such a timing attack is likely to be small (1 bit, on average), since the algorithm 
-    is expected to find a valid curve point after only two attempts.
+    is expected to find a valid curve point after only two attempts.  
+    However, there might be inputs which cause the algorithm to make many attempts
+    before it finds a valid curve point; for such inputs, the information leaked
+    in a timing attack will be more than 1 bit. 
     </t>
 
     </section>
@@ -994,8 +1020,8 @@
     <section title="Selective vs Full Pseudorandomness">
     
     <t><xref target="nsec5ecc"/> presents cryptographic reductions to an 
-    underlying hard problem (e.g. Decisional Diffie Hellman, or the 
-    standard RSA assumption) that prove the VRFs specificied in this 
+    underlying hard problem (e.g. Decisional Diffie Hellman for the EC-VRF, or the 
+    standard RSA assumption for RSA-VRF) that prove the VRFs specificied in this 
     document possess full pseudorandomness
     as well as selective pseudorandomness. 
     However, the cryptographic reductions are tighter for selective
@@ -1044,11 +1070,14 @@
                     P-256 and Ed25519.
                 </t>
                 <t>
-                    01 - Fixed ECVRF to work when cofactor > 1.  Changed 
-                    ECVRF_proof2hash(pi) so that it outputs a value processed
-                    by the cryptographic hash function Hash. Cleaned up 
-                    ciphersuites and ECVRF description so that it works with
+                    01 - Fixed ECVRF to work when cofactor > 1.  
+                    Changed ECVRF_proof2hash(pi) so that it outputs a value raised
+                    to the cofactor and then processed by the cryptographic hash function Hash. 
+                    Included the VRF public key y as input to the hash function
+                    ECVRF_hash_to_curve1.
+                    Cleaned up ciphersuites and ECVRF description so that it works with
                     EC point encodings for both P256 and Ed25519 curves.
+                    Updated implementation status.
                 </t>
             </list>
         </t>
@@ -1056,8 +1085,10 @@
 
     <section title="Contributors">
         <t>
-            Leonid Reyzin (Boston University) made major contributions to this 
-            document. 
+            Leonid Reyzin (Boston University) is a major contributer to this 
+            document. </t>
+            
+        <t>
             This document also would not be possible without the work of
             Moni Naor (Weizmann Institute),
             Sachin Vasant (Cisco Systems), and
