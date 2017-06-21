@@ -917,14 +917,15 @@
         VRF key.  
         </t>
         
-        <t> The Verifier MUST perform this validation procedure when the 
-        entity that generated the public VRF key is untrusted. This procedure
-        supposes that the public key provided to the verifier is an octet 
+        <t>The Verifier MUST perform this validation procedure when the 
+        entity that generated the public VRF key is untrusted. 
+        The public key MUST NOT be used if this procedure returns "INVALID".</t>
+                
+        <t> This procedure supposes that the public key provided to the Verifier is an octet 
         string. The procedure returns "INVALID" if the public key in invalid. 
-        Otherwise, it returns the public key as an EC point.
+        Otherwise, it returns y, the public key as an EC point.
         </t>
         
-        <t>The public key MUST NOT be used if this procedure returns INVALID.</t>
         
         <section title="EC-VRF Validate Key">
       
@@ -1139,6 +1140,8 @@
                     ECVRF_hash_to_curve1.
                     Cleaned up ciphersuites and ECVRF description so that it works with
                     EC point encodings for both P256 and Ed25519 curves.
+                    Added ECVRF_validate_key so that EC-VRF can satisfy "full
+                    uniqueness" and "full collision" resistance.
                     Updated implementation status.
                 </t>
             </list>
