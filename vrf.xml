@@ -520,16 +520,23 @@
             Fixed options:
             <list>
                 <t>F - finite field</t>
-                <t>2n - length, in octets, of a field element in F. 
-                (This specification assumes that field elements in F 
-                have bit lengths that are divisible by 16.)</t>
+                <t>2n - length, in octets, of a field element in F</t>
                 <t>E - elliptic curve (EC) defined over F</t>
-                <t>m - length, in octets, of an EC point encoded as an octet string</t>
+                <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
                 <t>G - subgroup of E of large prime order</t>
                 <t>q - prime order of group G</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>g - generator of group G</t>
-                <t>Hash - cryptographic hash function with output length 2n octets</t>
+                <t>Hash - cryptographic hash function</t>
+                <t>hLen - output length in octets of Hash</t>
+            </list>
+        </t>
+
+        <t>
+            Constraints on options:
+            <list>
+                <t>Field elements in F have bit lengths divisible by 16</t>
+                <t>hLen is equal to 2n</t>
             </list>
         </t>
 
@@ -544,8 +551,8 @@
         <t>
             Notation and primitives used:
             <list>
-                <t>We use multiplicative notation for the elliptic curve. p1*p2 denotes the group operation on two EC points p1 and p2 (sometimes called "point addition"),
-                    and p^k denotes k repetitions of the group operation on the point p (sometimes called "point multiplication")</t>
+                <t>p1*p2 - point addition, i.e. group operation on two EC points p1 and p2</t>
+                <t>p^k - point multiplication, i.e. k repetitions of group operation on EC point p</t>
                 <t>|| - octet string concatenation</t>
                 <t>I2OSP - nonnegative integer conversion to octet string as defined in
                     Section 4.1 of <xref target="RFC8017" /></t>
@@ -554,12 +561,10 @@
                 <t>EC2OSP - conversion of EC point to an m-octet string 
                 as specified in <xref target="suites"/></t>
                 <t>OS2ECP - conversion of an m-octet string to EC point
-                as specified in <xref target="suites"/>.
+                as specified in <xref target="suites"/>
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
                 <t>RS2ECP - conversion of a random 2n-octet string to an 
-                EC point as specified in <xref target="suites"/>.
-                RS2ECP returns INVALID if the octet string does not convert 
-                to a valid EC point.</t>
+                EC point as specified in <xref target="suites"/></t>
             </list>
         </t>
 
@@ -613,18 +618,17 @@
             <t>
                 Output:
                 <list>
+                    <t>"INVALID", or </t>
                     <t>beta - VRF hash output, octet string of length 2n</t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", 
-                    then output "INVALID" and stop. Else it outputs 
-                    (gamma, c, s) where gamma is an EC point, c is an integer
-                    and s is an integer.</t>
-                    <t>beta = Hash(EC2OSP(gamma^cofactor))  [MAJOR CHANGE HERE! Hash-ing gamma rather than 
-                    just grabbing the x-coordinate of the EC point!]</t>
+                    <t>D = ECVRF_decode_proof(pi)</t>
+                    <t>If D is "INVALID", output "INVALID" and stop</t>
+                    <t>(gamma, c, s) = D</t>
+                    <t>beta = Hash(EC2OSP(gamma^cofactor))</t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -654,17 +658,16 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Run ECVRF_decode_proof(pi).  If it outputs "INVALID", 
-                    then output "INVALID" and stop. Else it outputs 
-                    (gamma, c, s) where gamma is an EC point, c is an integer
-                    and s is an integer. </t>
+                    <t>D = ECVRF_decode_proof(pi)</t>
+                    <t>If D is "INVALID", output "INVALID" and stop</t>
+                    <t>(gamma, c, s) = D</t>
                     <t>u = y^c * g^s</t>
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>v = gamma^c * h^s</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
-                        else output "INVALID". 
+                        else output "INVALID" 
                     </t>
                 </list>
             </t>
@@ -714,7 +717,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, which is a finite EC point in G</t>
+                    <t>h - hashed value, a finite EC point in G</t>
                 </list>
             </t>
             
@@ -723,18 +726,15 @@
                 <list style="numbers">
                     <t>ctr = 0</t>
                     <t>pk = EC2OSP(y)</t>
-                    <t>Repeat:
+                    <t>h = "INVALID"</t>
+                    <t>While h is "INVALID" or h is EC point at infinity:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
-                        <t>attempted_hash = Hash( pk || alpha  || CTR)</t>
-                        <t>h = RS2ECP(attempted_hash)</t>
-                        <t>If h is not equal to "INVALID" and cofactor>1, 
-                            set h = h^cofactor</t>
                         <t>ctr = ctr + 1</t>
-                    </list>
-                    until (h is not equal to "INVALID") and 
-                    (h is not equal to the EC point at infinity)
-                    </t>
+                        <t>attempted_hash = Hash(pk || alpha || CTR)</t>
+                        <t>h = RS2ECP(attempted_hash)</t>
+                        <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
+                    </list></t>
                     <t>Output h</t>
                 </list>
             </t>
@@ -805,7 +805,7 @@
             <t>
                 Output:
                 <list>
-                    <t> "INVALID", or </t>
+                    <t>"INVALID", or </t>
                     <t>gamma - EC point</t>
                     <t>
                     c - integer between 0 and 2^(8n)-1
@@ -837,20 +837,16 @@
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
-            and <xref target="RFC5114"></xref>  (Section 2.6). 
-            <cref source="Sharon">Seeking feedback on what is the right 
-            source to cite!</cref>
-            For this group,
-            the cofactor = 1, 
-            the length in octets of a single coordinate of an EC point is 2n = 32,
-            and EC points are encoded with point compression as octet strings
-            of length m = 2n+1 = 33.  
+            and <xref target="RFC5114"></xref>  (Section 2.6). For this group,
+            2n = 32 and cofactor = 1.
         </t>
-        
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />. </t>
         
-        <t> EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" />.</t>
+        <t>
+            EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" /> with point compression on.
+            This implies m = 2n + 1 = 33.
+        </t>
         
         <t> OS2ECP is specified in Section 2.3.4 of <xref target="SECG1" />.
         </t>
@@ -873,25 +869,17 @@
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
              <xref target="RFC8032"></xref>.       
-            For this group,
-            the cofactor = 8,
-            the length in octets of a single coordinate of an EC point is 
-            2n = 32, and
-            and EC points are encoded with point compression as octet strings
-            of length m = 2n+1 = 33. 
+            For this group, 2n = 32 and cofactor = 8.
         </t>
         <t> The key pair generation primitive is specified in Section 5.1.5 
         of <xref target="RFC8032" /></t>
         
-        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />.</t>
+        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. This implies m = 2n = 32.</t>
         
         <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
-        <cref source="Sharon">need to confirm that os2ecp outputs INVALID 
-        (or something like that) if conversion fails!!</cref>
         </t>
 
-        <t> RS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />. 
-        (Note: RS2ECP is the same as OS2ECP.)</t>
+        <t>RS2ECP is equivalent to OS2ECP.</t>
 
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
