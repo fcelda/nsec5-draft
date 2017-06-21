@@ -327,7 +327,7 @@
    <t>[TO DO:   This property is not needed for the VRF applications
    that use VRFs to prevent enumeration of hash-based data structures.
    However, we noticed that this property is required
-   for certain VRF applications, specifically the Algorand protocol. 
+   for certain VRF applications. 
    As we have not yet found a formal definition of this property in the literature,
    we write it down here. We also have not proved that the VRFs specified 
    in this document have this property.]</t>
