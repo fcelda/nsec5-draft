@@ -586,7 +586,7 @@
         <t>
             Notation and primitives used:
             <list>
-                <t>p1*p2 - point addition, i.e. group operation on two EC points p1 and p2</t>
+                <t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>
                 <t>p^k - point multiplication, i.e. k repetitions of group operation on EC point p</t>
                 <t>|| - octet string concatenation</t>
                 <t>I2OSP - nonnegative integer conversion to octet string as defined in
@@ -938,6 +938,16 @@
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
         
+        <t>[NOTE: In the unlikely case that future versions of this spec
+        use a elliptic curve group G that does not also come with a specification
+        of the group generator g, then we can still have full uniqueness and full
+        collision resistance by adding an check to ECVRF_validate_key(PK) that
+        ensures that g is a point on the elliptic curve and g^cofactor is not
+        the EC point at infinity.]
+        </t> 
+        
+        
+        
         </section>
 
         <section title="When the EC-VRF Keys are Untrusted" anchor="keycheck">
@@ -945,15 +955,21 @@
         <t>The EC-VRF as specified above is a VRF that satisfies the 
         "trusted uniqueness", "trusted collision resistance", and 
         "full pseudorandomness" properties defined in <xref target="secdef"/>.
-        This VRF can be modified to additionally satisfy "full uniqueness", 
-        and "full collision resistance" by additionally requiring the Verifier to perform
+        If the elliptic curve parameters (including the generator g) are trusted, 
+        but the VRF public key PK is not trusted, this VRF can be modified
+        to additionally satisfy "full uniqueness", 
+        and "full collision resistance".  This is done by 
+        additionally requiring the Verifier to perform
         the following validation procedure upon receipt of the public 
         VRF key.  
         </t>
         
         <t>The Verifier MUST perform this validation procedure when the 
         entity that generated the public VRF key is untrusted. 
-        The public key MUST NOT be used if this procedure returns "INVALID".</t>
+        The public key MUST NOT be used if this procedure returns "INVALID".
+        Note well that this procedure is not sufficient if the elliptic curve E 
+        or if g, the generator of group G, is untrusted.
+        </t>
                 
         <t> This procedure supposes that the public key provided to the Verifier is an octet 
         string. The procedure returns "INVALID" if the public key in invalid. 
@@ -984,7 +1000,7 @@
                 <list style="numbers">
                     <t>y = OS2ECP(PK)</t>
                     <t>If y is "INVALID", output "INVALID" and stop</t>
-                    <t>If y^cofactor is an EC point at infinty, output "INVALID" and stop</t>
+                    <t>If y^cofactor is the EC point at infinty, output "INVALID" and stop</t>
                     <t>Output y</t>
                 </list>
             </t>
