@@ -182,9 +182,9 @@ informative:
 
 --- abstract
 
-The Domain Name System Security Extensions (DNSSEC) introduced the
-NSEC resource record (RR) for authenticated denial of existence and
-the NSEC3 RR for hashed authenticated denial of existence.  This
+The Domain Name System Security Extensions (DNSSEC) introduced two 
+resource records (RR) for authenticated denial of existence: the
+NSEC RR and the NSEC3 RR. This
 document introduces NSEC5 as an alternative mechanism for DNSSEC
 authenticated denial of existence.  NSEC5 uses verifiable random
 functions (VRFs) to prevent offline enumeration of zone
