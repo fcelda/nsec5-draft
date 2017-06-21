@@ -416,36 +416,31 @@ The algorithms used for NSEC5 authenticated denial are independent of
 the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
-The NSEC5 proof corresponding to a name is computed using VRF_prove(), 
+The NSEC5 proof corresponding to a name is computed using ECVRF_prove(), 
 as specified in {{I-D.goldbe-vrf}}.
-The input to VRF_prove() is 
+The input to ECVRF_prove() is 
+a public NSEC5 key followed by
 a private NSEC5 key followed by
 an RR owner name in {{RFC4034}} canonical wire format.
 The output NSEC5 proof is an octet string.
 
 An NSEC5 hash corresponding to a name is computed from 
-its NSEC5 proof using VRF_proof2hash(), as specified in {{I-D.goldbe-vrf}}.
+its NSEC5 proof using ECVRF_proof2hash(), as specified in {{I-D.goldbe-vrf}}.
 The input to VRF_proof2hash() is 
-an NSEC5 proof as an octet string; 
-the output NSEC5 hash is an octet string.
+an NSEC5 proof as an octet string. 
+The output NSEC5 hash is either an octet string, or INVALID.
 
-
-An NSEC5 proof for a name is verified using VRF_verify(),  as specified in
+An NSEC5 proof for a name is verified using ECVRF_verify(),  as specified in
 {{I-D.goldbe-vrf}}.
 The input is the NSEC5 public key, 
-followed by an RR owner name in {{RFC4034}} canonical wire format,
-followed by an NSEC5 proof as an octet string; 
-the output is either VALID or INVALID.
+followed by an NSEC5 proof as an octet string,
+followed by an RR owner name in {{RFC4034}} canonical wire format.
+The output is either VALID or INVALID.
 
 This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in {{I-D.goldbe-vrf}}
-  (Section X) where
-  the secure hash function Hash is SHA-256 and 
-  the EC group G is the FIPS 186-3 P-256 curve. 
-  SHA-256 is specified in {{RFC6234}}.
-  The curve parameters are specified in {{FIPS-186-3}} (Section D.1.2.3)
-  and {{RFC5114}} (Section 2.6). 
+* The VRF is the EC-VRF algorithm using the EC-VRF-P256-SHA256 
+ciphersuite specified in {{I-D.goldbe-vrf}}.
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 4 of {{RFC6605}} and thus is the same as the format used to
@@ -453,13 +448,8 @@ This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm specified in {{I-D.goldbe-vrf}}
-  (Section X) where
-  the secure hash function Hash is SHA-256 and 
-  the EC group G is the Ed25519 curve. 
-  SHA-256 is specified in {{RFC6234}}.
-  The curve parameters are specified in
-  {{RFC7748}} (Section 4.1).
+* The VRF is the EC-VRF algorithm using the EC-VRF-ED25519-SHA256
+ciphersuite specified in {{I-D.goldbe-vrf}}.
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 3 of {{RFC8080}} and thus is the same as the format used to
