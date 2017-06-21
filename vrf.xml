@@ -1010,12 +1010,26 @@
     using good randomness.
     </t>
     
-    <t> Without good randomness, the "pseudorandomness"
-    properties of the VRF may not hold. Note that it is not possible to guarantee 
-    pseudorandomness in the face of adversarially generated VRF keys.  This is
-    because an adversary can always use bad randomness to generate the VRF keys, 
-    and thus, the VRF output may not be pseudorandom.
+    <section title="Uniqueness and collision resistance with untrusted keys">
+        
+    <t>The EC-VRF as specified in <xref target="ecvrfprove"/>-<xref target="suites"/>
+    statisfies the "trusted uniqueness" and "trusted collision resistance" properties
+    as long as the VRF keys are generated correctly, with good randomness.
+    If the Verifier trusts the VRF keys are generated correctly, it MAY use 
+    the public key y as is.
     </t>
+    
+    <t>
+    However, if the EC-VRF uses keys that could be generated adversarially, then the 
+    the Verfier MUST perform the validation procedure ECVRF_validate_key(PK)
+    (specified in <xref target="keycheck"/>)  upon receipt of the
+    public key PK as an octet string.  If the validation procedure
+    outputs "INVALID", then the public key MUST not be used.  
+    Otherwise, the procedure will output a valid public key y, 
+    and the EC-VRF with public key y satisfies the "full uniqueness" and 
+    "full collision resistance" properties.
+    </t>
+    
     
     <t>The RSA-VRF statisfies the "trusted uniqueness" and "trusted collision resistance" properties
     as long as the VRF keys are generated correctly, with good randomness.
@@ -1029,56 +1043,21 @@
     properties by adding additional cryptographic checks
     that its public key has the right form.  These modifications are left for future specification.
     </t>
-
     
-    <t>The EC-VRF as specified in <xref target="ecvrfprove"/>-<xref target="suites"/>
-    statisfies the "trusted uniqueness" and "trusted collision resistance" properties
-    as long as the VRF keys are generated correctly, with good randomness.
-    If the Verifier trusts the VRF keys are generated correctly, it MAY use 
-    the public key y as is.
-    However, if the EC-VRF uses keys that could be generated adversarially, then the 
-    the Verfier MUST perform the validation procedure ECVRF_validate_key(PK)
-    (specified in <xref target="keycheck"/>)  upon receipt of the
-    public key PK as an octet string.  If the validation procedure
-    outputs "INVALID", then the public key MUST not be used.  
-    Otherwise, the procedure will output a valid public key y, 
-    and the EC-VRF with public key y satisfies the "full uniqueness" and 
-    "full collision resistance" properties.
+    </section>
+    
+    <section title="Pseudorandomness with untrusted keys">
+    
+    <t> Without good randomness, the "pseudorandomness"
+    properties of the VRF may not hold. Note that it is not possible to guarantee 
+    pseudorandomness in the face of adversarially generated VRF keys.  This is
+    because an adversary can always use bad randomness to generate the VRF keys, 
+    and thus, the VRF output may not be pseudorandom.
     </t>
-    
-    
+    </section>
     </section>
 
 
-    <section title="Proper randomness for EC-VRF">
-
-    <t>
-    Applications that use the EC-VRF defined in this document MUST ensure
-    that the random nonce k used in the ECVRF_prove algorithm is
-    chosen with proper randomness. Otherwise, an adversary may be able to recover
-    the private VRF key x (and thus break pseudorandomness of the VRF)
-    after observing several valid VRF proofs pi.
-    </t>
-
-    </section>
-
-    <section title="Timing attacks">
-    
-    <t>The EC-VRF_hash_to_curve algorithm defined in
-    <xref target="ecvrfH2C1" /> SHOULD NOT be used in applications where
-    the VRF input alpha is secret and is hashed by the VRF on-the-fly.
-    This is because the EC-VRF_hash_to_curve algorithm's running time depends
-    on the VRF input alpha, and thus creates a timing channel that
-    can be used to learn information about alpha. 
-    That said, for most inputs the amount of information obtained from
-    such a timing attack is likely to be small (1 bit, on average), since the algorithm 
-    is expected to find a valid curve point after only two attempts.  
-    However, there might be inputs which cause the algorithm to make many attempts
-    before it finds a valid curve point; for such inputs, the information leaked
-    in a timing attack will be more than 1 bit. 
-    </t>
-
-    </section>
     
     <section title="Selective vs Full Pseudorandomness">
     
@@ -1113,6 +1092,38 @@
     </list>
     </t>
     </section>
+
+
+ <section title="Proper randomness for EC-VRF">
+
+    <t>
+    Applications that use the EC-VRF defined in this document MUST ensure
+    that the random nonce k used in the ECVRF_prove algorithm is
+    chosen with proper randomness. Otherwise, an adversary may be able to recover
+    the private VRF key x (and thus break pseudorandomness of the VRF)
+    after observing several valid VRF proofs pi.
+    </t>
+
+    </section>
+
+    <section title="Timing attacks">
+    
+    <t>The EC-VRF_hash_to_curve algorithm defined in
+    <xref target="ecvrfH2C1" /> SHOULD NOT be used in applications where
+    the VRF input alpha is secret and is hashed by the VRF on-the-fly.
+    This is because the EC-VRF_hash_to_curve algorithm's running time depends
+    on the VRF input alpha, and thus creates a timing channel that
+    can be used to learn information about alpha. 
+    That said, for most inputs the amount of information obtained from
+    such a timing attack is likely to be small (1 bit, on average), since the algorithm 
+    is expected to find a valid curve point after only two attempts.  
+    However, there might be inputs which cause the algorithm to make many attempts
+    before it finds a valid curve point; for such inputs, the information leaked
+    in a timing attack will be more than 1 bit. 
+    </t>
+
+    </section>
+   
 
     </section>
 
