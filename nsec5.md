@@ -376,7 +376,7 @@ using the following steps:
   given NSEC5 proof corresponds to a given domain name.
 
 2. The NSEC5 proof is then processed using a publicly-computable VRF
-  proof-to-hash function to obtain the NSEC5 hash.  The NSEC5 hash can
+  proof2hash function to obtain the NSEC5 hash.  The NSEC5 hash can
   be computed by anyone who knows the input NSEC5 proof.
 
 The NSEC5 hash determines the position of a domain name in an NSEC5
@@ -403,7 +403,7 @@ To validate the response, the client verifies the following items:
   NSEC5KEY RR, to verify that the NSEC5 proof in the NSEC5PROOF RR
   corresponds to the queried name.
 
-* The client uses the VRF proof-to-hash function to compute the NSEC5
+* The client uses the VRF proof2hash function to compute the NSEC5
   hash from the NSEC5 proof in the NSEC5PROOF RR.  The client verifies
   that the NSEC5 hash is covered by the NSEC5 RR.
 
@@ -444,7 +444,12 @@ ciphersuite specified in {{I-D.goldbe-vrf}}.
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 4 of {{RFC6605}} and thus is the same as the format used to
-  store ECDSA public keys in DNSKEY RRs.
+  store ECDSA public keys in DNSKEY RRs.   
+  \[NOTE: This specification does 
+  not compress the elliptic curve point used for the public key! 
+  But we do compress curve points in every other place we use them with the 
+  P256 ECVRF.  We could save 31 octets in the NSEC5KEY record by encoding the 
+  public key with point compression!\]
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
