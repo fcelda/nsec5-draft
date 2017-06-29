@@ -324,13 +324,11 @@
    
    <section title="An additional pseudorandomness property">
    
-   <t>[TO DO:   This property is not needed for the VRF applications
+   <t>[TODO:   The following property is not needed for applications
    that use VRFs to prevent enumeration of hash-based data structures.
-   However, we noticed that this property is required
-   for certain VRF applications. 
-   As we have not yet found a formal definition of this property in the literature,
-   we write it down here. We also have not proved that the VRFs specified 
-   in this document have this property.]</t>
+   However, we noticed that some other applications of VRF rely on 
+   this property.  As we have not yet found a formal definition 
+   of this property in the literature, we write it down here. ]</t>
    
    <t>Pseudorandomness, as defined in <xref target="pseudodef"/>, does not 
    hold if the VRF keys were generated adversarially.
@@ -346,9 +344,12 @@
    to the adversary, and (4) the VRF public key chosen by the adversary is valid. 
    </t>
    
-   <t>[TO DO: It is important to work out exactly what properties are needed from 
-   the public keys (and possibly added to the VRF_validate_key() function)
-   to ensure that adversarially-chosen keys are "valid".] </t>
+   <t>[TODO: It should be possible to get the EC-VRF to satisfy this property, 
+   as long as verifiers run an VRF_validate_key() key function upon receipt
+   of VRF public keys. However, we need to work out exactly what properties are needed from 
+   the VRF public keys in order for this property to hold. Some 
+   additional checks might need to be added to the ECVRF_validate_key() function.
+   Need to work out what are these checks.] </t>
    </section>
   
    </section>
@@ -1319,7 +1320,7 @@
 
         <t>
             <list style="numbers">
-                <t>Open issues</t>
+                <t>Open issue.</t>
             </list>
         </t>
     </section>
