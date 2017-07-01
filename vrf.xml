@@ -580,7 +580,7 @@
             <list>
                 <t>y = g^x - VRF public key, an EC point</t>
                 <t>x - VRF private key, an integer where 0 &lt; x &lt; q
-                <!--<cref source="Sharon">check this with leo</cref>--></t> 
+                </t> 
              </list>
         </t>
 
