@@ -643,19 +643,19 @@ and Next Hashed Owner Name.
 
 Facts to prove:
 
-> Non-existence of RRset that explictly matches the QNAME.  \[Shumon, Dave, check this terminology.]
+> Non-existence of the domain name that explictly matches the QNAME.
 
-> Non-existence of RRset that matches QNAME via wildcard expansion. \[Shumon, Dave, check this terminology.]
-
-> The QNAME does not fall into a delegation. \[Shumon, Dave, check this terminology. "fall into"?]
-
-> The QNAME does not fall into a DNAME redirection.
+> Non-existence of the wildcard that matches the QNAME.
 
 Authoritative server proofs:
 
 > NSEC5PROOF for closest encloser and matching NSEC5 RR.
 
 > NSEC5PROOF for next closer name and covering NSEC5 RR.
+
+> The QNAME does not fall into a delegation.
+
+> The QNAME does not fall into a DNAME redirection.
 
 Validator checks:
 
