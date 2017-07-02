@@ -705,8 +705,6 @@ Validator checks:
 
 ### No Data Response, Opt-Out In Effect
 
-\[Sharon has no idea how this works, someone else should check this for correctness!]
-
 Facts to prove:
 
 > The delegation is not covered by the NSEC5 chain.
@@ -719,10 +717,7 @@ Validator checks:
 
 > Closest provable encloser is in zone.
 
-> Closest provable encloser covers (not matches) the QNAME.  \[Sharon says that 
-this terminology "covers (not matches)" is really confusing to me.  What does
-"covers" mean in the context of a DNS name? Is this defined in some other
-RFC? If so, maybe we should point to that other RFC?]
+> Closest provable encloser covers (not matches) the QNAME.
 
 > NSEC5 RR matching the closest provable encloser has Opt-Out flag set.
 
@@ -730,22 +725,15 @@ RFC? If so, maybe we should point to that other RFC?]
 
 Facts to prove:
 
-> Non-existence of RRset matching the QNAME.
+> A signed positive response to the QNAME demonstrating the existence of the wildcard (label count in RRSIG is less than in QNAME), and also providing closest encloser name.
 
-> Non-existence of wildcard closer to the QNAME.  \[Sharon says: what does "wildcard 
-closer to the QNAME" actually mean? Probably there is a better way to say this.]
-
-> Existence of the wildcard expansion of the QNAME. \[Sharon added this. Check 
-it please!]
+> Non-existence of the domain name matching the QNAME.
 
 Authoritative server proofs:
 
-> NSEC5PROOF for next closer name and covering NSEC5 RR.
+> A signed positive response for the wildcard expansion of the QNAME.
 
-> A signed positive response for the wildcard expansion of the QNAME, 
-  as specified in <xref target="RFC4035"/>. \[Sharon says: Guys, please check this, 
-  both the language and the pointer to the RFC. I added this based on 
-  stuff in that chat window from 3/10/2017.]
+> NSEC5PROOF for next closer name and covering NSEC5 RR.
 
 Validator checks:
 
@@ -753,22 +741,13 @@ Validator checks:
 
 > Next closer name is not in the zone.
 
-> \[Something here about the positive response. Not sure what.]
-
 ## Wildcard No Data Responses
-
-\[Sharon says: please check again this section, as I am not sure I understand it!]
 
 Facts to prove:
 
-> Non-existence of RRset that explictly matches the QNAME.  \[Shumon, Dave, check this terminology.]
+> The existence of the wildcard at the closest encloser to the QNAME.
 
-> Non-existence of QTYPE RRset that matches QNAME via wildcard expansion. \[Shumon, Dave, check this terminology.]
-
-> Non-existence of CNAME RRset that matches QNAME via wildcard expansion. 
-
-> No wildcard closer to the QNAME exists.  \[Sharon says as before I don't understand
-what this means.]
+> Non-existence of both the QTYPE and of the CNAME type that matches QNAME via wildcard expansion. 
 
 Authoritative server proofs:
 
@@ -779,17 +758,9 @@ encloser) and matching NSEC5 RR.
 
 Validator checks:
 
-> Source of synthesis matches the QNAME. \[Sharon says: again, I'm not sure what 
-this means. Are we saying "Source of synthesis matches QNAME via wildcard expansion." ?]
+> Closest encloser to the QNAME exists.
 
-> NSEC5 RR matching source of synthesis does not have QTYPE in Type Bit Map.
-
-> NSEC5 RR matching source of synthesis does not have CNAME in Type Bit Map.
-
-<!--> Next closer name is derived correctly.-->
-
-> Next closer name is not in the zone.
-
+> NSEC5 RR matching the wildcard label prepended to the closest encloser, and which does not have the bits corresponding to the QTYPE and CNAME types set it the type bitmap.
 
 # Authoritative Server Considerations
 
