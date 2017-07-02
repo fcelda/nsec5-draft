@@ -1307,26 +1307,15 @@ NSEC5 RR are precomputed.
     o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
                 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
 
-## Delegation to Unisgned Opt-Out Zone Example
-
-\[Dimitris: This case separation reads kind of awkward. 
-I would rather rename this section to Delegation to Unisgned Opt-out zone 
-and the previous to simply No Data] \[Sharon: I agree with this and made the 
-change. Note that this section used to be called 
-"No Data Example, Opt-Out In Effect" and the previous 
-"No Data Example, Opt-Out Not In Effect".]
-
-
-\[Sharon: I took a pass over this but it really needs to be checked by someone
-who is "more dns" than I am.]
+## Delegation to an Unsigned Zone in an Opt-Out span Example
 
 Consider a query for a type A record for foo.d.example.org.
+
+Here, d.example.org is a delegation to an unsigned zone, which sits within an Opt-Out span.
 
 The server must prove the following facts:
 
 * Non-existence of signature on next closer name d.example.org. 
-(Note: d.example.org. is a delegation to an unsigned zone, and 
-thus the NS RR for d.example.org is unsigned).
 
 * Opt-out bit is set in NSEC5 record covering next closer name
  d.example.org. 
