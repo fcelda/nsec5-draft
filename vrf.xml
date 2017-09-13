@@ -28,6 +28,22 @@
             </address>
         </author>
 
+        
+        <author fullname="Leonid Reyzin" initials="L." surname="Reyzin">
+            <organization>Boston University</organization>
+            <address>
+                <postal>
+                    <street>111 Cummington St, MCS135</street>
+                    <city>Boston</city>
+                    <region>MA</region>
+                    <code>02215</code>
+                    <country>USA</country>
+                </postal>
+                <email>reyzin@cs.bu.edu</email>
+            </address>
+        </author>
+
+
         <author fullname="Dimitrios Papadopoulos" initials="D." surname="Papadopoulos">
             <organization>Hong Kong University of Science and Techology</organization>
             <address>
