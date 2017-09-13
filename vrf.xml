@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-goldbe-vrf-01" ipr="trust200902">
+<rfc category="std" docName="draft-irtf-cfrg-vrf-00" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -29,16 +29,16 @@
         </author>
 
         <author fullname="Dimitrios Papadopoulos" initials="D." surname="Papadopoulos">
-            <organization>University of Maryland</organization>
+            <organization>Hong Kong University of Science and Techology</organization>
             <address>
                 <postal>
-                    <street>8223 Paint Branch Dr</street>
-                    <city>College Park</city>
-                    <region>MD</region>
-                    <code>20740</code>
-                    <country>USA</country>
+                    <street>Clearwater Bay</street>
+                    <!--<city></city>-->
+                    <!--<region>MD</region>-->
+                    <!--<code>20740</code>-->
+                    <country>Hong Kong</country>
                 </postal>
-                <email>dipapado@bu.edu</email>
+                <email>dipapado@cse.ust.hkbu.edu</email>
             </address>
         </author>
 
@@ -58,7 +58,7 @@
 
         <date year="2017" />
 
-        <!-- <workgroup></workgroup> -->
+        <workgroup>CFRG</workgroup>
 
         <keyword>public key cryptography</keyword>
         <keyword>hashing</keyword>
@@ -1188,15 +1188,15 @@
 
         <t>
             <list>
-                <t>
-                    00 - Forked this document from draft-vcelak-nsec5-04. 
+                <!--<t>
+                    draft-goldbe-vrf-00 - Forked this document from draft-vcelak-nsec5-04. 
                     Cleaned up the definitions of VRF algorithms.
                     Added security definitions for VRF and security considerations.
                     Parameterized EC-VRF so it could support curves other than 
                     P-256 and Ed25519.
                 </t>
                 <t>
-                    01 - Fixed ECVRF to work when cofactor > 1.  
+                    draft-goldbe-vrf-01 - Fixed ECVRF to work when cofactor > 1.  
                     Changed ECVRF_proof2hash(pi) so that it outputs a value raised
                     to the cofactor and then processed by the cryptographic hash function Hash. 
                     Included the VRF public key y as input to the hash function
@@ -1208,7 +1208,8 @@
                     Updated implementation status.
                     Added "an additional pseudorandomness property" to security
                     definitions.
-                </t>
+                </t>-->
+                <t> 00 - Forked this document from draft-goldbe-vrf-01.</t>
             </list>
         </t>
     </section>
@@ -1274,7 +1275,7 @@
 
         <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
-                <title>Making NSEC5 Practical for DNSSEC Deployments</title>
+                <title>Making NSEC5 Practical for DNSSEC</title>
                 <author initials="D." surname="Papadopoulos"><organization /></author>
                 <author initials="D." surname="Wessels"><organization /></author>
                 <author initials="S." surname="Huque"><organization /></author>
@@ -1312,7 +1313,7 @@
         
     </references>
 
-
+    <!--
     <section title="Open Issues">
         <t>
             Note to RFC Editor: please remove this appendix before publication as an RFC.
@@ -1324,6 +1325,7 @@
             </list>
         </t>
     </section>
+    -->
   </back>
 </rfc>
 <!-- vim: et ts=4 sts=4 sw=4 colorcolumn=100 spell :
