@@ -1,8 +1,8 @@
 ---
 title: NSEC5, DNSSEC Authenticated Denial of Existence
 abbrev: NSEC5
-docname: draft-vcelak-nsec5-05
-date: 2017
+docname: draft-vcelak-nsec5-06
+date: 2018
 
 ipr: trust200902
 area: Internet
@@ -268,7 +268,7 @@ server is compromised.
 NSEC5 prevents offline zone enumeration and also protects integrity
 even if a zone's authoritative server is compromised.  To do this,
 NSEC5 replaces the unkeyed cryptographic hash function used in NSEC3
-with a verifiable random function (VRF) {{MRV99}}.  A VRF is the
+with a verifiable random function (VRF) {{I-D.goldbe-vrf}} {{MRV99}}.  A VRF is the
 public-key version of a keyed cryptographic hash.  Only the holder of
 the private VRF key can compute the hash, but anyone with public VRF
 key can verify the correctness of the hash.
@@ -292,9 +292,10 @@ against network attacks.
 
 NSEC5 is not intended to replace NSEC or NSEC3. It is an alternative
 mechanism for authenticated denial of existence.  This document
-specifies NSEC5 based on the FIPS 186-3 P-256 elliptic curve and on
+specifies NSEC5 based on the VRFs in {{I-D.goldbe-vrf}} over the
+FIPS 186-3 P-256 elliptic curve and over the
 the Ed25519 elliptic curve. A formal cryptographic proof of security
-for elliptic curve (EC) NSEC5 is in {{nsec5ecc}}.
+for NSEC5 is in {{nsec5ecc}}.
 
 ## Requirements
 
@@ -652,11 +653,11 @@ Authoritative server proofs:
 
 Validator checks:
 
-[comment]: <Dimitris commented out the next two. They are covered by the last two validator checks, right?>
+<!-- Dimitris 01/2018 commented out the next two. They are covered by the last two validator checks, right?-->
 
-[comment]: <The QNAME does not fall into a delegation.>
+<!-- The QNAME does not fall into a delegation.-->
 
-[comment]: <The QNAME does not fall into a DNAME redirection.>
+<!-- The QNAME does not fall into a DNAME redirection.-->
 
 > Closest encloser is in the zone.
 
@@ -1495,6 +1496,7 @@ RFC, please remove this appendix before publication as an RFC.
 > specification.  Rewrite Performance Considerations and
 > Implementation Status sections.
 
-
 > 05 - Remove appendix specifying VRFs and add reference to 
 > {{I-D.goldbe-vrf}}.  Add {{examples}}.
+
+> 06 - Editorial changes.  Minor updates to {{name-error-responses}}.
