@@ -429,22 +429,22 @@
 <link href="#rfc.references.2" rel="Chapter" title="18.2 Informative References"/>
 <link href="#rfc.appendix.A" rel="Chapter" title="A Examples"/>
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Name Error Example"/>
-<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 No Data Example, Opt-Out Not In Effect"/>
-<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 No Data Example, Opt-Out In Effect"/>
+<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 No Data Example"/>
+<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Delegation to an Unsigned Zone in an Opt-Out span Example"/>
 <link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Wildcard Example"/>
 <link href="#rfc.appendix.A.5" rel="Chapter" title="A.5 Wildcard No Data Example"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B Change Log"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
-  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and D. Lawrence" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-vcelak-nsec5-05" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-13" />
-  <meta name="dct.abstract" content="The Domain Name System Security Extensions (DNSSEC) introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 RR for hashed authenticated denial of existence.  This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies." />
-  <meta name="description" content="The Domain Name System Security Extensions (DNSSEC) introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 RR for hashed authenticated denial of existence.  This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies." />
+  <meta name="dct.issued" scheme="ISO8601" content="2017" />
+  <meta name="dct.abstract" content="The Domain Name System Security Extensions (DNSSEC) introduced two resource records (RR) for authenticated denial of existence: the NSEC RR and the NSEC3 RR. This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies." />
+  <meta name="description" content="The Domain Name System Security Extensions (DNSSEC) introduced two resource records (RR) for authenticated denial of existence: the NSEC RR and the NSEC3 RR. This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies." />
 
 </head>
 
@@ -466,7 +466,7 @@
   <td class="right">S. Goldberg</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 14, 2017</td>
+  <td class="left">Expires: July 7, 2018</td>
   <td class="right">Boston University</td>
 </tr>
 <tr>
@@ -475,7 +475,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">University of Maryland</td>
+  <td class="right">HKUST</td>
 </tr>
 <tr>
   <td class="left"></td>
@@ -495,7 +495,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 13, 2017</td>
+  <td class="right">2017</td>
 </tr>
 
     	
@@ -508,7 +508,7 @@
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>The Domain Name System Security Extensions (DNSSEC) introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 RR for hashed authenticated denial of existence.  This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies.</p>
+<p>The Domain Name System Security Extensions (DNSSEC) introduced two resource records (RR) for authenticated denial of existence: the NSEC RR and the NSEC3 RR. This document introduces NSEC5 as an alternative mechanism for DNSSEC authenticated denial of existence.  NSEC5 uses verifiable random functions (VRFs) to prevent offline enumeration of zone contents. NSEC5 also protects the integrity of the zone contents even if an adversary compromises one of the authoritative servers for the zone.  Integrity is preserved because NSEC5 does not require private zone-signing keys to be present on all authoritative servers for the zone, in contrast to DNSSEC online signing schemes like NSEC3 White Lies.</p>
 <h1>
   <a>Ed note</a>
 </h1>
@@ -519,7 +519,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 14, 2017.</p>
+<p>This Internet-Draft will expire on July 7, 2018.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -586,8 +586,8 @@
 <li>18.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">Examples</a></li>
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">Name Error Example</a></li>
-<li>A.2.   <a href="#rfc.appendix.A.2">No Data Example, Opt-Out Not In Effect</a></li>
-<li>A.3.   <a href="#rfc.appendix.A.3">No Data Example, Opt-Out In Effect</a></li>
+<li>A.2.   <a href="#rfc.appendix.A.2">No Data Example</a></li>
+<li>A.3.   <a href="#rfc.appendix.A.3">Delegation to an Unsigned Zone in an Opt-Out span Example</a></li>
 <li>A.4.   <a href="#rfc.appendix.A.4">Wildcard Example</a></li>
 <li>A.5.   <a href="#rfc.appendix.A.5">Wildcard No Data Example</a></li>
 </ul><li>Appendix B.   <a href="#rfc.appendix.B">Change Log</a></li>
@@ -690,7 +690,7 @@
 
 <ol>
   <li>The domain name is processed using a VRF keyed with the private NSEC5 key to obtain the NSEC5 proof.  Anyone who knows the public NSEC5 key, normally acquired via an NSEC5KEY RR, can verify that a given NSEC5 proof corresponds to a given domain name.</li>
-  <li>The NSEC5 proof is then processed using a publicly-computable VRF proof-to-hash function to obtain the NSEC5 hash.  The NSEC5 hash can be computed by anyone who knows the input NSEC5 proof.</li>
+  <li>The NSEC5 proof is then processed using a publicly-computable VRF proof2hash function to obtain the NSEC5 hash.  The NSEC5 hash can be computed by anyone who knows the input NSEC5 proof.</li>
 </ol>
 <p id="rfc.section.3.p.3">The NSEC5 hash determines the position of a domain name in an NSEC5 chain.</p>
 <p id="rfc.section.3.p.4">To sign a zone, the private NSEC5 key is used to compute the NSEC5 hashes for each name in the zone. These NSEC5 hashes are sorted in canonical order <a href="#RFC4034">[RFC4034]</a>, and each consecutive pair forms an NSEC5 RR.  Each NSEC5 RR is signed offline using the private zone-signing key.  The resulting signed chain of NSEC5 RRs is provided to all authoritative servers for the zone, along with the private NSEC5 key.</p>
@@ -700,26 +700,26 @@
 
 <ul>
   <li>The client uses the public NSEC5 key, normally acquired from the NSEC5KEY RR, to verify that the NSEC5 proof in the NSEC5PROOF RR corresponds to the queried name.</li>
-  <li>The client uses the VRF proof-to-hash function to compute the NSEC5 hash from the NSEC5 proof in the NSEC5PROOF RR.  The client verifies that the NSEC5 hash is covered by the NSEC5 RR.</li>
+  <li>The client uses the VRF proof2hash function to compute the NSEC5 hash from the NSEC5 proof in the NSEC5PROOF RR.  The client verifies that the NSEC5 hash is covered by the NSEC5 RR.</li>
   <li>The client verifies that the NSEC5 RR is validly signed by the RRSIG RRset.</li>
 </ul>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#nsec5-algorithms" id="nsec5-algorithms">NSEC5 Algorithms</a></h1>
 <p id="rfc.section.4.p.1">The algorithms used for NSEC5 authenticated denial are independent of the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how the NSEC5 proof and the NSEC5 hash are computed and validated.</p>
-<p id="rfc.section.4.p.2">The NSEC5 proof corresponding to a name is computed using VRF_prove(), as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input to VRF_prove() is a private NSEC5 key followed by an RR owner name in <a href="#RFC4034">[RFC4034]</a> canonical wire format.  The output NSEC5 proof is an octet string.</p>
-<p id="rfc.section.4.p.3">An NSEC5 hash corresponding to a name is computed from its NSEC5 proof using VRF_proof2hash(), as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input to VRF_proof2hash() is an NSEC5 proof as an octet string; the output NSEC5 hash is an octet string.</p>
-<p id="rfc.section.4.p.4">An NSEC5 proof for a name is verified using VRF_verify(),  as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input is the NSEC5 public key, followed by an RR owner name in <a href="#RFC4034">[RFC4034]</a> canonical wire format, followed by an NSEC5 proof as an octet string; the output is either VALID or INVALID.</p>
+<p id="rfc.section.4.p.2">The NSEC5 proof corresponding to a name is computed using ECVRF_prove(), as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input to ECVRF_prove() is a public NSEC5 key followed by a private NSEC5 key followed by an RR owner name in <a href="#RFC4034">[RFC4034]</a> canonical wire format.  The output NSEC5 proof is an octet string.</p>
+<p id="rfc.section.4.p.3">An NSEC5 hash corresponding to a name is computed from its NSEC5 proof using ECVRF_proof2hash(), as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input to VRF_proof2hash() is an NSEC5 proof as an octet string.  The output NSEC5 hash is either an octet string, or INVALID.</p>
+<p id="rfc.section.4.p.4">An NSEC5 proof for a name is verified using ECVRF_verify(),  as specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  The input is the NSEC5 public key, followed by an NSEC5 proof as an octet string, followed by an RR owner name in <a href="#RFC4034">[RFC4034]</a> canonical wire format.  The output is either VALID or INVALID.</p>
 <p id="rfc.section.4.p.5">This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:</p>
 <p/>
 
 <ul>
-  <li>The VRF is the EC-VRF algorithm specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a> (Section X) where the secure hash function Hash is SHA-256 and the EC group G is the FIPS 186-3 P-256 curve.  SHA-256 is specified in <a href="#RFC6234">[RFC6234]</a>.  The curve parameters are specified in <a href="#FIPS-186-3">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114">[RFC5114]</a> (Section 2.6).</li>
-  <li>The public key format to be used in the NSEC5KEY RR is defined in Section 4 of <a href="#RFC6605">[RFC6605]</a> and thus is the same as the format used to store ECDSA public keys in DNSKEY RRs.</li>
+  <li>The VRF is the EC-VRF algorithm using the EC-VRF-P256-SHA256 ciphersuite specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.</li>
+  <li>The public key format to be used in the NSEC5KEY RR is defined in Section 4 of <a href="#RFC6605">[RFC6605]</a> and thus is the same as the format used to store ECDSA public keys in DNSKEY RRs. <br/> [NOTE: This specification does not compress the elliptic curve point used for the public key, but we do compress curve points in every other place we use them. The NSEC5KEY record can be shrunk by 31 additional octets by encoding the public key with point compression.]</li>
 </ul>
 <p id="rfc.section.4.p.7">This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:</p>
 <p/>
 
 <ul>
-  <li>The VRF is the EC-VRF algorithm specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a> (Section X) where the secure hash function Hash is SHA-256 and the EC group G is the Ed25519 curve.  SHA-256 is specified in <a href="#RFC6234">[RFC6234]</a>.  The curve parameters are specified in <a href="#RFC7748">[RFC7748]</a> (Section 4.1).</li>
+  <li>The VRF is the EC-VRF algorithm using the EC-VRF-ED25519-SHA256 ciphersuite specified in <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.</li>
   <li>The public key format to be used in the NSEC5KEY RR is defined in Section 3 of <a href="#RFC8080">[RFC8080]</a> and thus is the same as the format used to store Ed25519 public keys in DNSKEY RRs.</li>
 </ul>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#the-nsec5key-resource-record" id="the-nsec5key-resource-record">The NSEC5KEY Resource Record</a></h1>
@@ -810,7 +810,7 @@
 
 <ol>
   <li>Facts to prove: the minimum amount of information that an authoritative server must provide to a client to assure the client that the response content is valid.</li>
-  <li>Authoritative server proofs: the names for which the NSEC5PROOF RRs are synthesized and added into the response along the NSEC5 RRs matching or covering each such name. These records together prove the listed facts.</li>
+  <li>Authoritative server proofs: the names for which the NSEC5PROOF RRs are synthesized and added into the response along with the NSEC5 RRs matching or covering each such name. These records together prove the listed facts.</li>
   <li>Validator checks: the individual checks that a validating server is required to perform on a response. The response content is considered valid only if all of the checks pass.</li>
 </ol>
 <p id="rfc.section.8.p.3">If NSEC5 is said to match a domain name, the owner name of the NSEC5 RR has to be equivalent to an NSEC5 hash of that domain name. If an NSEC5 RR is said to cover a domain name, the NSEC5 hash of the domain name must sort in canonical order between that NSEC5 RR's Owner Name and Next Hashed Owner Name.</p>
@@ -819,24 +819,14 @@
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of RRset that explictly matches the QNAME.  [Shumon, Dave, check this terminology.]</li>
+  <li>Non-existence of the domain name that explictly matches the QNAME.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of RRset that matches QNAME via wildcard expansion. [Shumon, Dave, check this terminology.]</li>
+  <li>Non-existence of the wildcard that matches the QNAME.</li>
 </ul>
-<p/>
-
-<ul class="empty">
-  <li>The QNAME does not fall into a delegation. [Shumon, Dave, check this terminology. "fall into"?]</li>
-</ul>
-<p/>
-
-<ul class="empty">
-  <li>The QNAME does not fall into a DNAME redirection.</li>
-</ul>
-<p id="rfc.section.8.1.p.6">Authoritative server proofs:</p>
+<p id="rfc.section.8.1.p.4">Authoritative server proofs:</p>
 <p/>
 
 <ul class="empty">
@@ -847,7 +837,7 @@
 <ul class="empty">
   <li>NSEC5PROOF for next closer name and covering NSEC5 RR.</li>
 </ul>
-<p id="rfc.section.8.1.p.9">Validator checks:</p>
+<p id="rfc.section.8.1.p.7">Validator checks:</p>
 <p/>
 
 <ul class="empty">
@@ -916,20 +906,19 @@
   <li>NSEC5 RR matching the QNAME does not have CNAME in Type Bit Map.</li>
 </ul>
 <h1 id="rfc.section.8.2.2"><a href="#rfc.section.8.2.2">8.2.2.</a> <a href="#no-data-response-opt-out-in-effect" id="no-data-response-opt-out-in-effect">No Data Response, Opt-Out In Effect</a></h1>
-<p id="rfc.section.8.2.2.p.1">[Sharon has no idea how this works, someone else should check this for correctness!]</p>
-<p id="rfc.section.8.2.2.p.2">Facts to prove:</p>
+<p id="rfc.section.8.2.2.p.1">Facts to prove:</p>
 <p/>
 
 <ul class="empty">
   <li>The delegation is not covered by the NSEC5 chain.</li>
 </ul>
-<p id="rfc.section.8.2.2.p.4">Authoritative server proofs:</p>
+<p id="rfc.section.8.2.2.p.3">Authoritative server proofs:</p>
 <p/>
 
 <ul class="empty">
   <li>NSEC5PROOF for closest provable encloser and matching NSEC5 RR.</li>
 </ul>
-<p id="rfc.section.8.2.2.p.6">Validator checks:</p>
+<p id="rfc.section.8.2.2.p.5">Validator checks:</p>
 <p/>
 
 <ul class="empty">
@@ -938,7 +927,7 @@
 <p/>
 
 <ul class="empty">
-  <li>Closest provable encloser covers (not matches) the QNAME.  [Sharon says that this terminology "covers (not matches)" is really confusing to me.  What does "covers" mean in the context of a DNS name? Is this defined in some other RFC? If so, maybe we should point to that other RFC?]</li>
+  <li>Closest provable encloser covers (not matches) the QNAME.</li>
 </ul>
 <p/>
 
@@ -950,64 +939,43 @@
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of RRset matching the QNAME.</li>
+  <li>A signed positive response to the QNAME demonstrating the existence of the wildcard (label count in RRSIG is less than in QNAME), and also providing closest encloser name.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of wildcard closer to the QNAME.  [Sharon says: what does "wildcard closer to the QNAME" actually mean? Probably there is a better way to say this.]</li>
+  <li>Non-existence of the domain name matching the QNAME.</li>
 </ul>
+<p id="rfc.section.8.3.p.4">Authoritative server proofs:</p>
 <p/>
 
 <ul class="empty">
-  <li>Existence of the wildcard expansion of the QNAME. [Sharon added this. Check it please!]</li>
+  <li>A signed positive response for the wildcard expansion of the QNAME.</li>
 </ul>
-<p id="rfc.section.8.3.p.5">Authoritative server proofs:</p>
 <p/>
 
 <ul class="empty">
   <li>NSEC5PROOF for next closer name and covering NSEC5 RR.</li>
 </ul>
-<p/>
-
-<ul class="empty">
-  <li>A signed positive response for the wildcard expansion of the QNAME, as specified in <a href="#RFC4035">[RFC4035]</a>. [Sharon says: Guys, please check this, both the language and the pointer to the RFC. I added this based on stuff in that chat window from 3/10/2017.]</li>
-</ul>
-<p id="rfc.section.8.3.p.8">Validator checks:</p>
+<p id="rfc.section.8.3.p.7">Validator checks:</p>
 <p/>
 
 <ul class="empty">
   <li>Next closer name is not in the zone.</li>
 </ul>
-<p/>
-
-<ul class="empty">
-  <li>[Something here about the positive response. Not sure what.]</li>
-</ul>
 <h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#wildcard-no-data-responses" id="wildcard-no-data-responses">Wildcard No Data Responses</a></h1>
-<p id="rfc.section.8.4.p.1">[Sharon says: please check again this section, as I am not sure I understand it!]</p>
-<p id="rfc.section.8.4.p.2">Facts to prove:</p>
+<p id="rfc.section.8.4.p.1">Facts to prove:</p>
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of RRset that explictly matches the QNAME.  [Shumon, Dave, check this terminology.]</li>
+  <li>The existence of the wildcard at the closest encloser to the QNAME.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>Non-existence of QTYPE RRset that matches QNAME via wildcard expansion. [Shumon, Dave, check this terminology.]</li>
+  <li>Non-existence of both the QTYPE and of the CNAME type that matches QNAME via wildcard expansion.</li>
 </ul>
-<p/>
-
-<ul class="empty">
-  <li>Non-existence of CNAME RRset that matches QNAME via wildcard expansion.</li>
-</ul>
-<p/>
-
-<ul class="empty">
-  <li>No wildcard closer to the QNAME exists.  [Sharon says as before I don't understand what this means.]</li>
-</ul>
-<p id="rfc.section.8.4.p.7">Authoritative server proofs:</p>
+<p id="rfc.section.8.4.p.4">Authoritative server proofs:</p>
 <p/>
 
 <ul class="empty">
@@ -1018,26 +986,16 @@
 <ul class="empty">
   <li>NSEC5PROOF for next closer name and covering NSEC5 RR.</li>
 </ul>
-<p id="rfc.section.8.4.p.10">Validator checks:</p>
+<p id="rfc.section.8.4.p.7">Validator checks:</p>
 <p/>
 
 <ul class="empty">
-  <li>Source of synthesis matches the QNAME. [Sharon says: again, I'm not sure what this means. Are we saying "Source of synthesis matches QNAME via wildcard expansion." ?]</li>
+  <li>Closest encloser to the QNAME exists.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>NSEC5 RR matching source of synthesis does not have QTYPE in Type Bit Map.</li>
-</ul>
-<p/>
-
-<ul class="empty">
-  <li>NSEC5 RR matching source of synthesis does not have CNAME in Type Bit Map.</li>
-</ul>
-<p/>
-
-<ul class="empty">
-  <li>Next closer name is not in the zone.</li>
+  <li>NSEC5 RR matching the wildcard label prepended to the closest encloser, and which does not have the bits corresponding to the QTYPE and CNAME types set it the type bitmap.</li>
 </ul>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#authoritative-server-considerations" id="authoritative-server-considerations">Authoritative Server Considerations</a></h1>
 <h1 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a> <a href="#zone_signing" id="zone_signing">Zone Signing</a></h1>
@@ -1052,7 +1010,7 @@
 <p/>
 
 <ol>
-  <li>Select an algorithm for NSEC5.  Generate the public and private NSEC5 keys.</li>
+  <li>Select an algorithm for NSEC5 and generate the public and private NSEC5 keys.</li>
   <li>Add an NSEC5KEY RR into the zone apex containing the public NSEC5 key.</li>
   <li>For each unique original domain name in the zone and each empty non-terminal, add an NSEC5 RR. If Opt-Out is used, owner names of unsigned delegations MAY be excluded.  <br/><br/> A. The owner name of the NSEC5 RR is the NSEC5 hash of the original owner name encoded in Base32hex without padding, prepended as a single label to the zone name.  <br/><br/> B. Set the Key Tag field to be the key tag corresponding to the public NSEC5 key.  <br/><br/> C. Clear the Flags field. If Opt-Out is being used, set the Opt-Out flag. If there is a wildcard label directly descending from the original domain name, set the Wildcard flag. Note that the wildcard can be an empty non-terminal (i.e., the wildcard synthesis does not take effect and therefore the flag is not to be set).  <br/><br/> D. Set the Next Length field to a value determined by the used NSEC5 algorithm. Leave the Next Hashed Owner Name field blank.  <br/><br/> E. Set the Type Bit Maps field based on the RRsets present at the original owner name.</li>
   <li>Sort the set of NSEC5 RRs into canonical order.</li>
@@ -1061,7 +1019,7 @@
 <p id="rfc.section.9.1.p.5">The NSEC5KEY and NSEC5 RRs MUST have the same class as the zone SOA RR.  Also the NSEC5 RRs SHOULD have the same TTL value as the SOA minimum TTL field.</p>
 <p id="rfc.section.9.1.p.6">Notice that a use of Opt-Out is not indicated in the zone. This does not affect the ability of a server to prove insecure delegations. The Opt-Out MAY be part of the zone-signing tool configuration.</p>
 <h1 id="rfc.section.9.1.1"><a href="#rfc.section.9.1.1">9.1.1.</a> <a href="#precompute" id="precompute">Precomputing Closest Provable Encloser Proofs</a></h1>
-<p id="rfc.section.9.1.1.p.1">Per <a href="#nsec5_proofs">Section 8</a>, the worst-case scenario when answering a negative query with NSEC5 requires authoritative server to respond with two NSEC5PROOF RRs and two NSEC5 RRs. One pair of NSEC5PROOF and NSEC5 RRs corresponds to the closest provable encloser, and the other pair corresponds to the next closer name.  The NSEC5PROOF corresponding to the next closer name MUST be computed on the fly by the authoritative server when responding to the query. However, the NSEC5PROOF corresponding to the closest provable encloser MAY be precomputed and stored as part of zone signing.</p>
+<p id="rfc.section.9.1.1.p.1">Per <a href="#nsec5_proofs">Section 8</a>, the worst-case scenario when answering a negative query with NSEC5 requires the authoritative server to respond with two NSEC5PROOF RRs and two NSEC5 RRs. One pair of NSEC5PROOF and NSEC5 RRs corresponds to the closest provable encloser, and the other pair corresponds to the next closer name.  The NSEC5PROOF corresponding to the next closer name MUST be computed on the fly by the authoritative server when responding to the query. However, the NSEC5PROOF corresponding to the closest provable encloser MAY be precomputed and stored as part of zone signing.</p>
 <p id="rfc.section.9.1.1.p.2">Precomputing NSEC5PROOF RRs can halve the number of online cryptographic computations required when responding to a negative query. NSEC5PROOF RRs MAY be precomputed as part of zone signing as follows: For each NSEC5 RR, compute an NSEC5PROOF RR corresponding to the original owner name of the NSEC5 RR. The content of the precomputed NSEC5PROOF record MUST be the same as if the record was computed on the fly when serving the zone.  NSEC5PROOF records are not part of the zone and SHOULD be stored separately from the zone file.</p>
 <h1 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a> <a href="#zone-serving" id="zone-serving">Zone Serving</a></h1>
 <p id="rfc.section.9.2.p.1">This specification modifies DNSSEC-enabled DNS responses generated by authoritative servers. In particular, it replaces use of NSEC or NSEC3 RRs in such responses with NSEC5 RRs and adds NSEC5PROOF RRs.</p>
@@ -1208,7 +1166,7 @@
       <td class="reference">
         <b id="I-D.goldbe-vrf">[I-D.goldbe-vrf]</b>
       </td>
-      <td class="top"><a>Goldberg, S.</a>, <a>Papadopoulos, D.</a> and <a>J. Vcelak</a>, "<a href="http://tools.ietf.org/html/draft-goldbe-vrf-00">Verifiable Random Functions (VRFs)</a>", Internet-Draft draft-goldbe-vrf-00, March 2017.</td>
+      <td class="top"><a>Goldberg, S.</a>, <a>Papadopoulos, D.</a> and <a>J. Vcelak</a>, "<a href="http://tools.ietf.org/html/draft-goldbe-vrf-01">Verifiable Random Functions (VRFs)</a>", Internet-Draft draft-goldbe-vrf-01, June 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1392,14 +1350,14 @@
   </tbody>
 </table>
 <h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#examples" id="examples">Examples</a></h1>
-<p id="rfc.section.A.p.1">We use small DNS zone with three names and four types (SOA, NS, A, and TXT) to illustrate how denying responses are handled with NSEC5.  For brevity, the class is not shown (defaults to IN) and the SOA record is shortened, resulting in the following zone file:</p>
+<p id="rfc.section.A.p.1">We use a small DNS zone to illustrate how negative responses are handled with NSEC5.  For brevity, the class is not shown (defaults to IN) and the SOA record is shortened, resulting in the following zone file:</p>
 <pre>
 example.org.        SOA ( ... )  
 example.org.        NS  a.example.org
 
 a.example.org.      A 192.0.2.1  
-c.example.org.      A 192.0.2.2  
 
+c.example.org.      A 192.0.2.2  
 c.example.org.      TXT "c record"  
 
 d.example.org.      NS ns1.d.example.org
@@ -1411,7 +1369,8 @@ g.example.org.      TXT "g record"
 
 *.a.example.org.    TXT "wildcard record"
 </pre>
-<p id="rfc.section.A.p.2">Next we present example responses. All cryptographic values are shortened as indicated by "&#8230;" and ADDITIONAL sections have been removed.</p>
+<p id="rfc.section.A.p.2">Notice the delegation to an unsigned zone d.example.org served by ns1.d.example.org.  (Note: if the d.example.org zone was signed, then the example.org zone have a DS record for d.example.org.)</p>
+<p id="rfc.section.A.p.3">Next we present example responses. All cryptographic values are shortened as indicated by "&#8230;" and ADDITIONAL sections have been removed.</p>
 <h1 id="rfc.appendix.A.1"><a href="#rfc.appendix.A.1">A.1.</a> <a href="#name-error-example" id="name-error-example">Name Error Example</a></h1>
 <p id="rfc.section.A.1.p.1">Consider a query for a type A record for a.b.c.example.org.</p>
 <p id="rfc.section.A.1.p.2">The server must prove the following facts:</p>
@@ -1423,36 +1382,44 @@ g.example.org.      TXT "g record"
   <li>Non-existence of next closer b.c.example.org.</li>
 </ul>
 <p id="rfc.section.A.1.p.4">To do this, the server returns:</p>
-<p id="rfc.section.A.1.p.5">;; -&#187;HEADER&#171;- opcode: QUERY; status: NXDOMAIN; id: 5937<br/> ;; QUESTION SECTION:<br/> ;; a.b.c.example.org.           IN      A</p>
-<p id="rfc.section.A.1.p.6">;; AUTHORITY SECTION:<br/> example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (<br/> 2010111214 21600 3600 604800 86400 )</p>
-<p id="rfc.section.A.1.p.7">example.org.         3600 IN RRSIG  SOA 16 2 3600 (<br/> 20170412024301 20170313024301 5137 example.org. rT231b1rH&#8230; )</p>
-<p/>
+<pre>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY; status: NXDOMAIN; id: 5937 
+ 
+;; QUESTION SECTION:  
+;; a.b.c.example.org.           IN      A
 
-<ul>
-  <li>This is an NSEC5PROOF RR for c.example.com.  The owner name of this NSEC5PROOF RR is c.example.com and the RDATA is the NSEC5 proof corresponding to c.example.com. Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</li>
-</ul>
-<p id="rfc.section.A.1.p.9">c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT&#8230;</p>
-<p/>
+;; AUTHORITY SECTION:  
+example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (  
+            2010111214 21600 3600 604800 86400 )
 
-<ul>
-  <li>This is as signed NSEC5 RR "matching" c.example.org its with Wildcard flag cleared.  The NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org, which is O4K89V.  NSEC5 RRs are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.1.p.11">o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG<br/> o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (<br/> 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz&#8230; )</p>
-<p/>
+example.org.         3600 IN RRSIG  SOA 16 2 3600 (  
+            20170412024301 20170313024301 5137 example.org. rT231b1rH... )
+</pre>
+<p id="rfc.section.A.1.p.5">This is an NSEC5PROOF RR for c.example.com. It's RDATA is the NSEC5 proof corresponding to c.example.com.  (NSEC5 proofs are randomized values, because NSEC5 proof values are computed uses the EC-VRF from <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.) Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</p>
+<pre>
+c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
+</pre>
+<p id="rfc.section.A.1.p.6">This is a signed NSEC5 RR "matching" c.example.org, which proves the existence of closest encloser c.example.org.  The NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org, which is O4K89V.  (NSEC5 hash values are deterministic given the public NSEC5 key.) The NSEC5 RR also has its Wildcard flag cleared (see the "0" after the key ID 48566). This proves the non-existence of the wildcard at the closest encloser *.c.example.com.  NSEC5 RRs are  precomputed.</p>
+<pre>
+o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG  
+o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (  
+            20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
+</pre>
+<p id="rfc.section.A.1.p.7">This is an NSEC5PROOF RR for b.c.example.org. It's RDATA is the NSEC5 proof corresponding to b.c.example.com.  This NSEC5PROOF RR must be computed on the fly.</p>
+<pre>
+b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
+</pre>
+<p id="rfc.section.A.1.p.8">This is a signed  NSEC5 RR "covering" b.c.example.org, which proves the non-existence of the next closer name b.c.example.org The NSEC5 hash of b.c.example.org, which is AO5OF, sorts in canonical order between the "covering" NSEC5 RR's Owner Name (which is 0O49PI) and Next Hashed Owner Name (which is BAPROH).</p>
+<pre>
+0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
+            NS SOA RRSIG DNSKEY NSEC5KEY )
 
-<ul>
-  <li>This is an NSEC5PROOF RR for b.c.example.org.  This NSEC5PROOF RR must be computed on-the-fly.</li>
-</ul>
-<p id="rfc.section.A.1.p.13">b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY&#8230;</p>
-<p/>
+0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO)
 
-<ul>
-  <li>This is a signed  NSEC5 RR "covering" b.c.example.org.  The NSEC5 hash of b.c.example.org, which is AO5OF, sorts in canonical order between the "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.</li>
-</ul>
-<p id="rfc.section.A.1.p.15">0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH ( NS SOA RRSIG DNSKEY NSEC5KEY )</p>
-<p id="rfc.section.A.1.p.16">0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 ( 20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO</p>
-<p id="rfc.section.A.1.p.17">[NOTE: ALSO THIS EXAMPLE DOESN'T DISCUSS CNAME AND DNAME. SOMEONE MIGHT WANT TO ADD.]</p>
-<h1 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#no-data-example-opt-out-not-in-effect" id="no-data-example-opt-out-not-in-effect">No Data Example, Opt-Out Not In Effect</a></h1>
+[TODO: Add discussion of CNAME and DNAME to the example?]
+</pre>
+<h1 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#no-data-example" id="no-data-example">No Data Example</a></h1>
 <p id="rfc.section.A.2.p.1">Consider a query for a type MX record for c.example.org.</p>
 <p id="rfc.section.A.2.p.2">The server must prove the following facts:</p>
 <p/>
@@ -1461,139 +1428,158 @@ g.example.org.      TXT "g record"
   <li>Existence of c.example.org. for any type other than MX or CNAME</li>
 </ul>
 <p id="rfc.section.A.2.p.4">To do this, the server returns:</p>
-<p id="rfc.section.A.2.p.5">;; -&#187;HEADER&#171;- opcode: QUERY; status: NOERROR; id: 38781</p>
-<p id="rfc.section.A.2.p.6">;; QUESTION SECTION: ;; c.example.org.               IN      MX</p>
-<p id="rfc.section.A.2.p.7">;; AUTHORITY SECTION: example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400</p>
-<p id="rfc.section.A.2.p.8">example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p</p>
-<p/>
+<pre>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY; status: NOERROR; id: 38781
 
-<ul>
-  <li>This is an NSEC5PROOF RR for c.example.com.    Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</li>
-</ul>
-<p id="rfc.section.A.2.p.10">c.example.org.          86400   IN      NSEC5PROOF      48566 Amgn22zUiZ9JVyaT</p>
-<p/>
+;; QUESTION SECTION:
+;; c.example.org.    IN MX
 
-<ul>
-  <li>This is a signed NSEC5 RR "matching" c.example.org with CNAME and MX Type Bits cleared. This NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org.  NSEC5 RR are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.2.p.12">o4k89v.example.org. 86400 IN      NSEC5   48566 0 0O49PI A TXT RRSIG</p>
-<p id="rfc.section.A.2.p.13">o4k89v.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J</p>
-<h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#no-data-example-opt-out-in-effect" id="no-data-example-opt-out-in-effect">No Data Example, Opt-Out In Effect</a></h1>
-<p id="rfc.section.A.3.p.1">[Dimitris: This case separation reads kind of awkward. I would rather rename this section to Delegation to Unisgned Opt-out zone and the previous to simply No Data]</p>
-<p id="rfc.section.A.3.p.2">Consider a query for a type A record for foo.d.example.org.</p>
+;; AUTHORITY SECTION:
+example.org.    3600 IN SOA     a.example.org. hostmaster.example.org. (
+            2010111214 21600 3600 604800 86400 )
+
+example.org.    3600 IN RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
+</pre>
+<p id="rfc.section.A.2.p.5">This is an NSEC5PROOF RR for c.example.com. Its RDATA corresponds to the NSEC5 proof for c.example.com. which is a randomized value.  Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</p>
+<pre>
+c.example.org. 86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT
+</pre>
+<p id="rfc.section.A.2.p.6">This is a signed NSEC5 RR "matching" c.example.org. with CNAME and MX Type Bits cleared and its TXT Type Bit set. This NSEC5 RR has its owner name equal to the NSEC5 hash of c.example.org. This proves the existence of c.example.org. for a type other than MX and CNAME.  NSEC5 RR are precomputed.</p>
+<pre>
+o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
+
+o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
+</pre>
+<h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#delegation-to-an-unsigned-zone-in-an-opt-out-span-example" id="delegation-to-an-unsigned-zone-in-an-opt-out-span-example">Delegation to an Unsigned Zone in an Opt-Out span Example</a></h1>
+<p id="rfc.section.A.3.p.1">Consider a query for a type A record for foo.d.example.org.</p>
+<p id="rfc.section.A.3.p.2">Here, d.example.org is a delegation to an unsigned zone, which lies within an Opt-Out span.</p>
 <p id="rfc.section.A.3.p.3">The server must prove the following facts:</p>
 <p/>
 
 <ul>
+  <li>Non-existence of signature on next closer name d.example.org.</li>
+  <li>Opt-out bit is set in NSEC5 record covering next closer name d.example.org.</li>
   <li>Existence of closest provable encloser example.org</li>
-  <li>Non-existence of next closer d.example.org</li>
-  <li>Opt-out bit is set in the closest provable encloser NSEC5 record</li>
 </ul>
 <p id="rfc.section.A.3.p.5">To do this, the server returns:</p>
-<p id="rfc.section.A.3.p.6">;; -&#187;HEADER&#171;- opcode: QUERY; status: NOERROR; id: 45866</p>
-<p id="rfc.section.A.3.p.7">;; QUESTION SECTION: ;; foo.d.example.org.           IN      A</p>
-<p id="rfc.section.A.3.p.8">;; AUTHORITY SECTION: d.example.org.          3600    IN      NS      ns1.d.example.org.</p>
-<p/>
+<pre>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY; status: NOERROR; id: 45866
 
-<ul>
-  <li>This is an NSEC5PROOF RR for example.com.    Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</li>
-</ul>
-<p id="rfc.section.A.3.p.10">example.org.            86400   IN          NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr</p>
-<p/>
+;; QUESTION SECTION:
+;; foo.d.example.org.         IN A
 
-<ul>
-  <li>This is a signed NSEC5 RR "matching" example.org. This NSEC5 RR has its owner name equal to the NSEC5 hash of example.org.  NSEC5 RR are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.3.p.12">0o49pi.example.org. 86400       IN      NSEC5   48566 0 BAPROH NS SOA RRSIG DNSKEY NSEC5KEY</p>
-<p id="rfc.section.A.3.p.13">0o49pi.example.org. 86400       IN      RRSIG   NSEC5 16 3 86400 20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO</p>
-<p/>
+;; AUTHORITY SECTION:
+d.example.org.       3600  IN NS      ns1.d.example.org.
+</pre>
+<p id="rfc.section.A.3.p.6">This is an NSEC5PROOF RR for d.example.org.  Its RDATA is the NSEC5 proof corresponding to d.example.org. This NSEC5PROOF RR is computed on the fly.</p>
+<pre>
+d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
+</pre>
+<p id="rfc.section.A.3.p.7">This is a signed NSEC5 RR "covering" d.example.org with its Opt-out bit set (see the "1" after the key ID 48566). The NSEC5 hash of d.example.org (which is BLE8LR) sorts in canonical order between the "covering" NSEC5 RR's Owner Name (BAPROH) and Next Hashed Owner Name (JQBMG4).  This proves that no signed RR exists for d.example.org, but that the zone might contain a unsigned RR for a name whose NSEC5 hash sorts in canonical order between BAPROH and JQBMG4.</p>
+<pre>
+baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
 
-<ul>
-  <li>This is an NSEC5PROOF RR for d.example.org.  This NSEC5PROOF RR must be computed on-the-fly.</li>
-</ul>
-<p id="rfc.section.A.3.p.15">d.example.org.          86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW</p>
-<p/>
+baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
+</pre>
+<p id="rfc.section.A.3.p.8">This is an NSEC5PROOF RR for example.com. It's RDATA is the NSEC5 proof corresponding to example.com.  Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</p>
+<pre>
+example.org.        86400 IN NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
+</pre>
+<p id="rfc.section.A.3.p.9">This is a signed NSEC5 RR "matching" example.org which proves the existence of a signed RRs for example.org. This NSEC5 RR has its owner name equal to the NSEC5 hash of example.org which is 0O49PI.<br/> NSEC5 RR are   precomputed.</p>
+<pre>
+0o49pi.example.org. 86400 IN NSEC5   48566 0 BAPROH (
+            NS SOA RRSIG DNSKEY NSEC5KEY)
 
-<ul>
-  <li>This is a signed  NSEC5 RR "covering" d.example.org with its Opt-out bit set.  The NSEC5 hash of d.example.org, which is BLE8LR, sorts in canonical order between the "covering" NSEC5 RR's Owner Name and Next Hashed Owner Name.</li>
-</ul>
-<p id="rfc.section.A.3.p.17">baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG</p>
-<p id="rfc.section.A.3.p.18">baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1</p>
+0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO)
+</pre>
 <h1 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#wildcard-example" id="wildcard-example">Wildcard Example</a></h1>
-<p id="rfc.section.A.4.p.1">[Sharon is not sure this is correct. Please check my work!]</p>
-<p id="rfc.section.A.4.p.2">Consider a query for a type TXT record for foo.a.example.org.</p>
-<p id="rfc.section.A.4.p.3">The server must prove the following facts:</p>
+<p id="rfc.section.A.4.p.1">Consider a query for a type TXT record for foo.a.example.org.</p>
+<p id="rfc.section.A.4.p.2">The server must prove the following facts:</p>
 <p/>
 
 <ul>
   <li>Existence of the TXT record for the wildcard *.a.example.org</li>
   <li>Non-existence of the next closer name foo.a.example.org.</li>
 </ul>
-<p id="rfc.section.A.4.p.5">To do this, the server returns:</p>
-<p id="rfc.section.A.4.p.6">;; -&#187;HEADER&#171;- opcode: QUERY; status: NOERROR; id: 53731</p>
-<p id="rfc.section.A.4.p.7">;; QUESTION SECTION: ;; foo.a.example.org.           IN      TXT</p>
-<p/>
+<p id="rfc.section.A.4.p.4">To do this, the server returns:</p>
+<pre>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY; status: NOERROR; id: 53731
 
-<ul>
-  <li>This is a signed TXT record for the wildcard below a.example.org (number of labels is set to 3 in the RRSIG record).</li>
-</ul>
-<p id="rfc.section.A.4.p.9">;; ANSWER SECTION: foo.a.example.org.      3600    IN      TXT     "wildcard record"</p>
-<p id="rfc.section.A.4.p.10">foo.a.example.org.      3600    IN      RRSIG   TXT 16 3 3600 20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98</p>
-<p id="rfc.section.A.4.p.11">;; AUTHORITY SECTION: example.org.            3600    IN      NS      a.example.org.</p>
-<p id="rfc.section.A.4.p.12">example.org.            3600    IN      RRSIG   NS 16 2 3600 20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyF</p>
-<p/>
+;; QUESTION SECTION:
+;; foo.a.example.org.        IN TXT
+</pre>
+<p id="rfc.section.A.4.p.5">This is a signed TXT record for the wildcard at a.example.org (number of labels is set to 3 in the RRSIG record).</p>
+<pre>
+;; ANSWER SECTION:
+foo.a.example.org.      3600 IN TXT     "wildcard record"
 
-<ul>
-  <li>NSEC5PROOF RR for foo.a.example.org.  This NSEC5PROOF RR must be computed on-the-fly.</li>
-</ul>
-<p id="rfc.section.A.4.p.14">foo.a.example.org.      86400   IN      NSEC5PROOF      48566 AjqF5FGGVso40Lda</p>
-<p/>
+foo.a.example.org.      3600 IN RRSIG   TXT 16 3 3600 (
+            20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98)
 
-<ul>
-  <li>Signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of foo.a.example.org is FORDMO and sorts in canonical order between the NSEC5 RR's Owner Name and Next Hashed Owner Name.  NSEC5 RRs are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.4.p.16">baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1</p>
+;; AUTHORITY SECTION:
+example.org.            3600 IN NS      a.example.org.
+
+example.org.            3600 IN RRSIG   NS 16 2 3600 (
+            20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyF)
+</pre>
+<p id="rfc.section.A.4.p.6">This is an NSEC5PROOF RR for foo.a.example.org.  This NSEC5PROOF RR must be computed on-the-fly.</p>
+<pre>
+foo.a.example.org.     86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
+</pre>
+<p id="rfc.section.A.4.p.7">This is a signed NSEC5 RR "covering" foo.a.example.org.  The NSEC5 hash of foo.a.example.org is FORDMO and sorts in canonical order between the NSEC5 RR's Owner Name (which is BAPROH) and Next Hashed Owner Name (which is JQBMG4). This proves the non-existence of the next closer name foo.a.example.com. NSEC5 RRs are precomputed.</p>
+<pre>
+    baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+    baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+        20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
+</pre>
 <h1 id="rfc.appendix.A.5"><a href="#rfc.appendix.A.5">A.5.</a> <a href="#wildcard-no-data-example" id="wildcard-no-data-example">Wildcard No Data Example</a></h1>
-<p id="rfc.section.A.5.p.1">[Sharon is not sure this is correct. Please check my work!]</p>
-<p id="rfc.section.A.5.p.2">Consider a query for a type MX record for foo.a.example.org.</p>
-<p id="rfc.section.A.5.p.3">The server must prove the following facts:</p>
+<p id="rfc.section.A.5.p.1">Consider a query for a type MX record for foo.a.example.org.</p>
+<p id="rfc.section.A.5.p.2">The server must prove the following facts:</p>
 <p/>
 
 <ul>
   <li>Existence of wildcard at closest encloser *.a.example.org. for any type other than MX or CNAME.</li>
   <li>Non-existence of the next closer name foo.a.example.org.</li>
 </ul>
-<p id="rfc.section.A.5.p.5">To do this, the server returns:</p>
-<p id="rfc.section.A.5.p.6">;; -&#187;HEADER&#171;- opcode: QUERY; status: NOERROR; id: 17332</p>
-<p id="rfc.section.A.5.p.7">;; QUESTION SECTION: ;; foo.a.example.org.           IN      MX</p>
-<p id="rfc.section.A.5.p.8">;; AUTHORITY SECTION: example.org.            3600    IN      SOA     a.example.org. hostmaster.example.org. 2010111214 21600 3600 604800 86400</p>
-<p id="rfc.section.A.5.p.9">example.org.            3600    IN      RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p</p>
-<p/>
+<p id="rfc.section.A.5.p.4">To do this, the server returns:</p>
+<pre>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY; status: NOERROR; id: 17332
 
-<ul>
-  <li>This is an NSEC5PROOF RR for *.a.example.com.  Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</li>
-</ul>
-<p id="rfc.section.A.5.p.11">*.a.example.org.        86400   IN      NSEC5PROOF      48566 Aq38RWWPhbs/vtih</p>
-<p/>
+;; QUESTION SECTION:
+;; foo.a.example.org.           IN      MX
 
-<ul>
-  <li>This is a s igned NSEC5 RR "matching" *.a.example.org with its CNAME and MX Type Bits cleared.  This NSEC5 RR has its owner name equal to the NSEC5 hash of *.a.example.org.  NSEC5 RRs are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.5.p.13">mpu6c4.example.org. 86400 IN      NSEC5   48566 0 O4K89V TXT RRSIG</p>
-<p id="rfc.section.A.5.p.14">mpu6c4.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. m3I75ttcWwVC</p>
-<p/>
+;; AUTHORITY SECTION:
+example.org.       3600 IN SOA     a.example.org. hostmaster.example.org. (
+            2010111214 21600 3600 604800 86400 )
 
-<ul>
-  <li>An NSEC5PROOF RR for foo.a.example.com. This NSEC5PROOF RR must be computed on-the-fly.</li>
-</ul>
-<p id="rfc.section.A.5.p.16">foo.a.example.org.      86400   IN      NSEC5PROOF      48566 AjqF5FGGVso40Lda</p>
-<p/>
+example.org.       3600 IN RRSIG   SOA 16 2 3600 (
+            20170412024301 20170313024301 5137 example.org. /rT231b1rH/p )
+</pre>
+<p id="rfc.section.A.5.p.5">This is an NSEC5PROOF RR for *.a.example.com, with RDATA equal to the NSEC5 proof for *.a.example.com. Per <a href="#precompute">Section 9.1.1</a>, this NSEC5PROOF RR may be precomputed.</p>
+<pre>
+*.a.example.org.  86400 IN NSEC5PROOF      48566 Aq38RWWPhbs/vtih
+</pre>
+<p id="rfc.section.A.5.p.6">This is a signed NSEC5 RR "matching" *.a.example.org with its CNAME and MX Type Bits cleared and its TXT Type Bit set.  This NSEC5 RR has its owner name equal to the NSEC5 hash of *.a.example.org.  NSEC5 RRs are   precomputed.</p>
+<pre>
+mpu6c4.example.org. 86400 IN NSEC5   48566 0 O4K89V TXT RRSIG
 
-<ul>
-  <li>This is a signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of foo.a.example.org is FORDMO, and sorts in canonical order between this covering NSEC5 RR's Owner Name and Next Hashed Owner Name.  NSEC5 RRs are always precomputed.</li>
-</ul>
-<p id="rfc.section.A.5.p.18">baproh.example.org. 86400 IN      NSEC5   48566 1 JQBMG4 A TXT RRSIG</p>
-<p id="rfc.section.A.5.p.19">baproh.example.org. 86400 IN      RRSIG   NSEC5 16 3 86400 20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1</p>
+mpu6c4.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. m3I75ttcWwVC )
+</pre>
+<p id="rfc.section.A.5.p.7">This is an NSEC5PROOF RR for foo.a.example.com. This NSEC5PROOF RR must be computed on-the-fly.</p>
+<pre>
+foo.a.example.org.  86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
+</pre>
+<p id="rfc.section.A.5.p.8">This is a signed NSEC5 RR "covering" foo.a.example.org. The NSEC5 hash of foo.a.example.org is FORDMO, and sorts in canonical order between this covering NSEC5 RR's Owner Name (which is BAPROH) and Next Hashed Owner Name (which is JQBMG4).   This proves the existence of the wildcard at closest encloser *.a.example.org. for any type other than MX or CNAME.  NSEC5 RRs are   precomputed.</p>
+<pre>
+baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+
+baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1 )
+</pre>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
 <p id="rfc.section.B.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.</p>
 <p/>
@@ -1625,6 +1611,11 @@ g.example.org.      TXT "g record"
 
 <ul class="empty">
   <li>04 - Edit Rationale, How NSEC5 Works, and Security Consideration sections for clarity.  Edit Zone Signing section, adding precomputation of NSEC5PROOFs.  Remove RSA-based NSEC5 specification.  Rewrite Performance Considerations and Implementation Status sections.</li>
+</ul>
+<p/>
+
+<ul class="empty">
+  <li>05 - Remove appendix specifying VRFs and add reference to <a href="#I-D.goldbe-vrf">[I-D.goldbe-vrf]</a>.  Add <a href="#examples">Appendix A</a>.</li>
 </ul>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
@@ -1681,18 +1672,18 @@ g.example.org.      TXT "g record"
 		<span class="family-name">Papadopoulos</span>
 	  </span>
 	</span>
-	<span class="org vcardline">University of Maryland</span>
+	<span class="org vcardline">HKUST</span>
 	<span class="adr">
-	  <span class="vcardline">8223 Paint Branch Dr</span>
+	  <span class="vcardline">Clearwater Bay</span>
 
 	  <span class="vcardline">
-		<span class="locality">College Park</span>,  
-		<span class="region">MD</span> 
-		<span class="code">20740</span>
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">USA</span>
+	  <span class="country-name vcardline">Hong Kong</span>
 	</span>
-	<span class="vcardline">EMail: <a href="mailto:dipapado@umd.edu">dipapado@umd.edu</a></span>
+	<span class="vcardline">EMail: <a href="mailto:dipapado@ust.hk">dipapado@ust.hk</a></span>
 
   </address>
 </div><div class="avoidbreak">

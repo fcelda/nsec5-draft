@@ -5,14 +5,14 @@
 Network Working Group                                          J. Vcelak
 Internet-Draft                                                    CZ.NIC
 Intended status: Standards Track                             S. Goldberg
-Expires: January 04, 2018                              Boston University
+Expires: July 7, 2018                                  Boston University
                                                          D. Papadopoulos
-                                                  University of Maryland
+                                                                   HKUST
                                                                 S. Huque
                                                               Salesforce
                                                              D. Lawrence
                                                      Akamai Technologies
-                                                           July 03, 2017
+                                                                    2017
 
 
             NSEC5, DNSSEC Authenticated Denial of Existence
@@ -47,19 +47,17 @@ Status of This Memo
    This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
 
-
-
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 1]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 1]
+
+Internet-Draft                    NSEC5                             2017
+
+
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at http://datatracker.ietf.org/drafts/current/.
 
@@ -68,7 +66,7 @@ Internet-Draft                    NSEC5                        July 2017
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 04, 2018.
+   This Internet-Draft will expire on July 7, 2018.
 
 Copyright Notice
 
@@ -106,16 +104,16 @@ Table of Contents
      7.2.  NSEC5PROOF RDATA Presentation Format  . . . . . . . . . .  12
    8.  Types of Authenticated Denial of Existence with NSEC5 . . . .  12
      8.1.  Name Error Responses  . . . . . . . . . . . . . . . . . .  12
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 2]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
      8.2.  No Data Responses . . . . . . . . . . . . . . . . . . . .  13
        8.2.1.  No Data Response, Opt-Out Not In Effect . . . . . . .  13
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 2]
+
+Internet-Draft                    NSEC5                             2017
+
+
        8.2.2.  No Data Response, Opt-Out In Effect . . . . . . . . .  14
      8.3.  Wildcard Responses  . . . . . . . . . . . . . . . . . . .  14
      8.4.  Wildcard No Data Responses  . . . . . . . . . . . . . . .  14
@@ -123,7 +121,7 @@ Internet-Draft                    NSEC5                        July 2017
      9.1.  Zone Signing  . . . . . . . . . . . . . . . . . . . . . .  15
        9.1.1.  Precomputing Closest Provable Encloser Proofs . . . .  16
      9.2.  Zone Serving  . . . . . . . . . . . . . . . . . . . . . .  17
-     9.3.  NSEC5KEY Rollover Mechanism . . . . . . . . . . . . . . .  17
+     9.3.  NSEC5KEY Rollover Mechanism . . . . . . . . . . . . . . .  18
      9.4.  Secondary Servers . . . . . . . . . . . . . . . . . . . .  18
      9.5.  Zones Using Unknown NSEC5 Algorithms  . . . . . . . . . .  18
      9.6.  Dynamic Updates . . . . . . . . . . . . . . . . . . . . .  18
@@ -135,7 +133,7 @@ Internet-Draft                    NSEC5                        July 2017
    12. Special Considerations  . . . . . . . . . . . . . . . . . . .  20
      12.1.  Transition Mechanism . . . . . . . . . . . . . . . . . .  20
      12.2.  Private NSEC5 keys . . . . . . . . . . . . . . . . . . .  20
-     12.3.  Domain Name Length Restrictions  . . . . . . . . . . . .  20
+     12.3.  Domain Name Length Restrictions  . . . . . . . . . . . .  21
    13. Implementation Status . . . . . . . . . . . . . . . . . . . .  21
    14. Performance Considerations  . . . . . . . . . . . . . . . . .  21
    15. Security Considerations . . . . . . . . . . . . . . . . . . .  21
@@ -145,16 +143,17 @@ Internet-Draft                    NSEC5                        July 2017
      15.4.  NSEC5 Hash Collisions  . . . . . . . . . . . . . . . . .  22
    16. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
    17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  23
-   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
-     18.1.  Normative References . . . . . . . . . . . . . . . . . .  23
+   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
+     18.1.  Normative References . . . . . . . . . . . . . . . . . .  24
      18.2.  Informative References . . . . . . . . . . . . . . . . .  25
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  26
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  27
      A.1.  Name Error Example  . . . . . . . . . . . . . . . . . . .  27
-     A.2.  No Data Example . . . . . . . . . . . . . . . . . . . . .  28
-     A.3.  Delegation to an Unsigned Zone in an Opt-Out span Example  29
+     A.2.  No Data Example . . . . . . . . . . . . . . . . . . . . .  29
+     A.3.  Delegation to an Unsigned Zone in an Opt-Out span Example  30
      A.4.  Wildcard Example  . . . . . . . . . . . . . . . . . . . .  31
      A.5.  Wildcard No Data Example  . . . . . . . . . . . . . . . .  32
    Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  33
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 1.  Introduction
 
@@ -162,15 +161,15 @@ Internet-Draft                    NSEC5                        July 2017
 
    NSEC5 provides an alternative mechanism for authenticated denial of
    existence for the DNS Security Extensions (DNSSEC).  NSEC5 has two
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 3]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    key security properties.  First, NSEC5 protects the integrity of the
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 3]
+
+Internet-Draft                    NSEC5                             2017
+
+
    zone contents even if an adversary compromises one of the
    authoritative servers for the zone.  Second, NSEC5 prevents offline
    zone enumeration, where an adversary makes a small number of online
@@ -216,16 +215,19 @@ Internet-Draft                    NSEC5                        July 2017
    private zone-signing key, integrity is lost if the authoritative
    server is compromised.
 
+
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 4]
+
+Internet-Draft                    NSEC5                             2017
+
+
    +----------+-------------+---------------+----------------+---------+
    | Scheme   |   Integrity |  Integrity vs |       Prevents |  Online |
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 4]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    |          |  vs network |   compromised |   offline zone | crypto? |
    |          |    attacks? | auth. server? |   enumeration? |         |
    +----------+-------------+---------------+----------------+---------+
@@ -235,7 +237,6 @@ Internet-Draft                    NSEC5                        July 2017
    | NSEC3-WL |         YES |            NO |            YES |     YES |
    | NSEC5    |         YES |           YES |            YES |     YES |
    +----------+-------------+---------------+----------------+---------+
-
 
    NSEC5 prevents offline zone enumeration and also protects integrity
    even if a zone's authoritative server is compromised.  To do this,
@@ -276,10 +277,9 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-
-Vcelak, et al.          Expires January 04, 2018                [Page 5]
+Vcelak, et al.            Expires July 7, 2018                  [Page 5]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
 1.3.  Terminology
@@ -325,23 +325,19 @@ Internet-Draft                    NSEC5                        July 2017
    compatible with [RFC4035] and [RFC5155].  An NSEC5-unaware resolver
    will fail to validate responses introduced by this document.
 
-
-
-
-
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 6]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    To prevent NSEC5-unaware resolvers from attempting to validate the
    responses, new DNSSEC algorithms identifiers are introduced in
    Section 16 which alias existing algorithm numbers.  The zones signed
    according to this specification MUST use only these algorithm
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 6]
+
+Internet-Draft                    NSEC5                             2017
+
+
    identifiers, thus NSEC5-unaware resolvers will treat the zone as
    insecure.
 
@@ -387,15 +383,16 @@ Internet-Draft                    NSEC5                        July 2017
       hash from the NSEC5 proof in the NSEC5PROOF RR.  The client
       verifies that the NSEC5 hash is covered by the NSEC5 RR.
 
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 7]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    o  The client verifies that the NSEC5 RR is validly signed by the
       RRSIG RRset.
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 7]
+
+Internet-Draft                    NSEC5                             2017
+
 
 4.  NSEC5 Algorithms
 
@@ -429,10 +426,10 @@ Internet-Draft                    NSEC5                        July 2017
       Section 4 of [RFC6605] and thus is the same as the format used to
       store ECDSA public keys in DNSKEY RRs.
       [NOTE: This specification does not compress the elliptic curve
-      point used for the public key!  But we do compress curve points in
-      every other place we use them with the P256 ECVRF.  We could save
-      31 octets in the NSEC5KEY record by encoding the public key with
-      point compression!]
+      point used for the public key, but we do compress curve points in
+      every other place we use them.  The NSEC5KEY record can be shrunk
+      by 31 additional octets by encoding the public key with point
+      compression.]
 
    This document defines the EC-ED25519-SHA256 NSEC5 algorithm as
    follows:
@@ -440,19 +437,18 @@ Internet-Draft                    NSEC5                        July 2017
    o  The VRF is the EC-VRF algorithm using the EC-VRF-ED25519-SHA256
       ciphersuite specified in [I-D.goldbe-vrf].
 
-
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 8]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    o  The public key format to be used in the NSEC5KEY RR is defined in
       Section 3 of [RFC8080] and thus is the same as the format used to
       store Ed25519 public keys in DNSKEY RRs.
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 8]
+
+Internet-Draft                    NSEC5                             2017
+
 
 5.  The NSEC5KEY Resource Record
 
@@ -468,7 +464,6 @@ Internet-Draft                    NSEC5                        July 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |   Algorithm   |                  Public Key                   /
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 
    Algorithm is a single octet identifying the NSEC5 algorithm.
 
@@ -496,16 +491,23 @@ Internet-Draft                    NSEC5                        July 2017
 
    The RDATA for the NSEC5 RR is as shown below:
 
+
+
+
+
+
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                  [Page 9]
+
+Internet-Draft                    NSEC5                             2017
+
+
                         1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-
-
-
-Vcelak, et al.          Expires January 04, 2018                [Page 9]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |            Key Tag            |     Flags     |  Next Length  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -513,7 +515,6 @@ Internet-Draft                    NSEC5                        July 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    /                         Type Bit Maps                         /
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 
    The Key Tag field contains the key tag value of the NSEC5KEY RR that
    validates the NSEC5 RR, in network byte order.  The value is computed
@@ -543,7 +544,6 @@ Internet-Draft                    NSEC5                        July 2017
    |           |W|O|
    +-+-+-+-+-+-+-+-+
 
-
       O - Opt-Out flag
 
       W - Wildcard flag
@@ -557,9 +557,9 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 10]
+Vcelak, et al.            Expires July 7, 2018                 [Page 10]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
    The Wildcard flag indicates that a wildcard synthesis is possible at
@@ -603,7 +603,6 @@ Internet-Draft                    NSEC5                        July 2017
    |            Key Tag            |        Owner Name Hash        /
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
    Key Tag field contains the key tag value of the NSEC5KEY RR that
    validates the NSEC5PROOF RR, in network byte order.
 
@@ -613,9 +612,10 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 11]
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 11]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
 7.2.  NSEC5PROOF RDATA Presentation Format
@@ -637,9 +637,9 @@ Internet-Draft                    NSEC5                        July 2017
        client that the response content is valid.
 
    2.  Authoritative server proofs: the names for which the NSEC5PROOF
-       RRs are synthesized and added into the response along the NSEC5
-       RRs matching or covering each such name.  These records together
-       prove the listed facts.
+       RRs are synthesized and added into the response along with the
+       NSEC5 RRs matching or covering each such name.  These records
+       together prove the listed facts.
 
    3.  Validator checks: the individual checks that a validating server
        is required to perform on a response.  The response content is
@@ -665,18 +665,14 @@ Internet-Draft                    NSEC5                        July 2017
 
       NSEC5PROOF for next closer name and covering NSEC5 RR.
 
-      The QNAME does not fall into a delegation.
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 12]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
-      The QNAME does not fall into a DNAME redirection.
-
    Validator checks:
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 12]
+
+Internet-Draft                    NSEC5                             2017
+
 
       Closest encloser is in the zone.
 
@@ -725,9 +721,13 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 13]
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 13]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
 8.2.2.  No Data Response, Opt-Out In Effect
@@ -781,9 +781,9 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 14]
+Vcelak, et al.            Expires July 7, 2018                 [Page 14]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
       Non-existence of both the QTYPE and of the CNAME type that matches
@@ -824,7 +824,7 @@ Internet-Draft                    NSEC5                        July 2017
    required NSEC5 related records into a zone.  This is not the only
    such existing method.
 
-   1.  Select an algorithm for NSEC5.  Generate the public and private
+   1.  Select an algorithm for NSEC5 and generate the public and private
        NSEC5 keys.
 
    2.  Add an NSEC5KEY RR into the zone apex containing the public NSEC5
@@ -837,30 +837,30 @@ Internet-Draft                    NSEC5                        July 2017
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 15]
+Vcelak, et al.            Expires July 7, 2018                 [Page 15]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
-       A. The owner name of the NSEC5 RR is the NSEC5 hash of the
+       A.  The owner name of the NSEC5 RR is the NSEC5 hash of the
        original owner name encoded in Base32hex without padding,
        prepended as a single label to the zone name.
 
-       B. Set the Key Tag field to be the key tag corresponding to the
+       B.  Set the Key Tag field to be the key tag corresponding to the
        public NSEC5 key.
 
-       C. Clear the Flags field.  If Opt-Out is being used, set the Opt-
-       Out flag.  If there is a wildcard label directly descending from
-       the original domain name, set the Wildcard flag.  Note that the
-       wildcard can be an empty non-terminal (i.e., the wildcard
+       C.  Clear the Flags field.  If Opt-Out is being used, set the
+       Opt-Out flag.  If there is a wildcard label directly descending
+       from the original domain name, set the Wildcard flag.  Note that
+       the wildcard can be an empty non-terminal (i.e., the wildcard
        synthesis does not take effect and therefore the flag is not to
        be set).
 
-       D. Set the Next Length field to a value determined by the used
+       D.  Set the Next Length field to a value determined by the used
        NSEC5 algorithm.  Leave the Next Hashed Owner Name field blank.
 
-       E. Set the Type Bit Maps field based on the RRsets present at the
-       original owner name.
+       E.  Set the Type Bit Maps field based on the RRsets present at
+       the original owner name.
 
    4.  Sort the set of NSEC5 RRs into canonical order.
 
@@ -880,22 +880,22 @@ Internet-Draft                    NSEC5                        July 2017
 9.1.1.  Precomputing Closest Provable Encloser Proofs
 
    Per Section 8, the worst-case scenario when answering a negative
-   query with NSEC5 requires authoritative server to respond with two
-   NSEC5PROOF RRs and two NSEC5 RRs.  One pair of NSEC5PROOF and NSEC5
-   RRs corresponds to the closest provable encloser, and the other pair
-   corresponds to the next closer name.  The NSEC5PROOF corresponding to
-   the next closer name MUST be computed on the fly by the authoritative
-   server when responding to the query.  However, the NSEC5PROOF
-   corresponding to the closest provable encloser MAY be precomputed and
-   stored as part of zone signing.
+   query with NSEC5 requires the authoritative server to respond with
+   two NSEC5PROOF RRs and two NSEC5 RRs.  One pair of NSEC5PROOF and
+   NSEC5 RRs corresponds to the closest provable encloser, and the other
+   pair corresponds to the next closer name.  The NSEC5PROOF
+   corresponding to the next closer name MUST be computed on the fly by
+   the authoritative server when responding to the query.  However, the
+   NSEC5PROOF corresponding to the closest provable encloser MAY be
+   precomputed and stored as part of zone signing.
 
 
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 16]
+Vcelak, et al.            Expires July 7, 2018                 [Page 16]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
 
    Precomputing NSEC5PROOF RRs can halve the number of online
@@ -943,16 +943,18 @@ Internet-Draft                    NSEC5                        July 2017
    existence.  The desired behavior caused by this paradox is the same
    as described in Section 7.2.8 of [RFC5155].
 
-9.3.  NSEC5KEY Rollover Mechanism
 
 
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 17]
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 17]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
+
+9.3.  NSEC5KEY Rollover Mechanism
 
    Replacement of the NSEC5 key implies generating a new NSEC5 chain.
    The NSEC5KEY rollover mechanism is similar to "Pre-Publish Zone
@@ -999,16 +1001,17 @@ Internet-Draft                    NSEC5                        July 2017
    changes to the zone MUST be performed in a way that ensures that the
    zone satisfies the properties specified in Section 9.1 at any time.
    The process described in [RFC5155] Section 7.5 describes how to
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 18]
+
+Internet-Draft                    NSEC5                             2017
+
+
    handle the issues surrounding the handling of empty non-terminals as
    well as Opt-Out.
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 18]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
    It is RECOMMENDED that the server rejects all updates containing
    changes to the NSEC5 chain and its related RRSIG RRs, and performs
@@ -1055,16 +1058,16 @@ Internet-Draft                    NSEC5                        July 2017
 
    3.  Compute the NSEC5 hash value from the NSEC5 proof and check if
        the response contains NSEC5 RR matching or covering the computed
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 19]
+
+Internet-Draft                    NSEC5                             2017
+
+
        NSEC5 hash.  The TTL values of the NSEC5 and NSEC5PROOF RRs must
        be the same.
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 19]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
    4.  Validate the signature on the NSEC5 RR.
 
@@ -1108,19 +1111,23 @@ Internet-Draft                    NSEC5                        July 2017
    The private NSEC5 key MAY be shared between multiple zones, however a
    separate key is RECOMMENDED for each zone.
 
+
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 20]
+
+Internet-Draft                    NSEC5                             2017
+
+
 12.3.  Domain Name Length Restrictions
 
    NSEC5 creates additional restrictions on domain name lengths.  In
    particular, zones with names that, when converted into hashed owner
    names, exceed the 255 octet length limit imposed by [RFC1035] cannot
    use this specification.
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 20]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
    The actual maximum length of a domain name depends on the length of
    the zone name and the NSEC5 algorithm used.
@@ -1163,20 +1170,19 @@ Internet-Draft                    NSEC5                        July 2017
    corresponds to a given domain name.  The only way it can learn the
    NSEC5 proof value for a domain name is by querying the authoritative
    server for that name.  Without the NSEC5 proof value, the attacker
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 21]
+
+Internet-Draft                    NSEC5                             2017
+
+
    cannot learn the NSEC5 hash value.  Thus, even an attacker that
    collects the entire chain of NSEC5 RR for a zone cannot use offline
    attacks to "reverse" that NSEC5 hash values in these NSEC5 RR and
    thus learn which names are present in the zone.  A formal
    cryptographic proof of this property is in [nsec5] and [nsec5ecc].
-
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 21]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
 15.2.  Compromise of the Private NSEC5 Key
 
@@ -1220,19 +1226,18 @@ Internet-Draft                    NSEC5                        July 2017
    existence of the colliding QNAME.  However, the NSEC5 VRFs ensure
    that obtaining such a collision is as difficult as obtaining a
    collision in the SHA-256 hash function, requiring approximately 2^128
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 22]
+
+Internet-Draft                    NSEC5                             2017
+
+
    effort.  Note that DNSSEC already relies on the assumption that a
    cryptographic hash function is collision-resistant, since these hash
    functions are used for generating and validating signatures and DS
    RRs.  See also the discussion on key lengths in [nsec5].
-
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 22]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
 16.  IANA Considerations
 
@@ -1274,6 +1279,17 @@ Internet-Draft                    NSEC5                        July 2017
    Duane Wessels (Verisign Labs) provided advice on the implementation
    of NSEC5, and assisted with evaluating its performance.
 
+
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 23]
+
+Internet-Draft                    NSEC5                             2017
+
+
 18.  References
 
 18.1.  Normative References
@@ -1282,14 +1298,6 @@ Internet-Draft                    NSEC5                        July 2017
               National Institute for Standards and Technology, "Digital
               Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 23]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    [I-D.goldbe-vrf]
               Goldberg, S., Papadopoulos, D., and J. Vcelak, "Verifiable
               Random Functions (VRFs)", draft-goldbe-vrf-01 (work in
@@ -1297,76 +1305,84 @@ Internet-Draft                    NSEC5                        July 2017
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
-              <http://www.rfc-editor.org/info/rfc1034>.
+              <https://www.rfc-editor.org/info/rfc1034>.
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
-              specification", STD 13, RFC 1035, November 1987.
+              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
+              November 1987, <https://www.rfc-editor.org/info/rfc1035>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
               "Dynamic Updates in the Domain Name System (DNS UPDATE)",
               RFC 2136, DOI 10.17487/RFC2136, April 1997,
-              <http://www.rfc-editor.org/info/rfc2136>.
+              <https://www.rfc-editor.org/info/rfc2136>.
 
    [RFC2181]  Elz, R. and R. Bush, "Clarifications to the DNS
               Specification", RFC 2181, DOI 10.17487/RFC2181, July 1997,
-              <http://www.rfc-editor.org/info/rfc2181>.
+              <https://www.rfc-editor.org/info/rfc2181>.
 
    [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
               NCACHE)", RFC 2308, DOI 10.17487/RFC2308, March 1998,
-              <http://www.rfc-editor.org/info/rfc2308>.
+              <https://www.rfc-editor.org/info/rfc2308>.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, March 2005.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
-              RFC 4034, March 2005.
+              RFC 4034, DOI 10.17487/RFC4034, March 2005,
+              <https://www.rfc-editor.org/info/rfc4034>.
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 24]
+
+Internet-Draft                    NSEC5                             2017
+
 
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
-              Extensions", RFC 4035, March 2005.
+              Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
+              <https://www.rfc-editor.org/info/rfc4035>.
 
    [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <http://www.rfc-editor.org/info/rfc4648>.
+              <https://www.rfc-editor.org/info/rfc4648>.
 
    [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
-              Groups for Use with IETF Standards", RFC 5114, DOI
-              10.17487/RFC5114, January 2008,
-              <http://www.rfc-editor.org/info/rfc5114>.
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 24]
-
-Internet-Draft                    NSEC5                        July 2017
-
+              Groups for Use with IETF Standards", RFC 5114,
+              DOI 10.17487/RFC5114, January 2008, <https://www.rfc-
+              editor.org/info/rfc5114>.
 
    [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
               Security (DNSSEC) Hashed Authenticated Denial of
-              Existence", RFC 5155, March 2008.
+              Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
+              <https://www.rfc-editor.org/info/rfc5155>.
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
-              (SHA and SHA-based HMAC and HKDF)", RFC 6234, DOI 10.17487
-              /RFC6234, May 2011,
-              <http://www.rfc-editor.org/info/rfc6234>.
+              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
+              DOI 10.17487/RFC6234, May 2011, <https://www.rfc-
+              editor.org/info/rfc6234>.
 
    [RFC6605]  Hoffman, P. and W. Wijngaards, "Elliptic Curve Digital
-              Signature Algorithm (DSA) for DNSSEC", RFC 6605, April
-              2012.
+              Signature Algorithm (DSA) for DNSSEC", RFC 6605,
+              DOI 10.17487/RFC6605, April 2012, <https://www.rfc-
+              editor.org/info/rfc6605>.
 
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
-              2016, <http://www.rfc-editor.org/info/rfc7748>.
+              2016, <https://www.rfc-editor.org/info/rfc7748>.
 
    [RFC8080]  Sury, O. and R. Edmonds, "Edwards-Curve Digital Security
-              Algorithm (EdDSA) for DNSSEC", RFC 8080, DOI 10.17487/
-              RFC8080, February 2017,
-              <http://www.rfc-editor.org/info/rfc8080>.
+              Algorithm (EdDSA) for DNSSEC", RFC 8080,
+              DOI 10.17487/RFC8080, February 2017, <https://www.rfc-
+              editor.org/info/rfc8080>.
 
 18.2.  Informative References
 
@@ -1375,36 +1391,23 @@ Internet-Draft                    NSEC5                        July 2017
               Authenticated Denial of Existence", draft-gieben-nsec4-01
               (work in progress), July 2012.
 
-   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
-              Functions", in FOCS, 1999.
-
-   [RFC6781]  Kolkman, O., Mekking, W., and R. Gieben, "DNSSEC
-              Operational Practices, Version 2", RFC 6781, DOI 10.17487/
-              RFC6781, December 2012,
-              <http://www.rfc-editor.org/info/rfc6781>.
-
-   [RFC7129]  Gieben, R. and W. Mekking, "Authenticated Denial of
-              Existence in the DNS", RFC 7129, DOI 10.17487/RFC7129,
-              February 2014, <http://www.rfc-editor.org/info/rfc7129>.
-
-   [RFC7719]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
-              Terminology", RFC 7719, DOI 10.17487/RFC7719, December
-              2015, <http://www.rfc-editor.org/info/rfc7719>.
-
    [ldns-walk]
               NLNetLabs, "ldns", 2015,
               <http://git.nlnetlabs.nl/ldns/tree/examples/ldns-walk.c>.
 
 
 
-Vcelak, et al.          Expires January 04, 2018               [Page 25]
+Vcelak, et al.            Expires July 7, 2018                 [Page 25]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
+
+   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
+              Functions", in FOCS, 1999.
 
    [nmap-nsec-enum]
-              Bond, J., "nmap: dns-nsec-enum", 2011, <https://nmap.org/
-              nsedoc/scripts/dns-nsec-enum.html>.
+              Bond, J., "nmap: dns-nsec-enum", 2011,
+              <https://nmap.org/nsedoc/scripts/dns-nsec-enum.html>.
 
    [nmap-nsec3-enum]
               Nikolic, A. and J. Bond, "nmap: dns-nsec3-enum", 2011,
@@ -1425,21 +1428,42 @@ Internet-Draft                    NSEC5                        July 2017
 
    [nsec5]    Goldberg, S., Naor, M., Papadopoulos, D., Reyzin, L.,
               Vasant, S., and A. Ziv, "NSEC5: Provably Preventing DNSSEC
-              Zone Enumeration", in NDSS'15, July 2014, <https://
-              eprint.iacr.org/2014/582.pdf>.
+              Zone Enumeration", in NDSS'15, July 2014,
+              <https://eprint.iacr.org/2014/582.pdf>.
 
    [nsec5ecc]
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
               Naor, M., Reyzin, L., and S. Goldberg, "Can NSEC5 be
               Practical for DNSSEC Deployments?", in ePrint Cryptology
-              Archive 2017/099, February 2017, <https://eprint.iacr.org/
-              2017/099.pdf>.
+              Archive 2017/099, February 2017,
+              <https://eprint.iacr.org/2017/099.pdf>.
+
+   [RFC6781]  Kolkman, O., Mekking, W., and R. Gieben, "DNSSEC
+              Operational Practices, Version 2", RFC 6781,
+              DOI 10.17487/RFC6781, December 2012, <https://www.rfc-
+              editor.org/info/rfc6781>.
+
+   [RFC7129]  Gieben, R. and W. Mekking, "Authenticated Denial of
+              Existence in the DNS", RFC 7129, DOI 10.17487/RFC7129,
+              February 2014, <https://www.rfc-editor.org/info/rfc7129>.
+
+   [RFC7719]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
+              Terminology", RFC 7719, DOI 10.17487/RFC7719, December
+              2015, <https://www.rfc-editor.org/info/rfc7719>.
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 26]
+
+Internet-Draft                    NSEC5                             2017
+
 
 Appendix A.  Examples
 
-   We use small DNS zone to illustrate how denying responses are handled
-   with NSEC5.  For brevity, the class is not shown (defaults to IN) and
-   the SOA record is shortened, resulting in the following zone file:
+   We use a small DNS zone to illustrate how negative responses are
+   handled with NSEC5.  For brevity, the class is not shown (defaults to
+   IN) and the SOA record is shortened, resulting in the following zone
+   file:
 
    example.org.        SOA ( ... )
    example.org.        NS  a.example.org
@@ -1451,20 +1475,12 @@ Appendix A.  Examples
 
    d.example.org.      NS ns1.d.example.org
 
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 26]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    ns1.d.example.org.  A 192.0.2.4
 
    g.example.org.      A 192.0.2.1
    g.example.org.      TXT "g record"
 
    *.a.example.org.    TXT "wildcard record"
-
 
    Notice the delegation to an unsigned zone d.example.org served by
    ns1.d.example.org.  (Note: if the d.example.org zone was signed, then
@@ -1488,18 +1504,27 @@ A.1.  Name Error Example
 
    To do this, the server returns:
 
-   ;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
 
-   ;; QUESTION SECTION:
-   ;; a.b.c.example.org.           IN      A
 
-   ;; AUTHORITY SECTION:
-   example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (
-               2010111214 21600 3600 604800 86400 )
 
-   example.org.         3600 IN RRSIG  SOA 16 2 3600 (
-               20170412024301 20170313024301 5137 example.org. rT231b1rH... )
 
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 27]
+
+Internet-Draft                    NSEC5                             2017
+
+
+;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
+
+;; QUESTION SECTION:
+;; a.b.c.example.org.           IN      A
+
+;; AUTHORITY SECTION:
+example.org.         3600 IN SOA a.example.org. hostmaster.example.org. (
+            2010111214 21600 3600 604800 86400 )
+
+example.org.         3600 IN RRSIG  SOA 16 2 3600 (
+            20170412024301 20170313024301 5137 example.org. rT231b1rH... )
 
    This is an NSEC5PROOF RR for c.example.com.  It's RDATA is the NSEC5
    proof corresponding to c.example.com.  (NSEC5 proofs are randomized
@@ -1507,15 +1532,7 @@ A.1.  Name Error Example
    [I-D.goldbe-vrf].)  Per Section 9.1.1, this NSEC5PROOF RR may be
    precomputed.
 
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 27]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
-
 
    This is a signed NSEC5 RR "matching" c.example.org, which proves the
    existence of closest encloser c.example.org.  The NSEC5 RR has its
@@ -1525,17 +1542,15 @@ Internet-Draft                    NSEC5                        July 2017
    the key ID 48566).  This proves the non-existence of the wildcard at
    the closest encloser *.c.example.com.  NSEC5 RRs are precomputed.
 
-   o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
-   o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
-
+o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
+o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
 
    This is an NSEC5PROOF RR for b.c.example.org.  It's RDATA is the
    NSEC5 proof corresponding to b.c.example.com.  This NSEC5PROOF RR
-   must be computed on-the-fly.
+   must be computed on the fly.
 
    b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
-
 
    This is a signed NSEC5 RR "covering" b.c.example.org, which proves
    the non-existence of the next closer name b.c.example.org The NSEC5
@@ -1543,14 +1558,25 @@ Internet-Draft                    NSEC5                        July 2017
    between the "covering" NSEC5 RR's Owner Name (which is 0O49PI) and
    Next Hashed Owner Name (which is BAPROH).
 
-   0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
-               NS SOA RRSIG DNSKEY NSEC5KEY )
 
-   0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO)
 
-   [TODO: Add discussion of CNAME and DNAME to the example?]
 
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 28]
+
+Internet-Draft                    NSEC5                             2017
+
+
+0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
+            NS SOA RRSIG DNSKEY NSEC5KEY )
+
+0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. 4HT1uj1YlMzO)
+
+[TODO: Add discussion of CNAME and DNAME to the example?]
 
 A.2.  No Data Example
 
@@ -1562,25 +1588,16 @@ A.2.  No Data Example
 
    To do this, the server returns:
 
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
 
+;; QUESTION SECTION:
+;; c.example.org.    IN MX
 
+;; AUTHORITY SECTION:
+example.org.    3600 IN SOA     a.example.org. hostmaster.example.org. (
+            2010111214 21600 3600 604800 86400 )
 
-Vcelak, et al.          Expires January 04, 2018               [Page 28]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
-   ;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 38781
-
-   ;; QUESTION SECTION:
-   ;; c.example.org.    IN MX
-
-   ;; AUTHORITY SECTION:
-   example.org.    3600 IN SOA     a.example.org. hostmaster.example.org. (
-               2010111214 21600 3600 604800 86400 )
-
-   example.org.    3600 IN RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
-
+example.org.    3600 IN RRSIG   SOA 16 2 3600 20170412024301 20170313024301 5137 example.org. /rT231b1rH/p
 
    This is an NSEC5PROOF RR for c.example.com.  Its RDATA corresponds to
    the NSEC5 proof for c.example.com. which is a randomized value.  Per
@@ -1588,24 +1605,32 @@ Internet-Draft                    NSEC5                        July 2017
 
    c.example.org. 86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT
 
-
    This is a signed NSEC5 RR "matching" c.example.org. with CNAME and MX
    Type Bits cleared and its TXT Type Bit set.  This NSEC5 RR has its
    owner name equal to the NSEC5 hash of c.example.org.  This proves the
    existence of c.example.org. for a type other than MX and CNAME.
    NSEC5 RR are precomputed.
 
-   o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
+o4k89v.example.org. 86400 IN NSEC5   48566 0 0O49PI A TXT RRSIG
 
-   o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
+o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. zDNTSMQNlz/J)
+
+
+
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 29]
+
+Internet-Draft                    NSEC5                             2017
 
 
 A.3.  Delegation to an Unsigned Zone in an Opt-Out span Example
 
    Consider a query for a type A record for foo.d.example.org.
 
-   Here, d.example.org is a delegation to an unsigned zone, which sits
+   Here, d.example.org is a delegation to an unsigned zone, which lies
    within an Opt-Out span.
 
    The server must prove the following facts:
@@ -1619,13 +1644,6 @@ A.3.  Delegation to an Unsigned Zone in an Opt-Out span Example
 
    To do this, the server returns:
 
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 29]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
    ;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 45866
 
    ;; QUESTION SECTION:
@@ -1634,13 +1652,11 @@ Internet-Draft                    NSEC5                        July 2017
    ;; AUTHORITY SECTION:
    d.example.org.       3600  IN NS      ns1.d.example.org.
 
-
-   This is an NSEC5PROOF RR for d.example.org.  It's RDATA is the NSEC5
+   This is an NSEC5PROOF RR for d.example.org.  Its RDATA is the NSEC5
    proof corresponding to d.example.org.  This NSEC5PROOF RR is computed
    on the fly.
 
-   d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
-
+d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
 
    This is a signed NSEC5 RR "covering" d.example.org with its Opt-out
    bit set (see the "1" after the key ID 48566).  The NSEC5 hash of
@@ -1650,37 +1666,34 @@ Internet-Draft                    NSEC5                        July 2017
    but that the zone might contain a unsigned RR for a name whose NSEC5
    hash sorts in canonical order between BAPROH and JQBMG4.
 
-   baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
 
-   baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
-
+baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1)
 
    This is an NSEC5PROOF RR for example.com.  It's RDATA is the NSEC5
    proof corresponding to example.com.  Per Section 9.1.1, this
    NSEC5PROOF RR may be precomputed.
 
-   example.org.        86400 IN NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
 
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 30]
+
+Internet-Draft                    NSEC5                             2017
+
+
+   example.org.        86400 IN NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
 
    This is a signed NSEC5 RR "matching" example.org which proves the
    existence of a signed RRs for example.org.  This NSEC5 RR has its
    owner name equal to the NSEC5 hash of example.org which is 0O49PI.
    NSEC5 RR are precomputed.
 
-   0o49pi.example.org. 86400 IN NSEC5   48566 0 BAPROH (
-               NS SOA RRSIG DNSKEY NSEC5KEY)
+0o49pi.example.org. 86400 IN NSEC5   48566 0 BAPROH (
+            NS SOA RRSIG DNSKEY NSEC5KEY)
 
-   0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO)
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 30]
-
-Internet-Draft                    NSEC5                        July 2017
-
+0o49pi.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412034216 20170313034216 5137 example.org. 4HT1uj1YlMzO)
 
 A.4.  Wildcard Example
 
@@ -1699,28 +1712,33 @@ A.4.  Wildcard Example
    ;; QUESTION SECTION:
    ;; foo.a.example.org.        IN TXT
 
-
    This is a signed TXT record for the wildcard at a.example.org (number
    of labels is set to 3 in the RRSIG record).
 
-   ;; ANSWER SECTION:
-   foo.a.example.org.      3600 IN TXT     "wildcard record"
+;; ANSWER SECTION:
+foo.a.example.org.      3600 IN TXT     "wildcard record"
 
-   foo.a.example.org.      3600 IN RRSIG   TXT 16 3 3600 (
-               20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98)
+foo.a.example.org.      3600 IN RRSIG   TXT 16 3 3600 (
+            20170412024301 20170313024301 5137 example.org. aeaLgZ8sk+98)
 
-   ;; AUTHORITY SECTION:
-   example.org.            3600 IN NS      a.example.org.
+;; AUTHORITY SECTION:
+example.org.            3600 IN NS      a.example.org.
 
-   example.org.            3600 IN RRSIG   NS 16 2 3600 (
-               20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyF)
-
+example.org.            3600 IN RRSIG   NS 16 2 3600 (
+            20170412024301 20170313024301 5137 example.org. 8zuN0h2x5WyF)
 
    This is an NSEC5PROOF RR for foo.a.example.org.  This NSEC5PROOF RR
    must be computed on-the-fly.
 
-   foo.a.example.org.     86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
 
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 31]
+
+Internet-Draft                    NSEC5                             2017
+
+
+  foo.a.example.org.     86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
 
    This is a signed NSEC5 RR "covering" foo.a.example.org.  The NSEC5
    hash of foo.a.example.org is FORDMO and sorts in canonical order
@@ -1728,18 +1746,9 @@ A.4.  Wildcard Example
    Owner Name (which is JQBMG4).  This proves the non-existence of the
    next closer name foo.a.example.com.  NSEC5 RRs are precomputed.
 
-    baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
-    baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 31]
-
-Internet-Draft                    NSEC5                        July 2017
-
-
-        20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
-
+       baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+       baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+           20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1
 
 A.5.  Wildcard No Data Example
 
@@ -1754,18 +1763,17 @@ A.5.  Wildcard No Data Example
 
    To do this, the server returns:
 
-   ;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 17332
+;; ->>HEADER<<- opcode: QUERY; status: NOERROR; id: 17332
 
-   ;; QUESTION SECTION:
-   ;; foo.a.example.org.           IN      MX
+;; QUESTION SECTION:
+;; foo.a.example.org.           IN      MX
 
-   ;; AUTHORITY SECTION:
-   example.org.       3600 IN SOA     a.example.org. hostmaster.example.org. (
-               2010111214 21600 3600 604800 86400 )
+;; AUTHORITY SECTION:
+example.org.       3600 IN SOA     a.example.org. hostmaster.example.org. (
+            2010111214 21600 3600 604800 86400 )
 
-   example.org.       3600 IN RRSIG   SOA 16 2 3600 (
-               20170412024301 20170313024301 5137 example.org. /rT231b1rH/p )
-
+example.org.       3600 IN RRSIG   SOA 16 2 3600 (
+            20170412024301 20170313024301 5137 example.org. /rT231b1rH/p )
 
    This is an NSEC5PROOF RR for *.a.example.com, with RDATA equal to the
    NSEC5 proof for *.a.example.com.  Per Section 9.1.1, this NSEC5PROOF
@@ -1773,32 +1781,28 @@ A.5.  Wildcard No Data Example
 
    *.a.example.org.  86400 IN NSEC5PROOF      48566 Aq38RWWPhbs/vtih
 
-
    This is a signed NSEC5 RR "matching" *.a.example.org with its CNAME
    and MX Type Bits cleared and its TXT Type Bit set.  This NSEC5 RR has
    its owner name equal to the NSEC5 hash of *.a.example.org.  NSEC5 RRs
    are precomputed.
 
-   mpu6c4.example.org. 86400 IN NSEC5   48566 0 O4K89V TXT RRSIG
-
-   mpu6c4.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. m3I75ttcWwVC )
 
 
 
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 32]
+Vcelak, et al.            Expires July 7, 2018                 [Page 32]
 
-Internet-Draft                    NSEC5                        July 2017
+Internet-Draft                    NSEC5                             2017
 
+
+mpu6c4.example.org. 86400 IN NSEC5   48566 0 O4K89V TXT RRSIG
+
+mpu6c4.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. m3I75ttcWwVC )
 
    This is an NSEC5PROOF RR for foo.a.example.com.  This NSEC5PROOF RR
    must be computed on-the-fly.
 
    foo.a.example.org.  86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
-
 
    This is a signed NSEC5 RR "covering" foo.a.example.org.  The NSEC5
    hash of foo.a.example.org is FORDMO, and sorts in canonical order
@@ -1807,11 +1811,10 @@ Internet-Draft                    NSEC5                        July 2017
    of the wildcard at closest encloser *.a.example.org. for any type
    other than MX or CNAME.  NSEC5 RRs are precomputed.
 
-   baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
+baproh.example.org. 86400 IN NSEC5   48566 1 JQBMG4 A TXT RRSIG
 
-   baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
-               20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1 )
-
+baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
+            20170412024301 20170313024301 5137 example.org. fjTcoRKgdML1 )
 
 Appendix B.  Change Log
 
@@ -1839,16 +1842,16 @@ Appendix B.  Change Log
       specification.  Rewrite Performance Considerations and
       Implementation Status sections.
 
+
+
+
+Vcelak, et al.            Expires July 7, 2018                 [Page 33]
+
+Internet-Draft                    NSEC5                             2017
+
+
       05 - Remove appendix specifying VRFs and add reference to
       [I-D.goldbe-vrf].  Add Appendix A.
-
-
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 33]
-
-Internet-Draft                    NSEC5                        July 2017
-
 
 Authors' Addresses
 
@@ -1871,12 +1874,11 @@ Authors' Addresses
 
 
    Dimitrios Papadopoulos
-   University of Maryland
-   8223 Paint Branch Dr
-   College Park, MD  20740
-   USA
+   HKUST
+   Clearwater Bay
+   Hong Kong
 
-   EMail: dipapado@umd.edu
+   EMail: dipapado@ust.hk
 
 
    Shumon Huque
@@ -1899,6 +1901,4 @@ Authors' Addresses
 
 
 
-
-
-Vcelak, et al.          Expires January 04, 2018               [Page 34]
+Vcelak, et al.            Expires July 7, 2018                 [Page 34]

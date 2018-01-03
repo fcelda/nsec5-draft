@@ -43,13 +43,10 @@ author:
   -
     ins: D. Papadopoulos
     name: Dimitrios Papadopoulos
-    org: University of Maryland
-    street: 8223 Paint Branch Dr
-    city: College Park
-    region: MD
-    code: '20740'
-    country: USA
-    email: dipapado@umd.edu
+    org: HKUST
+    street: Clearwater Bay
+    country: Hong Kong
+    email: dipapado@ust.hk
   -
     ins: S. Huque
     name: Shumon Huque
@@ -446,10 +443,9 @@ ciphersuite specified in {{I-D.goldbe-vrf}}.
   Section 4 of {{RFC6605}} and thus is the same as the format used to
   store ECDSA public keys in DNSKEY RRs.   
   \[NOTE: This specification does 
-  not compress the elliptic curve point used for the public key! 
-  But we do compress curve points in every other place we use them with the 
-  P256 ECVRF.  We could save 31 octets in the NSEC5KEY record by encoding the 
-  public key with point compression!\]
+  not compress the elliptic curve point used for the public key,
+  but we do compress curve points in every other place we use them. The NSEC5KEY record can be shrunk by 31 additional octets by encoding the 
+  public key with point compression.\]
 
 This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
 
@@ -625,7 +621,7 @@ existence.  For each type the following lists are included:
   that the response content is valid.
 
 2. Authoritative server proofs: the names for which the NSEC5PROOF RRs
-  are synthesized and added into the response along the NSEC5 RRs
+  are synthesized and added into the response along with the NSEC5 RRs
   matching or covering each such name. These records together prove
   the listed facts.
 
@@ -653,11 +649,14 @@ Authoritative server proofs:
 
 > NSEC5PROOF for next closer name and covering NSEC5 RR.
 
-> The QNAME does not fall into a delegation.
-
-> The QNAME does not fall into a DNAME redirection.
 
 Validator checks:
+
+[comment]: <Dimitris commented out the next two. They are covered by the last two validator checks, right?>
+
+[comment]: <The QNAME does not fall into a delegation.>
+
+[comment]: <The QNAME does not fall into a DNAME redirection.>
 
 > Closest encloser is in the zone.
 
@@ -782,7 +781,7 @@ The following steps describe one possible method to properly add
 required NSEC5 related records into a zone. This is not the only such
 existing method.
 
-1. Select an algorithm for NSEC5.  Generate the public and private NSEC5 keys.
+1. Select an algorithm for NSEC5 and generate the public and private NSEC5 keys.
 
 2. Add an NSEC5KEY RR into the zone apex containing the public NSEC5 key.
 
@@ -827,7 +826,7 @@ Opt-Out MAY be part of the zone-signing tool configuration.
 ### Precomputing Closest Provable Encloser Proofs {#precompute}
 
 Per {{nsec5_proofs}}, the worst-case scenario when answering a negative 
-query with NSEC5 requires authoritative server to respond with two 
+query with NSEC5 requires the authoritative server to respond with two 
 NSEC5PROOF RRs and
 two NSEC5 RRs. One pair of NSEC5PROOF and NSEC5
 RRs corresponds to the closest provable encloser, and the other pair
@@ -1171,8 +1170,8 @@ evaluating its performance.
 
 # Examples {#examples}
 
-We use small DNS zone 
-to illustrate how denying responses are handled with NSEC5.  For brevity,
+We use a small DNS zone 
+to illustrate how negative responses are handled with NSEC5.  For brevity,
 the class is not shown (defaults to IN) and the SOA record is shortened,
 resulting in the following zone file:
 
@@ -1251,7 +1250,7 @@ NSEC5 RRs are  precomputed.
                 20170412024301 20170313024301 5137 example.org. zDNTSMQNlz... )
 
 This is an NSEC5PROOF RR for b.c.example.org. It's RDATA is the NSEC5 proof 
-corresponding to b.c.example.com.  This NSEC5PROOF RR must be computed on-the-fly.
+corresponding to b.c.example.com.  This NSEC5PROOF RR must be computed on the fly.
 
     b.c.example.org.    86400 IN NSEC5PROOF 48566 AuvvJqbUcEs8sCpY...
 
@@ -1311,7 +1310,7 @@ NSEC5 RR are precomputed.
 
 Consider a query for a type A record for foo.d.example.org.
 
-Here, d.example.org is a delegation to an unsigned zone, which sits within an Opt-Out span.
+Here, d.example.org is a delegation to an unsigned zone, which lies within an Opt-Out span.
 
 The server must prove the following facts:
 
@@ -1332,7 +1331,7 @@ To do this, the server returns:
     ;; AUTHORITY SECTION:
     d.example.org.       3600  IN NS      ns1.d.example.org.
 
-This is an NSEC5PROOF RR for d.example.org.  It's RDATA is the NSEC5 proof 
+This is an NSEC5PROOF RR for d.example.org.  Its RDATA is the NSEC5 proof 
 corresponding to d.example.org. This NSEC5PROOF RR is computed on the fly.
 
     d.example.org.      86400   IN      NSEC5PROOF      48566 A9FpmeH79q7g6VNW
