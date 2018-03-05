@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-irtf-cfrg-vrf-00" ipr="trust200902">
+<rfc category="std" docName="draft-irtf-cfrg-vrf-01" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -39,7 +39,7 @@
                     <code>02215</code>
                     <country>USA</country>
                 </postal>
-                <email>reyzin@cs.bu.edu</email>
+                <email>reyzin@bu.edu</email>
             </address>
         </author>
 
@@ -729,14 +729,19 @@
                 </list>
             </t>
             <t>
-                [TDOD: We could hash alpha instead of gamma. Doing so costs more because alpha is longer, but may help salvage some security if ECVRF_hash_to_curve is broken and not collision-resistant. Need to analyze exact security preserved and decide if the tradeoff is worth it.]
+                [TODO: We could hash alpha instead of gamma. Doing so costs 
+                more because alpha is longer, but may help salvage some 
+                security if ECVRF_hash_to_curve is broken and not 
+                collision-resistant. Need to analyze exact security preserved
+                and decide if the tradeoff is worth it.]
             </t>
         </section>
 
 
         <section title="EC-VRF Auxiliary Functions">
             <t>
-                [TODO: analyze whether domain separation for hash functions used here matters and if so how to ensure we have it.]
+                [TODO: analyze whether domain separation for hash functions 
+                used here matters and if so how to ensure we have it.]
             </t>
             
 
@@ -816,9 +821,12 @@
             
             <t>[TODO: We should look into specifying the
             generic deterministic time hash_to_curve algorithm from 
-            <xref target="Icart09"/>.  We should also consider  Shallue-Woestijne-Ulas
-            algorithm from <xref target="BCIMRT10"/> as well as Elligator (for Ed25519) and Elligator Squared for more general curves. Some of these options are summarized in an upcoming draft
-            <xref target="SW18"/>, which we may want to work with.]
+            <xref target="Icart09"/>.  We should also consider  
+            Shallue-Woestijne-Ulas
+            algorithm from <xref target="BCIMRT10"/> as well as 
+            Elligator (for Ed25519) and Elligator Squared for more general 
+            curves. Some of these options are summarized in an upcoming draft
+            <xref target="SW18"/>.]
             </t>
             </section>
         </section>
@@ -957,11 +965,12 @@
         </t>
    
         <t>[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator
-        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? Should
-        we add Elligator-Squared? We may want to consider options in the upcoming draft <xref target="SW18"/>.]
+        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? 
+        Should we add Elligator-Squared? We may want to consider options in 
+        the upcoming draft <xref target="SW18"/>.]
         </t>
    
-        <t>[TODO: Add an Ed448 ciphersuite?]</t>
+        <t>[TODO: Add an Ed448 ciphersuite? This is probably not needed...]</t>
         
         <t>[NOTE: In the unlikely case that future versions of this spec
         use a elliptic curve group G that does not also come with a specification
@@ -1181,7 +1190,8 @@
     </t>
     
     <t>
-        [TODO: We may wish to specify nonce generation]
+        [TODO: In the next version of the draft we should add a specification 
+        for nonce generation.]
     </t>
 
     </section>
@@ -1238,14 +1248,13 @@
                     definitions.
                 </t>-->
                 <t> 00 - Forked this document from draft-goldbe-vrf-01.</t>
+                <t> 01 - Minor updates, mostly highlighting TODO items.</t>
             </list>
         </t>
     </section>
 
     <section title="Contributors">
-        <t>
-            Leonid Reyzin (Boston University) is a major contributor to this 
-            document. </t>
+   
             
         <t>
             This document also would not be possible without the work of
