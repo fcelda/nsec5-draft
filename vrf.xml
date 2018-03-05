@@ -72,7 +72,7 @@
             </address>
         </author>
 
-        <date year="2017" />
+        <date year="2018" />
 
         <workgroup>CFRG</workgroup>
 
@@ -728,10 +728,17 @@
                     </t>
                 </list>
             </t>
+            <t>
+                [TDOD: We could hash alpha instead of gamma. Doing so costs more because alpha is longer, but may help salvage some security if ECVRF_hash_to_curve is broken and not collision-resistant. Need to analyze exact security preserved and decide if the tradeoff is worth it.]
+            </t>
         </section>
 
 
         <section title="EC-VRF Auxiliary Functions">
+            <t>
+                [TODO: analyze whether domain separation for hash functions used here matters and if so how to ensure we have it.]
+            </t>
+            
 
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
@@ -807,11 +814,11 @@
             generic way to hash an octet string onto any elliptic curve.
             </t>
             
-            <t>[TODO: If there interest, we could look into specifying the 
+            <t>[TODO: We should look into specifying the
             generic deterministic time hash_to_curve algorithm from 
-            <xref target="Icart09"/>.  Note also for the Ed25519 curve 
-            (but not the P256 curve), the Elligator algorithm 
-            could be used here.]
+            <xref target="Icart09"/>.  We should also consider  Shallue-Woestijne-Ulas
+            algorithm from <xref target="BCIMRT10"/> as well as Elligator (for Ed25519) and Elligator Squared for more general curves. Some of these options are summarized in an upcoming draft
+            <xref target="SW18"/>, which we may want to work with.]
             </t>
             </section>
         </section>
@@ -950,7 +957,8 @@
         </t>
    
         <t>[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator
-        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?]
+        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? Should
+        we add Elligator-Squared? We may want to consider options in the upcoming draft <xref target="SW18"/>.]
         </t>
    
         <t>[TODO: Add an Ed448 ciphersuite?]</t>
@@ -1171,6 +1179,10 @@
     the private VRF key x (and thus break pseudorandomness of the VRF)
     after observing several valid VRF proofs pi.
     </t>
+    
+    <t>
+        [TODO: We may wish to specify nonce generation]
+    </t>
 
     </section>
 
@@ -1323,10 +1335,34 @@
             </front>
             <seriesInfo name="in" value="CRYPTO" />
         </reference>
-        
+
+        <reference anchor="BCIMRT10">
+            <front>
+                <title>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</title>
+                <author initials= "E." surname="Brier"><organization /></author>
+                <author initials= "J.-S." surname="Coron"><organization /></author>
+                <author initials= "T." surname="Icart"><organization /></author>
+                <author initials= "D." surname="Madore"><organization /></author>
+                <author initials= "H." surname="Randriam"><organization /></author>
+                <author initials= "M." surname="Tibouchi"><organization /></author>
+                <date year="2010" />
+            </front>
+            <seriesInfo name="in" value="CRYPTO" />
+        </reference>
+
+        <reference anchor="SW18">
+            <front>
+                <title>Hashing to Elliptic Curves</title>
+                <author initials= "E." surname="Sullivan"><organization /></author>
+                <author initials= "C." surname="Wood"><organization /></author>
+                <date year="2018" />
+            </front>
+        </reference>
+
+
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
-        
+
     </references>
 
     <!--

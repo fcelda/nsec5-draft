@@ -412,16 +412,15 @@
 <link href="#rfc.references" rel="Chapter" title="10 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References"/>
-<link href="#rfc.appendix.A" rel="Chapter" title="A Open Issues"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
   <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Goldberg, S., Papadopoulos, D., and J. Vcelak" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-goldbe-vrf-01" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-6-21" />
+  <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-3-5" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -433,20 +432,24 @@
     <tbody>
     
     	<tr>
-  <td class="left">Network Working Group</td>
+  <td class="left">CFRG</td>
   <td class="right">S. Goldberg</td>
 </tr>
 <tr>
   <td class="left">Internet-Draft</td>
-  <td class="right">Boston University</td>
+  <td class="right">L. Reyzin</td>
 </tr>
 <tr>
   <td class="left">Intended status: Standards Track</td>
+  <td class="right">Boston University</td>
+</tr>
+<tr>
+  <td class="left">Expires: September 6, 2018</td>
   <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
-  <td class="left">Expires: December 23, 2017</td>
-  <td class="right">University of Maryland</td>
+  <td class="left"></td>
+  <td class="right">Hong Kong University of Science and Techology</td>
 </tr>
 <tr>
   <td class="left"></td>
@@ -458,7 +461,7 @@
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">June 21, 2017</td>
+  <td class="right">March 5, 2018</td>
 </tr>
 
     	
@@ -466,7 +469,7 @@
   </table>
 
   <p class="title">Verifiable Random Functions (VRFs)<br />
-  <span class="filename">draft-goldbe-vrf-01</span></p>
+  <span class="filename">draft-irtf-cfrg-vrf-00</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
@@ -478,11 +481,11 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 23, 2017.</p>
+<p>This Internet-Draft will expire on September 6, 2018.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
-<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
@@ -528,8 +531,7 @@
 <li>10.   <a href="#rfc.references">References</a></li>
 <ul><li>10.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>10.2.   <a href="#rfc.references.2">Informative References</a></li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Open Issues</a></li>
-<li><a href="#rfc.authors">Authors' Addresses</a></li>
+</ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
   </ul>
@@ -614,10 +616,10 @@
 <p id="rfc.section.3.3.p.6">Also, the VRF output beta does not look random to any party that knows valid VRF proof pi corresponding to the VRF input alpha, even if this party does not know the private VRF key SK.  Such a party can easily distinguish beta from a random value by checking whether VRF_verify(PK, alpha, pi) returns "VALID" and beta = VRF_proof2hash(pi).  </p>
 <p id="rfc.section.3.3.p.7">Also, the VRF output beta may not look random if VRF key generation was not done in a trustworthy fashion. (For example, if VRF keys were generated with bad randomness.) </p>
 <h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> An additional pseudorandomness property</h1>
-<p id="rfc.section.3.4.p.1">[TO DO:   This property is not needed for the VRF applications that use VRFs to prevent enumeration of hash-based data structures.  However, we noticed that this property is required for certain VRF applications.  As we have not yet found a formal definition of this property in the literature, we write it down here. We also have not proved that the VRFs specified in this document have this property.]</p>
+<p id="rfc.section.3.4.p.1">[TODO:   The following property is not needed for applications that use VRFs to prevent enumeration of hash-based data structures.  However, we noticed that some other applications of VRF rely on this property.  As we have not yet found a formal definition of this property in the literature, we write it down here. ]</p>
 <p id="rfc.section.3.4.p.2">Pseudorandomness, as defined in <a href="#pseudodef">Section 3.3</a>, does not hold if the VRF keys were generated adversarially.  </p>
 <p id="rfc.section.3.4.p.3">There is, however, a different type of pseudorandomness that could hold even if the VRF keys are generated adversarially, as long as the VRF input alpha is unpredictable.  Suppose the VRF keys are generated by an adversary.  Then, a VRF hash output beta should look pseudorandom to the adversary as long as (1) its corresponding VRF hash alpha is chosen randomly and independently of the VRF key, (2) alpha is unknown to the adversary, (3) the corresponding proof pi is unknown to the adversary, and (4) the VRF public key chosen by the adversary is valid.  </p>
-<p id="rfc.section.3.4.p.4">[TO DO: It is important to work out exactly what properties are needed from the public keys (and possibly added to the VRF_validate_key() function) to ensure that adversarially-chosen keys are "valid".] </p>
+<p id="rfc.section.3.4.p.4">[TODO: It should be possible to get the EC-VRF to satisfy this property, as long as verifiers run an VRF_validate_key() key function upon receipt of VRF public keys. However, we need to work out exactly what properties are needed from the VRF public keys in order for this property to hold. Some additional checks might need to be added to the ECVRF_validate_key() function.  Need to work out what are these checks.] </p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#fdh" id="fdh">RSA Full Domain Hash VRF (RSA-FDH-VRF)</a></h1>
 <p id="rfc.section.4.p.1">The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef">Section 3</a>.  Its security follows from the standard RSA assumption in the random oracle model.  Formal security proofs are in <a href="#nsec5ecc">[nsec5ecc]</a>.  </p>
 <p id="rfc.section.4.p.2">The VRF computes the proof pi as a deterministic RSA signature on input alpha using the RSA Full Domain Hash Algorithm <a href="#RFC8017">[RFC8017]</a> parametrized with the selected hash algorithm.  RSA signature verification is used to verify the correctness of the proof. The VRF hash output beta is simply obtained by hashing the proof pi with the selected hash algorithm.  </p>
@@ -769,7 +771,7 @@
 
 <ul class="empty">
   <li>y = g^x - VRF public key, an EC point</li>
-  <li>x - VRF private key, an integer where 0 &lt; x &lt; q <a id="CREF1" class="info">[CREF1]<span class="info">Sharon: check this with leo</span></a></li>
+  <li>x - VRF private key, an integer where 0 &lt; x &lt; q </li>
 </ul>
 
 <p> </p>
@@ -878,7 +880,9 @@
 </ol>
 
 <p> </p>
+<p id="rfc.section.5.3.p.5">[TDOD: We could hash alpha instead of gamma. Doing so costs more because alpha is longer, but may help salvage some security if ECVRF_hash_to_curve is broken and not collision-resistant. Need to analyze exact security preserved and decide if the tradeoff is worth it.] </p>
 <h1 id="rfc.section.5.4"><a href="#rfc.section.5.4">5.4.</a> EC-VRF Auxiliary Functions</h1>
+<p id="rfc.section.5.4.p.1">[TODO: analyze whether domain separation for hash functions used here matters and if so how to ensure we have it.] </p>
 <h1 id="rfc.section.5.4.1"><a href="#rfc.section.5.4.1">5.4.1.</a> <a href="#ecvrfH2C" id="ecvrfH2C">EC-VRF Hash To Curve</a></h1>
 <p id="rfc.section.5.4.1.p.1">The ECVRF_hash_to_curve algorithm takes in an octet string alpha and converts it to h, an EC point in G. </p>
 <h1 id="rfc.section.5.4.1.1"><a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve1</a></h1>
@@ -914,7 +918,7 @@
 <p> </p>
 <h1 id="rfc.section.5.4.1.2"><a href="#rfc.section.5.4.1.2">5.4.1.2.</a> ECVRF_hash_to_curve2</h1>
 <p id="rfc.section.5.4.1.2.p.1">For applications where VRF input alpha must be kept secret, the following ECVRF_hash_to_curve algorithm MAY be used to used as generic way to hash an octet string onto any elliptic curve.  </p>
-<p id="rfc.section.5.4.1.2.p.2">[TODO: If there interest, we could look into specifying the generic deterministic time hash_to_curve algorithm from <a href="#Icart09">[Icart09]</a>.  Note also for the Ed25519 curve (but not the P256 curve), the Elligator algorithm could be used here.] </p>
+<p id="rfc.section.5.4.1.2.p.2">[TODO: We should look into specifying the generic deterministic time hash_to_curve algorithm from <a href="#Icart09">[Icart09]</a>.  We should also consider  Shallue-Woestijne-Ulas algorithm from <a href="#BCIMRT10">[BCIMRT10]</a> as well as Elligator (for Ed25519) and Elligator Squared for more general curves. Some of these options are summarized in an upcoming draft <a href="#SW18">[SW18]</a>, which we may want to work with.] </p>
 <h1 id="rfc.section.5.4.2"><a href="#rfc.section.5.4.2">5.4.2.</a> EC-VRF Hash Points</h1>
 <p id="rfc.section.5.4.2.p.1">ECVRF_hash_points(p_1, p_2, ..., p_j) </p>
 <p id="rfc.section.5.4.2.p.2">Input: </p>
@@ -1001,7 +1005,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.3">[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve?] </p>
+<p id="rfc.section.5.5.p.3">[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? Should we add Elligator-Squared? We may want to consider options in the upcoming draft <a href="#SW18">[SW18]</a>.] </p>
 <p id="rfc.section.5.5.p.4">[TODO: Add an Ed448 ciphersuite?]</p>
 <p id="rfc.section.5.5.p.5">[NOTE: In the unlikely case that future versions of this spec use a elliptic curve group G that does not also come with a specification of the group generator g, then we can still have full uniqueness and full collision resistance by adding an check to ECVRF_validate_key(PK) that ensures that g is a point on the elliptic curve and g^cofactor is not the EC point at infinity.] </p>
 <h1 id="rfc.section.5.6"><a href="#rfc.section.5.6">5.6.</a> <a href="#keycheck" id="keycheck">When the EC-VRF Keys are Untrusted</a></h1>
@@ -1062,6 +1066,7 @@
 <p> </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> Proper randomness for EC-VRF</h1>
 <p id="rfc.section.7.3.p.1">Applications that use the EC-VRF defined in this document MUST ensure that the random nonce k used in the ECVRF_prove algorithm is chosen with proper randomness. Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi.  </p>
+<p id="rfc.section.7.3.p.2">[TODO: We may wish to specify nonce generation] </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Timing attacks</h1>
 <p id="rfc.section.7.4.p.1">The EC-VRF_hash_to_curve algorithm defined in <a href="#ecvrfH2C1">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the EC-VRF_hash_to_curve algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> Change Log</h1>
@@ -1069,13 +1074,12 @@
 <p/>
 
 <ul class="empty">
-  <li>00 - Forked this document from draft-vcelak-nsec5-04.  Cleaned up the definitions of VRF algorithms.  Added security definitions for VRF and security considerations.  Parameterized EC-VRF so it could support curves other than P-256 and Ed25519.  </li>
-  <li>01 - Fixed ECVRF to work when cofactor &gt; 1.  Changed ECVRF_proof2hash(pi) so that it outputs a value raised to the cofactor and then processed by the cryptographic hash function Hash.  Included the VRF public key y as input to the hash function ECVRF_hash_to_curve1.  Cleaned up ciphersuites and ECVRF description so that it works with EC point encodings for both P256 and Ed25519 curves.  Added ECVRF_validate_key so that EC-VRF can satisfy "full uniqueness" and "full collision" resistance.  Updated implementation status.  Added "an additional pseudorandomness property" to security definitions.  </li>
+  <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 </ul>
 
 <p> </p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> Contributors</h1>
-<p id="rfc.section.9.p.1">Leonid Reyzin (Boston University) is a major contributer to this document. </p>
+<p id="rfc.section.9.p.1">Leonid Reyzin (Boston University) is a major contributor to this document. </p>
 <p id="rfc.section.9.p.2">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce) and David C. Lawerence (Akamai) provided valuable input to this draft.  </p>
 <h1 id="rfc.references"><a href="#rfc.references">10.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">10.1.</a> Normative References</h1>
@@ -1132,7 +1136,7 @@
       <td class="reference">
         <b id="nsec5ecc">[nsec5ecc]</b>
       </td>
-      <td class="top"><a>Papadopoulos, D.</a>, <a>Wessels, D.</a>, <a>Huque, S.</a>, <a>Vcelak, J.</a>, <a>Naor, M.</a>, <a>Reyzin, L.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2017/099.pdf">Making NSEC5 Practical for DNSSEC Deployments</a>", in ePrint Cryptology Archive 2017/099, February 2017.</td>
+      <td class="top"><a>Papadopoulos, D.</a>, <a>Wessels, D.</a>, <a>Huque, S.</a>, <a>Vcelak, J.</a>, <a>Naor, M.</a>, <a>Reyzin, L.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2017/099.pdf">Making NSEC5 Practical for DNSSEC</a>", in ePrint Cryptology Archive 2017/099, February 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1148,21 +1152,24 @@
     </tr>
     <tr>
       <td class="reference">
+        <b id="BCIMRT10">[BCIMRT10]</b>
+      </td>
+      <td class="top"><a>Brier, E.</a>, <a>Coron, J.</a>, <a>Icart, T.</a>, <a>Madore, D.</a>, <a>Randriam, H.</a> and <a>M. Tibouchi</a>, "<a>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</a>", in CRYPTO, 2010.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="SW18">[SW18]</b>
+      </td>
+      <td class="top"><a>Sullivan, E.</a> and <a>C. Wood</a>, "<a>Hashing to Elliptic Curves</a>", 2018.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b>
       </td>
-      <td class="top"><a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="http://tools.ietf.org/html/draft-vcelak-nsec5-04">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-04, March 2017.</td>
+      <td class="top"><a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="http://tools.ietf.org/html/draft-vcelak-nsec5-06">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-06, January 2018.</td>
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> Open Issues</h1>
-<p id="rfc.section.A.p.1">Note to RFC Editor: please remove this appendix before publication as an RFC.  </p>
-<p/>
-
-<ol>
-  <li>Open issues</li>
-</ol>
-
-<p> </p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
@@ -1191,23 +1198,45 @@
 </div><div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
+	  <span class="fn">Leonid Reyzin</span> 
+	  <span class="n hidden">
+		<span class="family-name">Reyzin</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Boston University</span>
+	<span class="adr">
+	  <span class="vcardline">111 Cummington St, MCS135</span>
+
+	  <span class="vcardline">
+		<span class="locality">Boston</span>,  
+		<span class="region">MA</span> 
+		<span class="code">02215</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:reyzin@cs.bu.edu">reyzin@cs.bu.edu</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
 	  <span class="fn">Dimitrios Papadopoulos</span> 
 	  <span class="n hidden">
 		<span class="family-name">Papadopoulos</span>
 	  </span>
 	</span>
-	<span class="org vcardline">University of Maryland</span>
+	<span class="org vcardline">Hong Kong University of Science and Techology</span>
 	<span class="adr">
-	  <span class="vcardline">8223 Paint Branch Dr</span>
+	  <span class="vcardline">Clearwater Bay</span>
 
 	  <span class="vcardline">
-		<span class="locality">College Park</span>,  
-		<span class="region">MD</span> 
-		<span class="code">20740</span>
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">USA</span>
+	  <span class="country-name vcardline">Hong Kong</span>
 	</span>
-	<span class="vcardline">EMail: <a href="mailto:dipapado@bu.edu">dipapado@bu.edu</a></span>
+	<span class="vcardline">EMail: <a href="mailto:dipapado@cse.ust.hkbu.edu">dipapado@cse.ust.hkbu.edu</a></span>
 
   </address>
 </div><div class="avoidbreak">
