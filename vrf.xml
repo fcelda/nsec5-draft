@@ -115,7 +115,7 @@
    A key application of the VRF is to provide privacy against 
    offline enumeration (e.g. dictionary attacks) on data  stored in a 
    hash-based data structure. 
-   In this application, a Prover holds the VRF secret key and uses the VRF hashing to
+   In this application, a Prover holds the VRF private key and uses the VRF hashing to
    construct a hash-based data structure on the input data.
 
    Due to the nature of the VRF, only the Prover can answer queries
@@ -233,7 +233,7 @@
     <t> Uniqueness means that, for any fixed public
 	VRF key and for any input alpha, there is a unique VRF
 	output beta that can be proved to be valid.  Uniqueness must hold
-    even for an adversarial Prover that knows the VRF secret key SK.
+    even for an adversarial Prover that knows the VRF private key SK.
     </t>
 
     <t>
@@ -262,14 +262,14 @@
 
     <t>Like any cryprographic hash function, VRFs need to be
         collision resistant.  Collison resistance must hold
-    even for an adversarial Prover that knows the VRF secret key SK.
+    even for an adversarial Prover that knows the VRF private key SK.
     </t>
     
     <t> More percisely, "full collision resistance" states that
         it should be computationally 
         infeasible for an adversary to find two distinct VRF
 	    inputs alpha1 and alpha2 that have the same VRF hash beta, 
-        even if that adversary knows the secret VRF key SK.
+        even if that adversary knows the private VRF key SK.
     </t>
     
     <t>
@@ -594,9 +594,15 @@
           <t>
             Parameters used:
             <list>
+                <t>SK - VRF private key</t>
+                <t>x - VRF secret scalar, an integer where 0 &lt; x &lt; q
+                    <list><t>
+                        Note: depending on the ciphersuite used, the VRF secret scalar may be equal
+                        to SK; else, it is derived from SK
+                    </t></list>
+                </t>
                 <t>y = g^x - VRF public key, an EC point</t>
-                <t>x - VRF private key, an integer where 0 &lt; x &lt; q
-                </t> 
+                
              </list>
         </t>
 
@@ -622,9 +628,10 @@
 
         <section title="EC-VRF Proving" anchor="ecvrfprove">
                 
-            <t>Note: this function is made more efficient by taking in the public
-            VRF key y, as well as the private VRF key x.
-            </t>    
+                <t>
+                    Note: this function must have the VRF private key SK as input. Below we make it more
+                    efficient by supplying it also with the secret scalar x and the public key y as additional inputs; however, each of these can be computed from SK if desired.
+                </t>
                 
             <t>
                 ECVRF_prove(y, x, alpha)
@@ -633,9 +640,9 @@
             <t>
                 Input:
                 <list>
-                    <t>y - public key, an EC point</t>
-                    <t>x - private key, an integer</t>
-                    <t>alpha - VRF input, an octet string</t>
+                    <t>SK - VRF private key</t>
+                    <t>x - VRF secret scalar</t>
+                    <t>y = g^x - VRF public key</t>
                 </list>
             </t>
 
@@ -651,9 +658,9 @@
                 <list style="numbers">
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
                     <t>gamma = h^x</t>
-                    <t>choose a random integer nonce k from [0, q-1]</t>
+                    <t>k = ECVRF_nonce_generation(SK, alpha)</t>
                     <t>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</t>
-                    <t>s = k - c*x mod q (where * denotes integer multiplication)</t>
+                    <t>s = k + c*x mod q (where * denotes integer multiplication)</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
                 </list>
@@ -720,7 +727,7 @@
                     <t>(gamma, c, s) = D</t>
                     <t>u = y^c * g^s (where * denotes EC point addition, i.e. a group operation on two EC points)</t>
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
-                    <t>v = gamma^c * h^s (where * denotes EC point addition)</t>
+                    <t>v = gamma^c / h^s (where / denotes EC point subtraction)</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
@@ -829,7 +836,63 @@
             <xref target="SW18"/>.]
             </t>
             </section>
+            
+            <section title="ECVRF_hash_to_curve_elligator2_25519">
+                
+                
+                <t>
+                    ECVRF_hash_to_curve_elligator2_25519(y, alpha)
+                </t>
+                <t>
+                    Input:
+                    <list>
+                        <t>alpha - value to be hashed, an octet string</t>
+                        <t>y - public key, an EC point</t>
+                    </list>
+                </t>
+                <t>
+                    Output:
+                    <list>
+                        <t>h - hashed value, a finite EC point in G <xref target="RFC8032">RFC8032 Section 5.1.2</xref></t>
+                    </list>
+                </t>
+                
+                <t> Fixed options:
+                    <list>
+                        <t> p = 2^255-19, the size of the finite field F, a prime, for Curve25519</t>
+                        <t> A = 486662, Montgomery curve constant for Curve25519 </t>
+                        <t> cofactor = 8 , the cofactor for Curve25519 </t>
+                    </list>
+                </t>
+                
+                <t>
+                    Steps:
+                    <list style="numbers">
+                        <t>pk = EC2OSP(y)</t>
+                        <t>hash = Hash(pk || alpha )</t>
+                        <t>r = first 2n octects of hash</t>
+                        <t>x_0 = next unused bit of hash </t>
+                        <t>u = - A / (1 + 2*(r^2) )  mod p (where * denotes integer multiplication)</t>
+                        <t>v = u * (u^2 + A*u + 1) mod p </t>
+                        <t>e = v ^ ((p-1)/2) mod p </t>
+                        <t>if v is equal to -1 then finalu = -A - u; else finalu = u </t>
+                        <t>y = (finalu - 1) / (finalu + 1)</t>
+                        <t>let h = (x_0,y), an EC point per the encoding in
+                            <xref target="RFC8032">RFC8032 Section 5.1.2</xref></t>
+                        <t>h = h^cofactor</t>
+                    </list>
+                </t>
+            </section>
+
+            
         </section>
+
+
+    <section title="EC-VRF Nonce Generation">
+        <t>k = ECVRF_nonce_generation(SK, alpha)</t>
+        <t>[TODO: specify as per RFC 8032 for 25519 or as per RFC 6979 for other curves]</t>
+
+    </section>
 
         <section title="EC-VRF Hash Points">
                      
