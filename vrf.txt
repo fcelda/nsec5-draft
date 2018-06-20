@@ -764,20 +764,20 @@ Internet-Draft                     VRF                         June 2018
 
 5.4.1.2.  ECVRF_hash_to_curve2
 
-   For applications where VRF input alpha must be kept secret, the
-   following ECVRF_hash_to_curve algorithm MAY be used to used as
-   generic way to hash an octet string onto any elliptic curve.
+   [TODO: For applications where VRF input alpha must be kept secret, it
+   would be nice to have a generic ECVRF_hash_to_curve algorithm that
+   runs in constant time and provides a generic way to hash an octet
+   string onto any elliptic curve.  There is an an upcoming draft that
+   deals with this [SW18].  Some other useful algorithms include
+   [Icart09], and Shallue-Woestijne-Ulas algorithm from [BCIMRT10].]
 
-   [TODO: We should look into specifying the generic deterministic time
-   hash_to_curve algorithm from [Icart09].  We should also consider
-   Shallue-Woestijne-Ulas algorithm from [BCIMRT10] as well as Elligator
-   (for Ed25519) and Elligator Squared for more general curves.  Some of
-   these options are summarized in an upcoming draft [SW18].]
+5.4.1.3.  ECVRF_hash_to_curve_elligator2_25519
 
+   The following ECVRF__hash_to_curve_elligator2_25519(y, alpha)
+   algorithm implements ECVRF_hash_to_curve using the elligator2
+   algorithm exclusively for Curve25519.
 
-
-
-
+   ECVRF_hash_to_curve_elligator2_25519(y, alpha)
 
 
 
@@ -785,10 +785,6 @@ Goldberg, et al.        Expires December 22, 2018              [Page 14]
 
 Internet-Draft                     VRF                         June 2018
 
-
-5.4.1.3.  ECVRF_hash_to_curve_elligator2_25519
-
-   ECVRF_hash_to_curve_elligator2_25519(y, alpha)
 
    Input:
 
@@ -798,8 +794,8 @@ Internet-Draft                     VRF                         June 2018
 
    Output:
 
-      h - hashed value, a finite EC point in G RFC8032 Section 5.1.2
-      [RFC8032]
+      h - hashed value, a finite EC point in G per the encoding in
+      RFC8032 Section 5.1.2 [RFC8032]
 
    Fixed options:
 
@@ -809,6 +805,8 @@ Internet-Draft                     VRF                         June 2018
       A = 486662, Montgomery curve constant for Curve25519
 
       cofactor = 8 , the cofactor for Curve25519
+
+      * denotes integer multiplication
 
    Steps:
 
@@ -820,19 +818,21 @@ Internet-Draft                     VRF                         June 2018
 
    4.   x_0 = next unused bit of hash
 
-   5.   u = - A / (1 + 2*(r^2) ) mod p (where * denotes integer
-        multiplication)
+   5.   u = - A / (1 + 2*(r^2) ) mod p
 
    6.   v = u * (u^2 + A*u + 1) mod p
 
    7.   e = v ^ ((p-1)/2) mod p
 
-   8.   if v is equal to -1 then finalu = -A - u; else finalu = u
+   8.   If v is equal to -1 then finalu = -A - u; else finalu = u
 
    9.   y = (finalu - 1) / (finalu + 1)
 
    10.  let h = (x_0,y), an EC point per the encoding in RFC8032
         Section 5.1.2 [RFC8032]
+
+   11.  h = h^cofactor
+
 
 
 
@@ -842,7 +842,13 @@ Goldberg, et al.        Expires December 22, 2018              [Page 15]
 Internet-Draft                     VRF                         June 2018
 
 
-   11.  h = h^cofactor
+   This algorithm runs in constant time as long as Step 8 (Paragraph 8)
+   below is implemented to run in constant time.  One way to do this is
+   to replace Step 8 (Paragraph 8) with the following step (although
+   implementors should check that this step does indeed run in constant
+   time):
+
+      finalu = e*u - (1-e)/2 * A
 
 5.4.2.  EC-VRF Nonce Generation
 
@@ -884,12 +890,6 @@ Internet-Draft                     VRF                         June 2018
 
    Input:
 
-      pi - VRF proof, octet string (m+3n octets)
-
-   Output:
-
-      "INVALID", or
-
 
 
 
@@ -897,6 +897,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 16]
 
 Internet-Draft                     VRF                         June 2018
 
+
+      pi - VRF proof, octet string (m+3n octets)
+
+   Output:
+
+      "INVALID", or
 
       gamma - EC point
 
@@ -940,12 +946,6 @@ Internet-Draft                     VRF                         June 2018
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
-   o  The ECVRF_hash_to_curve function is as specified in
-      Section 5.4.1.1.
-
-   This document defines EC-VRF-ED25519-SHA256 as follows:
-
-
 
 
 
@@ -953,6 +953,11 @@ Goldberg, et al.        Expires December 22, 2018              [Page 17]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   o  The ECVRF_hash_to_curve function is as specified in
+      Section 5.4.1.1.
+
+   This document defines EC-VRF-ED25519-SHA256 as follows:
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -997,11 +1002,6 @@ Internet-Draft                     VRF                         June 2018
    uniqueness", "trusted collision resistance", and "full
    pseudorandomness" properties defined in Section 3.  If the elliptic
    curve parameters (including the generator g) are trusted, but the VRF
-   public key PK is not trusted, this VRF can be modified to
-   additionally satisfy "full uniqueness", and "full collision
-   resistance".  This is done by additionally requiring the Verifier to
-   perform the following validation procedure upon receipt of the public
-   VRF key.
 
 
 
@@ -1009,6 +1009,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 18]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   public key PK is not trusted, this VRF can be modified to
+   additionally satisfy "full uniqueness", and "full collision
+   resistance".  This is done by additionally requiring the Verifier to
+   perform the following validation procedure upon receipt of the public
+   VRF key.
 
    The Verifier MUST perform this validation procedure when the entity
    that generated the public VRF key is untrusted.  The public key MUST
@@ -1053,12 +1059,6 @@ Internet-Draft                     VRF                         June 2018
    and is available at <http://github.com/fcelda/nsec5-crypto>.  The EC-
    VRF implementation may be out of date as this spec has evolved.
 
-   The Key Transparency project at Google uses a VRF implemention that
-   is similar to the EC-VRF-P256-SHA256, with a few minor changes
-   including the use of SHA-512 instead of SHA-256.  Its implementation
-   is available
-
-
 
 
 Goldberg, et al.        Expires December 22, 2018              [Page 19]
@@ -1066,6 +1066,10 @@ Goldberg, et al.        Expires December 22, 2018              [Page 19]
 Internet-Draft                     VRF                         June 2018
 
 
+   The Key Transparency project at Google uses a VRF implemention that
+   is similar to the EC-VRF-P256-SHA256, with a few minor changes
+   including the use of SHA-512 instead of SHA-256.  Its implementation
+   is available
    <https://github.com/google/keytransparency/blob/master/core/vrf/
    vrf.go>
 
@@ -1110,10 +1114,6 @@ Internet-Draft                     VRF                         June 2018
    hold if the keys are generated adversarially (e.g., if RSA is not
    permutation).  Meanwhile, the "full uniqueness" and "full collision
    resistance" are properties that hold even if VRF keys are generated
-   by an adversary.  The RSA-FDH-VRF defined in this document does not
-   have these properties.  However, if adversarial key generation is a
-   concern, the RSA-FDH-VRF may be modifed to have these properties by
-
 
 
 
@@ -1122,6 +1122,9 @@ Goldberg, et al.        Expires December 22, 2018              [Page 20]
 Internet-Draft                     VRF                         June 2018
 
 
+   by an adversary.  The RSA-FDH-VRF defined in this document does not
+   have these properties.  However, if adversarial key generation is a
+   concern, the RSA-FDH-VRF may be modifed to have these properties by
    adding additional cryptographic checks that its public key has the
    right form.  These modifications are left for future specification.
 
@@ -1166,9 +1169,6 @@ Internet-Draft                     VRF                         June 2018
    Applications that use the EC-VRF defined in this document MUST ensure
    that the random nonce k used in the ECVRF_prove algorithm is chosen
    with proper randomness.  Otherwise, an adversary may be able to
-   recover the private VRF key x (and thus break pseudorandomness of the
-   VRF) after observing several valid VRF proofs pi.
-
 
 
 
@@ -1177,6 +1177,9 @@ Goldberg, et al.        Expires December 22, 2018              [Page 21]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   recover the private VRF key x (and thus break pseudorandomness of the
+   VRF) after observing several valid VRF proofs pi.
 
    [TODO: In the next version of the draft we should add a specification
    for nonce generation.]
@@ -1220,10 +1223,7 @@ Internet-Draft                     VRF                         June 2018
               National Institute for Standards and Technology, "Digital
               Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+
 
 
 
@@ -1233,6 +1233,11 @@ Goldberg, et al.        Expires December 22, 2018              [Page 22]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
               Groups for Use with IETF Standards", RFC 5114,
@@ -1276,11 +1281,6 @@ Internet-Draft                     VRF                         June 2018
 
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999.
-
-
-
-
-
 
 
 
