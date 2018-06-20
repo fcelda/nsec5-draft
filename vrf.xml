@@ -838,7 +838,7 @@
             
             </section>
             
-            <section title="ECVRF_hash_to_curve_elligator2_25519">
+            <section title="ECVRF_hash_to_curve_elligator2_25519" anchor="elligator2">
             
                 <t> The following ECVRF__hash_to_curve_elligator2_25519(y, alpha) 
                 algorithm implements ECVRF_hash_to_curve using the elligator2 
@@ -1062,13 +1062,15 @@
         </list>
         </t>
    
-        <t>[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator
-        ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? 
-        Should we add Elligator-Squared? We may want to consider options in 
-        the upcoming draft <xref target="SW18"/>.]
+   <t>This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows: 
+        <list style="symbols">
+        <t> This ciphersuite is identical to EC-VRF-ED25519-SHA512 except that
+        the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/>.
+        </t>
+        </list>
+        [TODO: Say somewhere that this runs in constant time.]
         </t>
    
-        <t>[TODO: Add an Ed448 ciphersuite? This is probably not needed...]</t>
         
         <t>[NOTE: In the unlikely case that future versions of this spec
         use a elliptic curve group G that does not also come with a specification
