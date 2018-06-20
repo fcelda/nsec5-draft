@@ -419,7 +419,8 @@
         <t>
             Constraints on options:
             <list>
-                <t>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key</t>
+                <t>Cryptographic security of Hash is at least as high as the 
+                cryptographic security level of the RSA key.</t>
             </list>
         </t>
 
@@ -587,7 +588,7 @@
             Constraints on options:
             <list>
                 <t>Field elements in F have bit lengths divisible by 16</t>
-                <t>hLen is equal to 2n</t>
+                <t>hLen is greater than or equal to 2n</t>
             </list>
         </t>
 
@@ -694,7 +695,8 @@
                     <t>D = ECVRF_decode_proof(pi)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>beta = Hash(EC2OSP(gamma^cofactor))</t>
+                    <t>hash = Hash(EC2OSP(gamma^cofactor))</t>
+                    <t>beta = first 2n octets of hash</t>
                     <t>Output beta</t>
                 </list>
             </t>
@@ -809,7 +811,8 @@
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
-                        <t>attempted_hash = Hash(pk || alpha || CTR)</t>
+                        <t>hash = Hash(pk || alpha || CTR)</t>
+                        <t>attempted_hash = first 2n bits of hash</t> 
                         <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
                     </list></t>
@@ -869,12 +872,19 @@
                     </list>
                 </t>
                 
+                <t> Constraints on options:
+                    <list>
+                        <t> output length of Hash is at least 16n + 1 bits 
+                        (i.e. greater than 2n octets)</t>
+                    </list>
+                </t>
+                
                 <t>
                     Steps:
                     <list style="numbers">
                         <t>pk = EC2OSP(y)</t>
                         <t>hash = Hash(pk || alpha )</t>
-                        <t>r = first 2n octects of hash</t>
+                        <t>r = first 2n octets of hash</t>
                         <t>x_0 = next unused bit of hash </t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
                         <t>v = u * (u^2 + A*u + 1) mod p </t>
@@ -905,12 +915,12 @@
             
         </section>
 
-
+<!--
     <section title="EC-VRF Nonce Generation">
         <t>k = ECVRF_nonce_generation(SK, alpha)</t>
         <t>[TODO: specify as per RFC 8032 for 25519 or as per RFC 6979 for other curves]</t>
-
     </section>
+-->
 
         <section title="EC-VRF Hash Points">
                      
@@ -1019,19 +1029,24 @@
         </list>
         </t>
         
-        <t>This document defines EC-VRF-ED25519-SHA256 as follows: 
+        <t>This document defines EC-VRF-ED25519-SHA512 as follows: 
         <list style="symbols">
         <t>
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
-             <xref target="RFC8032"></xref>.       
+             <xref target="RFC8032" />.       
             For this group, 2n = 32 and cofactor = 8.
         </t>
-        <t> The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
+        <t> The private key and generation of the secret scalar and the public 
+        key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
         
-        <t> The ECVRF_nonce_generation function is as specified in Section 5.1.6 Steps 1-2 of <xref target="RFC8032"/>[TODO: What should F and C be? Should we have a prehash version also?]</t>
+        <t> The ECVRF_nonce_generation function is as specified in 
+        <xref target="RFC8032">RFC 8032 Section 5.1.
+        6 Steps 1-2</xref>.
+         [TODO: What should F and C be? Should we have a prehash version also?]</t>
         
-        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. This implies m = 2n = 32.</t>
+        <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. 
+        This implies m = 2n = 32.</t>
         
         <t> OS2ECP is specified in Section 5.1.3 of <xref target="RFC8032" />.
         </t>
@@ -1039,7 +1054,7 @@
         <t>RS2ECP is equivalent to OS2ECP.</t>
 
         <t>
-            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>. [TODO: CHANGE TO SHA-512]
+            The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>.
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
