@@ -1092,7 +1092,8 @@
 
 <ul>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
-<li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>. </li>
+<li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>. In this ciphersuite, the secret scalar x is equal to the private key SK.</li>
+<li>The ECVRF_nonce_generation function is as specified in RFC 6979 [TODO: put in specific refs]</li>
 <li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
 <li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
 <li>RS2ECP(h) = OS2ECP(0x02 || h). The input h is a 32-octet string and the output is either an EC point or "INVALID". </li>
@@ -1111,7 +1112,7 @@
 <li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>. This implies m = 2n = 32.</li>
 <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
 <li>RS2ECP is equivalent to OS2ECP.</li>
-<li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
+<li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>. [TODO: CHANGE TO SHA-512] </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
 

@@ -91,21 +91,21 @@ Table of Contents
        5.4.3.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  16
        5.4.4.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  16
      5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  17
-     5.6.  When the EC-VRF Keys are Untrusted  . . . . . . . . . . .  18
+     5.6.  When the EC-VRF Keys are Untrusted  . . . . . . . . . . .  19
        5.6.1.  EC-VRF Validate Key . . . . . . . . . . . . . . . . .  19
-   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  19
+   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  20
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  20
        7.1.1.  Uniqueness and collision resistance with untrusted
                keys  . . . . . . . . . . . . . . . . . . . . . . . .  20
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  21
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  21
-     7.3.  Proper randomness for EC-VRF  . . . . . . . . . . . . . .  21
+     7.3.  Proper randomness for EC-VRF  . . . . . . . . . . . . . .  22
      7.4.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  22
    8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  22
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  22
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  22
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  23
 
 
 
@@ -934,17 +934,17 @@ Internet-Draft                     VRF                         June 2018
       1.
 
    o  The key pair generation primitive is specified in Section 3.2.1 of
-      [SECG1].
+      [SECG1].  In this ciphersuite, the secret scalar x is equal to the
+      private key SK.
+
+   o  The ECVRF_nonce_generation function is as specified in RFC 6979
+      [TODO: put in specific refs]
 
    o  EC2OSP is specified in Section 2.3.3 of [SECG1] with point
       compression on.  This implies m = 2n + 1 = 33.
 
    o  OS2ECP is specified in Section 2.3.4 of [SECG1].
 
-   o  RS2ECP(h) = OS2ECP(0x02 || h).  The input h is a 32-octet string
-      and the output is either an EC point or "INVALID".
-
-   o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
 
 
@@ -953,6 +953,11 @@ Goldberg, et al.        Expires December 22, 2018              [Page 17]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   o  RS2ECP(h) = OS2ECP(0x02 || h).  The input h is a 32-octet string
+      and the output is either an EC point or "INVALID".
+
+   o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
@@ -978,6 +983,7 @@ Internet-Draft                     VRF                         June 2018
    o  RS2ECP is equivalent to OS2ECP.
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
+      [TODO: CHANGE TO SHA-512]
 
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
@@ -996,12 +1002,6 @@ Internet-Draft                     VRF                         June 2018
    ECVRF_validate_key(PK) that ensures that g is a point on the elliptic
    curve and g^cofactor is not the EC point at infinity.]
 
-5.6.  When the EC-VRF Keys are Untrusted
-
-   The EC-VRF as specified above is a VRF that satisfies the "trusted
-   uniqueness", "trusted collision resistance", and "full
-   pseudorandomness" properties defined in Section 3.  If the elliptic
-   curve parameters (including the generator g) are trusted, but the VRF
 
 
 
@@ -1010,6 +1010,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 18]
 Internet-Draft                     VRF                         June 2018
 
 
+5.6.  When the EC-VRF Keys are Untrusted
+
+   The EC-VRF as specified above is a VRF that satisfies the "trusted
+   uniqueness", "trusted collision resistance", and "full
+   pseudorandomness" properties defined in Section 3.  If the elliptic
+   curve parameters (including the generator g) are trusted, but the VRF
    public key PK is not trusted, this VRF can be modified to
    additionally satisfy "full uniqueness", and "full collision
    resistance".  This is done by additionally requiring the Verifier to
@@ -1052,12 +1058,6 @@ Internet-Draft                     VRF                         June 2018
 
    4.  Output y
 
-6.  Implementation Status
-
-   An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256
-   was first developed as a part of the NSEC5 project [I-D.vcelak-nsec5]
-   and is available at <http://github.com/fcelda/nsec5-crypto>.  The EC-
-   VRF implementation may be out of date as this spec has evolved.
 
 
 
@@ -1065,6 +1065,13 @@ Goldberg, et al.        Expires December 22, 2018              [Page 19]
 
 Internet-Draft                     VRF                         June 2018
 
+
+6.  Implementation Status
+
+   An implementation of the RSA-FDH-VRF (SHA-256) and EC-VRF-P256-SHA256
+   was first developed as a part of the NSEC5 project [I-D.vcelak-nsec5]
+   and is available at <http://github.com/fcelda/nsec5-crypto>.  The EC-
+   VRF implementation may be out of date as this spec has evolved.
 
    The Key Transparency project at Google uses a VRF implemention that
    is similar to the EC-VRF-P256-SHA256, with a few minor changes
@@ -1108,13 +1115,6 @@ Internet-Draft                     VRF                         June 2018
    EC-VRF with public key y satisfies the "full uniqueness" and "full
    collision resistance" properties.
 
-   The RSA-FDH-VRF statisfies the "trusted uniqueness" and "trusted
-   collision resistance" properties as long as the VRF keys are
-   generated correctly, with good randomness.  These properties may not
-   hold if the keys are generated adversarially (e.g., if RSA is not
-   permutation).  Meanwhile, the "full uniqueness" and "full collision
-   resistance" are properties that hold even if VRF keys are generated
-
 
 
 Goldberg, et al.        Expires December 22, 2018              [Page 20]
@@ -1122,6 +1122,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 20]
 Internet-Draft                     VRF                         June 2018
 
 
+   The RSA-FDH-VRF statisfies the "trusted uniqueness" and "trusted
+   collision resistance" properties as long as the VRF keys are
+   generated correctly, with good randomness.  These properties may not
+   hold if the keys are generated adversarially (e.g., if RSA is not
+   permutation).  Meanwhile, the "full uniqueness" and "full collision
+   resistance" are properties that hold even if VRF keys are generated
    by an adversary.  The RSA-FDH-VRF defined in this document does not
    have these properties.  However, if adversarial key generation is a
    concern, the RSA-FDH-VRF may be modifed to have these properties by
@@ -1164,12 +1170,6 @@ Internet-Draft                     VRF                         June 2018
       and EC-VRF the cryptographic strength of the hash function Hash
       may also potentially need to be increased.
 
-7.3.  Proper randomness for EC-VRF
-
-   Applications that use the EC-VRF defined in this document MUST ensure
-   that the random nonce k used in the ECVRF_prove algorithm is chosen
-   with proper randomness.  Otherwise, an adversary may be able to
-
 
 
 
@@ -1178,6 +1178,11 @@ Goldberg, et al.        Expires December 22, 2018              [Page 21]
 Internet-Draft                     VRF                         June 2018
 
 
+7.3.  Proper randomness for EC-VRF
+
+   Applications that use the EC-VRF defined in this document MUST ensure
+   that the random nonce k used in the ECVRF_prove algorithm is chosen
+   with proper randomness.  Otherwise, an adversary may be able to
    recover the private VRF key x (and thus break pseudorandomness of the
    VRF) after observing several valid VRF proofs pi.
 
@@ -1217,11 +1222,6 @@ Internet-Draft                     VRF                         June 2018
 
 10.  References
 
-10.1.  Normative References
-
-   [FIPS-186-3]
-              National Institute for Standards and Technology, "Digital
-              Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
 
 
@@ -1233,6 +1233,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 22]
 
 Internet-Draft                     VRF                         June 2018
 
+
+10.1.  Normative References
+
+   [FIPS-186-3]
+              National Institute for Standards and Technology, "Digital
+              Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1276,12 +1282,6 @@ Internet-Draft                     VRF                         June 2018
               Existence", draft-vcelak-nsec5-06 (work in progress),
               January 2018.
 
-   [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
-              2009.
-
-   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
-              Functions", in FOCS, 1999.
-
 
 
 
@@ -1289,6 +1289,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 23]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
+              2009.
+
+   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
+              Functions", in FOCS, 1999.
 
    [nsec5ecc]
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
@@ -1328,6 +1334,18 @@ Authors' Addresses
    EMail: dipapado@cse.ust.hkbu.edu
 
 
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 22, 2018              [Page 24]
+
+Internet-Draft                     VRF                         June 2018
+
+
    Jan Vcelak
    NS1
    16 Beaver St
@@ -1341,4 +1359,42 @@ Authors' Addresses
 
 
 
-Goldberg, et al.        Expires December 22, 2018              [Page 24]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 22, 2018              [Page 25]
