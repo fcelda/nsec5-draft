@@ -1349,6 +1349,13 @@
                 </t>-->
                 <t> 00 - Forked this document from draft-goldbe-vrf-01.</t>
                 <t> 01 - Minor updates, mostly highlighting TODO items.</t>
+                <t> 02 - Added specification of elligator2 for Curve25519, along
+                with ciphersuites for EC-VRF-ED25519-SHA512-Elligator. 
+                Changed 
+                EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change
+                made because Ed25519 in <xref target="RFC8032"/> signatures 
+                use SHA512 and not SHA256.)
+                </t>
             </list>
         </t>
     </section>
