@@ -526,7 +526,8 @@ Internet-Draft                     VRF                         June 2018
 
       hLen is equal to 2n
 
-   Parameters used:
+   Parameters used (the generation of these parameters is specified in
+   Section 5.5):
 
       SK - VRF private key
 
@@ -556,7 +557,6 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
 Goldberg, et al.        Expires December 22, 2018              [Page 10]
 
 Internet-Draft                     VRF                         June 2018
@@ -568,6 +568,13 @@ Internet-Draft                     VRF                         June 2018
 
       RS2ECP - conversion of a random 2n-octet string to an EC point as
       specified in Section 5.5
+
+      ECVRF_hash_to_curve - [TODO: Explain]
+
+      ECVRF_nonce_generation - [TODO: Explain] as specified in
+      Section 5.5
+
+      ECVRF_hash_points - [TODO: Explain]
 
 5.1.  EC-VRF Proving
 
@@ -604,19 +611,14 @@ Internet-Draft                     VRF                         June 2018
 
    6.  pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
 
-   7.  Output pi
-
-
-
-
-
-
 
 
 Goldberg, et al.        Expires December 22, 2018              [Page 11]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   7.  Output pi
 
 5.2.  EC-VRF Proof To Hash
 
@@ -664,8 +666,6 @@ Internet-Draft                     VRF                         June 2018
 
    1.  D = ECVRF_decode_proof(pi)
 
-   2.  If D is "INVALID", output "INVALID" and stop
-
 
 
 
@@ -673,6 +673,8 @@ Goldberg, et al.        Expires December 22, 2018              [Page 12]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   2.  If D is "INVALID", output "INVALID" and stop
 
    3.  (gamma, c, s) = D
 
@@ -720,8 +722,6 @@ Internet-Draft                     VRF                         June 2018
 
    ECVRF_hash_to_curve1(y, alpha)
 
-   Input:
-
 
 
 
@@ -729,6 +729,8 @@ Goldberg, et al.        Expires December 22, 2018              [Page 13]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   Input:
 
       alpha - value to be hashed, an octet string
 
@@ -772,11 +774,9 @@ Internet-Draft                     VRF                         June 2018
    (for Ed25519) and Elligator Squared for more general curves.  Some of
    these options are summarized in an upcoming draft [SW18].]
 
-5.4.1.3.  ECVRF_hash_to_curve_elligator2_25519
 
-   ECVRF_hash_to_curve_elligator2_25519(y, alpha)
 
-   Input:
+
 
 
 
@@ -785,6 +785,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 14]
 
 Internet-Draft                     VRF                         June 2018
 
+
+5.4.1.3.  ECVRF_hash_to_curve_elligator2_25519
+
+   ECVRF_hash_to_curve_elligator2_25519(y, alpha)
+
+   Input:
 
       alpha - value to be hashed, an octet string
 
@@ -828,12 +834,6 @@ Internet-Draft                     VRF                         June 2018
    10.  let h = (x_0,y), an EC point per the encoding in RFC8032
         Section 5.1.2 [RFC8032]
 
-   11.  h = h^cofactor
-
-
-
-
-
 
 
 
@@ -841,6 +841,8 @@ Goldberg, et al.        Expires December 22, 2018              [Page 15]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   11.  h = h^cofactor
 
 5.4.2.  EC-VRF Nonce Generation
 
@@ -888,8 +890,6 @@ Internet-Draft                     VRF                         June 2018
 
       "INVALID", or
 
-      gamma - EC point
-
 
 
 
@@ -897,6 +897,8 @@ Goldberg, et al.        Expires December 22, 2018              [Page 16]
 
 Internet-Draft                     VRF                         June 2018
 
+
+      gamma - EC point
 
       c - integer between 0 and 2^(8n)-1
 
@@ -943,9 +945,7 @@ Internet-Draft                     VRF                         June 2018
 
    This document defines EC-VRF-ED25519-SHA256 as follows:
 
-   o  The EC group G is the Ed25519 elliptic curve with parameters
-      defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
-      cofactor = 8.
+
 
 
 
@@ -954,8 +954,16 @@ Goldberg, et al.        Expires December 22, 2018              [Page 17]
 Internet-Draft                     VRF                         June 2018
 
 
-   o  The key pair generation primitive is specified in Section 5.1.5 of
-      [RFC8032]
+   o  The EC group G is the Ed25519 elliptic curve with parameters
+      defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
+      cofactor = 8.
+
+   o  The private key and generation of the secret scalar and the public
+      key are specified in Section 5.1.5 of [RFC8032]
+
+   o  The ECVRF_nonce_generation function is as specified in
+      Section 5.1.6 Steps 1-2 of [RFC8032][TODO: What should F and C be?
+      Should we have a prehash version also?]
 
    o  EC2OSP is specified in Section 5.1.2 of [RFC8032].  This implies m
       = 2n = 32.
@@ -995,20 +1003,18 @@ Internet-Draft                     VRF                         June 2018
    perform the following validation procedure upon receipt of the public
    VRF key.
 
-   The Verifier MUST perform this validation procedure when the entity
-   that generated the public VRF key is untrusted.  The public key MUST
-   NOT be used if this procedure returns "INVALID".  Note well that this
-   procedure is not sufficient if the elliptic curve E or if g, the
-   generator of group G, is untrusted.
-
-
-
 
 
 Goldberg, et al.        Expires December 22, 2018              [Page 18]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   The Verifier MUST perform this validation procedure when the entity
+   that generated the public VRF key is untrusted.  The public key MUST
+   NOT be used if this procedure returns "INVALID".  Note well that this
+   procedure is not sufficient if the elliptic curve E or if g, the
+   generator of group G, is untrusted.
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
@@ -1051,12 +1057,6 @@ Internet-Draft                     VRF                         June 2018
    is similar to the EC-VRF-P256-SHA256, with a few minor changes
    including the use of SHA-512 instead of SHA-256.  Its implementation
    is available
-   <https://github.com/google/keytransparency/blob/master/core/vrf/
-   vrf.go>
-
-   An implementation by Yahoo! similar to the EC-VRF is available at
-   <https://github.com/r2ishiguro/vrf>.
-
 
 
 
@@ -1065,6 +1065,12 @@ Goldberg, et al.        Expires December 22, 2018              [Page 19]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   <https://github.com/google/keytransparency/blob/master/core/vrf/
+   vrf.go>
+
+   An implementation by Yahoo! similar to the EC-VRF is available at
+   <https://github.com/r2ishiguro/vrf>.
 
    An implementation similar to EC-VRF is available as part of the
    CONIKS implementation in Golang at <https://github.com/coniks-sys/
@@ -1107,12 +1113,6 @@ Internet-Draft                     VRF                         June 2018
    by an adversary.  The RSA-FDH-VRF defined in this document does not
    have these properties.  However, if adversarial key generation is a
    concern, the RSA-FDH-VRF may be modifed to have these properties by
-   adding additional cryptographic checks that its public key has the
-   right form.  These modifications are left for future specification.
-
-
-
-
 
 
 
@@ -1121,6 +1121,9 @@ Goldberg, et al.        Expires December 22, 2018              [Page 20]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   adding additional cryptographic checks that its public key has the
+   right form.  These modifications are left for future specification.
 
 7.1.2.  Pseudorandomness with untrusted keys
 
@@ -1166,9 +1169,6 @@ Internet-Draft                     VRF                         June 2018
    recover the private VRF key x (and thus break pseudorandomness of the
    VRF) after observing several valid VRF proofs pi.
 
-   [TODO: In the next version of the draft we should add a specification
-   for nonce generation.]
-
 
 
 
@@ -1177,6 +1177,9 @@ Goldberg, et al.        Expires December 22, 2018              [Page 21]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   [TODO: In the next version of the draft we should add a specification
+   for nonce generation.]
 
 7.4.  Timing attacks
 
@@ -1222,10 +1225,7 @@ Internet-Draft                     VRF                         June 2018
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
-              Groups for Use with IETF Standards", RFC 5114,
-              DOI 10.17487/RFC5114, January 2008,
-              <https://www.rfc-editor.org/info/rfc5114>.
+
 
 
 
@@ -1233,6 +1233,11 @@ Goldberg, et al.        Expires December 22, 2018              [Page 22]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
+              Groups for Use with IETF Standards", RFC 5114,
+              DOI 10.17487/RFC5114, January 2008,
+              <https://www.rfc-editor.org/info/rfc5114>.
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
@@ -1272,6 +1277,19 @@ Internet-Draft                     VRF                         June 2018
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999.
 
+
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 22, 2018              [Page 23]
+
+Internet-Draft                     VRF                         June 2018
+
+
    [nsec5ecc]
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
               Naor, M., Reyzin, L., and S. Goldberg, "Making NSEC5
@@ -1281,14 +1299,6 @@ Internet-Draft                     VRF                         June 2018
 
    [SW18]     Sullivan, E. and C. Wood, "Hashing to Elliptic Curves",
               2018.
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 23]
-
-Internet-Draft                     VRF                         June 2018
-
 
 Authors' Addresses
 
@@ -1325,16 +1335,6 @@ Authors' Addresses
    USA
 
    EMail: jvcelak@ns1.com
-
-
-
-
-
-
-
-
-
-
 
 
 

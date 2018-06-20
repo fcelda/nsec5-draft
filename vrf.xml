@@ -592,7 +592,7 @@
         </t>
 
           <t>
-            Parameters used:
+            Parameters used (the generation of these parameters is specified in <xref target="suites"/>):
             <list>
                 <t>SK - VRF private key</t>
                 <t>x - VRF secret scalar, an integer where 0 &lt; x &lt; q
@@ -602,7 +602,6 @@
                     </t></list>
                 </t>
                 <t>y = g^x - VRF public key, an EC point</t>
-                
              </list>
         </t>
 
@@ -623,6 +622,9 @@
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
                 <t>RS2ECP - conversion of a random 2n-octet string to an 
                 EC point as specified in <xref target="suites"/></t>
+                <t>ECVRF_hash_to_curve - [TODO: Explain]</t>
+                <t>ECVRF_nonce_generation - [TODO: Explain] as specified in <xref target="suites"/></t>
+                <t>ECVRF_hash_points - [TODO: Explain]</t>
             </list>
         </t>
 
@@ -1008,8 +1010,9 @@
              <xref target="RFC8032"></xref>.       
             For this group, 2n = 32 and cofactor = 8.
         </t>
-        <t> The key pair generation primitive is specified in Section 5.1.5 
-        of <xref target="RFC8032" /></t>
+        <t> The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
+        
+        <t> The ECVRF_nonce_generation function is as specified in Section 5.1.6 Steps 1-2 of <xref target="RFC8032"/>[TODO: What should F and C be? Should we have a prehash version also?]</t>
         
         <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. This implies m = 2n = 32.</t>
         

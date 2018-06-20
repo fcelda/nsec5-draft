@@ -803,7 +803,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.p.4">Parameters used: </p>
+<p id="rfc.section.5.p.4">Parameters used (the generation of these parameters is specified in <a href="#suites" class="xref">Section 5.5</a>): </p>
 
 <ul class="empty">
 <li>SK - VRF private key</li>
@@ -828,6 +828,10 @@
 <li>OS2ECP - conversion of an m-octet string to EC point as specified in <a href="#suites" class="xref">Section 5.5</a>.  OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</li>
 <li>RS2ECP - conversion of a random 2n-octet string to an EC point as specified in <a href="#suites" class="xref">Section 5.5</a>
 </li>
+<li>ECVRF_hash_to_curve - [TODO: Explain]</li>
+<li>ECVRF_nonce_generation - [TODO: Explain] as specified in <a href="#suites" class="xref">Section 5.5</a>
+</li>
+<li>ECVRF_hash_points - [TODO: Explain]</li>
 </ul>
 
 <p> </p>
@@ -1094,8 +1098,9 @@
 
 <ul>
 <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
-<li>The key pair generation primitive is specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
+<li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
+<li>The ECVRF_nonce_generation function is as specified in Section 5.1.6 Steps 1-2 of <a href="#RFC8032" class="xref">[RFC8032]</a>[TODO: What should F and C be? Should we have a prehash version also?]</li>
 <li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>. This implies m = 2n = 32.</li>
 <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
 <li>RS2ECP is equivalent to OS2ECP.</li>
