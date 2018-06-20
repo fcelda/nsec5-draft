@@ -996,8 +996,9 @@
             2n = 32 and cofactor = 1.
         </t>
         <t> The key pair generation primitive is specified in
-            Section 3.2.1 of <xref target="SECG1" />. </t>
-        
+            Section 3.2.1 of <xref target="SECG1" />. In this ciphersuite, the secret scalar x is equal to the private key SK.</t>
+        <t> The ECVRF_nonce_generation function is as specified in RFC 6979 [TODO: put in specific refs]</t>
+
         <t>
             EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" /> with point compression on.
             This implies m = 2n + 1 = 33.
@@ -1038,7 +1039,7 @@
         <t>RS2ECP is equivalent to OS2ECP.</t>
 
         <t>
-            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>. [TODO: CHANGE TO SHA-512]
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
