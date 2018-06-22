@@ -596,7 +596,7 @@
             Parameters used (the generation of these parameters is specified in <xref target="suites"/>):
             <list>
                 <t>SK - VRF private key</t>
-                <t>x - VRF secret scalar, an integer where 0 &lt; x &lt; q
+                <t>x - VRF secret scalar, an integer
                     <list><t>
                         Note: depending on the ciphersuite used, the VRF secret scalar may be equal
                         to SK; else, it is derived from SK
@@ -663,7 +663,7 @@
                     <t>gamma = h^x</t>
                     <t>k = ECVRF_nonce_generation(SK, alpha)</t>
                     <t>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</t>
-                    <t>s = k + c*x mod q (where * denotes integer multiplication)</t>
+                    <t>s = (k + c*x) mod q (where * denotes integer multiplication)</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
                 </list>
@@ -888,9 +888,9 @@
                         <t>x_0 = next unused bit of hash </t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
                         <t>v = u * (u^2 + A*u + 1) mod p </t>
-                        <t>e = v ^ ((p-1)/2) mod p </t>
-                        <t anchor="const">If v is equal to -1 then finalu = -A - u; else finalu = u </t>
-                        <t>y = (finalu - 1) / (finalu + 1)</t>
+                        <t anchor="const1">Let e equal the Legendre symbol of v modulo p</t>
+                        <t anchor="const2">If e is equal to -1 then finalu = (-A - u) mod p; else finalu = u </t>
+                        <t>y = (finalu - 1) / (finalu + 1) mod p</t>
                         <t>let h = (x_0,y), an EC point per the encoding in
                             <xref target="RFC8032">RFC8032 Section 5.1.2</xref></t>
                         <t>h = h^cofactor</t>
@@ -898,16 +898,18 @@
                 </t>
                 
                 
-                <t> This algorithm runs in constant time as long as 
-                <xref target="const">Step 8</xref> below
-                is implemented to run in constant time.  One way to do 
-                this is to replace <xref target="const">Step 8</xref>
-                with the following step (although implementors should 
-                check that this step does indeed run in
-                constant time): 
-                    <list>
-                     <t>finalu = e*u - (1-e)/2 * A</t>
-                    </list>
+                <t> In order to make this algorithm run in time that is (almost) independent
+                    of the input (so-called "constant-time"), implementers should pay particular attention
+                    to <xref target="const1">Step 7</xref> and
+                <xref target="const2">Step 8</xref> above.
+                This can be done using the following two steps:
+                <list>
+                    <t> e = v ^ ((p-1)/2) mod p</t>
+                    <t>finalu = (e*u - (1-e)/2 * A) mod p</t>
+                </list>
+                The first step will produce a value e that is either 1 or p-1. The second step is so fast compared
+                to the first that that its dependence on e is likely to not matter; implementers can also ensure that it
+                runs in the same amount of time regardless of e.
                 </t>
                 
             </section>
@@ -915,12 +917,6 @@
             
         </section>
 
-<!--
-    <section title="EC-VRF Nonce Generation">
-        <t>k = ECVRF_nonce_generation(SK, alpha)</t>
-        <t>[TODO: specify as per RFC 8032 for 25519 or as per RFC 6979 for other curves]</t>
-    </section>
--->
 
         <section title="EC-VRF Hash Points">
                      
@@ -1007,7 +1003,8 @@
         </t>
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />. In this ciphersuite, the secret scalar x is equal to the private key SK.</t>
-        <t> The ECVRF_nonce_generation function is as specified in RFC 6979 [TODO: put in specific refs]</t>
+        <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2, with the hash function
+        SHA-256 as specified in <xref target="RFC6234" /></t>
 
         <t>
             EC2OSP is specified in Section 2.3.3 of <xref target="SECG1" /> with point compression on.
@@ -1041,9 +1038,12 @@
         key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
         
         <t> The ECVRF_nonce_generation function is as specified in 
-        <xref target="RFC8032">RFC 8032 Section 5.1.
-        6 Steps 1-2</xref>.
-         [TODO: What should F and C be? Should we have a prehash version also?]</t>
+        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, with dom2(F, C) equal
+            to the ASCII string "SigEd25519 no
+            Ed25519 collisions" followed by a single octet 2 followed by a single octet 0 (i.e.,
+            F=2 and the context is empty), and PH(M) equal to M.
+        
+         [TODO: Is this what should F and C be? Should we have a prehash version also? Should we have a context version?]</t>
         
         <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. 
         This implies m = 2n = 32.</t>
@@ -1089,22 +1089,21 @@
         <t>The EC-VRF as specified above is a VRF that satisfies the 
         "trusted uniqueness", "trusted collision resistance", and 
         "full pseudorandomness" properties defined in <xref target="secdef"/>.
-        If the elliptic curve parameters (including the generator g) are trusted, 
-        but the VRF public key PK is not trusted, this VRF can be modified
-        to additionally satisfy "full uniqueness", 
-        and "full collision resistance".  This is done by 
-        additionally requiring the Verifier to perform
-        the following validation procedure upon receipt of the public 
-        VRF key.  
+        In order to obtain "full uniqueness" and "full collision resistance" (which provide
+        protection against a malicious VRF public key), the Verifier MUST
+        perform
+        the following additional validation procedure upon receipt of the public
+        VRF key. The public VRF key MUST NOT be used if this procedure returns "INVALID".
         </t>
         
-        <t>The Verifier MUST perform this validation procedure when the 
-        entity that generated the public VRF key is untrusted. 
-        The public key MUST NOT be used if this procedure returns "INVALID".
-        Note well that this procedure is not sufficient if the elliptic curve E 
-        or if g, the generator of group G, is untrusted.
+        <t>
+        Note that this procedure is not sufficient if the elliptic curve E
+        or the point g, the generator of group G, is untrusted. If the prover is untrusted,
+        the Verifier MUST
+        obtain E and g from a trusted source, such as a ciphersuite specification, rather
+        than from the prover.
         </t>
-                
+        
         <t> This procedure supposes that the public key provided to the Verifier is an octet 
         string. The procedure returns "INVALID" if the public key in invalid. 
         Otherwise, it returns y, the public key as an EC point.
@@ -1394,7 +1393,8 @@
         <?rfc include="reference.RFC.5114.xml"?>
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.8032.xml"?>
-        
+        <?rfc include="reference.RFC.6979.xml"?>
+
         <reference anchor="FIPS-186-3">
             <front>
                 <title>Digital Signature Standard (DSS)</title>

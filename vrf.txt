@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: December 22, 2018                               D. Papadopoulos
+Expires: December 24, 2018                               D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                           June 20, 2018
+                                                           June 22, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 22, 2018.
+   This Internet-Draft will expire on December 24, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 1]
+Goldberg, et al.        Expires December 24, 2018               [Page 1]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -87,9 +87,8 @@ Table of Contents
      5.3.  EC-VRF Verifying  . . . . . . . . . . . . . . . . . . . .  12
      5.4.  EC-VRF Auxiliary Functions  . . . . . . . . . . . . . . .  13
        5.4.1.  EC-VRF Hash To Curve  . . . . . . . . . . . . . . . .  13
-       5.4.2.  EC-VRF Nonce Generation . . . . . . . . . . . . . . .  16
-       5.4.3.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  16
-       5.4.4.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  16
+       5.4.2.  EC-VRF Hash Points  . . . . . . . . . . . . . . . . .  16
+       5.4.3.  EC-VRF Decode Proof . . . . . . . . . . . . . . . . .  17
      5.5.  EC-VRF Ciphersuites . . . . . . . . . . . . . . . . . . .  17
      5.6.  When the EC-VRF Keys are Untrusted  . . . . . . . . . . .  19
        5.6.1.  EC-VRF Validate Key . . . . . . . . . . . . . . . . .  19
@@ -103,18 +102,18 @@ Table of Contents
      7.3.  Proper randomness for EC-VRF  . . . . . . . . . . . . . .  22
      7.4.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  22
    8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  22
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  23
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  23
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  24
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 2]
+Goldberg, et al.        Expires December 24, 2018               [Page 2]
 
 Internet-Draft                     VRF                         June 2018
 
 
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  23
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  24
 
 1.  Introduction
@@ -165,7 +164,8 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 3]
+
+Goldberg, et al.        Expires December 24, 2018               [Page 3]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 4]
+Goldberg, et al.        Expires December 24, 2018               [Page 4]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 5]
+Goldberg, et al.        Expires December 24, 2018               [Page 5]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 6]
+Goldberg, et al.        Expires December 24, 2018               [Page 6]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -375,7 +375,7 @@ Internet-Draft                     VRF                         June 2018
    Constraints on options:
 
       Cryptographic security of Hash is at least as high as the
-      cryptographic security level of the RSA key
+      cryptographic security level of the RSA key.
 
    Primitives used:
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 7]
+Goldberg, et al.        Expires December 24, 2018               [Page 7]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 8]
+Goldberg, et al.        Expires December 24, 2018               [Page 8]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018               [Page 9]
+Goldberg, et al.        Expires December 24, 2018               [Page 9]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -524,14 +524,14 @@ Internet-Draft                     VRF                         June 2018
 
       Field elements in F have bit lengths divisible by 16
 
-      hLen is equal to 2n
+      hLen is greater than or equal to 2n
 
    Parameters used (the generation of these parameters is specified in
    Section 5.5):
 
       SK - VRF private key
 
-      x - VRF secret scalar, an integer where 0 < x < q
+      x - VRF secret scalar, an integer
 
          Note: depending on the ciphersuite used, the VRF secret scalar
          may be equal to SK; else, it is derived from SK
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 22, 2018              [Page 10]
+Goldberg, et al.        Expires December 24, 2018              [Page 10]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -607,13 +607,13 @@ Internet-Draft                     VRF                         June 2018
 
    4.  c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)
 
-   5.  s = k + c*x mod q (where * denotes integer multiplication)
+   5.  s = (k + c*x) mod q (where * denotes integer multiplication)
 
    6.  pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)
 
 
 
-Goldberg, et al.        Expires December 22, 2018              [Page 11]
+Goldberg, et al.        Expires December 24, 2018              [Page 11]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -642,9 +642,11 @@ Internet-Draft                     VRF                         June 2018
 
    3.  (gamma, c, s) = D
 
-   4.  beta = Hash(EC2OSP(gamma^cofactor))
+   4.  hash = Hash(EC2OSP(gamma^cofactor))
 
-   5.  Output beta
+   5.  beta = first 2n octets of hash
+
+   6.  Output beta
 
 5.3.  EC-VRF Verifying
 
@@ -664,15 +666,15 @@ Internet-Draft                     VRF                         June 2018
 
    Steps:
 
-   1.  D = ECVRF_decode_proof(pi)
 
 
 
-
-Goldberg, et al.        Expires December 22, 2018              [Page 12]
+Goldberg, et al.        Expires December 24, 2018              [Page 12]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   1.  D = ECVRF_decode_proof(pi)
 
    2.  If D is "INVALID", output "INVALID" and stop
 
@@ -720,15 +722,15 @@ Internet-Draft                     VRF                         June 2018
    algorithm SHOULD be avoided in applications where it is important
    that the VRF input alpha remain secret.
 
-   ECVRF_hash_to_curve1(y, alpha)
 
 
 
-
-Goldberg, et al.        Expires December 22, 2018              [Page 13]
+Goldberg, et al.        Expires December 24, 2018              [Page 13]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   ECVRF_hash_to_curve1(y, alpha)
 
    Input:
 
@@ -754,11 +756,13 @@ Internet-Draft                     VRF                         June 2018
 
        B.  ctr = ctr + 1
 
-       C.  attempted_hash = Hash(pk || alpha || CTR)
+       C.  hash = Hash(pk || alpha || CTR)
 
-       D.  h = RS2ECP(attempted_hash)
+       D.  attempted_hash = first 2n bits of hash
 
-       E.  If h is not "INVALID" and cofactor > 1, set h = h^cofactor
+       E.  h = RS2ECP(attempted_hash)
+
+       F.  If h is not "INVALID" and cofactor > 1, set h = h^cofactor
 
    5.  Output h
 
@@ -771,6 +775,17 @@ Internet-Draft                     VRF                         June 2018
    deals with this [SW18].  Some other useful algorithms include
    [Icart09], and Shallue-Woestijne-Ulas algorithm from [BCIMRT10].]
 
+
+
+
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 14]
+
+Internet-Draft                     VRF                         June 2018
+
+
 5.4.1.3.  ECVRF_hash_to_curve_elligator2_25519
 
    The following ECVRF__hash_to_curve_elligator2_25519(y, alpha)
@@ -778,13 +793,6 @@ Internet-Draft                     VRF                         June 2018
    algorithm exclusively for Curve25519.
 
    ECVRF_hash_to_curve_elligator2_25519(y, alpha)
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 14]
-
-Internet-Draft                     VRF                         June 2018
-
 
    Input:
 
@@ -808,13 +816,18 @@ Internet-Draft                     VRF                         June 2018
 
       * denotes integer multiplication
 
+   Constraints on options:
+
+      output length of Hash is at least 16n + 1 bits (i.e. greater than
+      2n octets)
+
    Steps:
 
    1.   pk = EC2OSP(y)
 
    2.   hash = Hash(pk || alpha )
 
-   3.   r = first 2n octects of hash
+   3.   r = first 2n octets of hash
 
    4.   x_0 = next unused bit of hash
 
@@ -822,42 +835,40 @@ Internet-Draft                     VRF                         June 2018
 
    6.   v = u * (u^2 + A*u + 1) mod p
 
-   7.   e = v ^ ((p-1)/2) mod p
 
-   8.   If v is equal to -1 then finalu = -A - u; else finalu = u
 
-   9.   y = (finalu - 1) / (finalu + 1)
+Goldberg, et al.        Expires December 24, 2018              [Page 15]
+
+Internet-Draft                     VRF                         June 2018
+
+
+   7.   Let e equal the Legendre symbol of v modulo p
+
+   8.   If e is equal to -1 then finalu = (-A - u) mod p; else finalu =
+        u
+
+   9.   y = (finalu - 1) / (finalu + 1) mod p
 
    10.  let h = (x_0,y), an EC point per the encoding in RFC8032
         Section 5.1.2 [RFC8032]
 
    11.  h = h^cofactor
 
+   In order to make this algorithm run in time that is (almost)
+   independent of the input (so-called "constant-time"), implementers
+   should pay particular attention to Step 7 (Paragraph 7) and Step 8
+   (Paragraph 8) above.  This can be done using the following two steps:
 
+      e = v ^ ((p-1)/2) mod p
 
+      finalu = (e*u - (1-e)/2 * A) mod p
 
+   The first step will produce a value e that is either 1 or p-1.  The
+   second step is so fast compared to the first that that its dependence
+   on e is likely to not matter; implementers can also ensure that it
+   runs in the same amount of time regardless of e.
 
-Goldberg, et al.        Expires December 22, 2018              [Page 15]
-
-Internet-Draft                     VRF                         June 2018
-
-
-   This algorithm runs in constant time as long as Step 8 (Paragraph 8)
-   below is implemented to run in constant time.  One way to do this is
-   to replace Step 8 (Paragraph 8) with the following step (although
-   implementors should check that this step does indeed run in constant
-   time):
-
-      finalu = e*u - (1-e)/2 * A
-
-5.4.2.  EC-VRF Nonce Generation
-
-   k = ECVRF_nonce_generation(SK, alpha)
-
-   [TODO: specify as per RFC 8032 for 25519 or as per RFC 6979 for other
-   curves]
-
-5.4.3.  EC-VRF Hash Points
+5.4.2.  EC-VRF Hash Points
 
    ECVRF_hash_points(p_1, p_2, ..., p_j)
 
@@ -880,23 +891,22 @@ Internet-Draft                     VRF                         June 2018
 
    4.  h2 = first n octets of h1
 
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 16]
+
+Internet-Draft                     VRF                         June 2018
+
+
    5.  h = OS2IP(h2)
 
    6.  Output h
 
-5.4.4.  EC-VRF Decode Proof
+5.4.3.  EC-VRF Decode Proof
 
    ECVRF_decode_proof(pi)
 
    Input:
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 16]
-
-Internet-Draft                     VRF                         June 2018
-
 
       pi - VRF proof, octet string (m+3n octets)
 
@@ -937,22 +947,21 @@ Internet-Draft                     VRF                         June 2018
       [SECG1].  In this ciphersuite, the secret scalar x is equal to the
       private key SK.
 
-   o  The ECVRF_nonce_generation function is as specified in RFC 6979
-      [TODO: put in specific refs]
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 17]
+
+Internet-Draft                     VRF                         June 2018
+
+
+   o  The ECVRF_nonce_generation function is as specified in [RFC6979]
+      Section 3.2, with the hash function SHA-256 as specified in
+      [RFC6234]
 
    o  EC2OSP is specified in Section 2.3.3 of [SECG1] with point
       compression on.  This implies m = 2n + 1 = 33.
 
    o  OS2ECP is specified in Section 2.3.4 of [SECG1].
-
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 17]
-
-Internet-Draft                     VRF                         June 2018
-
 
    o  RS2ECP(h) = OS2ECP(0x02 || h).  The input h is a 32-octet string
       and the output is either an EC point or "INVALID".
@@ -962,7 +971,7 @@ Internet-Draft                     VRF                         June 2018
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
 
-   This document defines EC-VRF-ED25519-SHA256 as follows:
+   This document defines EC-VRF-ED25519-SHA512 as follows:
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -971,9 +980,13 @@ Internet-Draft                     VRF                         June 2018
    o  The private key and generation of the secret scalar and the public
       key are specified in Section 5.1.5 of [RFC8032]
 
-   o  The ECVRF_nonce_generation function is as specified in
-      Section 5.1.6 Steps 1-2 of [RFC8032][TODO: What should F and C be?
-      Should we have a prehash version also?]
+   o  The ECVRF_nonce_generation function is as specified in [RFC8032]
+      Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the ASCII string
+      "SigEd25519 no Ed25519 collisions" followed by a single octet 2
+      followed by a single octet 0 (i.e., F=2 and the context is empty),
+      and PH(M) equal to M.  [TODO: Is this what should F and C be?
+      Should we have a prehash version also?  Should we have a context
+      version?]
 
    o  EC2OSP is specified in Section 5.1.2 of [RFC8032].  This implies m
       = 2n = 32.
@@ -982,18 +995,26 @@ Internet-Draft                     VRF                         June 2018
 
    o  RS2ECP is equivalent to OS2ECP.
 
-   o  The hash function Hash is SHA-256 as specified in [RFC6234].
-      [TODO: CHANGE TO SHA-512]
+   o  The hash function Hash is SHA-512 as specified in [RFC6234].
 
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
 
-   [TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator ciphersuite
-   where the Elligator hash function is used for ECVRF_hash-to-curve?
-   Should we add Elligator-Squared?  We may want to consider options in
-   the upcoming draft [SW18].]
+   This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows:
 
-   [TODO: Add an Ed448 ciphersuite?  This is probably not needed...]
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 18]
+
+Internet-Draft                     VRF                         June 2018
+
+
+   o  This ciphersuite is identical to EC-VRF-ED25519-SHA512 except that
+      the ECVRF_hash_to_curve function is as specified in
+      Section 5.4.1.3.
+
+   [TODO: Say somewhere that this runs in constant time.]
 
    [NOTE: In the unlikely case that future versions of this spec use a
    elliptic curve group G that does not also come with a specification
@@ -1002,31 +1023,21 @@ Internet-Draft                     VRF                         June 2018
    ECVRF_validate_key(PK) that ensures that g is a point on the elliptic
    curve and g^cofactor is not the EC point at infinity.]
 
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 18]
-
-Internet-Draft                     VRF                         June 2018
-
-
 5.6.  When the EC-VRF Keys are Untrusted
 
    The EC-VRF as specified above is a VRF that satisfies the "trusted
    uniqueness", "trusted collision resistance", and "full
-   pseudorandomness" properties defined in Section 3.  If the elliptic
-   curve parameters (including the generator g) are trusted, but the VRF
-   public key PK is not trusted, this VRF can be modified to
-   additionally satisfy "full uniqueness", and "full collision
-   resistance".  This is done by additionally requiring the Verifier to
-   perform the following validation procedure upon receipt of the public
-   VRF key.
+   pseudorandomness" properties defined in Section 3.  In order to
+   obtain "full uniqueness" and "full collision resistance" (which
+   provide protection against a malicious VRF public key), the Verifier
+   MUST perform the following additional validation procedure upon
+   receipt of the public VRF key.  The public VRF key MUST NOT be used
+   if this procedure returns "INVALID".
 
-   The Verifier MUST perform this validation procedure when the entity
-   that generated the public VRF key is untrusted.  The public key MUST
-   NOT be used if this procedure returns "INVALID".  Note well that this
-   procedure is not sufficient if the elliptic curve E or if g, the
-   generator of group G, is untrusted.
+   Note that this procedure is not sufficient if the elliptic curve E or
+   the point g, the generator of group G, is untrusted.  If the prover
+   is untrusted, the Verifier MUST obtain E and g from a trusted source,
+   such as a ciphersuite specification, rather than from the prover.
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
@@ -1047,6 +1058,14 @@ Internet-Draft                     VRF                         June 2018
 
       y - public key, an EC point
 
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 19]
+
+Internet-Draft                     VRF                         June 2018
+
+
    Steps:
 
    1.  y = OS2ECP(PK)
@@ -1057,14 +1076,6 @@ Internet-Draft                     VRF                         June 2018
        stop
 
    4.  Output y
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 19]
-
-Internet-Draft                     VRF                         June 2018
-
 
 6.  Implementation Status
 
@@ -1103,6 +1114,14 @@ Internet-Draft                     VRF                         June 2018
    The EC-VRF as specified in Section 5.1-Section 5.5 statisfies the
    "trusted uniqueness" and "trusted collision resistance" properties as
    long as the VRF keys are generated correctly, with good randomness.
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 20]
+
+Internet-Draft                     VRF                         June 2018
+
+
    If the Verifier trusts the VRF keys are generated correctly, it MAY
    use the public key y as is.
 
@@ -1114,13 +1133,6 @@ Internet-Draft                     VRF                         June 2018
    Otherwise, the procedure will output a valid public key y, and the
    EC-VRF with public key y satisfies the "full uniqueness" and "full
    collision resistance" properties.
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 20]
-
-Internet-Draft                     VRF                         June 2018
-
 
    The RSA-FDH-VRF statisfies the "trusted uniqueness" and "trusted
    collision resistance" properties as long as the VRF keys are
@@ -1157,6 +1169,15 @@ Internet-Draft                     VRF                         June 2018
    Applications that are concerned about tightness of cryptographic
    reductions therefore have two options.
 
+
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 21]
+
+Internet-Draft                     VRF                         June 2018
+
+
    o  They may choose to ensure that selective pseudorandomness is
       sufficient for the application.  That is, that pseudorandomness of
       outputs matters only for inputs that are chosen independently of
@@ -1169,14 +1190,6 @@ Internet-Draft                     VRF                         June 2018
       cryptographic strength of the EC group G.  For both RSA-FDH-VRF
       and EC-VRF the cryptographic strength of the hash function Hash
       may also potentially need to be increased.
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 21]
-
-Internet-Draft                     VRF                         June 2018
-
 
 7.3.  Proper randomness for EC-VRF
 
@@ -1213,6 +1226,20 @@ Internet-Draft                     VRF                         June 2018
 
       01 - Minor updates, mostly highlighting TODO items.
 
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 22]
+
+Internet-Draft                     VRF                         June 2018
+
+
+      02 - Added specification of elligator2 for Curve25519, along with
+      ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-
+      ED25519-SHA256 suite to EC-VRF-ED25519-SHA512.  (This change made
+      because Ed25519 in [RFC8032] signatures use SHA512 and not
+      SHA256.)
+
 9.  Contributors
 
    This document also would not be possible without the work of Moni
@@ -1221,18 +1248,6 @@ Internet-Draft                     VRF                         June 2018
    (Akamai) provided valuable input to this draft.
 
 10.  References
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 22]
-
-Internet-Draft                     VRF                         June 2018
-
 
 10.1.  Normative References
 
@@ -1255,10 +1270,25 @@ Internet-Draft                     VRF                         June 2018
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
 
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <https://www.rfc-editor.org/info/rfc6979>.
+
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
               RFC 8017, DOI 10.17487/RFC8017, November 2016,
               <https://www.rfc-editor.org/info/rfc8017>.
+
+
+
+
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 23]
+
+Internet-Draft                     VRF                         June 2018
+
 
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
@@ -1281,14 +1311,6 @@ Internet-Draft                     VRF                         June 2018
               D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
               Existence", draft-vcelak-nsec5-06 (work in progress),
               January 2018.
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 23]
-
-Internet-Draft                     VRF                         June 2018
-
 
    [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
               2009.
@@ -1317,6 +1339,13 @@ Authors' Addresses
    EMail: goldbe@cs.bu.edu
 
 
+
+
+Goldberg, et al.        Expires December 24, 2018              [Page 24]
+
+Internet-Draft                     VRF                         June 2018
+
+
    Leonid Reyzin
    Boston University
    111 Cummington St, MCS135
@@ -1332,18 +1361,6 @@ Authors' Addresses
    Hong Kong
 
    EMail: dipapado@cse.ust.hkbu.edu
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 24]
-
-Internet-Draft                     VRF                         June 2018
 
 
    Jan Vcelak
@@ -1380,21 +1397,4 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 22, 2018              [Page 25]
+Goldberg, et al.        Expires December 24, 2018              [Page 25]

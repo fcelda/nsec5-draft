@@ -394,9 +394,8 @@
 <link href="#rfc.section.5.3" rel="Chapter" title="5.3 EC-VRF Verifying">
 <link href="#rfc.section.5.4" rel="Chapter" title="5.4 EC-VRF Auxiliary Functions">
 <link href="#rfc.section.5.4.1" rel="Chapter" title="5.4.1 EC-VRF Hash To Curve">
-<link href="#rfc.section.5.4.2" rel="Chapter" title="5.4.2 EC-VRF Nonce Generation">
-<link href="#rfc.section.5.4.3" rel="Chapter" title="5.4.3 EC-VRF Hash Points">
-<link href="#rfc.section.5.4.4" rel="Chapter" title="5.4.4 EC-VRF Decode Proof">
+<link href="#rfc.section.5.4.2" rel="Chapter" title="5.4.2 EC-VRF Hash Points">
+<link href="#rfc.section.5.4.3" rel="Chapter" title="5.4.3 EC-VRF Decode Proof">
 <link href="#rfc.section.5.5" rel="Chapter" title="5.5 EC-VRF Ciphersuites">
 <link href="#rfc.section.5.6" rel="Chapter" title="5.6 When the EC-VRF Keys are Untrusted">
 <link href="#rfc.section.5.6.1" rel="Chapter" title="5.6.1 EC-VRF Validate Key">
@@ -421,7 +420,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-02" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-20" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-22" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -445,7 +444,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: December 22, 2018</td>
+<td class="left">Expires: December 24, 2018</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -462,7 +461,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 20, 2018</td>
+<td class="right">June 22, 2018</td>
 </tr>
 
     	
@@ -478,7 +477,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 22, 2018.</p>
+<p>This Internet-Draft will expire on December 24, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -528,11 +527,9 @@
 </li>
 <ul><li>5.4.1.   <a href="#rfc.section.5.4.1">EC-VRF Hash To Curve</a>
 </li>
-<li>5.4.2.   <a href="#rfc.section.5.4.2">EC-VRF Nonce Generation</a>
+<li>5.4.2.   <a href="#rfc.section.5.4.2">EC-VRF Hash Points</a>
 </li>
-<li>5.4.3.   <a href="#rfc.section.5.4.3">EC-VRF Hash Points</a>
-</li>
-<li>5.4.4.   <a href="#rfc.section.5.4.4">EC-VRF Decode Proof</a>
+<li>5.4.3.   <a href="#rfc.section.5.4.3">EC-VRF Decode Proof</a>
 </li>
 </ul><li>5.5.   <a href="#rfc.section.5.5">EC-VRF Ciphersuites</a>
 </li>
@@ -685,7 +682,7 @@
 <p> </p>
 <p id="rfc.section.4.p.7">Constraints on options: </p>
 
-<ul class="empty"><li>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key</li></ul>
+<ul class="empty"><li>Cryptographic security of Hash is at least as high as the cryptographic security level of the RSA key.</li></ul>
 
 <p> </p>
 <p id="rfc.section.4.p.8">Primitives used: </p>
@@ -799,7 +796,7 @@
 
 <ul class="empty">
 <li>Field elements in F have bit lengths divisible by 16</li>
-<li>hLen is equal to 2n</li>
+<li>hLen is greater than or equal to 2n</li>
 </ul>
 
 <p> </p>
@@ -807,7 +804,7 @@
 
 <ul class="empty">
 <li>SK - VRF private key</li>
-<li>x - VRF secret scalar, an integer where 0 &lt; x &lt; q <ul class="empty"><li>Note: depending on the ciphersuite used, the VRF secret scalar may be equal to SK; else, it is derived from SK </li></ul>
+<li>x - VRF secret scalar, an integer <ul class="empty"><li>Note: depending on the ciphersuite used, the VRF secret scalar may be equal to SK; else, it is derived from SK </li></ul>
 <p> </p>
 </li>
 <li>y = g^x - VRF public key, an EC point</li>
@@ -861,7 +858,7 @@
 <li>gamma = h^x</li>
 <li>k = ECVRF_nonce_generation(SK, alpha)</li>
 <li>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</li>
-<li>s = k + c*x mod q (where * denotes integer multiplication)</li>
+<li>s = (k + c*x) mod q (where * denotes integer multiplication)</li>
 <li>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
 <li>Output pi</li>
 </ol>
@@ -889,7 +886,8 @@
 <li>D = ECVRF_decode_proof(pi)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
-<li>beta = Hash(EC2OSP(gamma^cofactor))</li>
+<li>hash = Hash(EC2OSP(gamma^cofactor))</li>
+<li>beta = first 2n octets of hash</li>
 <li>Output beta</li>
 </ol>
 
@@ -962,7 +960,8 @@
 <li>While h is "INVALID" or h is EC point at infinity: <ol style="list-style-type: upper-alpha">
 <li>CTR = I2OSP(ctr, 4)</li>
 <li>ctr = ctr + 1</li>
-<li>attempted_hash = Hash(pk || alpha || CTR)</li>
+<li>hash = Hash(pk || alpha || CTR)</li>
+<li>attempted_hash = first 2n bits of hash</li>
 <li>h = RS2ECP(attempted_hash)</li>
 <li>If h is not "INVALID" and cofactor &gt; 1, set h = h^cofactor</li>
 </ol>
@@ -975,7 +974,8 @@
 <a href="#rfc.section.5.4.1.2">5.4.1.2.</a> ECVRF_hash_to_curve2</h1>
 <p id="rfc.section.5.4.1.2.p.1">[TODO: For applications where VRF input alpha must be kept secret, it would be nice to have a generic ECVRF_hash_to_curve algorithm that runs in constant time and provides a generic way to hash an octet string onto any elliptic curve.  There is an an upcoming draft that deals with this <a href="#SW18" class="xref">[SW18]</a>.  Some other useful algorithms include <a href="#Icart09" class="xref">[Icart09]</a>, and Shallue-Woestijne-Ulas algorithm from <a href="#BCIMRT10" class="xref">[BCIMRT10]</a>.] </p>
 <h1 id="rfc.section.5.4.1.3">
-<a href="#rfc.section.5.4.1.3">5.4.1.3.</a> ECVRF_hash_to_curve_elligator2_25519</h1>
+<a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#elligator2" id="elligator2">ECVRF_hash_to_curve_elligator2_25519</a>
+</h1>
 <p id="rfc.section.5.4.1.3.p.1">The following ECVRF__hash_to_curve_elligator2_25519(y, alpha) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
 <p id="rfc.section.5.4.1.3.p.2">ECVRF_hash_to_curve_elligator2_25519(y, alpha) </p>
 <p id="rfc.section.5.4.1.3.p.3">Input: </p>
@@ -1002,48 +1002,53 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.4.1.3.p.6">Steps: </p>
+<p id="rfc.section.5.4.1.3.p.6">Constraints on options: </p>
+
+<ul class="empty"><li>output length of Hash is at least 16n + 1 bits (i.e. greater than 2n octets)</li></ul>
+
+<p> </p>
+<p id="rfc.section.5.4.1.3.p.7">Steps: </p>
 
 <ol>
 <li>pk = EC2OSP(y)</li>
 <li>hash = Hash(pk || alpha )</li>
-<li>r = first 2n octects of hash</li>
+<li>r = first 2n octets of hash</li>
 <li>x_0 = next unused bit of hash </li>
 <li>u = - A / (1 + 2*(r^2) )  mod p </li>
 <li>v = u * (u^2 + A*u + 1) mod p </li>
-<li>e = v ^ ((p-1)/2) mod p </li>
 <li>
-<a name="const"></a>If v is equal to -1 then finalu = -A - u; else finalu = u </li>
-<li>y = (finalu - 1) / (finalu + 1)</li>
+<a name="const1"></a>Let e equal the Legendre symbol of v modulo p</li>
+<li>
+<a name="const2"></a>If e is equal to -1 then finalu = (-A - u) mod p; else finalu = u </li>
+<li>y = (finalu - 1) / (finalu + 1) mod p</li>
 <li>let h = (x_0,y), an EC point per the encoding in <a href="#RFC8032" class="xref">RFC8032 Section 5.1.2</a>
 </li>
 <li>h = h^cofactor</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.3.p.7">This algorithm runs in constant time as long as <a href="#const" class="xref">Step 8</a> below is implemented to run in constant time.  One way to do this is to replace <a href="#const" class="xref">Step 8</a> with the following step (although implementors should check that this step does indeed run in constant time): </p>
+<p id="rfc.section.5.4.1.3.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to <a href="#const1" class="xref">Step 7</a> and <a href="#const2" class="xref">Step 8</a> above.  This can be done using the following two steps: </p>
 
-<ul class="empty"><li>finalu = e*u - (1-e)/2 * A</li></ul>
+<ul class="empty">
+<li>e = v ^ ((p-1)/2) mod p</li>
+<li>finalu = (e*u - (1-e)/2 * A) mod p</li>
+</ul>
 
-<p> </p>
+<p> The first step will produce a value e that is either 1 or p-1. The second step is so fast compared to the first that that its dependence on e is likely to not matter; implementers can also ensure that it runs in the same amount of time regardless of e.  </p>
 <h1 id="rfc.section.5.4.2">
-<a href="#rfc.section.5.4.2">5.4.2.</a> EC-VRF Nonce Generation</h1>
-<p id="rfc.section.5.4.2.p.1">k = ECVRF_nonce_generation(SK, alpha)</p>
-<p id="rfc.section.5.4.2.p.2">[TODO: specify as per RFC 8032 for 25519 or as per RFC 6979 for other curves]</p>
-<h1 id="rfc.section.5.4.3">
-<a href="#rfc.section.5.4.3">5.4.3.</a> EC-VRF Hash Points</h1>
-<p id="rfc.section.5.4.3.p.1">ECVRF_hash_points(p_1, p_2, ..., p_j) </p>
-<p id="rfc.section.5.4.3.p.2">Input: </p>
+<a href="#rfc.section.5.4.2">5.4.2.</a> EC-VRF Hash Points</h1>
+<p id="rfc.section.5.4.2.p.1">ECVRF_hash_points(p_1, p_2, ..., p_j) </p>
+<p id="rfc.section.5.4.2.p.2">Input: </p>
 
 <ul class="empty"><li>p_i - EC point in G</li></ul>
 
 <p> </p>
-<p id="rfc.section.5.4.3.p.3">Output: </p>
+<p id="rfc.section.5.4.2.p.3">Output: </p>
 
 <ul class="empty"><li>h - hash value, integer between 0 and 2^(8n)-1</li></ul>
 
 <p> </p>
-<p id="rfc.section.5.4.3.p.4">Steps: </p>
+<p id="rfc.section.5.4.2.p.4">Steps: </p>
 
 <ol>
 <li>P = empty octet string</li>
@@ -1055,15 +1060,15 @@
 </ol>
 
 <p> </p>
-<h1 id="rfc.section.5.4.4">
-<a href="#rfc.section.5.4.4">5.4.4.</a> EC-VRF Decode Proof</h1>
-<p id="rfc.section.5.4.4.p.1">ECVRF_decode_proof(pi) </p>
-<p id="rfc.section.5.4.4.p.2">Input: </p>
+<h1 id="rfc.section.5.4.3">
+<a href="#rfc.section.5.4.3">5.4.3.</a> EC-VRF Decode Proof</h1>
+<p id="rfc.section.5.4.3.p.1">ECVRF_decode_proof(pi) </p>
+<p id="rfc.section.5.4.3.p.2">Input: </p>
 
 <ul class="empty"><li>pi - VRF proof, octet string (m+3n octets)</li></ul>
 
 <p> </p>
-<p id="rfc.section.5.4.4.p.3">Output: </p>
+<p id="rfc.section.5.4.3.p.3">Output: </p>
 
 <ul class="empty">
 <li>"INVALID", or </li>
@@ -1073,7 +1078,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.4.4.p.4">Steps: </p>
+<p id="rfc.section.5.4.3.p.4">Steps: </p>
 
 <ol>
 <li>let gamma', c', s' be pi split after m-th and m+n-th octet</li>
@@ -1093,7 +1098,8 @@
 <ul>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>. In this ciphersuite, the secret scalar x is equal to the private key SK.</li>
-<li>The ECVRF_nonce_generation function is as specified in RFC 6979 [TODO: put in specific refs]</li>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2, with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
+</li>
 <li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
 <li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
 <li>RS2ECP(h) = OS2ECP(0x02 || h). The input h is a 32-octet string and the output is either an EC point or "INVALID". </li>
@@ -1102,29 +1108,32 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.2">This document defines EC-VRF-ED25519-SHA256 as follows: </p>
+<p id="rfc.section.5.5.p.2">This document defines EC-VRF-ED25519-SHA512 as follows: </p>
 
 <ul>
 <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
 <li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
-<li>The ECVRF_nonce_generation function is as specified in Section 5.1.6 Steps 1-2 of <a href="#RFC8032" class="xref">[RFC8032]</a>[TODO: What should F and C be? Should we have a prehash version also?]</li>
-<li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>. This implies m = 2n = 32.</li>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the ASCII string "SigEd25519 no Ed25519 collisions" followed by a single octet 2 followed by a single octet 0 (i.e., F=2 and the context is empty), and PH(M) equal to M.  [TODO: Is this what should F and C be? Should we have a prehash version also? Should we have a context version?]</li>
+<li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.</li>
 <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
 <li>RS2ECP is equivalent to OS2ECP.</li>
-<li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>. [TODO: CHANGE TO SHA-512] </li>
+<li>The hash function Hash is SHA-512 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.3">[TODO: Should we add an EC-VRF-ED25519-SHA256-Elligator ciphersuite where the Elligator hash function is used for ECVRF_hash-to-curve? Should we add Elligator-Squared? We may want to consider options in the upcoming draft <a href="#SW18" class="xref">[SW18]</a>.] </p>
-<p id="rfc.section.5.5.p.4">[TODO: Add an Ed448 ciphersuite? This is probably not needed...]</p>
-<p id="rfc.section.5.5.p.5">[NOTE: In the unlikely case that future versions of this spec use a elliptic curve group G that does not also come with a specification of the group generator g, then we can still have full uniqueness and full collision resistance by adding an check to ECVRF_validate_key(PK) that ensures that g is a point on the elliptic curve and g^cofactor is not the EC point at infinity.] </p>
+<p id="rfc.section.5.5.p.3">This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows: </p>
+
+<ul><li>This ciphersuite is identical to EC-VRF-ED25519-SHA512 except that the ECVRF_hash_to_curve function is as specified in <a href="#elligator2" class="xref">Section 5.4.1.3</a>.  </li></ul>
+
+<p> [TODO: Say somewhere that this runs in constant time.] </p>
+<p id="rfc.section.5.5.p.4">[NOTE: In the unlikely case that future versions of this spec use a elliptic curve group G that does not also come with a specification of the group generator g, then we can still have full uniqueness and full collision resistance by adding an check to ECVRF_validate_key(PK) that ensures that g is a point on the elliptic curve and g^cofactor is not the EC point at infinity.] </p>
 <h1 id="rfc.section.5.6">
 <a href="#rfc.section.5.6">5.6.</a> <a href="#keycheck" id="keycheck">When the EC-VRF Keys are Untrusted</a>
 </h1>
-<p id="rfc.section.5.6.p.1">The EC-VRF as specified above is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef" class="xref">Section 3</a>.  If the elliptic curve parameters (including the generator g) are trusted, but the VRF public key PK is not trusted, this VRF can be modified to additionally satisfy "full uniqueness", and "full collision resistance".  This is done by additionally requiring the Verifier to perform the following validation procedure upon receipt of the public VRF key.  </p>
-<p id="rfc.section.5.6.p.2">The Verifier MUST perform this validation procedure when the entity that generated the public VRF key is untrusted.  The public key MUST NOT be used if this procedure returns "INVALID".  Note well that this procedure is not sufficient if the elliptic curve E or if g, the generator of group G, is untrusted.  </p>
+<p id="rfc.section.5.6.p.1">The EC-VRF as specified above is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef" class="xref">Section 3</a>.  In order to obtain "full uniqueness" and "full collision resistance" (which provide protection against a malicious VRF public key), the Verifier MUST perform the following additional validation procedure upon receipt of the public VRF key. The public VRF key MUST NOT be used if this procedure returns "INVALID".  </p>
+<p id="rfc.section.5.6.p.2">Note that this procedure is not sufficient if the elliptic curve E or the point g, the generator of group G, is untrusted. If the prover is untrusted, the Verifier MUST obtain E and g from a trusted source, such as a ciphersuite specification, rather than from the prover.  </p>
 <p id="rfc.section.5.6.p.3">This procedure supposes that the public key provided to the Verifier is an octet string. The procedure returns "INVALID" if the public key in invalid.  Otherwise, it returns y, the public key as an EC point.  </p>
 <h1 id="rfc.section.5.6.1">
 <a href="#rfc.section.5.6.1">5.6.1.</a> EC-VRF Validate Key</h1>
@@ -1200,6 +1209,7 @@
 <ul class="empty">
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
+<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) </li>
 </ul>
 
 <p> </p>
@@ -1230,6 +1240,11 @@
 <td class="reference"><b id="RFC6234">[RFC6234]</b></td>
 <td class="top">
 <a>Eastlake 3rd, D.</a> and <a>T. Hansen</a>, "<a href="https://tools.ietf.org/html/rfc6234">US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)</a>", RFC 6234, DOI 10.17487/RFC6234, May 2011.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6979">[RFC6979]</b></td>
+<td class="top">
+<a>Pornin, T.</a>, "<a href="https://tools.ietf.org/html/rfc6979">Deterministic Usage of the Digital Signature Algorithm (DSA) and Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", RFC 6979, DOI 10.17487/RFC6979, August 2013.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC8017">[RFC8017]</b></td>
