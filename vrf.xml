@@ -623,17 +623,23 @@
                 OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</t>
                 <t>RS2ECP - conversion of a random 2n-octet string to an 
                 EC point as specified in <xref target="suites"/></t>
-                <t>ECVRF_hash_to_curve - [TODO: Explain]</t>
-                <t>ECVRF_nonce_generation - [TODO: Explain] as specified in <xref target="suites"/></t>
-                <t>ECVRF_hash_points - [TODO: Explain]</t>
+                <t>ECVRF_hash_to_curve - collision resistant hash of strings 
+                to an EC point. Specified in <xref target="ecvrfH2C" />.</t>
+                <t>ECVRF_nonce_generation - derives an pseudorandom nonce 
+                from SK and the input as part of EC-VRF proving. 
+                Specified in <xref target="suites"/></t>
+                <t>ECVRF_hash_points - collision resistant hash of EC points 
+                to a string. Specified in <xref target="ecvrfHashPoints"/>.</t>
             </list>
         </t>
 
         <section title="EC-VRF Proving" anchor="ecvrfprove">
                 
                 <t>
-                    Note: this function must have the VRF private key SK as input. Below we make it more
-                    efficient by supplying it also with the secret scalar x and the public key y as additional inputs; however, each of these can be computed from SK if desired.
+                    Note: this function must have the VRF private key SK as input. 
+                    Below we make it more
+                    efficient by supplying it also with the secret scalar x and the public key y as 
+                    additional inputs; however, each of these can be computed from SK if desired.
                 </t>
                 
             <t>
@@ -646,7 +652,7 @@
                     <t>SK - VRF private key</t>
                     <t>x - VRF secret scalar</t>
                     <t>y = g^x - VRF public key</t>
-                    <t>[TODO: explain what suite is]</t>
+                    <t>suite = a 1 octet string specifying EC-VRF ciphersuite. </t>
                 </list>
             </t>
 
@@ -732,7 +738,7 @@
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
                     <t>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</t>
-                    <t>h = ECVRF_hash_to_curve(y, alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(suite, y, alpha)</t>
                     <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
@@ -755,13 +761,13 @@
 
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
-            <t>The ECVRF_hash_to_curve algorithm takes in an octet string alpha
+            <t>The ECVRF_hash_to_curve algorithm takes in an octet string 
             and converts it to h, an EC point in G. </t>
             
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve_try_and_increment(y, alpha) algorithm
+            The following ECVRF_hash_to_curve_try_and_increment(suite, y, alpha) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve. 
             </t>
@@ -782,13 +788,14 @@
             </t>
             
             <t>
-                ECVRF_hash_to_try_and_increment(y, alpha)
+                ECVRF_hash_to_try_and_increment(suite, y, alpha)
             </t>
             <t>
                 Input:
                 <list>
                     <t>alpha - value to be hashed, an octet string</t>
                     <t>y - public key, an EC point</t>
+                    <t>suite = a 1 octet string specifying EC-VRF ciphersuite. </t>
                 </list>
             </t>
             <t>
@@ -808,7 +815,7 @@
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
-                        <t>hash = Hash(pk || alpha || CTR)</t>
+                        <t>hash = Hash(suite || pk || alpha || CTR)</t>
                         <t>attempted_hash = first 2n bits of hash</t> 
                         <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
@@ -837,7 +844,7 @@
             
             <section title="ECVRF_hash_to_curve_elligator2_25519" anchor="elligator2">
             
-                <t> The following ECVRF__hash_to_curve_elligator2_25519(y, alpha) 
+                <t> The following ECVRF__hash_to_curve_elligator2_25519(suite, y, alpha) 
                 algorithm implements ECVRF_hash_to_curve using the elligator2 
                 algorithm exclusively for Curve25519. 
                 </t>
@@ -850,6 +857,7 @@
                     <list>
                         <t>alpha - value to be hashed, an octet string</t>
                         <t>y - public key, an EC point</t>
+                        <t>suite = a 1 octet string specifying EC-VRF ciphersuite. </t>
                     </list>
                 </t>
                 <t>
@@ -880,7 +888,7 @@
                     Steps:
                     <list style="numbers">
                         <t>pk = EC2OSP(y)</t>
-                        <t>hash = Hash(pk || alpha )</t>
+                        <t>hash = Hash(suite || pk || alpha )</t>
                         <t>r = first 2n octets of hash</t>
                         <t>x_0 = next unused bit of hash </t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
@@ -920,7 +928,7 @@
             
         </section>
 
-        <section title="EC-VRF Hash Points">
+        <section title="EC-VRF Hash Points" anchor="ecvrfHashPoints">
                      
             <t>
                 ECVRF_hash_points(p_1, p_2, ..., p_j)
@@ -997,6 +1005,8 @@
                 
         <t>This document defines EC-VRF-P256-SHA256 as follows: 
         <list style="symbols">
+        <t> [TODOx: Leo, edit this, I'm not sure how to write 1 as an octect string!] 
+        suite = 1. </t>
         <t>
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
@@ -1004,7 +1014,9 @@
             2n = 32 and cofactor = 1.
         </t>
         <t> The key pair generation primitive is specified in
-            Section 3.2.1 of <xref target="SECG1" />. In this ciphersuite, the secret scalar x is equal to the private key SK.</t>
+            Section 3.2.1 of <xref target="SECG1" />. In this ciphersuite, the secret scalar x is equal to the private key SK.
+            [TODOx: Leo, can you check this again? Is it correct given the new nonce generation? 
+            Would it be better to reference an RFC here?]</t>
         <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2 Steps b-h (ommitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function
         SHA-256 as specified in <xref target="RFC6234" /></t>
 
@@ -1030,6 +1042,8 @@
         
         <t>This document defines EC-VRF-ED25519-SHA512 as follows: 
         <list style="symbols">
+        <t> [TODOx: Leo, edit this, I'm not sure how to write 1 as an octect string!] 
+        suite = 2. </t>
         <t>
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
@@ -1059,15 +1073,17 @@
         </list>
         </t>
    
-   <t>This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows: 
+   <t>This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows:
+    
         <list style="symbols">
         <t> This ciphersuite is identical to EC-VRF-ED25519-SHA512 except that
-        the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/>.
+        the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/> and 
+        suite = 3 [TODOx: Leo check please how to write 3 as an octet string].
         </t>
         </list>
-        [TODO: Say somewhere that this runs in constant time.]
         </t>
-   
+    
+        
         
         <t>[NOTE: In the unlikely case that future versions of this spec
         use a elliptic curve group G that does not also come with a specification
@@ -1287,28 +1303,12 @@
     
     </section>
  
- <section title="Hash function domain separation">
-     
-     <t>
-         Hashing is used for four different purposes in EC-VRF (namely, in hash_to_curve, nonce_generation, hash_points, proof_to_hash). The
-         theoretical analysis assumes each of these four functions is a separate random oracle. This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ciphersuites defined in this document, because:
-         <list style="symbols">
-          <t> Queries made during nonce_generation are not equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
-         <t> Queries made to proof_to_hash cannot equal to queries made to hash_points or hash_to_curve, because they are shorter (just one EC point instead of an EC point plus alpha or more than one EC point)</t>
-         <t>Queries made to hash_to_curve and hash_points cannot equal each other, because hash_points starts with g and hash_to_curve starts with PK.
-        </t>
-         </list>
-     </t>
-     
- </section>
-
-
-    <section title="Timing attacks">
-    
-    <t>The EC-VRF_hash_to_curve algorithm defined in
+  <section title="Timing attacks">
+        
+    <t>The EC-VRF_hash_to_curve_try_and_increment algorithm defined in
     <xref target="ecvrfH2C1" /> SHOULD NOT be used in applications where
     the VRF input alpha is secret and is hashed by the VRF on-the-fly.
-    This is because the EC-VRF_hash_to_curve algorithm's running time depends
+    This is because the algorithm's running time depends
     on the VRF input alpha, and thus creates a timing channel that
     can be used to learn information about alpha. 
     That said, for most inputs the amount of information obtained from
@@ -1319,7 +1319,40 @@
     in a timing attack will be more than 1 bit. 
     </t>
 
+    
+    <t>Meanwhile, EC-VRF-ED25519-SHA512-Elligator2 runs in constant time 
+    if the implementation of the ECVRF_hash_to_curve function
+    specified in <xref target="elligator2"/> also runs in constant time.
+    </t>
+
     </section>
+   
+ 
+ 
+ <section title="Hash function domain separation and future proofing">
+     
+     <t>
+         Hashing is used for four different purposes in EC-VRF (namely, in hash_to_curve, nonce_generation, hash_points, proof_to_hash). The
+         theoretical analysis assumes each of these four functions is a separate random oracle. 
+         This analysis still holds even if the same hash function is used, as long as the four 
+         queries made to the hash function for a given SK and alpha are overwhelmingly unlikely 
+         to equal each other or to any queries made to the hash function for the same SK and 
+         different alpha. This is indeed the case for the EC-VRF ciphersuites defined in this document, because:
+         <list style="symbols">
+          <t> Queries made during nonce_generation are not equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
+         <t> Queries made to proof_to_hash cannot equal to queries made to hash_points or hash_to_curve, because they are shorter (just one EC point instead of an EC point plus alpha or more than one EC point)</t>
+         <t>Queries made to hash_to_curve and hash_points cannot equal each other, because hash_points starts with g and hash_to_curve starts with PK.
+        </t>
+         </list>
+     </t>
+     
+     <t>[TODOx: Leo add here rationale of how "suite" adds future proofing and domain
+     seperation across other usecases.]
+     </t>
+     
+ </section>
+
+
    
 
     </section>
@@ -1361,9 +1394,11 @@
                 Changed 
                 EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change
                 made because Ed25519 in <xref target="RFC8032"/> signatures 
-                use SHA512 and not SHA256.) Made nonce generation a separate component.
-                Changed + to - in proof generation (and made
-                corresponding verification changes) in order to be consistent with EdDSA.</t>
+                use SHA512 and not SHA256.) 
+                Made EC-VRF nonce generation a separate component, so that nonces are determinsitic.
+                In EC-VRF proving, changed + to - (and made corresponding 
+                verification changes) in order to be consistent with EdDSA and ECDSA.
+                Highlighted that EC-VRF hash_to_curve acts like a prehash.</t>
             </list>
         </t>
     </section>
