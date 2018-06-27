@@ -729,9 +729,9 @@
                     <t>D = ECVRF_decode_proof(pi)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>u = y^c * g^s (where * denotes EC point addition, i.e. a group operation on two EC points)</t>
+                    <t>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</t>
                     <t>h = ECVRF_hash_to_curve(y, alpha)</t>
-                    <t>v = gamma^c / h^s (where / denotes EC point subtraction)</t>
+                    <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
                     <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
@@ -750,21 +750,16 @@
 
 
         <section title="EC-VRF Auxiliary Functions">
-            <t>
-                [TODO: analyze whether domain separation for hash functions 
-                used here matters and if so how to ensure we have it.]
-            </t>
-            
 
         <section title="EC-VRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>The ECVRF_hash_to_curve algorithm takes in an octet string alpha
             and converts it to h, an EC point in G. </t>
             
-            <section title="ECVRF_hash_to_curve1" anchor="ecvrfH2C1">
+            <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve1(y, alpha) algorithm
+            The following ECVRF_hash_to_curve_try_and_increment(y, alpha) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve. 
             </t>
@@ -785,7 +780,7 @@
             </t>
             
             <t>
-                ECVRF_hash_to_curve1(y, alpha)
+                ECVRF_hash_to_try_and_increment(y, alpha)
             </t>
             <t>
                 Input:
@@ -1359,8 +1354,7 @@
                 Changed 
                 EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change
                 made because Ed25519 in <xref target="RFC8032"/> signatures 
-                use SHA512 and not SHA256.)
-                </t>
+                use SHA512 and not SHA256.)</t>
             </list>
         </t>
     </section>
@@ -1373,7 +1367,7 @@
             Moni Naor (Weizmann Institute),
             Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
-            Shumon Huque (Salesforce) and David C. Lawerence (Akamai) provided
+            Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided
             valuable input to this draft.
         </t>
     </section>

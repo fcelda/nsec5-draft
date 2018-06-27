@@ -915,9 +915,9 @@
 <li>D = ECVRF_decode_proof(pi)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
-<li>u = y^c * g^s (where * denotes EC point addition, i.e. a group operation on two EC points)</li>
+<li>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</li>
 <li>h = ECVRF_hash_to_curve(y, alpha)</li>
-<li>v = gamma^c / h^s (where / denotes EC point subtraction)</li>
+<li>v = h^s / gamma^c  (where / again denotes EC point subtraction)</li>
 <li>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</li>
 <li>If c and c' are equal, output "VALID"; else output "INVALID" </li>
 </ol>
@@ -926,18 +926,17 @@
 <p id="rfc.section.5.3.p.5">[TODO: We could hash alpha instead of gamma. Doing so costs more because alpha is longer, but may help salvage some security if ECVRF_hash_to_curve is broken and not collision-resistant. Need to analyze exact security preserved and decide if the tradeoff is worth it.] </p>
 <h1 id="rfc.section.5.4">
 <a href="#rfc.section.5.4">5.4.</a> EC-VRF Auxiliary Functions</h1>
-<p id="rfc.section.5.4.p.1">[TODO: analyze whether domain separation for hash functions used here matters and if so how to ensure we have it.] </p>
 <h1 id="rfc.section.5.4.1">
 <a href="#rfc.section.5.4.1">5.4.1.</a> <a href="#ecvrfH2C" id="ecvrfH2C">EC-VRF Hash To Curve</a>
 </h1>
 <p id="rfc.section.5.4.1.p.1">The ECVRF_hash_to_curve algorithm takes in an octet string alpha and converts it to h, an EC point in G. </p>
 <h1 id="rfc.section.5.4.1.1">
-<a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve1</a>
+<a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve_try_and_increment</a>
 </h1>
-<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve1(y, alpha) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
+<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve_try_and_increment(y, alpha) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
 <p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09" class="xref">[Icart09]</a>.  </p>
 <p id="rfc.section.5.4.1.1.p.3">However, because the running time of algorithm depends on alpha, this algorithm SHOULD be avoided in applications where it is important that the VRF input alpha remain secret.  </p>
-<p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_curve1(y, alpha) </p>
+<p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_try_and_increment(y, alpha) </p>
 <p id="rfc.section.5.4.1.1.p.5">Input: </p>
 
 <ul class="empty">
@@ -1210,13 +1209,13 @@
 <ul class="empty">
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
-<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) </li>
+<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.)</li>
 </ul>
 
 <p> </p>
 <h1 id="rfc.section.9">
 <a href="#rfc.section.9">9.</a> Contributors</h1>
-<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce) and David C. Lawerence (Akamai) provided valuable input to this draft.  </p>
+<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided valuable input to this draft.  </p>
 <h1 id="rfc.references">
 <a href="#rfc.references">10.</a> References</h1>
 <h1 id="rfc.references.1">
