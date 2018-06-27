@@ -646,6 +646,7 @@
                     <t>SK - VRF private key</t>
                     <t>x - VRF secret scalar</t>
                     <t>y = g^x - VRF public key</t>
+                    <t>[TODO: explain what suite is]</t>
                 </list>
             </t>
 
@@ -659,9 +660,10 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(y, alpha)</t>
+                    <t>h = ECVRF_hash_to_curve(suite, y, alpha)</t>
+                    <t>h1 = EC2OSP(h)</t>
                     <t>gamma = h^x</t>
-                    <t>k = ECVRF_nonce_generation(SK, alpha)</t>
+                    <t>k = ECVRF_nonce_generation(SK, h1)</t>
                     <t>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</t>
                     <t>s = (k + c*x) mod q (where * denotes integer multiplication)</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
@@ -918,7 +920,6 @@
             
         </section>
 
-
         <section title="EC-VRF Hash Points">
                      
             <t>
@@ -933,7 +934,7 @@
             <t>
                 Output:
                 <list>
-                    <t>h - hash value, integer between 0 and 2^(8n)-1</t>
+                    <t>c - hash value, integer between 0 and 2^(8n)-1</t>
                 </list>
             </t>
             <t>
@@ -943,10 +944,10 @@
                     <t>for p_i in [p_1, p_2, ... p_j]:
                        <vspace/>P = P || EC2OSP(p_i)
                     </t>
-                    <t>h1 = Hash(P)</t>
-                    <t>h2 = first n octets of h1</t>
-                    <t>h = OS2IP(h2)</t>
-                    <t>Output h</t>
+                    <t>c1 = Hash(P)</t>
+                    <t>c2 = first n octets of c1</t>
+                    <t>c = OS2IP(c2)</t>
+                    <t>Output c</t>
                 </list>
             </t>
             
@@ -1004,7 +1005,7 @@
         </t>
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" />. In this ciphersuite, the secret scalar x is equal to the private key SK.</t>
-        <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2, with the hash function
+        <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2 Steps b-h (ommitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function
         SHA-256 as specified in <xref target="RFC6234" /></t>
 
         <t>
@@ -1039,12 +1040,7 @@
         key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
         
         <t> The ECVRF_nonce_generation function is as specified in 
-        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, with dom2(F, C) equal
-            to the ASCII string "SigEd25519 no
-            Ed25519 collisions" followed by a single octet 2 followed by a single octet 0 (i.e.,
-            F=2 and the context is empty), and PH(M) equal to M.
-        
-         [TODO: Is this what should F and C be? Should we have a prehash version also? Should we have a context version?]</t>
+        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.</t>
         
         <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. 
         This implies m = 2n = 32.</t>
@@ -1080,10 +1076,8 @@
         ensures that g is a point on the elliptic curve and g^cofactor is not
         the EC point at infinity.]
         </t> 
-        
-        
-        
         </section>
+        
 
         <section title="When the EC-VRF Keys are Untrusted" anchor="keycheck">
         
@@ -1279,22 +1273,35 @@
     </section>
 
 
- <section title="Proper randomness for EC-VRF">
+ <section title="Proper random nonce for EC-VRF">
 
     <t>
-    Applications that use the EC-VRF defined in this document MUST ensure
-    that the random nonce k used in the ECVRF_prove algorithm is
-    chosen with proper randomness. Otherwise, an adversary may be able to recover
+    The EC-VRF defined in this document relies for its security
+    on the fact that random nonce k used in the ECVRF_prove algorithm is
+    chosen uniformly (randomly or pseudorandomly) modulo q, and is unknown to the advesrary.
+    Otherwise, an adversary may be able to recover
     the private VRF key x (and thus break pseudorandomness of the VRF)
-    after observing several valid VRF proofs pi.
+    after observing several valid VRF proofs pi. The nonce generation methods
+    specified in the ciphersuites are designed with this requirement in mind.
     </t>
     
-    <t>
-        [TODO: In the next version of the draft we should add a specification 
-        for nonce generation.]
-    </t>
-
     </section>
+ 
+ <section title="Hash function domain separation">
+     
+     <t>
+         Hashing is used for four different purposes in EC-VRF (namely, in hash_to_curve, nonce_generation, hash_points, proof_to_hash). The
+         theoretical analysis assumes each of these four functions is a separate random oracle. This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ciphersuites defined in this document, because:
+         <list style="symbols">
+          <t> Queries made during nonce_generation are not equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
+         <t> Queries made to proof_to_hash cannot equal to queries made to hash_points or hash_to_curve, because they are shorter (just one EC point instead of an EC point plus alpha or more than one EC point)</t>
+         <t>Queries made to hash_to_curve and hash_points cannot equal each other, because hash_points starts with g and hash_to_curve starts with PK.
+        </t>
+         </list>
+     </t>
+     
+ </section>
+
 
     <section title="Timing attacks">
     
@@ -1354,7 +1361,9 @@
                 Changed 
                 EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change
                 made because Ed25519 in <xref target="RFC8032"/> signatures 
-                use SHA512 and not SHA256.)</t>
+                use SHA512 and not SHA256.) Made nonce generation a separate component.
+                Changed + to - in proof generation (and made
+                corresponding verification changes) in order to be consistent with EdDSA.</t>
             </list>
         </t>
     </section>

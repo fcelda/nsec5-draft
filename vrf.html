@@ -405,8 +405,9 @@
 <link href="#rfc.section.7.1.1" rel="Chapter" title="7.1.1 Uniqueness and collision resistance with untrusted keys">
 <link href="#rfc.section.7.1.2" rel="Chapter" title="7.1.2 Pseudorandomness with untrusted keys">
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Selective vs Full Pseudorandomness">
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper randomness for EC-VRF">
-<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Timing attacks">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper random nonce for EC-VRF">
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Hash function domain separation">
+<link href="#rfc.section.7.5" rel="Chapter" title="7.5 Timing attacks">
 <link href="#rfc.section.8" rel="Chapter" title="8 Change Log">
 <link href="#rfc.section.9" rel="Chapter" title="9 Contributors">
 <link href="#rfc.references" rel="Chapter" title="10 References">
@@ -549,9 +550,11 @@
 </li>
 </ul><li>7.2.   <a href="#rfc.section.7.2">Selective vs Full Pseudorandomness</a>
 </li>
-<li>7.3.   <a href="#rfc.section.7.3">Proper randomness for EC-VRF</a>
+<li>7.3.   <a href="#rfc.section.7.3">Proper random nonce for EC-VRF</a>
 </li>
-<li>7.4.   <a href="#rfc.section.7.4">Timing attacks</a>
+<li>7.4.   <a href="#rfc.section.7.4">Hash function domain separation</a>
+</li>
+<li>7.5.   <a href="#rfc.section.7.5">Timing attacks</a>
 </li>
 </ul><li>8.   <a href="#rfc.section.8">Change Log</a>
 </li>
@@ -843,6 +846,7 @@
 <li>SK - VRF private key</li>
 <li>x - VRF secret scalar</li>
 <li>y = g^x - VRF public key</li>
+<li>[TODO: explain what suite is]</li>
 </ul>
 
 <p> </p>
@@ -854,9 +858,10 @@
 <p id="rfc.section.5.1.p.5">Steps: </p>
 
 <ol>
-<li>h = ECVRF_hash_to_curve(y, alpha)</li>
+<li>h = ECVRF_hash_to_curve(suite, y, alpha)</li>
+<li>h1 = EC2OSP(h)</li>
 <li>gamma = h^x</li>
-<li>k = ECVRF_nonce_generation(SK, alpha)</li>
+<li>k = ECVRF_nonce_generation(SK, h1)</li>
 <li>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</li>
 <li>s = (k + c*x) mod q (where * denotes integer multiplication)</li>
 <li>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
@@ -1045,7 +1050,7 @@
 <p> </p>
 <p id="rfc.section.5.4.2.p.3">Output: </p>
 
-<ul class="empty"><li>h - hash value, integer between 0 and 2^(8n)-1</li></ul>
+<ul class="empty"><li>c - hash value, integer between 0 and 2^(8n)-1</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.2.p.4">Steps: </p>
@@ -1053,10 +1058,10 @@
 <ol>
 <li>P = empty octet string</li>
 <li>for p_i in [p_1, p_2, ... p_j]: <br>P = P || EC2OSP(p_i) </li>
-<li>h1 = Hash(P)</li>
-<li>h2 = first n octets of h1</li>
-<li>h = OS2IP(h2)</li>
-<li>Output h</li>
+<li>c1 = Hash(P)</li>
+<li>c2 = first n octets of c1</li>
+<li>c = OS2IP(c2)</li>
+<li>Output c</li>
 </ol>
 
 <p> </p>
@@ -1098,7 +1103,7 @@
 <ul>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>. In this ciphersuite, the secret scalar x is equal to the private key SK.</li>
-<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2, with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (ommitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
 </li>
 <li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
 <li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
@@ -1114,7 +1119,7 @@
 <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
 <li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
-<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the ASCII string "SigEd25519 no Ed25519 collisions" followed by a single octet 2 followed by a single octet 0 (i.e., F=2 and the context is empty), and PH(M) equal to M.  [TODO: Is this what should F and C be? Should we have a prehash version also? Should we have a context version?]</li>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.</li>
 <li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.</li>
 <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
 <li>RS2ECP is equivalent to OS2ECP.</li>
@@ -1195,12 +1200,22 @@
 
 <p> </p>
 <h1 id="rfc.section.7.3">
-<a href="#rfc.section.7.3">7.3.</a> Proper randomness for EC-VRF</h1>
-<p id="rfc.section.7.3.p.1">Applications that use the EC-VRF defined in this document MUST ensure that the random nonce k used in the ECVRF_prove algorithm is chosen with proper randomness. Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi.  </p>
-<p id="rfc.section.7.3.p.2">[TODO: In the next version of the draft we should add a specification for nonce generation.] </p>
+<a href="#rfc.section.7.3">7.3.</a> Proper random nonce for EC-VRF</h1>
+<p id="rfc.section.7.3.p.1">The EC-VRF defined in this document relies for its security on the fact that random nonce k used in the ECVRF_prove algorithm is chosen uniformly (randomly or pseudorandomly) modulo q, and is unknown to the advesrary.  Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi. The nonce generation methods specified in the ciphersuites are designed with this requirement in mind.  </p>
 <h1 id="rfc.section.7.4">
-<a href="#rfc.section.7.4">7.4.</a> Timing attacks</h1>
-<p id="rfc.section.7.4.p.1">The EC-VRF_hash_to_curve algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the EC-VRF_hash_to_curve algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
+<a href="#rfc.section.7.4">7.4.</a> Hash function domain separation</h1>
+<p id="rfc.section.7.4.p.1">Hashing is used for four different purposes in EC-VRF (namely, in hash_to_curve, nonce_generation, hash_points, proof_to_hash). The theoretical analysis assumes each of these four functions is a separate random oracle. This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ciphersuites defined in this document, because: </p>
+
+<ul>
+<li>Queries made during nonce_generation are not equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</li>
+<li>Queries made to proof_to_hash cannot equal to queries made to hash_points or hash_to_curve, because they are shorter (just one EC point instead of an EC point plus alpha or more than one EC point)</li>
+<li>Queries made to hash_to_curve and hash_points cannot equal each other, because hash_points starts with g and hash_to_curve starts with PK.  </li>
+</ul>
+
+<p> </p>
+<h1 id="rfc.section.7.5">
+<a href="#rfc.section.7.5">7.5.</a> Timing attacks</h1>
+<p id="rfc.section.7.5.p.1">The EC-VRF_hash_to_curve algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the EC-VRF_hash_to_curve algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> Change Log</h1>
 <p id="rfc.section.8.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.  </p>
@@ -1209,7 +1224,7 @@
 <ul class="empty">
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
-<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.)</li>
+<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-ED25519-SHA256 suite to EC-VRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made nonce generation a separate component.  Changed + to - in proof generation (and made corresponding verification changes) in order to be consistent with EdDSA.</li>
 </ul>
 
 <p> </p>
