@@ -747,13 +747,7 @@
                     </t>
                 </list>
             </t>
-            <t>
-                [TODO: We could hash alpha instead of gamma. Doing so costs 
-                more because alpha is longer, but may help salvage some 
-                security if ECVRF_hash_to_curve is broken and not 
-                collision-resistant. Need to analyze exact security preserved
-                and decide if the tradeoff is worth it.]
-            </t>
+            
         </section>
 
 
@@ -763,6 +757,8 @@
         
             <t>The ECVRF_hash_to_curve algorithm takes in an octet string 
             and converts it to h, an EC point in G. </t>
+            
+            <t>[TODOx: Leo add here justification for how this is a prehash.]</t>
             
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
@@ -1399,7 +1395,8 @@
                 In EC-VRF proving, changed + to - (and made corresponding 
                 verification changes) in order to be consistent with EdDSA and ECDSA.
                 Highlighted that EC-VRF hash_to_curve acts like a prehash.
-                Added "suites" variable to EC-VRF for future proofing.</t>
+                Added "suites" variable to EC-VRF for future proofing.
+                Added discussion about domain seperation for hash functions.</t>
             </list>
         </t>
     </section>
