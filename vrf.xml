@@ -889,7 +889,7 @@
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
                         <t>v = u * (u^2 + A*u + 1) mod p </t>
                         <t anchor="const1">Let e equal the Legendre symbol of v modulo p</t>
-                        <t anchor="const2">If e is equal to -1 then finalu = (-A - u) mod p; else finalu = u </t>
+                        <t anchor="const2">If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p </t>
                         <t>y = (finalu - 1) / (finalu + 1) mod p</t>
                         <t>let h = (x_0,y), an EC point per the encoding in
                             <xref target="RFC8032">RFC8032 Section 5.1.2</xref></t>
@@ -905,11 +905,17 @@
                 This can be done using the following two steps:
                 <list>
                     <t> e = v ^ ((p-1)/2) mod p</t>
-                    <t>finalu = (e*u - (1-e)/2 * A) mod p</t>
+                    <t>finalu = (e*u + (e-1) * (A/2)) mod p</t>
                 </list>
                 The first step will produce a value e that is either 1 or p-1. The second step is so fast compared
                 to the first that that its dependence on e is likely to not matter; implementers can also ensure that it
                 runs in the same amount of time regardless of e.
+                </t>
+                
+                <t>
+                    If having this algorithm run in constant time is not important, then there are much faster algorithms
+                    to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).
+                    See, for example, Section 12.3 of <xref target="ntb"/>.
                 </t>
                 
             </section>
@@ -1416,6 +1422,14 @@
     </references>
 
     <references title="Informative References">
+
+        <reference anchor="ntb" target="http://www.shoup.net/ntb/ntb-v2.pdf">
+            <front>
+                <title>A Computational Introduction to Number Theory and Algebra</title>
+                <author initials="V." surname="Shoup"><organization /></author>
+                <date year="2008" />
+            </front>
+        </reference>
 
         <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
             <front>

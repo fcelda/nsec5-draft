@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: December 24, 2018                               D. Papadopoulos
+Expires: December 29, 2018                               D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                           June 22, 2018
+                                                           June 27, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 24, 2018.
+   This Internet-Draft will expire on December 29, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 1]
+Goldberg, et al.        Expires December 29, 2018               [Page 1]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -96,7 +96,7 @@ Table of Contents
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  20
        7.1.1.  Uniqueness and collision resistance with untrusted
-               keys  . . . . . . . . . . . . . . . . . . . . . . . .  20
+               keys  . . . . . . . . . . . . . . . . . . . . . . . .  21
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  21
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  21
      7.3.  Proper randomness for EC-VRF  . . . . . . . . . . . . . .  22
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 2]
+Goldberg, et al.        Expires December 29, 2018               [Page 2]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 3]
+Goldberg, et al.        Expires December 29, 2018               [Page 3]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 4]
+Goldberg, et al.        Expires December 29, 2018               [Page 4]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 5]
+Goldberg, et al.        Expires December 29, 2018               [Page 5]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 6]
+Goldberg, et al.        Expires December 29, 2018               [Page 6]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 7]
+Goldberg, et al.        Expires December 29, 2018               [Page 7]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 8]
+Goldberg, et al.        Expires December 29, 2018               [Page 8]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018               [Page 9]
+Goldberg, et al.        Expires December 29, 2018               [Page 9]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 10]
+Goldberg, et al.        Expires December 29, 2018              [Page 10]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -613,7 +613,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 11]
+Goldberg, et al.        Expires December 29, 2018              [Page 11]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -669,7 +669,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 12]
+Goldberg, et al.        Expires December 29, 2018              [Page 12]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -725,7 +725,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 13]
+Goldberg, et al.        Expires December 29, 2018              [Page 13]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -781,7 +781,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 14]
+Goldberg, et al.        Expires December 29, 2018              [Page 14]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -837,15 +837,14 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 24, 2018              [Page 15]
+Goldberg, et al.        Expires December 29, 2018              [Page 15]
 
 Internet-Draft                     VRF                         June 2018
 
 
    7.   Let e equal the Legendre symbol of v modulo p
 
-   8.   If e is equal to -1 then finalu = (-A - u) mod p; else finalu =
-        u
+   8.   If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p
 
    9.   y = (finalu - 1) / (finalu + 1) mod p
 
@@ -861,12 +860,17 @@ Internet-Draft                     VRF                         June 2018
 
       e = v ^ ((p-1)/2) mod p
 
-      finalu = (e*u - (1-e)/2 * A) mod p
+      finalu = (e*u + (e-1) * (A/2)) mod p
 
    The first step will produce a value e that is either 1 or p-1.  The
    second step is so fast compared to the first that that its dependence
    on e is likely to not matter; implementers can also ensure that it
    runs in the same amount of time regardless of e.
+
+   If having this algorithm run in constant time is not important, then
+   there are much faster algorithms to compute the Legendre symbol
+   (which is the same as the Jacobi symbol because p is a prime).  See,
+   for example, Section 12.3 of [ntb].
 
 5.4.2.  EC-VRF Hash Points
 
@@ -887,16 +891,16 @@ Internet-Draft                     VRF                         June 2018
    2.  for p_i in [p_1, p_2, ... p_j]:
        P = P || EC2OSP(p_i)
 
-   3.  h1 = Hash(P)
-
-   4.  h2 = first n octets of h1
 
 
-
-Goldberg, et al.        Expires December 24, 2018              [Page 16]
+Goldberg, et al.        Expires December 29, 2018              [Page 16]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   3.  h1 = Hash(P)
+
+   4.  h2 = first n octets of h1
 
    5.  h = OS2IP(h2)
 
@@ -943,16 +947,16 @@ Internet-Draft                     VRF                         June 2018
       [RFC5114]  (Section 2.6).  For this group, 2n = 32 and cofactor =
       1.
 
-   o  The key pair generation primitive is specified in Section 3.2.1 of
-      [SECG1].  In this ciphersuite, the secret scalar x is equal to the
-      private key SK.
 
 
-
-Goldberg, et al.        Expires December 24, 2018              [Page 17]
+Goldberg, et al.        Expires December 29, 2018              [Page 17]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   o  The key pair generation primitive is specified in Section 3.2.1 of
+      [SECG1].  In this ciphersuite, the secret scalar x is equal to the
+      private key SK.
 
    o  The ECVRF_nonce_generation function is as specified in [RFC6979]
       Section 3.2, with the hash function SHA-256 as specified in
@@ -997,18 +1001,19 @@ Internet-Draft                     VRF                         June 2018
 
    o  The hash function Hash is SHA-512 as specified in [RFC6234].
 
+
+
+
+
+Goldberg, et al.        Expires December 29, 2018              [Page 18]
+
+Internet-Draft                     VRF                         June 2018
+
+
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
 
    This document defines EC-VRF-ED25519-SHA512-Elligator2 as follows:
-
-
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 18]
-
-Internet-Draft                     VRF                         June 2018
-
 
    o  This ciphersuite is identical to EC-VRF-ED25519-SHA512 except that
       the ECVRF_hash_to_curve function is as specified in
@@ -1054,17 +1059,16 @@ Internet-Draft                     VRF                         June 2018
 
    Output:
 
-      "INVALID", or
-
-      y - public key, an EC point
 
 
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 19]
+Goldberg, et al.        Expires December 29, 2018              [Page 19]
 
 Internet-Draft                     VRF                         June 2018
 
+
+      "INVALID", or
+
+      y - public key, an EC point
 
    Steps:
 
@@ -1109,19 +1113,20 @@ Internet-Draft                     VRF                         June 2018
    Applications that use the VRFs defined in this document MUST ensure
    that that the VRF key is generated correctly, using good randomness.
 
+
+
+
+
+Goldberg, et al.        Expires December 29, 2018              [Page 20]
+
+Internet-Draft                     VRF                         June 2018
+
+
 7.1.1.  Uniqueness and collision resistance with untrusted keys
 
    The EC-VRF as specified in Section 5.1-Section 5.5 statisfies the
    "trusted uniqueness" and "trusted collision resistance" properties as
    long as the VRF keys are generated correctly, with good randomness.
-
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 20]
-
-Internet-Draft                     VRF                         June 2018
-
-
    If the Verifier trusts the VRF keys are generated correctly, it MAY
    use the public key y as is.
 
@@ -1166,17 +1171,15 @@ Internet-Draft                     VRF                         June 2018
    pseudorandomness.  This means the the VRFs have quantitavely stronger
    security guarentees for selective pseudorandomness.
 
-   Applications that are concerned about tightness of cryptographic
-   reductions therefore have two options.
 
 
-
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 21]
+Goldberg, et al.        Expires December 29, 2018              [Page 21]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   Applications that are concerned about tightness of cryptographic
+   reductions therefore have two options.
 
    o  They may choose to ensure that selective pseudorandomness is
       sufficient for the application.  That is, that pseudorandomness of
@@ -1224,15 +1227,14 @@ Internet-Draft                     VRF                         June 2018
 
       00 - Forked this document from draft-goldbe-vrf-01.
 
-      01 - Minor updates, mostly highlighting TODO items.
 
 
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 22]
+Goldberg, et al.        Expires December 29, 2018              [Page 22]
 
 Internet-Draft                     VRF                         June 2018
 
+
+      01 - Minor updates, mostly highlighting TODO items.
 
       02 - Added specification of elligator2 for Curve25519, along with
       ciphersuites for EC-VRF-ED25519-SHA512-Elligator.  Changed EC-VRF-
@@ -1283,9 +1285,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 23]
+Goldberg, et al.        Expires December 29, 2018              [Page 23]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1325,10 +1325,26 @@ Internet-Draft                     VRF                         June 2018
               2017/099, February 2017,
               <https://eprint.iacr.org/2017/099.pdf>.
 
+   [ntb]      Shoup, V., "A Computational Introduction to Number Theory
+              and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
+
    [SW18]     Sullivan, E. and C. Wood, "Hashing to Elliptic Curves",
               2018.
 
 Authors' Addresses
+
+
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 29, 2018              [Page 24]
+
+Internet-Draft                     VRF                         June 2018
+
 
    Sharon Goldberg
    Boston University
@@ -1337,13 +1353,6 @@ Authors' Addresses
    USA
 
    EMail: goldbe@cs.bu.edu
-
-
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 24]
-
-Internet-Draft                     VRF                         June 2018
 
 
    Leonid Reyzin
@@ -1388,13 +1397,4 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 24, 2018              [Page 25]
+Goldberg, et al.        Expires December 29, 2018              [Page 25]
