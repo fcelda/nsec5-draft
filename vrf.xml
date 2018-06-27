@@ -1398,7 +1398,8 @@
                 Made EC-VRF nonce generation a separate component, so that nonces are determinsitic.
                 In EC-VRF proving, changed + to - (and made corresponding 
                 verification changes) in order to be consistent with EdDSA and ECDSA.
-                Highlighted that EC-VRF hash_to_curve acts like a prehash.</t>
+                Highlighted that EC-VRF hash_to_curve acts like a prehash.
+                Added "suites" variable to EC-VRF for future proofing.</t>
             </list>
         </t>
     </section>
