@@ -1415,7 +1415,9 @@
                 verification changes) in order to be consistent with EdDSA and ECDSA.
                 Highlighted that EC-VRF hash_to_curve acts like a prehash.
                 Added "suites" variable to EC-VRF for future proofing.
-                Added discussion about domain seperation for hash functions.</t>
+                Added discussion about domain seperation for hash functions.
+                Updated todos in the "additional pseudorandomness property" 
+                section.</t>
             </list>
         </t>
     </section>
