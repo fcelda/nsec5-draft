@@ -1346,9 +1346,17 @@
          </list>
      </t>
      
-     <t>If future designs need to specify variants of the design in this document, they should use a different suite constant. This way, the inputs
-         to the hash_to_curve hash function used in producing h are guaranteed to be different; since all the other hashing depends on h, inputs to the hash functions used elsewhere in proving will also be different. (Inputs to the verifier hashing may be the same because proof2hash does not include the ciphersuite, but the verifier has no secrets, so this does not pose a security risk.)
-         [TODO: should we prefix proof2hash with suite also to avoid collisions between different ciphersuites? Not clear what it gives us, but just in case?]
+     <t>If future designs need to specify variants of the design in this document, 
+        they should use a different suite constant. This way, the inputs
+        to the hash_to_curve hash function used in producing h are 
+        guaranteed to be different; since all the other hashing depends on h, 
+        inputs to the hash functions used elsewhere in proving will also be 
+        different. (Inputs to the verifier hashing may be the same because 
+        proof2hash does not include the ciphersuite, but the verifier has no 
+        secrets, so this does not pose a security risk.)
+        [TODO: Leo: should we prefix proof2hash with suite also to avoid collisions
+         between different ciphersuites? Not clear what it gives us, but just in case?
+         Sharon: Yes, let's do it, and explain it here by saying "as an extra precaution"...]
      </t>
      
      
@@ -1404,7 +1412,7 @@
                 Highlighted that ECVRF_hash_to_curve acts like a prehash.
                 Added "suites" variable to ECVRF for future proofing.
                 Ensured domain separation for hash functions by modifying hash_points and added
-                aiscussion about domain seperation.
+                discussion about domain separation.
                 Updated todos in the "additional pseudorandomness property" 
                 section. Added an discussion of secrecy into security considerations.</t>
             </list>
