@@ -216,7 +216,7 @@
    <list>
    <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
-   that outputs VALID if beta=VRF_proof2hash(pi) is correct 
+   that outputs VALID if beta=VRF_proof2hash(pi) is the correct 
    VRF hash of alpha under key PK, and outputs INVALID otherwise.
    </t>   
    </section>
@@ -237,7 +237,7 @@
     </t>
 
     <t>
-    "Full uniqueness" states that a computationally-bounded adversary cannot
+    More percisely, "full uniqueness" states that a computationally-bounded adversary cannot
 	choose 
     a VRF public key PK, 
     a VRF input alpha, 
@@ -335,6 +335,16 @@
     was not done in a trustworthy fashion. (For example, if VRF keys were 
     generated with bad randomness.)
 	</t>
+
+    <t>
+    [TODOx: Leo the email asks the following, do we want to address this?
+    Am leaning to no.
+    "Does pi necessarily give alpha away? That is, in 
+    applications where alpha needs to remain secret, does pi need to 
+    be kept secret as well? If not necessarily, is this a property that 
+    the RFC guarantees, or maybe another possible property for a specific 
+    scheme? " ]
+    </t>
 
    </section>
    
@@ -549,15 +559,6 @@
     </section>
 
     <section title="Elliptic Curve VRF (EC-VRF)" anchor="ecvrf">
-
-    	<!--<t><cref source="Jan">We repeat these security properties here, 
-            although we already said that all VRF functions are required 
-            to satisfy these properties. What about removing it here and 
-            keep just the rough description, reference to the 
-            security proof?</cref>
-            <cref source="Sharon">Relevant because of trusted / full / selective
-            qualifiers of the security definitions. </cref>
-        </t>-->
         
         <t>
             The Elliptic Curve Verifiable Random Function (EC-VRF) is a VRF that
@@ -567,12 +568,24 @@
             Diffie-Hellman (DDH) assumption in the random oracle model. Formal security proofs are
             in <xref target="nsec5ecc" />.  
         </t>
-
+        
+        <t> To additionally satisfy "full uniqueness" and "full collision resistance", 
+        the Verifier MUST additionally perform the validation procedure specified in 
+        <xref target="keycheck"/>  upon receipt of the public
+        VRF key.
+        </t>
+        
         <t>
             Fixed options:
             <list>
                 <t>F - finite field</t>
-                <t>2n - length, in octets, of a field element in F</t>
+                <t>2n - length, in octets, of a field element in F
+                [TODOx:  Leo the email says "Moreover, the parameter description 
+                seems to require the size of the field to be an even number of
+                 octets. This is, of course, not actually required, as the 
+                 instantiation with ED25519 in 5.5 shows. It should be explicitly 
+                 mentioned that 2n is the size of a field element in octets, rounded up." 
+                 Is this a valid critism? I think not!] </t>
                 <t>E - elliptic curve (EC) defined over F</t>
                 <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
                 <t>G - subgroup of E of large prime order</t>
@@ -759,6 +772,7 @@
             and converts it to h, an EC point in G. </t>
             
             <t>[TODOx: Leo add here justification for how this is a prehash.]</t>
+                   
             
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
@@ -1342,9 +1356,18 @@
          </list>
      </t>
      
+      <t>[TODOx: The email says: "It feels worthwhile to explicitly note 
+            that the two hash_to_curve implementations are not compatible. 
+            Perhaps explicit domain separation should be added."
+            I think that elligator2 and try_and_increment are seperated because
+            the Hash(  ) steps operate on different length inputs. Do we 
+            want to mention this here?]</t>
+     
      <t>[TODOx: Leo add here rationale of how "suite" adds future proofing and domain
      seperation across other usecases.]
      </t>
+     
+     
      
  </section>
 
