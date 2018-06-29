@@ -405,7 +405,7 @@
 <link href="#rfc.section.7.1.1" rel="Chapter" title="7.1.1 Uniqueness and collision resistance with untrusted keys">
 <link href="#rfc.section.7.1.2" rel="Chapter" title="7.1.2 Pseudorandomness with untrusted keys">
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Selective vs Full Pseudorandomness">
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper nonce for ECVRF">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper pseudorandom nonce for ECVRF">
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Timing attacks">
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Proofs Provide No Secrecy for VRF Input">
 <link href="#rfc.section.7.6" rel="Chapter" title="7.6 Prehashing">
@@ -552,7 +552,7 @@
 </li>
 </ul><li>7.2.   <a href="#rfc.section.7.2">Selective vs Full Pseudorandomness</a>
 </li>
-<li>7.3.   <a href="#rfc.section.7.3">Proper nonce for ECVRF</a>
+<li>7.3.   <a href="#rfc.section.7.3">Proper pseudorandom nonce for ECVRF</a>
 </li>
 <li>7.4.   <a href="#rfc.section.7.4">Timing attacks</a>
 </li>
@@ -1208,7 +1208,7 @@
 
 <p> </p>
 <h1 id="rfc.section.7.3">
-<a href="#rfc.section.7.3">7.3.</a> Proper nonce for ECVRF</h1>
+<a href="#rfc.section.7.3">7.3.</a> Proper pseudorandom nonce for ECVRF</h1>
 <p id="rfc.section.7.3.p.1">The security of the ECVRF defined in this document relies on the fact that nonce k used in the ECVRF_prove algorithm is chosen uniformly and pseudorandomly modulo q, and is unknown to the advesrary.  Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi. The nonce generation methods specified in the ECVRF ciphersuites of <a href="#suites" class="xref">Section 5.5</a> are designed with this requirement in mind.  </p>
 <h1 id="rfc.section.7.4">
 <a href="#rfc.section.7.4">7.4.</a> Timing attacks</h1>
@@ -1226,8 +1226,8 @@
 <p id="rfc.section.7.7.p.1">Hashing is used for four different purposes in ECVRF (namely, in hash_to_curve, nonce_generation, hash_points, and proof2hash). The theoretical analysis assumes each of these four functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because: </p>
 
 <ul>
-<li>Hash inputs used during nonce_generation are unlikely to equal to inputs given to hash_to_curve, proof2hash, and hash_points, because nonce_generation uses a secret that is not used by honest parties as input to any other hash, and is not available to the adversary</li>
-<li>Hash inputs used in hash_to_curve, proof2hash, and hash_points have a different second octet, and so cannot equal each other</li>
+<li>inputs to the hash function used during nonce_generation are unlikely to equal to inputs given to hash_to_curve, proof2hash, and hash_points. This follows since nonce_generation inputs a secret to the hash function that is not used by honest parties as input to any other hash function, and is not available to the adversary</li>
+<li>the second octet of the input to the hash function used in hash_to_curve, proof2hash, and hash_points are all different</li>
 </ul>
 
 <p> </p>

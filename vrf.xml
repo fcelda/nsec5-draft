@@ -1279,7 +1279,7 @@
     </section>
 
 
- <section title="Proper nonce for ECVRF">
+ <section title="Proper pseudorandom nonce for ECVRF">
 
     <t>
     The security of the ECVRF defined in this document relies on the 
@@ -1356,7 +1356,7 @@
          to equal each other or to any queries made to the hash function for the same SK and 
          different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
-          <t>inputs to the hash fnction used during nonce_generation are unlikely to equal 
+          <t>inputs to the hash function used during nonce_generation are unlikely to equal 
           to inputs given to hash_to_curve, proof2hash, and hash_points. This
           follows since nonce_generation inputs a secret to the hash function that is not used by 
           honest parties as input to any other hash function, and is not available to the adversary</t>

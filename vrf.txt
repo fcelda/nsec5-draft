@@ -99,7 +99,7 @@ Table of Contents
                keys  . . . . . . . . . . . . . . . . . . . . . . . .  21
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  22
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  22
-     7.3.  Proper nonce for ECVRF  . . . . . . . . . . . . . . . . .  22
+     7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  22
      7.4.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  23
      7.5.  Proofs Provide No Secrecy for VRF Input . . . . . . . . .  23
      7.6.  Prehashing  . . . . . . . . . . . . . . . . . . . . . . .  23
@@ -1214,7 +1214,7 @@ Internet-Draft                     VRF                         June 2018
       and ECVRF the cryptographic strength of the hash function Hash may
       also potentially need to be increased.
 
-7.3.  Proper nonce for ECVRF
+7.3.  Proper pseudorandom nonce for ECVRF
 
    The security of the ECVRF defined in this document relies on the fact
    that nonce k used in the ECVRF_prove algorithm is chosen uniformly
@@ -1302,14 +1302,15 @@ Internet-Draft                     VRF                         June 2018
    same SK and different alpha.  This is indeed the case for the ECVRF
    ciphersuites defined in this document, because:
 
-   o  Hash inputs used during nonce_generation are unlikely to equal to
-      inputs given to hash_to_curve, proof2hash, and hash_points,
-      because nonce_generation uses a secret that is not used by honest
-      parties as input to any other hash, and is not available to the
+   o  inputs to the hash function used during nonce_generation are
+      unlikely to equal to inputs given to hash_to_curve, proof2hash,
+      and hash_points.  This follows since nonce_generation inputs a
+      secret to the hash function that is not used by honest parties as
+      input to any other hash function, and is not available to the
       adversary
 
-   o  Hash inputs used in hash_to_curve, proof2hash, and hash_points
-      have a different second octet, and so cannot equal each other
+   o  the second octet of the input to the hash function used in
+      hash_to_curve, proof2hash, and hash_points are all different
 
    If future designs need to specify variants (e.g., additional
    ciphersuites) of the design in this document, then, to avoid the
@@ -1337,7 +1338,6 @@ Internet-Draft                     VRF                         June 2018
       SHA256.)  Made ECVRF nonce generation a separate component, so
       that nonces are determinsitic.  In ECVRF proving, changed + to -
       (and made corresponding verification changes) in order to be
-      consistent with EdDSA and ECDSA.  Highlighted that
 
 
 
@@ -1346,6 +1346,7 @@ Goldberg, et al.        Expires December 31, 2018              [Page 24]
 Internet-Draft                     VRF                         June 2018
 
 
+      consistent with EdDSA and ECDSA.  Highlighted that
       ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable
       to ECVRF for future-proofing.  Ensured domain separation for hash
       functions by modifying hash_points and added discussion about
@@ -1390,7 +1391,6 @@ Internet-Draft                     VRF                         June 2018
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <https://www.rfc-editor.org/info/rfc6979>.
-
 
 
 
