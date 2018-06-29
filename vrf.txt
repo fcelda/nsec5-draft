@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: December 30, 2018                               D. Papadopoulos
+Expires: December 31, 2018                               D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                           June 28, 2018
+                                                           June 29, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -33,14 +33,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 30, 2018.
+   This Internet-Draft will expire on December 31, 2018.
 
 Copyright Notice
 
@@ -49,11 +49,11 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 1]
+Goldberg, et al.        Expires December 31, 2018               [Page 1]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -105,11 +105,11 @@ Table of Contents
      7.6.  Prehashing  . . . . . . . . . . . . . . . . . . . . . . .  23
      7.7.  Hash function domain separation and future-proofing . . .  23
    8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  24
-   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  24
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  25
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 2]
+Goldberg, et al.        Expires December 31, 2018               [Page 2]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -117,7 +117,7 @@ Internet-Draft                     VRF                         June 2018
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  25
      10.2.  Informative References . . . . . . . . . . . . . . . . .  26
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  26
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
 1.  Introduction
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 3]
+Goldberg, et al.        Expires December 31, 2018               [Page 3]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 4]
+Goldberg, et al.        Expires December 31, 2018               [Page 4]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 5]
+Goldberg, et al.        Expires December 31, 2018               [Page 5]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 6]
+Goldberg, et al.        Expires December 31, 2018               [Page 6]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 7]
+Goldberg, et al.        Expires December 31, 2018               [Page 7]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 8]
+Goldberg, et al.        Expires December 31, 2018               [Page 8]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018               [Page 9]
+Goldberg, et al.        Expires December 31, 2018               [Page 9]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -531,8 +531,8 @@ Internet-Draft                     VRF                         June 2018
 
       hLen - output length in octets of Hash; must be at least 2n
 
-      suite - a single octet specifying the ECVRF ciphersuite, which
-      determines the above options
+      suite - a single nonzero octet specifying the ECVRF ciphersuite,
+      which determines the above options
 
    Notation and primitives used:
 
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 10]
+Goldberg, et al.        Expires December 31, 2018              [Page 10]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -613,7 +613,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 11]
+Goldberg, et al.        Expires December 31, 2018              [Page 11]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -626,7 +626,7 @@ Internet-Draft                     VRF                         June 2018
 
    4.  k = ECVRF_nonce_generation(SK, h1)
 
-   5.  c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)
+   5.  c = ECVRF_hash_points(h, gamma, g^k, h^k)
 
    6.  s = (k + c*x) mod q (where * denotes integer multiplication)
 
@@ -669,7 +669,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 12]
+Goldberg, et al.        Expires December 31, 2018              [Page 12]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -705,7 +705,7 @@ Internet-Draft                     VRF                         June 2018
 
    6.  v = h^s / gamma^c (where / again denotes EC point subtraction)
 
-   7.  c' = ECVRF_hash_points(g, h, y, gamma, u, v)
+   7.  c' = ECVRF_hash_points(h, gamma, u, v)
 
    8.  If c and c' are equal, output "VALID"; else output "INVALID"
 
@@ -725,7 +725,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 13]
+Goldberg, et al.        Expires December 31, 2018              [Page 13]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -781,7 +781,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 14]
+Goldberg, et al.        Expires December 31, 2018              [Page 14]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -804,7 +804,7 @@ Internet-Draft                     VRF                         June 2018
 
       y - public key, an EC point
 
-      suite = a 1 octet string specifying ECVRF ciphersuite.
+      suite = a single octet specifying ECVRF ciphersuite.
 
    Output:
 
@@ -837,7 +837,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 15]
+Goldberg, et al.        Expires December 31, 2018              [Page 15]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -893,7 +893,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 16]
+Goldberg, et al.        Expires December 31, 2018              [Page 16]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -949,7 +949,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 17]
+Goldberg, et al.        Expires December 31, 2018              [Page 17]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 18]
+Goldberg, et al.        Expires December 31, 2018              [Page 18]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 19]
+Goldberg, et al.        Expires December 31, 2018              [Page 19]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 20]
+Goldberg, et al.        Expires December 31, 2018              [Page 20]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 21]
+Goldberg, et al.        Expires December 31, 2018              [Page 21]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 22]
+Goldberg, et al.        Expires December 31, 2018              [Page 22]
 
 Internet-Draft                     VRF                         June 2018
 
@@ -1249,7 +1249,7 @@ Internet-Draft                     VRF                         June 2018
    may reveal the VRF input alpha.  Anyone who knows PK and pi is able
    to perform an offline dictionary attack to search for alpha, by
    verifying guesses for alpha using VRF_verify.  This is in contrast to
-   the VRF hash output beta which, without the proof, is psuedorandom
+   the VRF hash output beta which, without the proof, is pseudorandom
    and thus is designed to reveal no information about alpha.
 
 7.6.  Prehashing
@@ -1258,10 +1258,15 @@ Internet-Draft                     VRF                         June 2018
    input alpha for both signing and verifying.  Thus, additional
    prehashing of alpha (as specified, for example, in [RFC8032] for
    EdDSA signatures) is not needed, even for applications that need to
-   support the Initialized-Update-Finalize (IUF) interface or to handle
-   long alpha.  The ECVRF, in particular, uses alpha only in
-   ECVRF_hash_to_curve.  The curve point h becomes the representative of
-   alpha thereafter.
+   handle long alpha or to support the Initialized-Update-Finalize (IUF)
+   interface (in such an interface, alpha is not supplied all at once,
+   but rather in pieces by a sequence of calls to Update).  The ECVRF,
+   in particular, uses alpha only in ECVRF_hash_to_curve.  The curve
+   point h becomes the representative of alpha thereafter.  Note that
+   the suite octet and the public key are hashed together with alpha in
+   ECVRF_hash_to_curve, which ensures that the curve (including the
+   generator g) and the public key are included indirectly into
+   subsequent hashes.
 
 7.7.  Hash function domain separation and future-proofing
 
@@ -1275,39 +1280,48 @@ Internet-Draft                     VRF                         June 2018
    same SK and different alpha.  This is indeed the case for the ECVRF
    ciphersuites defined in this document, because:
 
-   o  Queries made during nonce_generation are not equal to any others,
-      because nonce_generation uses a secret that is not used by honest
-      parties as input to any hash, and is not available to the
-      adversary
-
-   o  Queries made to proof2hash cannot equal to queries made to
-      hash_points or hash_to_curve, because they are shorter (just one
+   o  Queries made during nonce_generation are unlikely to equal to any
+      others, because nonce_generation uses a secret that is not used by
 
 
 
-Goldberg, et al.        Expires December 30, 2018              [Page 23]
+Goldberg, et al.        Expires December 31, 2018              [Page 23]
 
 Internet-Draft                     VRF                         June 2018
 
 
-      EC point instead of an octet followed by an EC point and alpha or
-      an octet followed by more than one EC point)
+      honest parties as input to any hash, and is not available to the
+      adversary
 
-   o  Queries made to hash_to_curve and hash_points cannot equal each
+   o  Queries made in proof2hash cannot equal to queries made in
+      hash_points or hash_to_curve, because they are shorter (just an EC
+      point instead of an octet followed by an EC point and other
+      information)
+
+   o  Queries made in hash_to_curve and hash_points cannot equal each
       other, because hash_points starts with a 0 octet and hash_to_curve
       starts with a suite number, which is nonzero.
 
-   If future designs need to specify variants of the design in this
-   document, they should use a different suite constant.  This way, the
-   inputs to the hash_to_curve hash function used in producing h are
-   guaranteed to be different; since all the other hashing depends on h,
-   inputs to the hash functions used elsewhere in proving will also be
-   different.  (Inputs to the verifier hashing may be the same because
-   proof2hash does not include the ciphersuite, but the verifier has no
-   secrets, so this does not pose a security risk.)  [TODO: should we
-   prefix proof2hash with suite also to avoid collisions between
-   different ciphersuites?  Not clear what it gives us, but just in
-   case?]
+   If future designs need to specify variants (e.g., additional
+   ciphersuites) of the design in this document, then, to avoid the
+   possibility that an adversary can obtain a VRF output under one
+   variant, and then claim it was obtained under another variant, they
+   should specify a different suite constant.  This way, the inputs to
+   the hash_to_curve hash function used in producing h are guaranteed to
+   be different; since all the other hashing done by the prover depends
+   on h, inputs all the hash functions used by the prover will also be
+   different as long as hash_to_curve is collision resistant.
+
+   [TODO: Note that proof2hash is not prefixed with suite number, so, if
+   used by the verifier before verifying the proof, the variant is
+   ambiguous.  However, ambiguiuty disappears once the proof is
+   verified.  If anyone thinks this can present a problem, we should
+   modify the design to include the suite octet into proof2hash; but
+   this can cause collisions with hash_to_curve on an empty alpha, so
+   slight changes to other hash functions are also needed then.  For
+   example, we can prefix every hash (except nonce_generation) with
+   suite number and a sequence number (1, 2, or 3 for hash_to_curve,
+   hash_points, proof2hash, respectively).]
 
 8.  Change Log
 
@@ -1324,28 +1338,30 @@ Internet-Draft                     VRF                         June 2018
       because Ed25519 in [RFC8032] signatures use SHA512 and not
       SHA256.)  Made ECVRF nonce generation a separate component, so
       that nonces are determinsitic.  In ECVRF proving, changed + to -
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 24]
+
+Internet-Draft                     VRF                         June 2018
+
+
       (and made corresponding verification changes) in order to be
       consistent with EdDSA and ECDSA.  Highlighted that
       ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable
-      to ECVRF for future proofing.  Ensured domain separation for hash
-      functions by modifying hash_points and added aiscussion about
-      domain seperation.  Updated todos in the "additional
+      to ECVRF for future-proofing.  Ensured domain separation for hash
+      functions by modifying hash_points and added discussion about
+      domain separation.  Updated todos in the "additional
       pseudorandomness property" section.  Added an discussion of
-      secrecy into security considerations.
+      secrecy into security considerations.  Removed g and PK=y from
+      ECVRF_hash_points because they are already present via h, which is
+      computed via hash_to_curve using the suite (which identifies g)
+      and y.
 
 9.  Contributors
 
    This document also would not be possible without the work of Moni
    Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf
-
-
-
-
-Goldberg, et al.        Expires December 30, 2018              [Page 24]
-
-Internet-Draft                     VRF                         June 2018
-
-
    Ziv (Facebook).  Shumon Huque (Salesforce), David C.  Lawerence
    (Akamai), and Trevor Perrin provided valuable input to this draft.
 
@@ -1353,59 +1369,71 @@ Internet-Draft                     VRF                         June 2018
 
 10.1.  Normative References
 
+   [FIPS-186-3]
+              National Institute for Standards and Technology, "Digital
+              Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
-
-   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
-              "PKCS #1: RSA Cryptography Specifications Version 2.2",
-              RFC 8017, DOI 10.17487/RFC8017, November 2016,
-              <https://www.rfc-editor.org/info/rfc8017>.
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
               Groups for Use with IETF Standards", RFC 5114,
-              DOI 10.17487/RFC5114, January 2008, <https://www.rfc-
-              editor.org/info/rfc5114>.
+              DOI 10.17487/RFC5114, January 2008,
+              <https://www.rfc-editor.org/info/rfc5114>.
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
-              DOI 10.17487/RFC6234, May 2011, <https://www.rfc-
-              editor.org/info/rfc6234>.
-
-   [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
-              Signature Algorithm (EdDSA)", RFC 8032,
-              DOI 10.17487/RFC8032, January 2017, <https://www.rfc-
-              editor.org/info/rfc8032>.
+              DOI 10.17487/RFC6234, May 2011,
+              <https://www.rfc-editor.org/info/rfc6234>.
 
    [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <https://www.rfc-editor.org/info/rfc6979>.
 
-   [FIPS-186-3]
-              National Institute for Standards and Technology, "Digital
-              Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
+
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 25]
+
+Internet-Draft                     VRF                         June 2018
+
+
+   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
+              "PKCS #1: RSA Cryptography Specifications Version 2.2",
+              RFC 8017, DOI 10.17487/RFC8017, November 2016,
+              <https://www.rfc-editor.org/info/rfc8017>.
+
+   [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
+              Signature Algorithm (EdDSA)", RFC 8032,
+              DOI 10.17487/RFC8032, January 2017,
+              <https://www.rfc-editor.org/info/rfc8032>.
 
    [SECG1]    Standards for Efficient Cryptography Group (SECG), "SEC 1:
               Elliptic Curve Cryptography", Version 2.0, May 2009,
               <http://www.secg.org/sec1-v2.pdf>.
 
-
-
-
-
-
-
-Goldberg, et al.        Expires December 30, 2018              [Page 25]
-
-Internet-Draft                     VRF                         June 2018
-
-
 10.2.  Informative References
 
-   [ntb]      Shoup, V., "A Computational Introduction to Number Theory
-              and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
+   [BCIMRT10]
+              Brier, E., Coron, J., Icart, T., Madore, D., Randriam, H.,
+              and M. Tibouchi, "Efficient Indifferentiable Hashing into
+              Ordinary Elliptic Curves", in CRYPTO, 2010.
+
+   [I-D.vcelak-nsec5]
+              Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
+              D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
+              Existence", draft-vcelak-nsec5-06 (work in progress),
+              January 2018.
+
+   [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
+              2009.
+
+   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
+              Functions", in FOCS, 1999.
 
    [nsec5ecc]
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
@@ -1414,25 +1442,21 @@ Internet-Draft                     VRF                         June 2018
               2017/099, February 2017,
               <https://eprint.iacr.org/2017/099.pdf>.
 
-   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
-              Functions", in FOCS, 1999.
-
-   [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
-              2009.
-
-   [BCIMRT10]
-              Brier, E., Coron, J., Icart, T., Madore, D., Randriam, H.,
-              and M. Tibouchi, "Efficient Indifferentiable Hashing into
-              Ordinary Elliptic Curves", in CRYPTO, 2010.
+   [ntb]      Shoup, V., "A Computational Introduction to Number Theory
+              and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
 
    [SW18]     Sullivan, E. and C. Wood, "Hashing to Elliptic Curves",
               2018.
 
-   [I-D.vcelak-nsec5]
-              Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
-              D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
-              Existence", draft-vcelak-nsec5-06 (work in progress),
-              January 2018.
+
+
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 26]
+
+Internet-Draft                     VRF                         June 2018
+
 
 Authors' Addresses
 
@@ -1443,19 +1467,6 @@ Authors' Addresses
    USA
 
    EMail: goldbe@cs.bu.edu
-
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 30, 2018              [Page 26]
-
-Internet-Draft                     VRF                         June 2018
 
 
    Leonid Reyzin
@@ -1498,15 +1509,4 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires December 30, 2018              [Page 27]
+Goldberg, et al.        Expires December 31, 2018              [Page 27]

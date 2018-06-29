@@ -581,7 +581,7 @@
                 <t>g - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of Hash; must be at least 2n</t>
-                <t>suite - a single octet specifying the ECVRF ciphersuite, which determines the above options</t>
+                <t>suite - a single nonzero octet specifying the ECVRF ciphersuite, which determines the above options</t>
             </list>
 
         </t>
@@ -664,7 +664,7 @@
                     <t>h1 = EC2OSP(h)</t>
                     <t>gamma = h^x</t>
                     <t>k = ECVRF_nonce_generation(SK, h1)</t>
-                    <t>c = ECVRF_hash_points(g, h, y, gamma, g^k, h^k)</t>
+                    <t>c = ECVRF_hash_points(h, gamma, g^k, h^k)</t>
                     <t>s = (k + c*x) mod q (where * denotes integer multiplication)</t>
                     <t>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</t>
                     <t>Output pi</t>
@@ -734,7 +734,7 @@
                     <t>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</t>
                     <t>h = ECVRF_hash_to_curve(suite, y, alpha)</t>
                     <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
-                    <t>c' = ECVRF_hash_points(g, h, y, gamma, u, v)</t>
+                    <t>c' = ECVRF_hash_points(h, gamma, u, v)</t>
                     <t>
                         If c and c' are equal, output "VALID";
                         else output "INVALID" 
@@ -836,7 +836,7 @@
                     <list>
                         <t>alpha - value to be hashed, an octet string</t>
                         <t>y - public key, an EC point</t>
-                        <t>suite = a 1 octet string specifying ECVRF ciphersuite. </t>
+                        <t>suite = a single octet specifying ECVRF ciphersuite. </t>
                     </list>
                 </t>
                 <t>
@@ -1315,17 +1315,21 @@
     <t>The VRF proof pi is not designed to provide secrecy and, in general, may reveal the VRF input alpha.
         Anyone who knows PK and pi is able to perform an offline
         dictionary attack to search for alpha, by verifying guesses for alpha using VRF_verify.
-        This is in contrast to the VRF hash output beta which, without the proof, is psuedorandom
+        This is in contrast to the VRF hash output beta which, without the proof, is pseudorandom
         and thus is designed to reveal no information about alpha.
     </t>
 </section>
 
 <section title="Prehashing" anchor="prehash" >
     <t>The VRFs specified in this document allow for read-once access to
-    the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in
-    <xref target="RFC8032" /> for EdDSA signatures) is not needed, even for applications that need to support the
-        Initialized-Update-Finalize (IUF) interface or to handle long alpha. The ECVRF, in particular, uses alpha only in
-        ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter.</t>
+        the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in
+        <xref target="RFC8032" /> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or
+        to support the
+        Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied
+        all at once, but rather in pieces by a sequence of calls to Update). The ECVRF, in particular, uses alpha only in
+        ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite octet and the public key
+    are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public
+    key are included indirectly into subsequent hashes.</t>
 </section>
  
  
@@ -1339,25 +1343,34 @@
          to equal each other or to any queries made to the hash function for the same SK and 
          different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
-          <t> Queries made during nonce_generation are not equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
-         <t> Queries made to proof2hash cannot equal to queries made to hash_points or hash_to_curve, because they are shorter (just one EC point instead of an octet followed by an EC point and alpha or an octet followed by more than one EC point)</t>
-         <t>Queries made to hash_to_curve and hash_points cannot equal each other, because hash_points starts with a 0 octet and hash_to_curve starts with a suite number, which is nonzero.
+          <t>Queries made during nonce_generation are unlikely to equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
+         <t>Queries made in proof2hash cannot equal to queries made in hash_points or hash_to_curve, because they are shorter (just an EC point instead of an octet followed by an EC point and other information)</t>
+         <t>Queries made in hash_to_curve and hash_points cannot equal each other, because hash_points starts with a 0 octet and hash_to_curve starts with a suite number, which is nonzero.
         </t>
          </list>
      </t>
      
-     <t>If future designs need to specify variants of the design in this document, 
-        they should use a different suite constant. This way, the inputs
+     <t>If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document,
+         then, to avoid the possibility
+         that an adversary can obtain a VRF output under one variant, and then claim it was obtained under
+         another variant,
+        they should specify a different suite constant. This way, the inputs
         to the hash_to_curve hash function used in producing h are 
-        guaranteed to be different; since all the other hashing depends on h, 
-        inputs to the hash functions used elsewhere in proving will also be 
-        different. (Inputs to the verifier hashing may be the same because 
-        proof2hash does not include the ciphersuite, but the verifier has no 
-        secrets, so this does not pose a security risk.)
-        [TODO: Leo: should we prefix proof2hash with suite also to avoid collisions
-         between different ciphersuites? Not clear what it gives us, but just in case?
-         Sharon: Yes, let's do it, and explain it here by saying "as an extra precaution"...]
-     </t>
+        guaranteed to be different; since all the other hashing done by the prover
+        depends on h, inputs all the hash functions used by the prover will also be
+        different as long as hash_to_curve is collision resistant.
+    </t>
+        
+        <t>
+        [TODO: Note that proof2hash is not prefixed with suite number, so, if
+        used by the verifier before verifying the proof, the variant is ambiguous. However,
+        ambiguiuty disappears once the proof is verified.
+        If anyone thinks this can present a problem, we should modify the design
+        to include the suite octet into proof2hash; but this can cause collisions with
+        hash_to_curve on an empty alpha, so slight changes to other hash functions
+        are also needed then. For example, we can prefix every hash (except nonce_generation)
+        with suite number and a sequence number (1, 2, or 3 for hash_to_curve, hash_points,
+            proof2hash, respectively).]</t>
      
      
      
@@ -1410,11 +1423,13 @@
                 In ECVRF proving, changed + to - (and made corresponding
                 verification changes) in order to be consistent with EdDSA and ECDSA.
                 Highlighted that ECVRF_hash_to_curve acts like a prehash.
-                Added "suites" variable to ECVRF for future proofing.
+                Added "suites" variable to ECVRF for future-proofing.
                 Ensured domain separation for hash functions by modifying hash_points and added
                 discussion about domain separation.
                 Updated todos in the "additional pseudorandomness property" 
-                section. Added an discussion of secrecy into security considerations.</t>
+                section. Added an discussion of secrecy into security considerations.
+                Removed g and PK=y from ECVRF_hash_points because they are already present
+                via h, which is computed via hash_to_curve using the suite (which identifies g) and y.</t>
             </list>
         </t>
     </section>
