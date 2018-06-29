@@ -1287,7 +1287,7 @@
     Otherwise, an adversary may be able to recover
     the private VRF key x (and thus break pseudorandomness of the VRF)
     after observing several valid VRF proofs pi. The nonce generation methods
-    specified in the ECVRF ciphersuites of <xref target="suites">
+    specified in the ECVRF ciphersuites of <xref target="suites"/>
     are designed with this requirement in mind.
     </t>
     
