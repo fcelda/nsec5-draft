@@ -697,7 +697,8 @@
                     <t>D = ECVRF_decode_proof(pi)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>preBeta = Hash(EC2OSP(gamma^cofactor))</t>
+                    <t>three = 0x03 = I2OSP(3, 1), a single octet with value 3 </t>
+                    <t>preBeta = Hash(suite || three || EC2OSP(gamma^cofactor))</t>
                     <t>beta = first 2n octets of preBeta</t>
                     <t>Output beta</t>
                 </list>
@@ -803,12 +804,13 @@
                 <list style="numbers">
                     <t>ctr = 0</t>
                     <t>pk = EC2OSP(y)</t>
+                    <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
                     <t>h = "INVALID"</t>
                     <t>While h is "INVALID" or h is EC point at infinity:
                     <list style="letters">
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
-                        <t>hash = Hash(suite || pk || alpha || CTR)</t>
+                        <t>hash = Hash(suite || one || pk || alpha || CTR)</t>
                         <t>attempted_hash = first 2n bits of hash</t> 
                         <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
@@ -867,7 +869,8 @@
                     Steps:
                     <list style="numbers">
                         <t>pk = EC2OSP(y)</t>
-                        <t>hash = Hash(suite || pk || alpha )</t>
+                        <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
+                        <t>hash = Hash(suite || one || pk || alpha )</t>
                         <t>r = first 2n octets of hash</t>
                         <t>x_0 = next unused bit of hash </t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
@@ -940,10 +943,8 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t> zero = 0x00 = I2OSP(0, 1), an octet string of length 1,
-                     consisting of a single 0 octet</t>
-                     <t> str = zero </t>
-                    <t>str = an octet string of length 1, consisting of a single 0 octet</t>
+                    <t>two = 0x02 = I2OSP(2, 1), a single octet with value 2 </t>
+                    <t>Initialize str = suite || two </t>
                     <t>for p_i in [p_1, p_2, ... p_j]:
                        <vspace/>str = str || EC2OSP(p_i)
                     </t>
@@ -1355,10 +1356,8 @@
          to equal each other or to any queries made to the hash function for the same SK and 
          different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
-          <t>Queries made during nonce_generation are unlikely to equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</t>
-         <t>Queries made in proof2hash cannot equal to queries made in hash_points or hash_to_curve, because they are shorter (just an EC point instead of an octet followed by an EC point and other information)</t>
-         <t>Queries made in hash_to_curve and hash_points cannot equal each other, because hash_points starts with a 0 octet and hash_to_curve starts with a suite number, which is nonzero.
-        </t>
+          <t>Hash inputs used during nonce_generation are unlikely to equal to inputs given to hash_to_curve, proof2hash, and hash_points, because nonce_generation uses a secret that is not used by honest parties as input to any other hash, and is not available to the adversary</t>
+          <t>Hash inputs used in hash_to_curve, proof2hash, and hash_points have a different second octet, and so cannot equal each other</t>
          </list>
      </t>
      
@@ -1372,19 +1371,6 @@
         depends on h, inputs all the hash functions used by the prover will also be
         different as long as hash_to_curve is collision resistant.
     </t>
-        
-        <t>
-        [TODO: Note that proof2hash is not prefixed with suite number, so, if
-        used by the verifier before verifying the proof, the variant is ambiguous. However,
-        ambiguiuty disappears once the proof is verified.
-        If anyone thinks this can present a problem, we should modify the design
-        to include the suite octet into proof2hash; but this can cause collisions with
-        hash_to_curve on an empty alpha, so slight changes to other hash functions
-        are also needed then. For example, we can prefix every hash (except nonce_generation)
-        with suite number and a sequence number (1, 2, or 3 for hash_to_curve, hash_points,
-            proof2hash, respectively).]</t>
-     
-     
      
  </section>
 

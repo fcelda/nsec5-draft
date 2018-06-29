@@ -97,13 +97,13 @@ Table of Contents
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  21
        7.1.1.  Uniqueness and collision resistance with untrusted
                keys  . . . . . . . . . . . . . . . . . . . . . . . .  21
-       7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  21
+       7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  22
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  22
-     7.3.  Proper random nonce for ECVRF . . . . . . . . . . . . . .  22
-     7.4.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  22
+     7.3.  Proper nonce for ECVRF  . . . . . . . . . . . . . . . . .  22
+     7.4.  Timing attacks  . . . . . . . . . . . . . . . . . . . . .  23
      7.5.  Proofs Provide No Secrecy for VRF Input . . . . . . . . .  23
      7.6.  Prehashing  . . . . . . . . . . . . . . . . . . . . . . .  23
-     7.7.  Hash function domain separation and future-proofing . . .  23
+     7.7.  Hash function domain separation and future-proofing . . .  24
    8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  24
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  25
 
@@ -656,13 +656,13 @@ Internet-Draft                     VRF                         June 2018
 
    3.  (gamma, c, s) = D
 
-   4.  preBeta = Hash(EC2OSP(gamma^cofactor))
+   4.  three = 0x03 = I2OSP(3, 1), a single octet with value 3
 
-   5.  beta = first 2n octets of preBeta
+   5.  preBeta = Hash(suite || three || EC2OSP(gamma^cofactor))
 
-   6.  Output beta
+   6.  beta = first 2n octets of preBeta
 
-
+   7.  Output beta
 
 
 
@@ -765,19 +765,19 @@ Internet-Draft                     VRF                         June 2018
 
    2.  pk = EC2OSP(y)
 
-   3.  h = "INVALID"
+   3.  one = 0x01 = I2OSP(1, 1), a single octet with value 1
 
-   4.  While h is "INVALID" or h is EC point at infinity:
+   4.  h = "INVALID"
+
+   5.  While h is "INVALID" or h is EC point at infinity:
 
        A.  CTR = I2OSP(ctr, 4)
 
        B.  ctr = ctr + 1
 
-       C.  hash = Hash(suite || pk || alpha || CTR)
+       C.  hash = Hash(suite || one || pk || alpha || CTR)
 
        D.  attempted_hash = first 2n bits of hash
-
-       E.  h = RS2ECP(attempted_hash)
 
 
 
@@ -786,9 +786,11 @@ Goldberg, et al.        Expires December 31, 2018              [Page 14]
 Internet-Draft                     VRF                         June 2018
 
 
+       E.  h = RS2ECP(attempted_hash)
+
        F.  If h is not "INVALID" and cofactor > 1, set h = h^cofactor
 
-   5.  Output h
+   6.  Output h
 
 5.4.1.2.  ECVRF_hash_to_curve_elligator2_25519
 
@@ -831,9 +833,7 @@ Internet-Draft                     VRF                         June 2018
 
    1.   pk = EC2OSP(y)
 
-   2.   hash = Hash(suite || pk || alpha )
-
-   3.   r = first 2n octets of hash
+   2.   one = 0x01 = I2OSP(1, 1), a single octet with value 1
 
 
 
@@ -842,22 +842,26 @@ Goldberg, et al.        Expires December 31, 2018              [Page 15]
 Internet-Draft                     VRF                         June 2018
 
 
-   4.   x_0 = next unused bit of hash
+   3.   hash = Hash(suite || one || pk || alpha )
 
-   5.   u = - A / (1 + 2*(r^2) ) mod p
+   4.   r = first 2n octets of hash
 
-   6.   v = u * (u^2 + A*u + 1) mod p
+   5.   x_0 = next unused bit of hash
 
-   7.   Let e equal the Legendre symbol of v modulo p
+   6.   u = - A / (1 + 2*(r^2) ) mod p
 
-   8.   If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p
+   7.   v = u * (u^2 + A*u + 1) mod p
 
-   9.   y = (finalu - 1) / (finalu + 1) mod p
+   8.   Let e equal the Legendre symbol of v modulo p
 
-   10.  let h = (x_0,y), an EC point per the encoding in Section 5.1.2
+   9.   If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p
+
+   10.  y = (finalu - 1) / (finalu + 1) mod p
+
+   11.  let h = (x_0,y), an EC point per the encoding in Section 5.1.2
         of [RFC8032]
 
-   11.  h = h^cofactor
+   12.  h = h^cofactor
 
    In order to make this algorithm run in time that is (almost)
    independent of the input (so-called "constant-time"), implementers
@@ -889,10 +893,6 @@ Internet-Draft                     VRF                         June 2018
 
 
 
-
-
-
-
 Goldberg, et al.        Expires December 31, 2018              [Page 16]
 
 Internet-Draft                     VRF                         June 2018
@@ -912,18 +912,20 @@ Internet-Draft                     VRF                         June 2018
 
    Steps:
 
-   1.  str = an octet string of length 1, consisting of a single 0 octet
+   1.  two = 0x02 = I2OSP(2, 1), a single octet with value 2
 
-   2.  for p_i in [p_1, p_2, ... p_j]:
+   2.  Initialize str = suite || two
+
+   3.  for p_i in [p_1, p_2, ... p_j]:
        str = str || EC2OSP(p_i)
 
-   3.  c1 = Hash(str)
+   4.  c1 = Hash(str)
 
-   4.  c2 = first n octets of c1
+   5.  c2 = first n octets of c1
 
-   5.  c = OS2IP(c2)
+   6.  c = OS2IP(c2)
 
-   6.  Output c
+   7.  Output c
 
 5.4.3.  ECVRF Decode Proof
 
@@ -945,14 +947,14 @@ Internet-Draft                     VRF                         June 2018
 
    Steps:
 
-   1.  let gamma', c', s' be pi split after m-th and m+n-th octet
-
 
 
 Goldberg, et al.        Expires December 31, 2018              [Page 17]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   1.  let gamma', c', s' be pi split after m-th and m+n-th octet
 
    2.  gamma = OS2ECP(gamma')
 
@@ -981,7 +983,7 @@ Internet-Draft                     VRF                         June 2018
       secret scalar x is equal to the private key SK.
 
    o  The ECVRF_nonce_generation function is as specified in [RFC6979]
-      Section 3.2 Steps b-h (ommitting Step a and using h1 that is
+      Section 3.2 Steps b-h (omitting Step a and using h1 that is
       provided as input to ECVRF_nonce_generation), with the hash
       function SHA-256 as specified in [RFC6234]
 
@@ -1001,14 +1003,14 @@ Internet-Draft                     VRF                         June 2018
 
    This document defines ECVRF-ED25519-SHA512 as follows:
 
-   o  suite = 0x02 = I2OSP(2, 1).
-
 
 
 Goldberg, et al.        Expires December 31, 2018              [Page 18]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   o  suite = 0x02 = I2OSP(2, 1).
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -1055,8 +1057,6 @@ Internet-Draft                     VRF                         June 2018
    is untrusted, the Verifier MUST obtain E and g from a trusted source,
    such as a ciphersuite specification, rather than from the prover.
 
-   This procedure supposes that the public key provided to the Verifier
-   is an octet string.  The procedure returns "INVALID" if the public
 
 
 
@@ -1066,6 +1066,8 @@ Goldberg, et al.        Expires December 31, 2018              [Page 19]
 Internet-Draft                     VRF                         June 2018
 
 
+   This procedure supposes that the public key provided to the Verifier
+   is an octet string.  The procedure returns "INVALID" if the public
    key in invalid.  Otherwise, it returns y, the public key as an EC
    point.
 
@@ -1111,9 +1113,7 @@ Internet-Draft                     VRF                         June 2018
    An implementation by Yahoo! similar to the ECVRF is available at
    <https://github.com/r2ishiguro/vrf>.
 
-   An implementation similar to ECVRF is available as part of the CONIKS
-   implementation in Golang at <https://github.com/coniks-sys/coniks-
-   go/tree/master/crypto/vrf>.
+
 
 
 
@@ -1121,6 +1121,10 @@ Goldberg, et al.        Expires December 31, 2018              [Page 20]
 
 Internet-Draft                     VRF                         June 2018
 
+
+   An implementation similar to ECVRF is available as part of the CONIKS
+   implementation in Golang at <https://github.com/coniks-sys/coniks-
+   go/tree/master/crypto/vrf>.
 
    Open Whisper Systems also uses a VRF very similar to ECVRF-
    ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
@@ -1162,6 +1166,18 @@ Internet-Draft                     VRF                         June 2018
    adding additional cryptographic checks that its public key has the
    right form.  These modifications are left for future specification.
 
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 21]
+
+Internet-Draft                     VRF                         June 2018
+
+
 7.1.2.  Pseudorandomness with untrusted keys
 
    Without good randomness, the "pseudorandomness" properties of the VRF
@@ -1170,13 +1186,6 @@ Internet-Draft                     VRF                         June 2018
    This is because an adversary can always use bad randomness to
    generate the VRF keys, and thus, the VRF output may not be
    pseudorandom.
-
-
-
-Goldberg, et al.        Expires December 31, 2018              [Page 21]
-
-Internet-Draft                     VRF                         June 2018
-
 
 7.2.  Selective vs Full Pseudorandomness
 
@@ -1205,16 +1214,25 @@ Internet-Draft                     VRF                         June 2018
       and ECVRF the cryptographic strength of the hash function Hash may
       also potentially need to be increased.
 
-7.3.  Proper random nonce for ECVRF
+7.3.  Proper nonce for ECVRF
 
-   The ECVRF defined in this document relies for its security on the
-   fact that random nonce k used in the ECVRF_prove algorithm is chosen
-   uniformly (randomly or pseudorandomly) modulo q, and is unknown to
-   the advesrary.  Otherwise, an adversary may be able to recover the
-   private VRF key x (and thus break pseudorandomness of the VRF) after
-   observing several valid VRF proofs pi.  The nonce generation methods
-   specified in the ciphersuites are designed with this requirement in
-   mind.
+   The security of the ECVRF defined in this document relies on the fact
+   that nonce k used in the ECVRF_prove algorithm is chosen uniformly
+   and pseudorandomly modulo q, and is unknown to the advesrary.
+   Otherwise, an adversary may be able to recover the private VRF key x
+   (and thus break pseudorandomness of the VRF) after observing several
+   valid VRF proofs pi.  The nonce generation methods specified in the
+   ECVRF ciphersuites of Section 5.5 are designed with this requirement
+   in mind.
+
+
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 22]
+
+Internet-Draft                     VRF                         June 2018
+
 
 7.4.  Timing attacks
 
@@ -1226,14 +1244,6 @@ Internet-Draft                     VRF                         June 2018
    information about alpha.  That said, for most inputs the amount of
    information obtained from such a timing attack is likely to be small
    (1 bit, on average), since the algorithm is expected to find a valid
-
-
-
-Goldberg, et al.        Expires December 31, 2018              [Page 22]
-
-Internet-Draft                     VRF                         June 2018
-
-
    curve point after only two attempts.  However, there might be inputs
    which cause the algorithm to make many attempts before it finds a
    valid curve point; for such inputs, the information leaked in a
@@ -1268,6 +1278,18 @@ Internet-Draft                     VRF                         June 2018
    generator g) and the public key are included indirectly into
    subsequent hashes.
 
+
+
+
+
+
+
+
+Goldberg, et al.        Expires December 31, 2018              [Page 23]
+
+Internet-Draft                     VRF                         June 2018
+
+
 7.7.  Hash function domain separation and future-proofing
 
    Hashing is used for four different purposes in ECVRF (namely, in
@@ -1280,27 +1302,14 @@ Internet-Draft                     VRF                         June 2018
    same SK and different alpha.  This is indeed the case for the ECVRF
    ciphersuites defined in this document, because:
 
-   o  Queries made during nonce_generation are unlikely to equal to any
-      others, because nonce_generation uses a secret that is not used by
-
-
-
-Goldberg, et al.        Expires December 31, 2018              [Page 23]
-
-Internet-Draft                     VRF                         June 2018
-
-
-      honest parties as input to any hash, and is not available to the
+   o  Hash inputs used during nonce_generation are unlikely to equal to
+      inputs given to hash_to_curve, proof2hash, and hash_points,
+      because nonce_generation uses a secret that is not used by honest
+      parties as input to any other hash, and is not available to the
       adversary
 
-   o  Queries made in proof2hash cannot equal to queries made in
-      hash_points or hash_to_curve, because they are shorter (just an EC
-      point instead of an octet followed by an EC point and other
-      information)
-
-   o  Queries made in hash_to_curve and hash_points cannot equal each
-      other, because hash_points starts with a 0 octet and hash_to_curve
-      starts with a suite number, which is nonzero.
+   o  Hash inputs used in hash_to_curve, proof2hash, and hash_points
+      have a different second octet, and so cannot equal each other
 
    If future designs need to specify variants (e.g., additional
    ciphersuites) of the design in this document, then, to avoid the
@@ -1311,17 +1320,6 @@ Internet-Draft                     VRF                         June 2018
    be different; since all the other hashing done by the prover depends
    on h, inputs all the hash functions used by the prover will also be
    different as long as hash_to_curve is collision resistant.
-
-   [TODO: Note that proof2hash is not prefixed with suite number, so, if
-   used by the verifier before verifying the proof, the variant is
-   ambiguous.  However, ambiguiuty disappears once the proof is
-   verified.  If anyone thinks this can present a problem, we should
-   modify the design to include the suite octet into proof2hash; but
-   this can cause collisions with hash_to_curve on an empty alpha, so
-   slight changes to other hash functions are also needed then.  For
-   example, we can prefix every hash (except nonce_generation) with
-   suite number and a sequence number (1, 2, or 3 for hash_to_curve,
-   hash_points, proof2hash, respectively).]
 
 8.  Change Log
 
@@ -1338,6 +1336,8 @@ Internet-Draft                     VRF                         June 2018
       because Ed25519 in [RFC8032] signatures use SHA512 and not
       SHA256.)  Made ECVRF nonce generation a separate component, so
       that nonces are determinsitic.  In ECVRF proving, changed + to -
+      (and made corresponding verification changes) in order to be
+      consistent with EdDSA and ECDSA.  Highlighted that
 
 
 
@@ -1346,8 +1346,6 @@ Goldberg, et al.        Expires December 31, 2018              [Page 24]
 Internet-Draft                     VRF                         June 2018
 
 
-      (and made corresponding verification changes) in order to be
-      consistent with EdDSA and ECDSA.  Highlighted that
       ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable
       to ECVRF for future-proofing.  Ensured domain separation for hash
       functions by modifying hash_points and added discussion about
@@ -1392,6 +1390,8 @@ Internet-Draft                     VRF                         June 2018
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <https://www.rfc-editor.org/info/rfc6979>.
+
+
 
 
 

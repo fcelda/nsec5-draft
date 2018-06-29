@@ -405,7 +405,7 @@
 <link href="#rfc.section.7.1.1" rel="Chapter" title="7.1.1 Uniqueness and collision resistance with untrusted keys">
 <link href="#rfc.section.7.1.2" rel="Chapter" title="7.1.2 Pseudorandomness with untrusted keys">
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Selective vs Full Pseudorandomness">
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper random nonce for ECVRF">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper nonce for ECVRF">
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Timing attacks">
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Proofs Provide No Secrecy for VRF Input">
 <link href="#rfc.section.7.6" rel="Chapter" title="7.6 Prehashing">
@@ -552,7 +552,7 @@
 </li>
 </ul><li>7.2.   <a href="#rfc.section.7.2">Selective vs Full Pseudorandomness</a>
 </li>
-<li>7.3.   <a href="#rfc.section.7.3">Proper random nonce for ECVRF</a>
+<li>7.3.   <a href="#rfc.section.7.3">Proper nonce for ECVRF</a>
 </li>
 <li>7.4.   <a href="#rfc.section.7.4">Timing attacks</a>
 </li>
@@ -891,7 +891,8 @@
 <li>D = ECVRF_decode_proof(pi)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
-<li>preBeta = Hash(EC2OSP(gamma^cofactor))</li>
+<li>three = 0x03 = I2OSP(3, 1), a single octet with value 3 </li>
+<li>preBeta = Hash(suite || three || EC2OSP(gamma^cofactor))</li>
 <li>beta = first 2n octets of preBeta</li>
 <li>Output beta</li>
 </ol>
@@ -961,11 +962,12 @@
 <ol>
 <li>ctr = 0</li>
 <li>pk = EC2OSP(y)</li>
+<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
 <li>h = "INVALID"</li>
 <li>While h is "INVALID" or h is EC point at infinity: <ol style="list-style-type: upper-alpha">
 <li>CTR = I2OSP(ctr, 4)</li>
 <li>ctr = ctr + 1</li>
-<li>hash = Hash(suite || pk || alpha || CTR)</li>
+<li>hash = Hash(suite || one || pk || alpha || CTR)</li>
 <li>attempted_hash = first 2n bits of hash</li>
 <li>h = RS2ECP(attempted_hash)</li>
 <li>If h is not "INVALID" and cofactor &gt; 1, set h = h^cofactor</li>
@@ -1014,7 +1016,8 @@
 
 <ol>
 <li>pk = EC2OSP(y)</li>
-<li>hash = Hash(suite || pk || alpha )</li>
+<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
+<li>hash = Hash(suite || one || pk || alpha )</li>
 <li>r = first 2n octets of hash</li>
 <li>x_0 = next unused bit of hash </li>
 <li>u = - A / (1 + 2*(r^2) )  mod p </li>
@@ -1059,7 +1062,8 @@
 <p id="rfc.section.5.4.2.p.4">Steps: </p>
 
 <ol>
-<li>str = an octet string of length 1, consisting of a single 0 octet</li>
+<li>two = 0x02 = I2OSP(2, 1), a single octet with value 2 </li>
+<li>Initialize str = suite || two </li>
 <li>for p_i in [p_1, p_2, ... p_j]: <br>str = str || EC2OSP(p_i) </li>
 <li>c1 = Hash(str)</li>
 <li>c2 = first n octets of c1</li>
@@ -1107,7 +1111,7 @@
 <li>suite = 0x01 = I2OSP(1, 1). </li>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, g, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
-<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (ommitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (omitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
 </li>
 <li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
 <li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
@@ -1204,8 +1208,8 @@
 
 <p> </p>
 <h1 id="rfc.section.7.3">
-<a href="#rfc.section.7.3">7.3.</a> Proper random nonce for ECVRF</h1>
-<p id="rfc.section.7.3.p.1">The ECVRF defined in this document relies for its security on the fact that random nonce k used in the ECVRF_prove algorithm is chosen uniformly (randomly or pseudorandomly) modulo q, and is unknown to the advesrary.  Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi. The nonce generation methods specified in the ciphersuites are designed with this requirement in mind.  </p>
+<a href="#rfc.section.7.3">7.3.</a> Proper nonce for ECVRF</h1>
+<p id="rfc.section.7.3.p.1">The security of the ECVRF defined in this document relies on the fact that nonce k used in the ECVRF_prove algorithm is chosen uniformly and pseudorandomly modulo q, and is unknown to the advesrary.  Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi. The nonce generation methods specified in the ECVRF ciphersuites of <a href="#suites" class="xref">Section 5.5</a> are designed with this requirement in mind.  </p>
 <h1 id="rfc.section.7.4">
 <a href="#rfc.section.7.4">7.4.</a> Timing attacks</h1>
 <p id="rfc.section.7.4.p.1">The ECVRF_hash_to_curve_try_and_increment algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
@@ -1216,20 +1220,18 @@
 <h1 id="rfc.section.7.6">
 <a href="#rfc.section.7.6">7.6.</a> <a href="#prehash" id="prehash">Prehashing</a>
 </h1>
-<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update). The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public key are included indirectly into subsequent hashes.</p>
+<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public key are included indirectly into subsequent hashes.</p>
 <h1 id="rfc.section.7.7">
 <a href="#rfc.section.7.7">7.7.</a> Hash function domain separation and future-proofing</h1>
 <p id="rfc.section.7.7.p.1">Hashing is used for four different purposes in ECVRF (namely, in hash_to_curve, nonce_generation, hash_points, and proof2hash). The theoretical analysis assumes each of these four functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because: </p>
 
 <ul>
-<li>Queries made during nonce_generation are unlikely to equal to any others, because nonce_generation uses a secret that is not used by honest parties as input to any hash, and is not available to the adversary</li>
-<li>Queries made in proof2hash cannot equal to queries made in hash_points or hash_to_curve, because they are shorter (just an EC point instead of an octet followed by an EC point and other information)</li>
-<li>Queries made in hash_to_curve and hash_points cannot equal each other, because hash_points starts with a 0 octet and hash_to_curve starts with a suite number, which is nonzero.  </li>
+<li>Hash inputs used during nonce_generation are unlikely to equal to inputs given to hash_to_curve, proof2hash, and hash_points, because nonce_generation uses a secret that is not used by honest parties as input to any other hash, and is not available to the adversary</li>
+<li>Hash inputs used in hash_to_curve, proof2hash, and hash_points have a different second octet, and so cannot equal each other</li>
 </ul>
 
 <p> </p>
 <p id="rfc.section.7.7.p.2">If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document, then, to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant, they should specify a different suite constant. This way, the inputs to the hash_to_curve hash function used in producing h are guaranteed to be different; since all the other hashing done by the prover depends on h, inputs all the hash functions used by the prover will also be different as long as hash_to_curve is collision resistant.  </p>
-<p id="rfc.section.7.7.p.3">[TODO: Note that proof2hash is not prefixed with suite number, so, if used by the verifier before verifying the proof, the variant is ambiguous. However, ambiguiuty disappears once the proof is verified.  If anyone thinks this can present a problem, we should modify the design to include the suite octet into proof2hash; but this can cause collisions with hash_to_curve on an empty alpha, so slight changes to other hash functions are also needed then. For example, we can prefix every hash (except nonce_generation) with suite number and a sequence number (1, 2, or 3 for hash_to_curve, hash_points, proof2hash, respectively).]</p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> Change Log</h1>
 <p id="rfc.section.8.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.  </p>
