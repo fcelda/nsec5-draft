@@ -1,7 +1,7 @@
 ---
 title: NSEC5, DNSSEC Authenticated Denial of Existence
 abbrev: NSEC5
-docname: draft-vcelak-nsec5-06
+docname: draft-vcelak-nsec5-07
 date: 2018
 
 ipr: trust200902
@@ -85,7 +85,7 @@ normative:
   rfc6605: 
   rfc7748: 
   rfc8080: 
-  I-D.goldbe-vrf:
+  I-D.irtf-cfrg-vrf:
   FIPS-186-3:
     title: Digital Signature Standard (DSS)
     author:
@@ -199,7 +199,7 @@ information, answers to frequently asked questions, general musings,
 etc.  They will be removed before publication.  This document is being
 collaborated on in GitHub at
 \<https://github.com/fcelda/nsec5-draft\>.  The most recent version of
-the document, open issues, etc should all be available here.  The
+the document, open issues, etc should all be available there.  The
 authors gratefully accept pull requests.
 
 --- middle
@@ -268,7 +268,7 @@ server is compromised.
 NSEC5 prevents offline zone enumeration and also protects integrity
 even if a zone's authoritative server is compromised.  To do this,
 NSEC5 replaces the unkeyed cryptographic hash function used in NSEC3
-with a verifiable random function (VRF) {{I-D.goldbe-vrf}} {{MRV99}}.  A VRF is the
+with a verifiable random function (VRF) {{I-D.irtf-cfrg-vrf}} {{MRV99}}.  A VRF is the
 public-key version of a keyed cryptographic hash.  Only the holder of
 the private VRF key can compute the hash, but anyone with public VRF
 key can verify the correctness of the hash.
@@ -292,7 +292,7 @@ against network attacks.
 
 NSEC5 is not intended to replace NSEC or NSEC3. It is an alternative
 mechanism for authenticated denial of existence.  This document
-specifies NSEC5 based on the VRFs in {{I-D.goldbe-vrf}} over the
+specifies NSEC5 based on the VRFs in {{I-D.irtf-cfrg-vrf}} over the
 FIPS 186-3 P-256 elliptic curve and over the
 the Ed25519 elliptic curve. A formal cryptographic proof of security
 for NSEC5 is in {{nsec5ecc}}.
@@ -312,7 +312,7 @@ concepts described in {{RFC1034}}, {{RFC1035}}, {{RFC4033}},
 and DNS terms in {{RFC7719}}.
 
 The reader should also be familiar with verifiable random functions (VRFs)
-as defined in {{I-D.goldbe-vrf}}.
+as defined in {{I-D.irtf-cfrg-vrf}}.
 
 The following terminology is used through this document:
 
@@ -365,7 +365,7 @@ zone as insecure.
 
 # How NSEC5 Works
 
-With NSEC5, the original domain name is hashed using a VRF {{I-D.goldbe-vrf}}
+With NSEC5, the original domain name is hashed using a VRF {{I-D.irtf-cfrg-vrf}}
 using the following steps:
 
 1. The domain name is processed using a VRF keyed with the private
@@ -415,7 +415,7 @@ the algorithms used for DNSSEC signing. An NSEC5 algorithm defines how
 the NSEC5 proof and the NSEC5 hash are computed and validated.
 
 The NSEC5 proof corresponding to a name is computed using ECVRF_prove(), 
-as specified in {{I-D.goldbe-vrf}}.
+as specified in {{I-D.irtf-cfrg-vrf}}.
 The input to ECVRF_prove() is 
 a public NSEC5 key followed by
 a private NSEC5 key followed by
@@ -423,13 +423,13 @@ an RR owner name in {{RFC4034}} canonical wire format.
 The output NSEC5 proof is an octet string.
 
 An NSEC5 hash corresponding to a name is computed from 
-its NSEC5 proof using ECVRF_proof2hash(), as specified in {{I-D.goldbe-vrf}}.
+its NSEC5 proof using ECVRF_proof2hash(), as specified in {{I-D.irtf-cfrg-vrf}}.
 The input to VRF_proof2hash() is 
 an NSEC5 proof as an octet string. 
 The output NSEC5 hash is either an octet string, or INVALID.
 
 An NSEC5 proof for a name is verified using ECVRF_verify(),  as specified in
-{{I-D.goldbe-vrf}}.
+{{I-D.irtf-cfrg-vrf}}.
 The input is the NSEC5 public key, 
 followed by an NSEC5 proof as an octet string,
 followed by an RR owner name in {{RFC4034}} canonical wire format.
@@ -437,8 +437,8 @@ The output is either VALID or INVALID.
 
 This document defines the EC-P256-SHA256 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm using the EC-VRF-P256-SHA256 
-ciphersuite specified in {{I-D.goldbe-vrf}}.
+* The VRF is the ECVRF algorithm using the ECVRF-P256-SHA256 
+ciphersuite specified in {{I-D.irtf-cfrg-vrf}}.
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 4 of {{RFC6605}} and thus is the same as the format used to
@@ -448,14 +448,19 @@ ciphersuite specified in {{I-D.goldbe-vrf}}.
   but we do compress curve points in every other place we use them. The NSEC5KEY record can be shrunk by 31 additional octets by encoding the 
   public key with point compression.\]
 
-This document defines the EC-ED25519-SHA256 NSEC5 algorithm as follows:
+This document defines the EC-ED25519-SHA512 NSEC5 algorithm as follows:
 
-* The VRF is the EC-VRF algorithm using the EC-VRF-ED25519-SHA256
-ciphersuite specified in {{I-D.goldbe-vrf}}.
+* The VRF is the EC-VRF algorithm using the ECVRF-ED25519-SHA512
+ciphersuite specified in {{I-D.irtf-cfrg-vrf}}. 
 
 * The public key format to be used in the NSEC5KEY RR is defined in
   Section 3 of {{RFC8080}} and thus is the same as the format used to
   store Ed25519 public keys in DNSKEY RRs.
+  
+[NOTE: Could alternatively have the EC-ED25519-SHA512 NSEC5 ciphersuite
+use the 
+EC-VRF-ED25519-SHA512-ELLIGATOR2 ciphersuite specified in {{I-D.irtf-cfrg-vrf}}.] 
+
 
 # The NSEC5KEY Resource Record
 
@@ -1231,7 +1236,7 @@ To do this, the server returns:
 This is an NSEC5PROOF RR for c.example.com. It's RDATA is the NSEC5 proof 
 corresponding to c.example.com.  (NSEC5 proofs are randomized values,
 because NSEC5 proof values are computed uses the EC-VRF 
-from <xref target="I-D.goldbe-vrf"/>.)
+from <xref target="I-D.irtf-cfrg-vrf"/>.)
 Per {{precompute}}, this NSEC5PROOF RR may be precomputed.
 
     c.example.org.      86400 IN NSEC5PROOF 48566 Amgn22zUiZ9JVyaT...
@@ -1496,7 +1501,9 @@ RFC, please remove this appendix before publication as an RFC.
 > specification.  Rewrite Performance Considerations and
 > Implementation Status sections.
 
-> 05 - Remove appendix specifying VRFs and add reference to 
-> {{I-D.goldbe-vrf}}.  Add {{examples}}.
+> 05 - Remove appendix specifying VRFs and add reference to draft-goldbe-vrf.
+ Add {{examples}}.
 
 > 06 - Editorial changes.  Minor updates to {{name-error-responses}}.
+
+> 07 - Updated reference to {{I-D.irtf-cfrg-vrf}}, updated VRF ciphersuites.
