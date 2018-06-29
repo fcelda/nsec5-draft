@@ -940,6 +940,9 @@
             <t>
                 Steps:
                 <list style="numbers">
+                    <t> zero = 0x00 = I2OSP(0, 1), an octet string of length 1,
+                     consisting of a single 0 octet</t>
+                     <t> str = zero </t>
                     <t>str = an octet string of length 1, consisting of a single 0 octet</t>
                     <t>for p_i in [p_1, p_2, ... p_j]:
                        <vspace/>str = str || EC2OSP(p_i)
@@ -1010,7 +1013,8 @@
             correspond to in n, G, d, and Q in Section 3.2.1 of <xref target="SECG1" />).
             In this ciphersuite, the secret scalar x is equal to the private key SK.
         </t>
-        <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2 Steps b-h (ommitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function
+        <t> The ECVRF_nonce_generation function is as specified in <xref target="RFC6979" /> Section 3.2 Steps b-h 
+        (omitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function
         SHA-256 as specified in <xref target="RFC6234" /></t>
 
         <t>
@@ -1274,16 +1278,17 @@
     </section>
 
 
- <section title="Proper random nonce for ECVRF">
+ <section title="Proper nonce for ECVRF">
 
     <t>
-    The ECVRF defined in this document relies for its security
-    on the fact that random nonce k used in the ECVRF_prove algorithm is
-    chosen uniformly (randomly or pseudorandomly) modulo q, and is unknown to the advesrary.
+    The security of the ECVRF defined in this document relies on the 
+    fact that nonce k used in the ECVRF_prove algorithm is
+    chosen uniformly and pseudorandomly modulo q, and is unknown to the advesrary.
     Otherwise, an adversary may be able to recover
     the private VRF key x (and thus break pseudorandomness of the VRF)
     after observing several valid VRF proofs pi. The nonce generation methods
-    specified in the ciphersuites are designed with this requirement in mind.
+    specified in the ECVRF ciphersuites of <xref target="suites">
+    are designed with this requirement in mind.
     </t>
     
     </section>
@@ -1312,7 +1317,8 @@
   </section>
 
 <section title="Proofs Provide No Secrecy for VRF Input">
-    <t>The VRF proof pi is not designed to provide secrecy and, in general, may reveal the VRF input alpha.
+    <t>The VRF proof pi is not designed to provide secrecy and, in general, 
+        may reveal the VRF input alpha.
         Anyone who knows PK and pi is able to perform an offline
         dictionary attack to search for alpha, by verifying guesses for alpha using VRF_verify.
         This is in contrast to the VRF hash output beta which, without the proof, is pseudorandom
@@ -1322,13 +1328,19 @@
 
 <section title="Prehashing" anchor="prehash" >
     <t>The VRFs specified in this document allow for read-once access to
-        the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in
-        <xref target="RFC8032" /> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or
+        the input alpha for both signing and verifying. Thus, additional 
+        prehashing of alpha (as specified, for example, in
+        <xref target="RFC8032" /> for EdDSA signatures) is not needed, 
+        even for applications that need to handle long alpha or
         to support the
-        Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied
-        all at once, but rather in pieces by a sequence of calls to Update). The ECVRF, in particular, uses alpha only in
-        ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite octet and the public key
-    are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public
+        Initialized-Update-Finalize (IUF) interface (in such an interface,
+        alpha is not supplied
+        all at once, but rather in pieces by a sequence of calls to Update).
+        The ECVRF, in particular, uses alpha only in
+        ECVRF_hash_to_curve. The curve point h becomes the representative 
+        of alpha thereafter. Note that the suite octet and the public key
+        are hashed together with alpha in ECVRF_hash_to_curve, which ensures
+        that the curve (including the generator g) and the public
     key are included indirectly into subsequent hashes.</t>
 </section>
  
