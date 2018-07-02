@@ -887,7 +887,7 @@
                 
                 <t> In order to make this algorithm run in time that is (almost) independent
                     of the input (so-called "constant-time"), implementers should pay particular attention
-                    to Steps 7 and 8 above.
+                    to Steps 8 and 9 above.
                     These steps can be implemented using the following approach:
                 <list>
                     <t> e = v ^ ((p-1)/2) mod p</t>
@@ -895,7 +895,8 @@
                 </list>
                 The first step will produce a value e that is either 1 or p-1. The second step is so fast compared
                 to the first that that its dependence on e is likely to not matter; implementers can also ensure that it
-                runs in the same amount of time regardless of e.
+                runs in the same amount of time regardless of e by ensuring that
+                the multiplication operation * runs in constant time.
                 </t>
                 
                 <t>
