@@ -1024,33 +1024,44 @@
 <li>x_0 = truncatedHash[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</li>
 <li>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</li>
 <li>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</li>
-<li>u = - A / (1 + 2*(r^2) )  mod p </li>
+<li>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</li>
 <li>v = u * (u^2 + A*u + 1) mod p </li>
 <li>
 <a name="const1"></a>Let e equal the Legendre symbol of v modulo p</li>
 <li>
-<a name="const2"></a>If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p (finalu is the Montgomery u-coordinate of the output)</li>
-<li>y = (finalu - 1) / (finalu + 1) mod p (y is the Edwards coordinate corresponding to finalu)</li>
-<li>Form an EC point h out of y and x_0 per the encoding in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>, as follows: <ol style="list-style-type: upper-alpha">
-<li>h = little-endian-integer-to-octet-string (y)</li>
-<li>h[31] = h[31] | x_0, where | denotes the bit-wise OR</li>
+<a name="const2"></a>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p (final_u is the Montgomery u-coordinate of the output)</li>
+<li>y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards coordinate corresponding to final_u)</li>
+<li>Form an octet string encoding of an elliptic curve point out of y and x_0 per the encoding defined in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>, as follows: <ol style="list-style-type: upper-alpha">
+<li>hEncoded = little-endian-integer-to-octet-string (y)</li>
+<li>hEncoded[31] = hEncoded[31] | x_0, where | denotes the bit-wise OR</li>
 </ol>
 <p> </p>
 </li>
+<li>h = OS2ECP(hEncoded)</li>
 <li>hc = h^cofactor</li>
 <li>Output hc</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 8 and 9 above.  These steps can be implemented using the following approach: </p>
+<p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 13 and 14 above.  These steps can be implemented using the following approach: </p>
 
 <ul class="empty">
 <li>e = v ^ ((p-1)/2) mod p</li>
-<li>finalu = (e*u + (e-1) * (A/2)) mod p</li>
+<li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
 </ul>
 
-<p> The first step will produce a value e that is either 1 or p-1. The second step is so fast compared to the first that that its dependence on e is likely to not matter; implementers can also ensure that it runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
-<p id="rfc.section.5.4.1.2.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
+<p id="rfc.section.5.4.1.2.p.9">Alternatively, if we let CMOV(result_if_1, result_if_0, selector_bit) be the function that returns result_if_1 when selector_bit is 1 and  result_if_0 when selector_bit is 0, we can implement steps 13 and 14 above as follows: </p>
+
+<ul class="empty">
+<li>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
+<li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
+<li>negative_u = (-A-u) mod p</li>
+<li>final_u = CMOV(u, negative_u, b)</li>
+</ul>
+
+<p> The function CMOV should take the same amount of time regardless of its inputs.  </p>
+<p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> ECVRF_hash_to_curve_other?</h1>
 <p id="rfc.section.5.4.1.3.p.1">[TODO: In addition to Elligator, it would be nice to have a generic ECVRF_hash_to_curve algorithm that runs in constant time and provides a generic way to hash an octet string onto any elliptic curve.  There is an an upcoming draft that deals with this <a href="#SW18" class="xref">[SW18]</a>.  Some other useful algorithms include <a href="#Icart09" class="xref">[Icart09]</a>, and Shallue-Woestijne-Ulas algorithm from <a href="#BCIMRT10" class="xref">[BCIMRT10]</a>.] </p>
