@@ -709,7 +709,7 @@
                     <t>(gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
                     <t>b_string = Hash(suite_string || three_string || point_to_string(gamma^cofactor))</t>
-                    <t>beta_string = first 2n octets of b_string</t>
+                    <t>beta_string = b_string[0]...b_string[2n-1] (first 2n octets of b_string)</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -821,7 +821,7 @@
                         <t>ctr_string = int_to_string(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</t>
-                        <t>attempted_hash_string = first 2n octects of hash_string</t> 
+                        <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] (first 2n octects of hash_string)</t>
                         <t>h = arbitrary_string_to_point(attempted_hash_string)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
                     </list></t>
@@ -1050,7 +1050,7 @@
                        <vspace/>str = str || point_to_string(pj)
                     </t>
                     <t>c_string = Hash(str)</t>
-                    <t>truncated_c_string = first n octets of c_string</t>
+                    <t>truncated_c_string = c_string[0]...c_string[n-1] (first n octets of c_string)</t>
                     <t>c = string_to_int(truncated_c_string)</t>
                     <t>Output c</t>
                 </list>
