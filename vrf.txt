@@ -85,26 +85,26 @@ Table of Contents
      5.1.  ECVRF Proving . . . . . . . . . . . . . . . . . . . . . .  11
      5.2.  ECVRF Proof To Hash . . . . . . . . . . . . . . . . . . .  12
      5.3.  ECVRF Verifying . . . . . . . . . . . . . . . . . . . . .  13
-     5.4.  ECVRF Auxiliary Functions . . . . . . . . . . . . . . . .  13
-       5.4.1.  ECVRF Hash To Curve . . . . . . . . . . . . . . . . .  13
-       5.4.2.  ECVRF Hash Points . . . . . . . . . . . . . . . . . .  19
+     5.4.  ECVRF Auxiliary Functions . . . . . . . . . . . . . . . .  14
+       5.4.1.  ECVRF Hash To Curve . . . . . . . . . . . . . . . . .  14
+       5.4.2.  ECVRF Hash Points . . . . . . . . . . . . . . . . . .  20
        5.4.3.  ECVRF Decode Proof  . . . . . . . . . . . . . . . . .  20
      5.5.  ECVRF Ciphersuites  . . . . . . . . . . . . . . . . . . .  21
-     5.6.  When the ECVRF Keys are Untrusted . . . . . . . . . . . .  22
+     5.6.  When the ECVRF Keys are Untrusted . . . . . . . . . . . .  23
        5.6.1.  ECVRF Validate Key  . . . . . . . . . . . . . . . . .  23
-   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  23
+   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  24
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  24
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  24
        7.1.1.  Uniqueness and collision resistance with untrusted
                keys  . . . . . . . . . . . . . . . . . . . . . . . .  24
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  25
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  25
-     7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  25
+     7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  26
      7.4.  Side-channel attacks  . . . . . . . . . . . . . . . . . .  26
      7.5.  Proofs Provide No Secrecy for VRF Input . . . . . . . . .  26
-     7.6.  Prehashing  . . . . . . . . . . . . . . . . . . . . . . .  26
+     7.6.  Prehashing  . . . . . . . . . . . . . . . . . . . . . . .  27
      7.7.  Hash function domain separation and future-proofing . . .  27
-   8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  27
+   8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  28
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  28
 
 
@@ -542,29 +542,6 @@ Internet-Draft                     VRF                       August 2018
 
       || - octet string concatenation
 
-      int_to_string(a, len) - conversion of nonnegative integer a to to
-      octet string of length len as specified in Section 5.5.
-
-      string_to_int(a_string) - coversion of an octet string a_string to
-      a nonnegative integer as specified in Section 5.5.
-
-      point_to_string - conversion of EC point to an m-octet string as
-      specified in Section 5.5
-
-      string_to_point - conversion of an m-octet string to EC point as
-      specified in Section 5.5.  string_to_point returns INVALID if the
-      octet string does not convert to a valid EC point.
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 10]
-
-Internet-Draft                     VRF                       August 2018
-
-
-      rand_string_to_point - conversion of a random 2n-octet string to
-      an EC point as specified in Section 5.5
-
       ECVRF_hash_to_curve - collision resistant hash of strings to an EC
       point; options described in Section 5.4.1 and specified in
       Section 5.5.
@@ -574,6 +551,40 @@ Internet-Draft                     VRF                       August 2018
 
       ECVRF_hash_points - collision resistant hash of EC points to an
       n-octet string.  Specified in Section 5.4.2.
+
+   Type conversions:
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 10]
+
+Internet-Draft                     VRF                       August 2018
+
+
+      int_to_string(a, len) - conversion of nonnegative integer a to to
+      octet string of length len as specified in Section 5.5.
+
+      string_to_int(a_string) - conversion of an octet string a_string
+      to a nonnegative integer as specified in Section 5.5.
+
+      point_to_string - conversion of EC point to an m-octet string as
+      specified in Section 5.5
+
+      string_to_point - conversion of an m-octet string to EC point as
+      specified in Section 5.5.  string_to_point returns INVALID if the
+      octet string does not convert to a valid EC point.
+
+      arbitrary_string_to_point - conversion of an arbitrary 2n-octet
+      string to an EC point as specified in Section 5.5
+
+      Note that with certain software libraries (for big integer and
+      elliptic curve arithmetic), the first four conversions above are
+      not needed.  For example, in some implementations, EC point
+      operations will take octet strings as inputs and produce octet
+      strings as outputs, without introducing a seperate elliptic curve
+      point type.  Developers using such libraries may not need to
+      utilize type conversions in their code.
 
    Parameters used (the generation of these parameters is specified in
    Section 5.5):
@@ -600,6 +611,13 @@ Internet-Draft                     VRF                       August 2018
 
       SK - VRF private key
 
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 11]
+
+Internet-Draft                     VRF                       August 2018
+
+
       x - VRF secret scalar
 
       y = g^x - VRF public key
@@ -609,14 +627,6 @@ Internet-Draft                     VRF                       August 2018
    Output:
 
       pi_string - VRF proof, octet string of length m+3n
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 11]
-
-Internet-Draft                     VRF                       August 2018
-
 
    Steps:
 
@@ -657,6 +667,13 @@ Internet-Draft                     VRF                       August 2018
 
    2.  If D is "INVALID", output "INVALID" and stop
 
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 12]
+
+Internet-Draft                     VRF                       August 2018
+
+
    3.  (gamma, c, s) = D
 
    4.  three_string = 0x03 = int_to_string(3, 1), a single octet with
@@ -666,13 +683,6 @@ Internet-Draft                     VRF                       August 2018
        point_to_string(gamma^cofactor))
 
    6.  beta_string = first 2n octets of b_string
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 12]
-
-Internet-Draft                     VRF                       August 2018
-
 
    7.  Output beta_string
 
@@ -711,6 +721,15 @@ Internet-Draft                     VRF                       August 2018
 
    8.  If c and c' are equal, output "VALID"; else output "INVALID"
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 13]
+
+Internet-Draft                     VRF                       August 2018
+
+
 5.4.  ECVRF Auxiliary Functions
 
 5.4.1.  ECVRF Hash To Curve
@@ -722,13 +741,6 @@ Internet-Draft                     VRF                       August 2018
 
    The algorithms in this section are not compatible with each other;
    the choice of algorithm is made in Section 5.5.
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 13]
-
-Internet-Draft                     VRF                       August 2018
-
 
 5.4.1.1.  ECVRF_hash_to_curve_try_and_increment
 
@@ -765,6 +777,15 @@ Internet-Draft                     VRF                       August 2018
 
    2.  pk_string = point_to_string(y)
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 14]
+
+Internet-Draft                     VRF                       August 2018
+
+
    3.  one_string = 0x01 = int_to_string(1, 1), a single octet with
        value 1
 
@@ -779,16 +800,9 @@ Internet-Draft                     VRF                       August 2018
        C.  hash_string = Hash(suite_string || one_string || pk_string ||
            alpha_string || ctr_string)
 
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 14]
-
-Internet-Draft                     VRF                       August 2018
-
-
        D.  attempted_hash_string = first 2n octects of hash_string
 
-       E.  h = rand_string_to_point(attempted_hash_string)
+       E.  h = arbitrary_string_to_point(attempted_hash_string)
 
        F.  If h is not "INVALID" and cofactor > 1, set h = h^cofactor
 
@@ -821,6 +835,13 @@ Internet-Draft                     VRF                       August 2018
 
       A = 486662, Montgomery curve constant for Curve25519
 
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 15]
+
+Internet-Draft                     VRF                       August 2018
+
+
       cofactor = 8 , the cofactor for Curve25519
 
    Constraints on options:
@@ -833,16 +854,10 @@ Internet-Draft                     VRF                       August 2018
 
    2.   one = 0x01 = int_to_string(1, 1), a single octet with value 1
 
-   3.   hash = Hash(suite_string || one || pk || alpha_string )
+   3.   hash_string = Hash(suite_string || one || pk || alpha_string )
 
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 15]
-
-Internet-Draft                     VRF                       August 2018
-
-
-   4.   truncatedHash = hash[0]...hash[31] (first 32 octets of hash)
+   4.   truncated_hash_string = hash_string[0]...hash_string[31] (first
+        32 octets of hash)
 
    5.   OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet
         with value 128
@@ -850,15 +865,16 @@ Internet-Draft                     VRF                       August 2018
    6.   OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet
         with value 127
 
-   7.   x_0 = truncatedHash[31] & OneTwentyEight, where & denotes the
-        bit-wise AND (let x_0 equal highest-order bit of octet 31 of
-        truncated hash)
+   7.   x_0 = truncated_hash_string[31] & OneTwentyEight, where &
+        denotes the bit-wise AND (let x_0 equal highest-order bit of
+        octet 31 of truncated hash)
 
-   8.   truncatedHash[31] = truncatedHash[31] & OneTwentySeven (clear
-        the high-order bit of octet 31 of truncatedHash)
+   8.   truncated_hash_string[31] = truncated_hash_string[31] &
+        OneTwentySeven (clear the high-order bit of octet 31 of
+        truncatedHash)
 
-   9.   r = little-endian-to-integer(truncatedHash) (convert
-        truncatedHash to an integer, using little-endian encoding)
+   9.   r = point_to_string(truncatedHash) (convert truncatedHash to an
+        integer)
 
    10.  u = - A / (1 + 2*(r^2) ) mod p (the inverse of (1+2*(r^2))
         modulo p is guaranteed to exist)
@@ -874,22 +890,6 @@ Internet-Draft                     VRF                       August 2018
    14.  y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards
         coordinate corresponding to final_u)
 
-   15.  Form an octet string encoding of an elliptic curve point out of
-        y and x_0 per the encoding defined in Section 5.1.2 of
-        [RFC8032], as follows:
-
-        A.  hEncoded = little-endian-integer-to-octet-string (y)
-
-        B.  hEncoded[31] = hEncoded[31] | x_0, where | denotes the bit-
-            wise OR
-
-   16.  h = string_to_point(hEncoded)
-
-   17.  hc = h^cofactor
-
-   18.  Output hc
-
-
 
 
 
@@ -897,6 +897,20 @@ Goldberg, et al.        Expires February 28, 2019              [Page 16]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   15.  Form an octet string encoding of an elliptic curve point out of
+        y and x_0, as follows:
+
+        A.  h_string = int_to_string (y, 32)
+
+        B.  h_string[31] = hEncoded[31] | x_0, where | denotes the bit-
+            wise OR
+
+   16.  h = string_to_point(h_string)
+
+   17.  hc = h^cofactor
+
+   18.  Output hc
 
    In order to make this algorithm run in time that is (almost)
    independent of the input (so-called "constant-time"), implementers
@@ -931,6 +945,15 @@ Internet-Draft                     VRF                       August 2018
    [TODO: Do we have appropriate references to the literature where
    Elligator2 was proposed and to other standards?]
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 17]
+
+Internet-Draft                     VRF                       August 2018
+
+
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
    (which is the same as the Jacobi symbol because p is a prime).  See,
@@ -945,14 +968,6 @@ Internet-Draft                     VRF                       August 2018
    that is congruent to 3 modulo 4.
 
    ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 17]
-
-Internet-Draft                     VRF                       August 2018
-
 
    Input:
 
@@ -987,6 +1002,14 @@ Internet-Draft                     VRF                       August 2018
    6.   denominator = negative_t_squared^2 + negative_t_squared mod p
         (denominator is t^4-t^2 mod p)
 
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 18]
+
+Internet-Draft                     VRF                       August 2018
+
+
    7.   if denominator = 0, x = 0 [TODO: this won't work for every curve
         -- will work for P256, though].  Else x = (-b/a) * (1 + (1/
         denominator)) mod p.
@@ -1002,13 +1025,6 @@ Internet-Draft                     VRF                       August 2018
    11.  h = OS2ECP(toString(final_x)
 
    12.  hc = h^cofactor
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 18]
-
-Internet-Draft                     VRF                       August 2018
-
 
    13.  Output hc
 
@@ -1042,6 +1058,14 @@ Internet-Draft                     VRF                       August 2018
 
    [TODO: Should we explain how to implement CMOV in constant time?]
 
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 19]
+
+Internet-Draft                     VRF                       August 2018
+
+
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
    (which is the same as the Jacobi symbol because p is a prime).  See,
@@ -1058,13 +1082,6 @@ Internet-Draft                     VRF                       August 2018
    Output:
 
       c - hash value, integer between 0 and 2^(8n)-1
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 19]
-
-Internet-Draft                     VRF                       August 2018
-
 
    Steps:
 
@@ -1098,6 +1115,13 @@ Internet-Draft                     VRF                       August 2018
 
       gamma - EC point
 
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 20]
+
+Internet-Draft                     VRF                       August 2018
+
+
       c - integer between 0 and 2^(8n)-1
 
       s - integer between 0 and 2^(16n)-1
@@ -1114,13 +1138,6 @@ Internet-Draft                     VRF                       August 2018
    4.  c = string_to_int(c_string)
 
    5.  s = string_to_int(s_string)
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 20]
-
-Internet-Draft                     VRF                       August 2018
-
 
    6.  Output gamma, c, and s
 
@@ -1145,22 +1162,29 @@ Internet-Draft                     VRF                       August 2018
       provided as input to ECVRF_nonce_generation), with the hash
       function SHA-256 as specified in [RFC6234]
 
-   o  The int_to_string function is the I2OSP specified in Section 4.1
-      of [RFC8017].
+   o  The int_to_string function is the I2OSP function specified in
+      Section 4.1 of [RFC8017].  (This is big endian representation.)
 
-   o  The string_to_int function is the OS2IP specified in Section 4.2
-      of [RFC8017].
+   o  The string_to_int function is the OS2IP function specified in
+      Section 4.2 of [RFC8017].  (This is big endian representation.)
 
    o  The point_to_string function is specified in Section 2.3.3 of
       [SECG1] with point compression on.  This implies m = 2n + 1 = 33.
 
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 21]
+
+Internet-Draft                     VRF                       August 2018
+
+
    o  The string_to_point function is specified in Section 2.3.4 of
       [SECG1].
 
-   o  rand_string_to_point(h_string) = string_to_point(0x02 || h_string)
-      (where 0x02 is a single octet with value 2, 0x02=int_to_string(2,
-      1)).  The input h is a 32-octet string and the output is either an
-      EC point or "INVALID".
+   o  arbitrary_string_to_point(h_string) = string_to_point(0x02 ||
+      h_string) (where 0x02 is a single octet with value 2,
+      0x02=int_to_string(2, 1)).  The input h is a 32-octet string and
+      the output is either an EC point or "INVALID".
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
@@ -1170,13 +1194,6 @@ Internet-Draft                     VRF                       August 2018
    This document defines ECVRF-ED25519-SHA512 as follows:
 
    o  suite_string = 0x02 = int_to_string(2, 1).
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 21]
-
-Internet-Draft                     VRF                       August 2018
-
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -1189,19 +1206,33 @@ Internet-Draft                     VRF                       August 2018
       Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string
       and PH(M) equal to h_string.  Reduce the output modulo q.
 
+   o  The int_to_string function as specified in the first paragraph of
+      Section 5.1.2 of [RFC8032].  (This is little endian
+      representation.)
+
+   o  The string_to_int function interprets the string as an integer in
+      little-endian representation.
+
    o  The point_to_string function is specified in Section 5.1.2 of
       [RFC8032].  This implies m = 2n = 32.
 
    o  The string_to_point function is specified in Section 5.1.3 of
       [RFC8032].
 
-   o  rand_string_to_point function is equivalent to the string_to_point
-      function.
+   o  arbitrary_string_to_point function is equivalent to the
+      string_to_point function.
 
    o  The hash function Hash is SHA-512 as specified in [RFC6234].
 
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 22]
+
+Internet-Draft                     VRF                       August 2018
+
 
    This document defines ECVRF-ED25519-SHA512-Elligator2 as follows:
 
@@ -1224,15 +1255,6 @@ Internet-Draft                     VRF                       August 2018
    the point g, the generator of group G, is untrusted.  If the prover
    is untrusted, the Verifier MUST obtain E and g from a trusted source,
    such as a ciphersuite specification, rather than from the prover.
-
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 22]
-
-Internet-Draft                     VRF                       August 2018
-
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
@@ -1259,6 +1281,15 @@ Internet-Draft                     VRF                       August 2018
 
    2.  If y is "INVALID", output "INVALID" and stop
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 23]
+
+Internet-Draft                     VRF                       August 2018
+
+
    3.  If y^cofactor is the EC point at infinty, output "INVALID" and
        stop
 
@@ -1280,15 +1311,6 @@ Internet-Draft                     VRF                       August 2018
 
    An implementation by Yahoo! similar to the ECVRF is available at
    <https://github.com/r2ishiguro/vrf>.
-
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 23]
-
-Internet-Draft                     VRF                       August 2018
-
 
    An implementation similar to ECVRF is available as part of the CONIKS
    implementation in Golang at <https://github.com/coniks-sys/coniks-
@@ -1316,6 +1338,14 @@ Internet-Draft                     VRF                       August 2018
    However, if the ECVRF uses keys that could be generated
    adversarially, then the the Verfier MUST first perform the validation
    procedure ECVRF_validate_key(PK) (specified in Section 5.6) upon
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 24]
+
+Internet-Draft                     VRF                       August 2018
+
+
    receipt of the public key PK as an octet string.  If the validation
    procedure outputs "INVALID", then the public key MUST not be used.
    Otherwise, the procedure will output a valid public key y, and the
@@ -1333,18 +1363,6 @@ Internet-Draft                     VRF                       August 2018
    concern, the RSA-FDH-VRF may be modifed to have these properties by
    adding additional cryptographic checks that its public key has the
    right form.  These modifications are left for future specification.
-
-
-
-
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 24]
-
-Internet-Draft                     VRF                       August 2018
-
 
 7.1.2.  Pseudorandomness with untrusted keys
 
@@ -1376,6 +1394,14 @@ Internet-Draft                     VRF                       August 2018
 
    o  If full pseudorandomness is required for the application, the
       application may increase security parameters to make up for the
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 25]
+
+Internet-Draft                     VRF                       August 2018
+
+
       loose security reduction.  For RSA-FDH-VRF, this means increasing
       the RSA key length.  For ECVRF, this means increasing the
       cryptographic strength of the EC group G.  For both RSA-FDH-VRF
@@ -1392,15 +1418,6 @@ Internet-Draft                     VRF                       August 2018
    valid VRF proofs pi.  The nonce generation methods specified in the
    ECVRF ciphersuites of Section 5.5 are designed with this requirement
    in mind.
-
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 25]
-
-Internet-Draft                     VRF                       August 2018
-
 
 7.4.  Side-channel attacks
 
@@ -1433,6 +1450,14 @@ Internet-Draft                     VRF                       August 2018
    The VRF proof pi is not designed to provide secrecy and, in general,
    may reveal the VRF input alpha.  Anyone who knows PK and pi is able
    to perform an offline dictionary attack to search for alpha, by
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 26]
+
+Internet-Draft                     VRF                       August 2018
+
+
    verifying guesses for alpha using VRF_verify.  This is in contrast to
    the VRF hash output beta which, without the proof, is pseudorandom
    and thus is designed to reveal no information about alpha.
@@ -1450,14 +1475,6 @@ Internet-Draft                     VRF                       August 2018
    point h becomes the representative of alpha thereafter.  Note that
    the suite_string octet and the public key are hashed together with
    alpha in ECVRF_hash_to_curve, which ensures that the curve (including
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 26]
-
-Internet-Draft                     VRF                       August 2018
-
-
    the generator g) and the public key are included indirectly into
    subsequent hashes.
 
@@ -1489,6 +1506,14 @@ Internet-Draft                     VRF                       August 2018
    variant, and then claim it was obtained under another variant, they
    should specify a different suite_string constant.  This way, the
    inputs to the hash_to_curve hash function used in producing h are
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 27]
+
+Internet-Draft                     VRF                       August 2018
+
+
    guaranteed to be different; since all the other hashing done by the
    prover depends on h, inputs all the hash functions used by the prover
    will also be different as long as hash_to_curve is collision
@@ -1506,14 +1531,6 @@ Internet-Draft                     VRF                       August 2018
       02 - Added specification of elligator2 for Curve25519, along with
       ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-
       ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512.  (This change
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 27]
-
-Internet-Draft                     VRF                       August 2018
-
-
       made because Ed25519 in [RFC8032] signatures use SHA512 and not
       SHA256.)  Made ECVRF nonce generation a separate component, so
       that nonces are determinsitic.  In ECVRF proving, changed + to -
@@ -1544,6 +1561,15 @@ Internet-Draft                     VRF                       August 2018
               National Institute for Standards and Technology, "Digital
               Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 28]
+
+Internet-Draft                     VRF                       August 2018
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1558,17 +1584,6 @@ Internet-Draft                     VRF                       August 2018
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
-
-
-
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 28]
-
-Internet-Draft                     VRF                       August 2018
-
 
    [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
               Algorithm (DSA) and Elliptic Curve Digital Signature
@@ -1602,6 +1617,15 @@ Internet-Draft                     VRF                       August 2018
               Existence", draft-vcelak-nsec5-07 (work in progress), June
               2018.
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 29]
+
+Internet-Draft                     VRF                       August 2018
+
+
    [Icart09]  Icart, T., "How to Hash into Elliptic Curves", in CRYPTO,
               2009.
 
@@ -1617,14 +1641,6 @@ Internet-Draft                     VRF                       August 2018
 
    [ntb]      Shoup, V., "A Computational Introduction to Number Theory
               and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
-
-
-
-
-Goldberg, et al.        Expires February 28, 2019              [Page 29]
-
-Internet-Draft                     VRF                       August 2018
-
 
    [SW18]     Sullivan, E. and C. Wood, "Hashing to Elliptic Curves",
               2018.
@@ -1657,6 +1673,15 @@ Authors' Addresses
    EMail: dipapado@cse.ust.hkbu.edu
 
 
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 30]
+
+Internet-Draft                     VRF                       August 2018
+
+
    Jan Vcelak
    NS1
    16 Beaver St
@@ -1677,4 +1702,35 @@ Authors' Addresses
 
 
 
-Goldberg, et al.        Expires February 28, 2019              [Page 30]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Goldberg, et al.        Expires February 28, 2019              [Page 31]

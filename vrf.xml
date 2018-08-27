@@ -605,19 +605,22 @@
         <t>
             Type conversions:
             <list>
-                <t>int_to_string(a, len) - conversion of nonnegative integer a to 
-                to octet string of length len as specified in <xref target="suites"/>.</t>
+                <t>int_to_string(a, len) - conversion of nonnegative integer a to
+                    to octet string of length len as specified in <xref target="suites"/>.</t>
                 <t> string_to_int(a_string) - conversion of an octet string a_string
-                to a nonnegative integer as specified in <xref target="suites"/>.</t>
+                    to a nonnegative integer as specified in <xref target="suites"/>.</t>
                 <t>point_to_string - conversion of EC point to an m-octet string
                     as specified in <xref target="suites"/></t>
                 <t>string_to_point - conversion of an m-octet string to EC point
                     as specified in <xref target="suites"/>.
                     string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>rand_string_to_point - conversion of a random 2n-octet string to an
+                <t>arbitrary_string_to_point - conversion of an arbitrary 2n-octet string to an
                     EC point as specified in <xref target="suites"/></t>
+                <t>
+                    Note that with certain software libraries (for big integer and elliptic curve arithmetic), the first four conversions above are not needed. For example, in some implementations, EC point operations will take octet strings as inputs and produce octet strings as outputs, without introducing a seperate elliptic curve point type. Developers using such libraries may not need to utilize type conversions in their code.
+                </t>
             </list>
-        </t>    
+        </t>
 
           <t>
             Parameters used (the generation of these parameters is specified in <xref target="suites"/>):
@@ -819,7 +822,7 @@
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = first 2n octects of hash_string</t> 
-                        <t>h = rand_string_to_point(attempted_hash_string)</t>
+                        <t>h = arbitrary_string_to_point(attempted_hash_string)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
                     </list></t>
                     <t>Output h</t>
@@ -875,26 +878,25 @@
                     <list style="numbers">
                         <t>pk = point_to_string(y)</t>
                         <t>one = 0x01 = int_to_string(1, 1), a single octet with value 1 </t>
-                        <t>hash = Hash(suite_string || one || pk || alpha_string )</t>
-                        <t>truncatedHash = hash[0]...hash[31] (first 32 octets of hash)</t>
+                        <t>hash_string = Hash(suite_string || one || pk || alpha_string )</t>
+                        <t>truncated_hash_string = hash_string[0]...hash_string[31] (first 32 octets of hash)</t>
                         <t>OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet with value 128</t>
                         <t>OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet with value 127</t>
-                        <t>x_0 = truncatedHash[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</t>
-                        <t>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</t>
-                        <t>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</t>
+                        <t>x_0 = truncated_hash_string[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</t>
+                        <t>truncated_hash_string[31] = truncated_hash_string[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</t>
+                        <t>r = point_to_string(truncatedHash) (convert truncatedHash to an integer)</t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
                         <t>v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery equation for Curve25519)</t>
                         <t anchor="const1">Let e equal the Legendre symbol of v_candidate modulo p</t>
                         <t anchor="const2">If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p (final_u is the Montgomery u-coordinate of the output)</t>
                         <t>y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards coordinate corresponding to final_u)</t>
-                        <t>Form an octet string encoding of an elliptic curve point out of y and x_0 per the encoding defined in Section 5.1.2 of
-                            <xref target="RFC8032" />, as follows:
+                        <t>Form an octet string encoding of an elliptic curve point out of y and x_0, as follows:
                             <list style="letters">
-                                <t>hEncoded = little-endian-integer-to-octet-string (y)</t>
-                                <t>hEncoded[31] = hEncoded[31] | x_0, where | denotes the bit-wise OR</t>
+                                <t>h_string = int_to_string (y, 32)</t>
+                                <t>h_string[31] = hEncoded[31] | x_0, where | denotes the bit-wise OR</t>
                             </list>
                         </t>
-                        <t>h = string_to_point(hEncoded)</t>
+                        <t>h = string_to_point(h_string)</t>
                         <t>hc = h^cofactor</t>
                         <t>Output hc</t>
                     </list>
@@ -1136,7 +1138,7 @@
          of <xref target="SECG1" />.
         </t>
         
-        <t> rand_string_to_point(h_string) = string_to_point(0x02 || h_string) 
+        <t> arbitrary_string_to_point(h_string) = string_to_point(0x02 || h_string)
         (where 0x02 is a single 
         octet with value 2, 0x02=int_to_string(2, 1)). The input h is a 32-octet string
         and the output is either an EC point or "INVALID". </t>
@@ -1180,7 +1182,7 @@
         <t> The string_to_point function is specified in Section 5.1.3 of <xref target="RFC8032" />.
         </t>
 
-        <t>rand_string_to_point function is equivalent to the string_to_point function.</t>
+        <t>arbitrary_string_to_point function is equivalent to the string_to_point function.</t>
 
         <t>
             The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>.
