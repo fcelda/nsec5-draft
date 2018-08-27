@@ -748,8 +748,8 @@
                     <t>D = ECVRF_decode_proof(pi_string)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>u = B^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to B^s and the inverse of y^c)</t>
                     <t>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</t>
+                    <t>u = B^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to B^s and the inverse of y^c)</t>
                     <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
                     <t>c' = ECVRF_hash_points(h, gamma, u, v)</t>
                     <t>
