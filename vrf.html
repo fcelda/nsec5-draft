@@ -406,7 +406,7 @@
 <link href="#rfc.section.7.1.2" rel="Chapter" title="7.1.2 Pseudorandomness with untrusted keys">
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Selective vs Full Pseudorandomness">
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Proper pseudorandom nonce for ECVRF">
-<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Timing attacks">
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Side-channel attacks">
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Proofs Provide No Secrecy for VRF Input">
 <link href="#rfc.section.7.6" rel="Chapter" title="7.6 Prehashing">
 <link href="#rfc.section.7.7" rel="Chapter" title="7.7 Hash function domain separation and future-proofing">
@@ -554,7 +554,7 @@
 </li>
 <li>7.3.   <a href="#rfc.section.7.3">Proper pseudorandom nonce for ECVRF</a>
 </li>
-<li>7.4.   <a href="#rfc.section.7.4">Timing attacks</a>
+<li>7.4.   <a href="#rfc.section.7.4">Side-channel attacks</a>
 </li>
 <li>7.5.   <a href="#rfc.section.7.5">Proofs Provide No Secrecy for VRF Input</a>
 </li>
@@ -643,18 +643,18 @@
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> Full Uniqueness or Trusted Uniqueness</h1>
 <p id="rfc.section.3.1.p.1">Uniqueness means that, for any fixed public VRF key and for any input alpha, there is a unique VRF output beta that can be proved to be valid.  Uniqueness must hold even for an adversarial Prover that knows the VRF private key SK.  </p>
-<p id="rfc.section.3.1.p.2">More percisely, "full uniqueness" states that a computationally-bounded adversary cannot choose a VRF public key PK, a VRF input alpha, two different VRF hash outputs beta1 and beta2, and two proofs pi1 and pi2 such that VRF_verify(PK, alpha, pi1) and VRF_verify(PK, alpha, pi2) both output VALID.  </p>
+<p id="rfc.section.3.1.p.2">More precisely, "full uniqueness" states that a computationally-bounded adversary cannot choose a VRF public key PK, a VRF input alpha, two different VRF hash outputs beta1 and beta2, and two proofs pi1 and pi2 such that VRF_verify(PK, alpha, pi1) and VRF_verify(PK, alpha, pi2) both output VALID.  </p>
 <p id="rfc.section.3.1.p.3">A slightly weaker security property called "trusted uniqueness" sufficies for many applications.  Trusted uniqueness is the same as full uniqueness, but it must hold only if the VRF keys PK and SK were generated in a trustworthy manner. In other words, uniqueness might not hold if keys were generated in an invalid manner or with bad randomness.  </p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> Full Collison Resistance or Trusted Collision Resistance</h1>
 <p id="rfc.section.3.2.p.1">Like any cryprographic hash function, VRFs need to be collision resistant.  Collison resistance must hold even for an adversarial Prover that knows the VRF private key SK.  </p>
-<p id="rfc.section.3.2.p.2">More percisely, "full collision resistance" states that it should be computationally infeasible for an adversary to find two distinct VRF inputs alpha1 and alpha2 that have the same VRF hash beta, even if that adversary knows the private VRF key SK.  </p>
+<p id="rfc.section.3.2.p.2">More precisely, "full collision resistance" states that it should be computationally infeasible for an adversary to find two distinct VRF inputs alpha1 and alpha2 that have the same VRF hash beta, even if that adversary knows the private VRF key SK.  </p>
 <p id="rfc.section.3.2.p.3">For most applications, a slightly weaker security property called "trusted collision resistance" suffices.  Trusted collision resistance is the same as collision resistance, but it holds only if PK and SK were generated in a trustworthy manner.  </p>
 <h1 id="rfc.section.3.3">
 <a href="#rfc.section.3.3">3.3.</a> <a href="#pseudodef" id="pseudodef">Full Pseudorandomness or Selective Pseudorandomness</a>
 </h1>
 <p id="rfc.section.3.3.p.1">Pseudorandomness ensures that when an adversarial Verifier sees a VRF hash output beta without its corresponding VRF proof pi, then beta is indistinguishable from a random value.  </p>
-<p id="rfc.section.3.3.p.2">More percisely, suppose the public and private VRF keys (PK, SK) were generated in a trustworthy manner.  Pseudorandomness ensures that the VRF hash output beta (without its corresponding VRF proof pi) on any adversarially-chosen "target" VRF input alpha looks indistinguishable from random for any computationally bounded adversary who does not know the private VRF key SK.  This holds even if the adversary also gets to choose other VRF inputs alpha' and observe their corresponding VRF hash outputs beta' and proofs pi'.  </p>
+<p id="rfc.section.3.3.p.2">More precisely, suppose the public and private VRF keys (PK, SK) were generated in a trustworthy manner.  Pseudorandomness ensures that the VRF hash output beta (without its corresponding VRF proof pi) on any adversarially-chosen "target" VRF input alpha looks indistinguishable from random for any computationally bounded adversary who does not know the private VRF key SK.  This holds even if the adversary also gets to choose other VRF inputs alpha' and observe their corresponding VRF hash outputs beta' and proofs pi'.  </p>
 <p id="rfc.section.3.3.p.3">With "full pseudorandomness", the adversary is allowed to choose the "target" VRF input  alpha at any time, even after it observes VRF outputs beta' and proofs pi' on a variety of chosen inputs alpha'.  </p>
 <p id="rfc.section.3.3.p.4">"Selective pseudorandomness" is a weaker security property which suffices in many applications. Here, the adversary must choose the target VRF input alpha independently of the public VRF key PK, and before it  observes VRF outputs beta' and proofs pi' on inputs alpha' of its choice.  </p>
 <p id="rfc.section.3.3.p.5">It is important to remember that the VRF output beta does not look random to the Prover, or to any other party that knows the private VRF key SK!  Such a party can easily distinguish beta from a random value by comparing beta to the result of VRF_hash(SK, alpha).  </p>
@@ -980,21 +980,20 @@
 <h1 id="rfc.section.5.4.1.2">
 <a href="#rfc.section.5.4.1.2">5.4.1.2.</a> <a href="#elligator2" id="elligator2">ECVRF_hash_to_curve_elligator2_25519</a>
 </h1>
-<p id="rfc.section.5.4.1.2.p.1">The following ECVRF__hash_to_curve_elligator2_25519(suite, y, alpha) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
-<p id="rfc.section.5.4.1.2.p.2">ECVRF_hash_to_curve_elligator2_25519(y, alpha) </p>
+<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
+<p id="rfc.section.5.4.1.2.p.2">ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha) </p>
 <p id="rfc.section.5.4.1.2.p.3">Input: </p>
 
 <ul class="empty">
+<li>suite - a single octet specifying ECVRF ciphersuite. </li>
 <li>alpha - value to be hashed, an octet string</li>
 <li>y - public key, an EC point</li>
-<li>suite = a single octet specifying ECVRF ciphersuite. </li>
 </ul>
 
 <p> </p>
 <p id="rfc.section.5.4.1.2.p.4">Output: </p>
 
-<ul class="empty"><li>h - hashed value, a finite EC point in G per the encoding in <a href="#RFC8032" class="xref">RFC8032 Section 5.1.2</a>
-</li></ul>
+<ul class="empty"><li>hc - hashed value, a finite EC point in G </li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.1.2.p.5">Fixed options: </p>
@@ -1003,7 +1002,6 @@
 <li>p = 2^255-19, the size of the finite field F, a prime, for Curve25519</li>
 <li>A = 486662, Montgomery curve constant for Curve25519 </li>
 <li>cofactor = 8 , the cofactor for Curve25519 </li>
-<li>* denotes integer multiplication </li>
 </ul>
 
 <p> </p>
@@ -1025,9 +1023,9 @@
 <li>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</li>
 <li>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</li>
 <li>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</li>
-<li>v = u * (u^2 + A*u + 1) mod p </li>
+<li>v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery equation for Curve25519)</li>
 <li>
-<a name="const1"></a>Let e equal the Legendre symbol of v modulo p</li>
+<a name="const1"></a>Let e equal the Legendre symbol of v_candidate modulo p</li>
 <li>
 <a name="const2"></a>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p (final_u is the Montgomery u-coordinate of the output)</li>
 <li>y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards coordinate corresponding to final_u)</li>
@@ -1046,12 +1044,74 @@
 <p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 13 and 14 above.  These steps can be implemented using the following approach: </p>
 
 <ul class="empty">
+<li>e = (v_candidate) ^ ((p-1)/2) mod p</li>
+<li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
+</ul>
+
+<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
+<p id="rfc.section.5.4.1.2.p.9">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
+
+<ul class="empty">
+<li>e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
+<li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
+<li>negative_u = (-A-u) mod p</li>
+<li>final_u = CMOV(u, negative_u, b)</li>
+</ul>
+
+<p> [TODO: Should we explain how to implement CMOV in constant time?] [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?] </p>
+<p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<h1 id="rfc.section.5.4.1.3">
+<a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#SimpleSWU" id="SimpleSWU">ECVRF_hash_to_curve_Simplified_SWU</a>
+</h1>
+<p id="rfc.section.5.4.1.3.p.1">The following ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha) algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne-Ulas algorithm from [TODO: add reference to <a href="#BCIMRT10" class="xref">[BCIMRT10]</a> and <a href="#SW18" class="xref">[SW18]</a>, latest version] for any curve with prime p that is congruent to 3 modulo 4.  </p>
+<p id="rfc.section.5.4.1.3.p.2">ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha) </p>
+<p id="rfc.section.5.4.1.3.p.3">Input: </p>
+
+<ul class="empty">
+<li>suite - a single octet specifying ECVRF ciphersuite. </li>
+<li>alpha - value to be hashed, an octet string</li>
+<li>y - public key, an EC point</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.5.4.1.3.p.4">Output: </p>
+
+<ul class="empty"><li>h - hashed value, a finite EC point in G </li></ul>
+
+<p> </p>
+<p id="rfc.section.5.4.1.3.p.5">Fixed options: </p>
+
+<ul class="empty"><li>a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</li></ul>
+
+<p> </p>
+<p id="rfc.section.5.4.1.3.p.6">Steps: </p>
+
+<ol>
+<li>pk = EC2OSP(y)</li>
+<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
+<li>hash = Hash(suite || one || pk || alpha )</li>
+<li>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</li>
+<li>negative_t_squared = -t^2 mod p</li>
+<li>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</li>
+<li>if denominator = 0, x = 0 [TODO: this won't always work]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
+<li>y_candidate = x^3 + a*x + b mod p</li>
+<li>Let e equal the Legendre symbol of y_candidate modulo p</li>
+<li>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</li>
+<li>h = OS2ECP(toString(final_x)</li>
+<li>hc = h^cofactor</li>
+<li>Output hc</li>
+</ol>
+
+<p> </p>
+<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 13 and 14 above.  These steps can be implemented using the following approach: </p>
+
+<ul class="empty">
 <li>e = v ^ ((p-1)/2) mod p</li>
 <li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
 </ul>
 
 <p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
-<p id="rfc.section.5.4.1.2.p.9">Alternatively, if we let CMOV(result_if_1, result_if_0, selector_bit) be the function that returns result_if_1 when selector_bit is 1 and  result_if_0 when selector_bit is 0, we can implement steps 13 and 14 above as follows: </p>
+<p id="rfc.section.5.4.1.3.p.8">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
 
 <ul class="empty">
 <li>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
@@ -1060,11 +1120,8 @@
 <li>final_u = CMOV(u, negative_u, b)</li>
 </ul>
 
-<p> The function CMOV should take the same amount of time regardless of its inputs.  </p>
-<p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
-<h1 id="rfc.section.5.4.1.3">
-<a href="#rfc.section.5.4.1.3">5.4.1.3.</a> ECVRF_hash_to_curve_other?</h1>
-<p id="rfc.section.5.4.1.3.p.1">[TODO: In addition to Elligator, it would be nice to have a generic ECVRF_hash_to_curve algorithm that runs in constant time and provides a generic way to hash an octet string onto any elliptic curve.  There is an an upcoming draft that deals with this <a href="#SW18" class="xref">[SW18]</a>.  Some other useful algorithms include <a href="#Icart09" class="xref">[Icart09]</a>, and Shallue-Woestijne-Ulas algorithm from <a href="#BCIMRT10" class="xref">[BCIMRT10]</a>.] </p>
+<p> [TODO: Should we explain how to implement CMOV in constant time?] </p>
+<p id="rfc.section.5.4.1.3.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfHashPoints" id="ecvrfHashPoints">ECVRF Hash Points</a>
 </h1>
@@ -1148,7 +1205,7 @@
 <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
 <li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
-<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.</li>
+<li>The ECVRF_nonce_generation function as follows.  Perform <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.  Reduce the output modulo q.</li>
 <li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.</li>
 <li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
 <li>RS2ECP is equivalent to OS2ECP.</li>
@@ -1231,9 +1288,10 @@
 <a href="#rfc.section.7.3">7.3.</a> Proper pseudorandom nonce for ECVRF</h1>
 <p id="rfc.section.7.3.p.1">The security of the ECVRF defined in this document relies on the fact that nonce k used in the ECVRF_prove algorithm is chosen uniformly and pseudorandomly modulo q, and is unknown to the advesrary.  Otherwise, an adversary may be able to recover the private VRF key x (and thus break pseudorandomness of the VRF) after observing several valid VRF proofs pi. The nonce generation methods specified in the ECVRF ciphersuites of <a href="#suites" class="xref">Section 5.5</a> are designed with this requirement in mind.  </p>
 <h1 id="rfc.section.7.4">
-<a href="#rfc.section.7.4">7.4.</a> Timing attacks</h1>
-<p id="rfc.section.7.4.p.1">The ECVRF_hash_to_curve_try_and_increment algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
-<p id="rfc.section.7.4.p.2">Meanwhile, ECVRF-ED25519-SHA512-Elligator2 runs in constant time if the implementation of the ECVRF_hash_to_curve function specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> also runs in constant time.  </p>
+<a href="#rfc.section.7.4">7.4.</a> Side-channel attacks</h1>
+<p id="rfc.section.7.4.p.1">Side channel attacks on cryptographic primatives are an important issue.  Here we discuss only one such side channel:  timing attacks that can be used to leak information about the VRF input alpha.  Implementers should take care to avoid side-channel attacks that leak information about the VRF private key SK (and the nonce k used in the ECVRF).</p>
+<p id="rfc.section.7.4.p.2">The ECVRF_hash_to_curve_try_and_increment algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
+<p id="rfc.section.7.4.p.3">Meanwhile, ECVRF-ED25519-SHA512-Elligator2 runs in time constant in alpha if the implementation of the ECVRF_hash_to_curve function specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> also runs in constant time.  </p>
 <h1 id="rfc.section.7.5">
 <a href="#rfc.section.7.5">7.5.</a> Proofs Provide No Secrecy for VRF Input</h1>
 <p id="rfc.section.7.5.p.1">The VRF proof pi is not designed to provide secrecy and, in general, may reveal the VRF input alpha.  Anyone who knows PK and pi is able to perform an offline dictionary attack to search for alpha, by verifying guesses for alpha using VRF_verify.  This is in contrast to the VRF hash output beta which, without the proof, is pseudorandom and thus is designed to reveal no information about alpha.  </p>

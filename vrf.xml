@@ -825,27 +825,27 @@
             
             <section title="ECVRF_hash_to_curve_elligator2_25519" anchor="elligator2">
             
-                <t> The following ECVRF__hash_to_curve_elligator2_25519(suite, y, alpha) 
+                <t> The following ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha)
                 algorithm implements ECVRF_hash_to_curve using the elligator2 
                 algorithm exclusively for Curve25519. 
                 </t>
                                 
                 <t>
-                    ECVRF_hash_to_curve_elligator2_25519(y, alpha)
+                    ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha)
                 </t>
                 <t>
                     Input:
                     <list>
+                        <t>suite - a single octet specifying ECVRF ciphersuite. </t>
                         <t>alpha - value to be hashed, an octet string</t>
                         <t>y - public key, an EC point</t>
-                        <t>suite = a single octet specifying ECVRF ciphersuite. </t>
                     </list>
                 </t>
                 <t>
                     Output:
                     <list>
-                        <t>h - hashed value, a finite EC point in G 
-                        per the encoding in <xref target="RFC8032">RFC8032 Section 5.1.2</xref></t>
+                        <t>hc - hashed value, a finite EC point in G
+                        </t>
                     </list>
                 </t>
                 
@@ -854,7 +854,6 @@
                         <t> p = 2^255-19, the size of the finite field F, a prime, for Curve25519</t>
                         <t> A = 486662, Montgomery curve constant for Curve25519 </t>
                         <t> cofactor = 8 , the cofactor for Curve25519 </t>
-                        <t> * denotes integer multiplication </t>
                     </list>
                 </t>
                 
@@ -877,8 +876,8 @@
                         <t>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</t>
                         <t>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
-                        <t>v = u * (u^2 + A*u + 1) mod p </t>
-                        <t anchor="const1">Let e equal the Legendre symbol of v modulo p</t>
+                        <t>v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery equation for Curve25519)</t>
+                        <t anchor="const1">Let e equal the Legendre symbol of v_candidate modulo p</t>
                         <t anchor="const2">If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p (final_u is the Montgomery u-coordinate of the output)</t>
                         <t>y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards coordinate corresponding to final_u)</t>
                         <t>Form an octet string encoding of an elliptic curve point out of y and x_0 per the encoding defined in Section 5.1.2 of
@@ -900,7 +899,7 @@
                     to Steps 13 and 14 above.
                     These steps can be implemented using the following approach:
                 <list>
-                    <t> e = v ^ ((p-1)/2) mod p</t>
+                    <t> e = (v_candidate) ^ ((p-1)/2) mod p</t>
                     <t>final_u = (e*u + (e-1) * (A/2)) mod p</t>
                 </list>
                 The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step
@@ -909,15 +908,16 @@
                 </t>
                 
                 <t>
-                Alternatively, if we let CMOV(result_if_1, result_if_0, selector_bit) be the function that returns result_if_1 when
-                selector_bit is 1 and  result_if_0 when selector_bit is 0, we can implement steps 13 and 14 above as follows:
+                Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
+                selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows:
                 <list>
-                    <t>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
+                    <t>e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
                     <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
                     <t>negative_u = (-A-u) mod p</t>
                     <t>final_u = CMOV(u, negative_u, b)</t>
                 </list>
-                The function CMOV should take the same amount of time regardless of its inputs.
+                [TODO: Should we explain how to implement CMOV in constant time?]
+                [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?]
                 </t>
 
                 <t>
@@ -928,20 +928,90 @@
                 
             </section>
             
-            <section title="ECVRF_hash_to_curve_other?">
+            <section title="ECVRF_hash_to_curve_Simplified_SWU" anchor="SimpleSWU">
                 
-                <t>[TODO: In addition to Elligator,
-                    it would be nice to have a generic ECVRF_hash_to_curve algorithm that
-                    runs in constant time and
-                    provides a generic way to hash an octet string onto any elliptic curve.
-                    There is an an upcoming draft that deals with this
-                    <xref target="SW18"/>.
-                    Some other useful algorithms include <xref target="Icart09"/>, and
-                    Shallue-Woestijne-Ulas algorithm from <xref target="BCIMRT10"/>.]
+                <t> The following ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
+                    algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne-Ulas
+                    algorithm from [TODO: add reference to <xref target="BCIMRT10"/> and <xref target="SW18"/>, latest version] for any curve with prime p that is congruent
+                    to 3 modulo 4.
+                </t>
+                
+                <t>
+                    ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
+                </t>
+                <t>
+                    Input:
+                    <list>
+                        <t>suite - a single octet specifying ECVRF ciphersuite. </t>
+                        <t>alpha - value to be hashed, an octet string</t>
+                        <t>y - public key, an EC point</t>
+                    </list>
+                </t>
+                <t>
+                    Output:
+                    <list>
+                        <t>h - hashed value, a finite EC point in G
+                        </t>
+                    </list>
+                </t>
+                
+                <t> Fixed options:
+                    <list>
+                        <t> a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</t>
+                    </list>
+                </t>
+                <t>
+                    Steps:
+                    <list style="numbers">
+                        <t>pk = EC2OSP(y)</t>
+                        <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
+                        <t>hash = Hash(suite || one || pk || alpha )</t>
+                        <t>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</t>
+                        <t>negative_t_squared = -t^2 mod p</t>
+                        <t>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</t>
+                        <t>if denominator = 0, x = 0 [TODO: this won't always work]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
+                        <t>y_candidate = x^3 + a*x + b mod p</t>
+                        <t>Let e equal the Legendre symbol of y_candidate modulo p</t>
+                        <t>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</t>
+                        <t>h = OS2ECP(toString(final_x)</t>
+                        <t>hc = h^cofactor</t>
+                        <t>Output hc</t>
+                    </list>
+                </t>
+                
+                
+                <t> In order to make this algorithm run in time that is (almost) independent
+                    of the input (so-called "constant-time"), implementers should pay particular attention
+                    to Steps 13 and 14 above.
+                    These steps can be implemented using the following approach:
+                    <list>
+                        <t> e = v ^ ((p-1)/2) mod p</t>
+                        <t>final_u = (e*u + (e-1) * (A/2)) mod p</t>
+                    </list>
+                    The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step
+                    runs in the same amount of time regardless of e by ensuring that
+                    the multiplication operation * runs in constant time.
+                </t>
+                
+                <t>
+                    Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
+                    selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows:
+                    <list>
+                        <t>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
+                        <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
+                        <t>negative_u = (-A-u) mod p</t>
+                        <t>final_u = CMOV(u, negative_u, b)</t>
+                    </list>
+                    [TODO: Should we explain how to implement CMOV in constant time?]
+                </t>
+                
+                <t>
+                    If having this algorithm run in constant time is not important, then there are much faster algorithms
+                    to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).
+                    See, for example, Section 12.3 of <xref target="ntb"/>.
                 </t>
                 
             </section>
-
             
         </section>
 
