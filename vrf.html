@@ -1021,23 +1021,21 @@
 <ol>
 <li>pk = point_to_string(y)</li>
 <li>one = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
-<li>hash_string = Hash(suite_string || one || pk || alpha_string )</li>
-<li>truncated_hash_string = hash_string[0]...hash_string[31] (first 32 octets of hash)</li>
-<li>OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet with value 128</li>
-<li>OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet with value 127</li>
-<li>x_0 = truncated_hash_string[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</li>
-<li>truncated_hash_string[31] = truncated_hash_string[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</li>
-<li>r = string_to_int(truncatedHash)</li>
-<li>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</li>
-<li>v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery equation for Curve25519)</li>
-<li>
-<a name="const1"></a>Let e equal the Legendre symbol of v_candidate modulo p</li>
-<li>
-<a name="const2"></a>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p (final_u is the Montgomery u-coordinate of the output)</li>
-<li>y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards coordinate corresponding to final_u)</li>
-<li>Form an octet string encoding of an elliptic curve point out of y and x_0, as follows: <ol style="list-style-type: upper-alpha">
-<li>h_string = int_to_string (y, 32)</li>
-<li>h_string[31] = hEncoded[31] | x_0, where | denotes the bit-wise OR</li>
+<li>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</li>
+<li>truncated_h_string = h_string[0]...h_string[31] <br>(first 32 octets of hash)</li>
+<li>oneTwentyEight_string = 0x80 = int_to_string(128, 1) <br>(a single octet with value 128)</li>
+<li>oneTwentySeven_string = 0x7F = int_to_string(127, 1) <br>(a single octet with value 127)</li>
+<li>x_0 = truncated_h_string[31] &amp; oneTwentyEight_string, where &amp; denotes the bit-wise AND <br>(save  highest-order bit of octet 31 of truncated hash in x_0)</li>
+<li>truncated_h_string[31] = truncated_h_string[31] &amp; oneTwentySeven_string <br>(clear the high-order bit of octet 31 of truncated hash)</li>
+<li>r = string_to_int(truncated_h_string)</li>
+<li>u = - A / (1 + 2*(r^2) )  mod p <br>(the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</li>
+<li>w = u * (u^2 + A*u + 1) mod p <br>(evaluate the Montgomery equation for Curve25519)</li>
+<li>Let e equal the Legendre symbol of w modulo p</li>
+<li>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p <br>(final_u is the Montgomery u-coordinate of the output)</li>
+<li>y_coordinate = (final_u - 1) / (final_u + 1) mod p <br>(y_coordinate is the Edwards coordinate corresponding to final_u)</li>
+<li>Form an octet string encoding of an elliptic curve point out of y_coordinate and x_0, as follows: <ol style="list-style-type: upper-alpha">
+<li>h_string = int_to_string (y_coordinate, 32)</li>
+<li>h_string[31] = h_string[31] | x_0, where | denotes the bit-wise OR</li>
 </ol>
 <p> </p>
 </li>
@@ -1050,7 +1048,7 @@
 <p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 13 and 14 above.  These steps can be implemented using the following approach: </p>
 
 <ul class="empty">
-<li>e = (v_candidate) ^ ((p-1)/2) mod p</li>
+<li>e = w ^ ((p-1)/2) mod p</li>
 <li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
 </ul>
 
@@ -1058,7 +1056,7 @@
 <p id="rfc.section.5.4.1.2.p.9">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
 
 <ul class="empty">
-<li>e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
+<li>e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
 <li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
 <li>alternative_u = (-A-u) mod p</li>
 <li>final_u = CMOV(u, alternative_u, b)</li>
@@ -1096,12 +1094,12 @@
 <p id="rfc.section.5.4.1.3.p.6">Steps: </p>
 
 <ol>
-<li>pk = EC2OSP(y)</li>
-<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>hash_string = Hash(suite || one || pk || alpha_string )</li>
-<li>t = string_to_int(hash_string)</li>
+<li>pk_string = EC2OSP(y)</li>
+<li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
+<li>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</li>
+<li>t = string_to_int(h_string)</li>
 <li>negative_t_squared = -t^2 mod p</li>
-<li>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</li>
+<li>denominator = negative_t_squared^2 + negative_t_squared mod p <br>(denominator is t^4-t^2 mod p)</li>
 <li>if denominator = 0, x = default_x. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
 <li>y_candidate = x^3 + a*x + b mod p</li>
 <li>Let e equal the Legendre symbol of y_candidate modulo p</li>

@@ -856,40 +856,40 @@ Internet-Draft                     VRF                       August 2018
 
    2.   one = 0x01 = int_to_string(1, 1), a single octet with value 1
 
-   3.   hash_string = Hash(suite_string || one || pk || alpha_string )
+   3.   h_string = Hash(suite_string || one_string || pk_string ||
+        alpha_string )
 
-   4.   truncated_hash_string = hash_string[0]...hash_string[31] (first
-        32 octets of hash)
+   4.   truncated_h_string = h_string[0]...h_string[31]
+        (first 32 octets of hash)
 
-   5.   OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet
-        with value 128
+   5.   oneTwentyEight_string = 0x80 = int_to_string(128, 1)
+        (a single octet with value 128)
 
-   6.   OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet
-        with value 127
+   6.   oneTwentySeven_string = 0x7F = int_to_string(127, 1)
+        (a single octet with value 127)
 
-   7.   x_0 = truncated_hash_string[31] & OneTwentyEight, where &
-        denotes the bit-wise AND (let x_0 equal highest-order bit of
-        octet 31 of truncated hash)
+   7.   x_0 = truncated_h_string[31] & oneTwentyEight_string, where &
+        denotes the bit-wise AND
+        (save highest-order bit of octet 31 of truncated hash in x_0)
 
-   8.   truncated_hash_string[31] = truncated_hash_string[31] &
-        OneTwentySeven (clear the high-order bit of octet 31 of
-        truncatedHash)
+   8.   truncated_h_string[31] = truncated_h_string[31] &
+        oneTwentySeven_string
+        (clear the high-order bit of octet 31 of truncated hash)
 
-   9.   r = string_to_int(truncatedHash)
+   9.   r = string_to_int(truncated_h_string)
 
-   10.  u = - A / (1 + 2*(r^2) ) mod p (the inverse of (1+2*(r^2))
-        modulo p is guaranteed to exist)
+   10.  u = - A / (1 + 2*(r^2) ) mod p
+        (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)
 
-   11.  v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery
-        equation for Curve25519)
+   11.  w = u * (u^2 + A*u + 1) mod p
+        (evaluate the Montgomery equation for Curve25519)
 
-   12.  Let e equal the Legendre symbol of v_candidate modulo p
+   12.  Let e equal the Legendre symbol of w modulo p
 
    13.  If e is equal to 1 then final_u = u; else final_u = (-A - u) mod
-        p (final_u is the Montgomery u-coordinate of the output)
+        p
+        (final_u is the Montgomery u-coordinate of the output)
 
-   14.  y = (final_u - 1) / (final_u + 1) mod p (y is the Edwards
-        coordinate corresponding to final_u)
 
 
 
@@ -898,12 +898,16 @@ Goldberg, et al.        Expires February 28, 2019              [Page 16]
 Internet-Draft                     VRF                       August 2018
 
 
+   14.  y_coordinate = (final_u - 1) / (final_u + 1) mod p
+        (y_coordinate is the Edwards coordinate corresponding to
+        final_u)
+
    15.  Form an octet string encoding of an elliptic curve point out of
-        y and x_0, as follows:
+        y_coordinate and x_0, as follows:
 
-        A.  h_string = int_to_string (y, 32)
+        A.  h_string = int_to_string (y_coordinate, 32)
 
-        B.  h_string[31] = hEncoded[31] | x_0, where | denotes the bit-
+        B.  h_string[31] = h_string[31] | x_0, where | denotes the bit-
             wise OR
 
    16.  h = string_to_point(h_string)
@@ -917,7 +921,7 @@ Internet-Draft                     VRF                       August 2018
    should pay particular attention to Steps 13 and 14 above.  These
    steps can be implemented using the following approach:
 
-      e = (v_candidate) ^ ((p-1)/2) mod p
+      e = w ^ ((p-1)/2) mod p
 
       final_u = (e*u + (e-1) * (A/2)) mod p
 
@@ -931,8 +935,7 @@ Internet-Draft                     VRF                       August 2018
    when selector is 0.  If CMOV is implemented in constant time, then
    steps 13 and 14 above can be implemented as follows:
 
-      e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0
-      or 2)
+      e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)
 
       b = e/2 (note that only the least significant byte of e is needed
       for this operation)
@@ -941,9 +944,6 @@ Internet-Draft                     VRF                       August 2018
 
       final_u = CMOV(u, alternative_u, b)
 
-   [TODO: Should we explain how to implement CMOV in constant time?]
-   [TODO: Do we have appropriate references to the literature where
-   Elligator2 was proposed and to other standards?]
 
 
 
@@ -953,6 +953,10 @@ Goldberg, et al.        Expires February 28, 2019              [Page 17]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   [TODO: Should we explain how to implement CMOV in constant time?]
+   [TODO: Do we have appropriate references to the literature where
+   Elligator2 was proposed and to other standards?]
 
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
@@ -991,16 +995,12 @@ Internet-Draft                     VRF                       August 2018
 
    Steps:
 
-   1.   pk = EC2OSP(y)
+   1.   pk_string = EC2OSP(y)
 
-   2.   one = 0x01 = I2OSP(1, 1), a single octet with value 1
+   2.   one_string = 0x01 = I2OSP(1, 1), a single octet with value 1
 
-   3.   hash_string = Hash(suite || one || pk || alpha_string )
-
-   4.   t = string_to_int(hash_string)
-
-   5.   negative_t_squared = -t^2 mod p
-
+   3.   h_string = Hash(suite_string || one_string || pk_string ||
+        alpha_string )
 
 
 
@@ -1009,6 +1009,10 @@ Goldberg, et al.        Expires February 28, 2019              [Page 18]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   4.   t = string_to_int(h_string)
+
+   5.   negative_t_squared = -t^2 mod p
 
    6.   denominator = negative_t_squared^2 + negative_t_squared mod p
         (denominator is t^4-t^2 mod p)
@@ -1055,16 +1059,16 @@ Internet-Draft                     VRF                       August 2018
       b = e/2 (note that only the least significant byte of e is needed
       for this operation)
 
-      alternative_x = negative_t_squared * x mod p
-
-      final_u = CMOV(x, negative_t_squared, b)
-
 
 
 Goldberg, et al.        Expires February 28, 2019              [Page 19]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      alternative_x = negative_t_squared * x mod p
+
+      final_u = CMOV(x, negative_t_squared, b)
 
    [TODO: Should we explain how to implement CMOV in constant time?]
 
@@ -1110,10 +1114,6 @@ Internet-Draft                     VRF                       August 2018
 
    Input:
 
-      pi_string - VRF proof, octet string (m+3n octets)
-
-   Output:
-
 
 
 
@@ -1121,6 +1121,10 @@ Goldberg, et al.        Expires February 28, 2019              [Page 20]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      pi_string - VRF proof, octet string (m+3n octets)
+
+   Output:
 
       "INVALID", or
 
@@ -1166,10 +1170,6 @@ Internet-Draft                     VRF                       August 2018
       provided as input to ECVRF_nonce_generation), with the hash
       function SHA-256 as specified in [RFC6234]
 
-   o  The int_to_string function is the I2OSP function specified in
-      Section 4.1 of [RFC8017].  (This is big endian representation.)
-
-
 
 
 
@@ -1177,6 +1177,9 @@ Goldberg, et al.        Expires February 28, 2019              [Page 21]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   o  The int_to_string function is the I2OSP function specified in
+      Section 4.1 of [RFC8017].  (This is big endian representation.)
 
    o  The string_to_int function is the OS2IP function specified in
       Section 4.2 of [RFC8017].  (This is big endian representation.)
@@ -1224,15 +1227,15 @@ Internet-Draft                     VRF                       August 2018
       Section 5.1.2 of [RFC8032].  (This is little endian
       representation.)
 
-   o  The string_to_int function interprets the string as an integer in
-      little-endian representation.
-
 
 
 Goldberg, et al.        Expires February 28, 2019              [Page 22]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   o  The string_to_int function interprets the string as an integer in
+      little-endian representation.
 
    o  The point_to_string function converts an EC point to an octect
       string according to the encoding specified in Section 5.1.2 of
@@ -1279,9 +1282,6 @@ Internet-Draft                     VRF                       August 2018
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
-   key in invalid.  Otherwise, it returns y, the public key as an EC
-   point.
-
 
 
 
@@ -1289,6 +1289,9 @@ Goldberg, et al.        Expires February 28, 2019              [Page 23]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   key in invalid.  Otherwise, it returns y, the public key as an EC
+   point.
 
 5.6.1.  ECVRF Validate Key
 
@@ -1335,9 +1338,6 @@ Internet-Draft                     VRF                       August 2018
    An implementation similar to ECVRF is available as part of the CONIKS
    implementation in Golang at <https://github.com/coniks-sys/coniks-
    go/tree/master/crypto/vrf>.
-
-
-
 
 
 
