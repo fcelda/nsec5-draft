@@ -869,10 +869,10 @@ Internet-Draft                     VRF                       August 2018
    6.   oneTwentySeven_string = 0x7F = int_to_string(127, 1)
         (a single octet with value 127)
 
-   7.   x_0 = truncated_h_string[31] & oneTwentyEight_string
+   7.   x0 = truncated_h_string[31] & oneTwentyEight_string
         (where & denotes the bit-wise AND)
         (this step saves highest-order bit of octet 31 of truncated hash
-        in x_0)
+        in x0)
 
    8.   truncated_h_string[31] = truncated_h_string[31] &
         oneTwentySeven_string
@@ -888,7 +888,7 @@ Internet-Draft                     VRF                       August 2018
    11.  w = u * (u^2 + A*u + 1) mod p
         (this step evaluates the Montgomery equation for Curve25519)
 
-   12.  Let e equal the Legendre symbol of w modulo p
+   12.  Let e equal the Legendre symbol of w and p
 
 
 
@@ -907,11 +907,11 @@ Internet-Draft                     VRF                       August 2018
         final_u)
 
    15.  Form an octet string encoding of an elliptic curve point out of
-        y_coordinate and x_0, as follows:
+        y_coordinate and x0, as follows:
 
         A.  h_string = int_to_string (y_coordinate, 32)
 
-        B.  h_string[31] = h_string[31] | x_0
+        B.  h_string[31] = h_string[31] | x0
             (where | denotes the bit-wise OR)
 
    16.  h = string_to_point(h_string)
@@ -1015,16 +1015,17 @@ Internet-Draft                     VRF                       August 2018
 
    4.   t = string_to_int(h_string)
 
-   5.   r = -t^2 mod p
+   5.   r = -(t^2) mod p
 
-   6.   d = r^2 + r mod p
+   6.   d = (r^2 + r) mod p
         (d is t^4-t^2 mod p)
 
-   7.   if d = 0, x = default_x.  Else x = (-b/a) * (1 + (1/d)) mod p.
+   7.   If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod
+        p.
 
-   8.   w = x^3 + a*x + b mod p
+   8.   w = (x^3 + a*x + b) mod p
 
-   9.   Let e equal the Legendre symbol of w modulo p
+   9.   Let e equal the Legendre symbol of w and p
 
    10.  If e is equal to 1 then final_x = x; else final_x = r * x mod p
         (final_x is the x-coordinate of the output)
@@ -1055,8 +1056,7 @@ Internet-Draft                     VRF                       August 2018
    when selector is 0.  If CMOV is implemented in constant time, then
    steps 13 and 14 above can be implemented as follows:
 
-      e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)
-
+      e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)
 
 
 
@@ -1069,7 +1069,7 @@ Internet-Draft                     VRF                       August 2018
       b = e/2 (note that only the least significant byte of e is needed
       for this operation)
 
-      other_x = negative_t_squared * x mod p
+      other_x = r * x mod p
 
       final_x = CMOV(x, other_x, b)
 

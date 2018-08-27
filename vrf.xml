@@ -891,9 +891,9 @@
                             <vspace/>(a single octet with value 128)</t>
                         <t>oneTwentySeven_string = 0x7F = int_to_string(127, 1)
                             <vspace/>(a single octet with value 127)</t>
-                        <t>x_0 = truncated_h_string[31] &amp; oneTwentyEight_string
+                        <t>x0 = truncated_h_string[31] &amp; oneTwentyEight_string
                             <vspace/>(where &amp; denotes the bit-wise AND)
-                            <vspace/>(this step saves highest-order bit of octet 31 of truncated hash in x_0)</t>
+                            <vspace/>(this step saves highest-order bit of octet 31 of truncated hash in x0)</t>
                         <t>truncated_h_string[31] = truncated_h_string[31] &amp; oneTwentySeven_string
                             <vspace/>(this step clears the high-order bit of octet 31 of truncated hash)</t>
                         <t>r = string_to_int(truncated_h_string)</t>
@@ -901,15 +901,15 @@
                             <vspace/>(note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
                         <t>w = u * (u^2 + A*u + 1) mod p
                             <vspace/>(this step evaluates the Montgomery equation for Curve25519)</t>
-                        <t>Let e equal the Legendre symbol of w modulo p</t>
+                        <t>Let e equal the Legendre symbol of w and p</t>
                         <t>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p
                             <vspace/>(final_u is the Montgomery u-coordinate of the output)</t>
                         <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
                             <vspace/>(y_coordinate is the Edwards coordinate corresponding to final_u)</t>
-                        <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x_0, as follows:
+                        <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
                             <list style="letters">
                                 <t>h_string = int_to_string (y_coordinate, 32)</t>
-                                <t>h_string[31] = h_string[31] | x_0
+                                <t>h_string[31] = h_string[31] | x0
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
                         </t>
@@ -994,13 +994,14 @@
                         <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
                         <t>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</t>
                         <t>t = string_to_int(h_string)</t>
-                        <t>r = -t^2 mod p</t>
-                        <t>d = r^2 + r mod p
+                        <t>r = -(t^2) mod p</t>
+                        <t>d = (r^2 + r) mod p
                             <vspace/>(d is t^4-t^2 mod p)</t>
-                        <t>if d = 0, x = default_x. Else x = (-b/a) * (1 + (1/d)) mod p.</t>
-                        <t>w = x^3 + a*x + b mod p</t>
-                        <t>Let e equal the Legendre symbol of w modulo p</t>
-                        <t>If e is equal to 1 then final_x = x; else final_x = r * x mod p (final_x is the x-coordinate of the output)</t>
+                        <t>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</t>
+                        <t>w = (x^3 + a*x + b) mod p</t>
+                        <t>Let e equal the Legendre symbol of w and p</t>
+                        <t>If e is equal to 1 then final_x = x; else final_x = r * x mod p
+                            <vspace/>(final_x is the x-coordinate of the output)</t>
                         <t>h = arbitrary_string_to_point(int_to_string(final_x, 2n))</t>
                         <t>hc = h^cofactor</t>
                         <t>Output hc</t>
@@ -1025,9 +1026,9 @@
                     Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
                     selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows:
                     <list>
-                        <t>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
+                        <t>e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
                         <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
-                        <t>other_x = negative_t_squared * x mod p</t>
+                        <t>other_x = r * x mod p</t>
                         <t>final_x = CMOV(x, other_x, b)</t>
                     </list>
                     (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).
