@@ -1115,11 +1115,11 @@
         ECVRF_nonce_generation), with the hash function
         SHA-256 as specified in <xref target="RFC6234" /></t>
         
-        <t>The int_to_string function is the I2OSP specified in Section 
-        4.1 of <xref target="RFC8017" />.</t>
+        <t>The int_to_string function is the I2OSP function specified in Section 
+        4.1 of <xref target="RFC8017" />. (This is big endian representation.)</t>
 
-        <t>The string_to_int function is the OS2IP specified in Section 
-        4.2 of <xref target="RFC8017" />.</t>
+        <t>The string_to_int function is the OS2IP function specified in Section 
+        4.2 of <xref target="RFC8017" />. (This is big endian representation.)</t>
 
         <t>
             The point_to_string function is specified in Section 2.3.3 of 
@@ -1163,6 +1163,12 @@
         with dom2(F, C) equal to the empty string and PH(M) equal to h_string. 
         Reduce the output modulo q.</t>
         
+        <t>The int_to_string function as specified in the first paragraph of
+        Section 5.1.2 of <xref target="RFC8032" />. (This is little endian representation.)</t>
+
+        <t>The string_to_int function interprets the string as an integer in little-endian
+       representation.</t>
+                
         <t> The point_to_string function is specified in Section 5.1.2 of <xref target="RFC8032" />. 
         This implies m = 2n = 32.</t>
         
