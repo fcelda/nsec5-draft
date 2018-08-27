@@ -922,8 +922,8 @@
                 <list>
                     <t>e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
                     <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
-                    <t>negative_u = (-A-u) mod p</t>
-                    <t>final_u = CMOV(u, negative_u, b)</t>
+                    <t>alternative_u = (-A-u) mod p</t>
+                    <t>final_u = CMOV(u, alternative_u, b)</t>
                 </list>
                 [TODO: Should we explain how to implement CMOV in constant time?]
                 [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?]
@@ -967,6 +967,7 @@
                 <t> Fixed options:
                     <list>
                         <t> a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</t>
+                        <t> default_x, to be used in the negligbly likely case that this algorithm cannot compute an answer because of division by 0</t>
                     </list>
                 </t>
                 <t>
@@ -978,10 +979,10 @@
                         <t>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</t>
                         <t>negative_t_squared = -t^2 mod p</t>
                         <t>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</t>
-                        <t>if denominator = 0, x = 0 [TODO: this won't work for every curve -- will work for P256, though]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
+                        <t>if denominator = 0, x = default_x. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
                         <t>y_candidate = x^3 + a*x + b mod p</t>
                         <t>Let e equal the Legendre symbol of y_candidate modulo p</t>
-                        <t>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</t>
+                        <t>If e is equal to 1 then final_x = x; else final_x = negative_t_squared * x mod p (final_x is the x-coordinate of the output)</t>
                         <t>h = OS2ECP(toString(final_x)</t>
                         <t>hc = h^cofactor</t>
                         <t>Output hc</t>
@@ -991,15 +992,15 @@
                 
                 <t> In order to make this algorithm run in time that is (almost) independent
                     of the input (so-called "constant-time"), implementers should pay particular attention
-                    to Steps 13 and 14 above.
+                    to Steps 9 and 10 above.
                     These steps can be implemented using the following approach:
                     <list>
-                        <t> e = v ^ ((p-1)/2) mod p</t>
-                        <t>final_u = (e*u + (e-1) * (A/2)) mod p</t>
+                        <t> e = x ^ ((p-1)/2) mod p</t>
+                        <t>final_x = (e*(1+negative_t_squared)/2 + (1-negative_t_squared)/2)*x mod p</t>
                     </list>
                     The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step
                     runs in the same amount of time regardless of e by ensuring that
-                    the multiplication operation * runs in constant time.
+                    arithmetic operations run constant time.
                 </t>
                 
                 <t>
@@ -1008,8 +1009,8 @@
                     <list>
                         <t>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
                         <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
-                        <t>negative_u = (-A-u) mod p</t>
-                        <t>final_u = CMOV(u, negative_u, b)</t>
+                        <t>alternative_x = negative_t_squared * x mod p</t>
+                        <t>final_u = CMOV(x, negative_t_squared, b)</t>
                     </list>
                     [TODO: Should we explain how to implement CMOV in constant time?]
                 </t>

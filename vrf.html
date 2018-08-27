@@ -1060,8 +1060,8 @@
 <ul class="empty">
 <li>e = (v_candidate ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
 <li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
-<li>negative_u = (-A-u) mod p</li>
-<li>final_u = CMOV(u, negative_u, b)</li>
+<li>alternative_u = (-A-u) mod p</li>
+<li>final_u = CMOV(u, alternative_u, b)</li>
 </ul>
 
 <p> [TODO: Should we explain how to implement CMOV in constant time?] [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?] </p>
@@ -1087,7 +1087,10 @@
 <p> </p>
 <p id="rfc.section.5.4.1.3.p.5">Fixed options: </p>
 
-<ul class="empty"><li>a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</li></ul>
+<ul class="empty">
+<li>a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</li>
+<li>default_x, to be used in the negligbly likely case that this algorithm cannot compute an answer because of division by 0</li>
+</ul>
 
 <p> </p>
 <p id="rfc.section.5.4.1.3.p.6">Steps: </p>
@@ -1099,31 +1102,31 @@
 <li>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</li>
 <li>negative_t_squared = -t^2 mod p</li>
 <li>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</li>
-<li>if denominator = 0, x = 0 [TODO: this won't work for every curve -- will work for P256, though]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
+<li>if denominator = 0, x = default_x. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
 <li>y_candidate = x^3 + a*x + b mod p</li>
 <li>Let e equal the Legendre symbol of y_candidate modulo p</li>
-<li>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</li>
+<li>If e is equal to 1 then final_x = x; else final_x = negative_t_squared * x mod p (final_x is the x-coordinate of the output)</li>
 <li>h = OS2ECP(toString(final_x)</li>
 <li>hc = h^cofactor</li>
 <li>Output hc</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 13 and 14 above.  These steps can be implemented using the following approach: </p>
+<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 9 and 10 above.  These steps can be implemented using the following approach: </p>
 
 <ul class="empty">
-<li>e = v ^ ((p-1)/2) mod p</li>
-<li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
+<li>e = x ^ ((p-1)/2) mod p</li>
+<li>final_x = (e*(1+negative_t_squared)/2 + (1-negative_t_squared)/2)*x mod p</li>
 </ul>
 
-<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
+<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that arithmetic operations run constant time.  </p>
 <p id="rfc.section.5.4.1.3.p.8">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
 
 <ul class="empty">
 <li>e = (v ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
 <li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
-<li>negative_u = (-A-u) mod p</li>
-<li>final_u = CMOV(u, negative_u, b)</li>
+<li>alternative_x = negative_t_squared * x mod p</li>
+<li>final_u = CMOV(x, negative_t_squared, b)</li>
 </ul>
 
 <p> [TODO: Should we explain how to implement CMOV in constant time?] </p>
