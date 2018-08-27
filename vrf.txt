@@ -1043,8 +1043,7 @@ Internet-Draft                     VRF                       August 2018
 
       e = x ^ ((p-1)/2) mod p
 
-      final_x = (e*(1+negative_t_squared)/2 +
-      (1-negative_t_squared)/2)*x mod p
+      final_x = (e*(1+r)/2 + (1-r)/2)*x mod p
 
    The first step will produce a value e that is either 1 or p-1.
    Implementers should also ensure that the second step runs in the same
@@ -1056,8 +1055,9 @@ Internet-Draft                     VRF                       August 2018
    when selector is 0.  If CMOV is implemented in constant time, then
    steps 13 and 14 above can be implemented as follows:
 
-      e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)
+      e = (w ^ ((p-1)/2))+1 mod p
 
+      b = e/2
 
 
 
@@ -1065,9 +1065,6 @@ Goldberg, et al.        Expires February 28, 2019              [Page 19]
 
 Internet-Draft                     VRF                       August 2018
 
-
-      b = e/2 (note that only the least significant byte of e is needed
-      for this operation)
 
       other_x = r * x mod p
 
@@ -1112,6 +1109,9 @@ Internet-Draft                     VRF                       August 2018
    6.  c = string_to_int(truncated_c_string)
 
    7.  Output c
+
+
+
 
 
 

@@ -1114,15 +1114,15 @@
 
 <ul class="empty">
 <li>e = x ^ ((p-1)/2) mod p</li>
-<li>final_x = (e*(1+negative_t_squared)/2 + (1-negative_t_squared)/2)*x mod p</li>
+<li>final_x = (e*(1+r)/2 + (1-r)/2)*x mod p</li>
 </ul>
 
 <p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that arithmetic operations run constant time.  </p>
 <p id="rfc.section.5.4.1.3.p.8">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
 
 <ul class="empty">
-<li>e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</li>
-<li>b = e/2 (note that only the least significant byte of e is needed for this operation)</li>
+<li>e = (w ^ ((p-1)/2))+1 mod p</li>
+<li>b = e/2</li>
 <li>other_x = r * x mod p</li>
 <li>final_x = CMOV(x, other_x, b)</li>
 </ul>
