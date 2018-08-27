@@ -1191,8 +1191,8 @@
         <t>The string_to_int function interprets the string as an integer in little-endian
        representation.</t>
                 
-        <t> The point_to_string function The string_to_point function converts an octet string to an 
-            EC point according to the encoding specified
+        <t> The point_to_string function converts an EC point to an 
+            octect string according to the encoding specified
              in Section 5.1.2 of <xref target="RFC8032" />. 
             This implies m = 2n = 32.
             (Note that certain software implementations do not introduce a
