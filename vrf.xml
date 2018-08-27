@@ -578,7 +578,7 @@
                 <t>G - subgroup of E of large prime order</t>
                 <t>q - prime order of group G; must be less than 2^{2n}</t>
                 <t>cofactor - number of points on E divided by q</t>
-                <t>g - generator of group G</t>
+                <t>B - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of Hash; must be at least 2n</t>
                 <t>suite_string - a single nonzero octet specifying the ECVRF 
@@ -638,7 +638,7 @@
                         to SK; else, it is derived from SK
                     </t></list>
                 </t>
-                <t>y = g^x - VRF public key, an EC point</t>
+                <t>y = B^x - VRF public key, an EC point</t>
              </list>
         </t>
 
@@ -661,7 +661,7 @@
                 <list>
                     <t>SK - VRF private key</t>
                     <t>x - VRF secret scalar</t>
-                    <t>y = g^x - VRF public key</t>
+                    <t>y = B^x - VRF public key</t>
                     <t>alpha_string = input alpha, an octet string</t>
                 </list>
             </t>
@@ -680,7 +680,7 @@
                     <t>h_string = point_to_string(h)</t>
                     <t>gamma = h^x</t>
                     <t>k = ECVRF_nonce_generation(SK, h_string)</t>
-                    <t>c = ECVRF_hash_points(h, gamma, g^k, h^k)</t>
+                    <t>c = ECVRF_hash_points(h, gamma, B^k, h^k)</t>
                     <t>s = (k + c*x) mod q (where * denotes integer multiplication)</t>
                     <t>pi_string = point_to_string(gamma) || int_to_string(c, n) || int_to_string(s, 2n)</t>
                     <t>Output pi_string</t>
@@ -748,7 +748,7 @@
                     <t>D = ECVRF_decode_proof(pi_string)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(gamma, c, s) = D</t>
-                    <t>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</t>
+                    <t>u = B^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to B^s and the inverse of y^c)</t>
                     <t>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</t>
                     <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
                     <t>c' = ECVRF_hash_points(h, gamma, u, v)</t>
@@ -1133,7 +1133,7 @@
             2n = 32 and cofactor = 1.
         </t>
         <t> The key pair generation primitive is specified in
-            Section 3.2.1 of <xref target="SECG1" /> (q, g, SK, and PK in this document
+            Section 3.2.1 of <xref target="SECG1" /> (q, B, SK, and PK in this document
             correspond to in n, G, d, and Q in Section 3.2.1 of <xref target="SECG1" />).
             In this ciphersuite, the secret scalar x is equal to the private key SK.
         </t>
@@ -1261,9 +1261,9 @@
         
         <t>
         Note that this procedure is not sufficient if the elliptic curve E
-        or the point g, the generator of group G, is untrusted. If the prover is untrusted,
+        or the point B, the generator of group G, is untrusted. If the prover is untrusted,
         the Verifier MUST
-        obtain E and g from a trusted source, such as a ciphersuite specification, rather
+        obtain E and B from a trusted source, such as a ciphersuite specification, rather
         than from the prover.
         </t>
         
@@ -1511,7 +1511,7 @@
         ECVRF_hash_to_curve. The curve point h becomes the representative 
         of alpha thereafter. Note that the suite_string octet and the public key
         are hashed together with alpha in ECVRF_hash_to_curve, which ensures
-        that the curve (including the generator g) and the public
+        that the curve (including the generator B) and the public
     key are included indirectly into subsequent hashes.</t>
 </section>
  
@@ -1601,8 +1601,8 @@
                 discussion about domain separation.
                 Updated todos in the "additional pseudorandomness property" 
                 section. Added an discussion of secrecy into security considerations.
-                Removed g and PK=y from ECVRF_hash_points because they are already present
-                via h, which is computed via hash_to_curve using the suite_string (which identifies g) and y.</t>
+                Removed B and PK=y from ECVRF_hash_points because they are already present
+                via h, which is computed via hash_to_curve using the suite_string (which identifies B) and y.</t>
             </list>
         </t>
     </section>
