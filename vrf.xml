@@ -255,7 +255,7 @@
     
     <t>
      A slightly weaker security
-     property called "trusted uniquness" sufficies for many applications.
+     property called "trusted uniqueness" sufficies for many applications.
      Trusted uniqueness is the same as full uniqueness, but it must hold 
      only if the VRF keys PK and SK were generated in a trustworthy 
      manner. In other words, uniqueness might not hold if keys were
@@ -714,7 +714,7 @@
                 Input:
                 <list>
                     <t>y -  public key, an EC point</t>
-                    <t>pi - VRF proof, octet string of length 5n+1</t>
+                    <t>pi - VRF proof, octet string of length m+3n</t>
                     <t>alpha - VRF input, octet string</t>
                 </list>
             </t>
@@ -811,7 +811,7 @@
                         <t>CTR = I2OSP(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash = Hash(suite || one || pk || alpha || CTR)</t>
-                        <t>attempted_hash = first 2n bits of hash</t> 
+                        <t>attempted_hash = first 2n octects of hash</t> 
                         <t>h = RS2ECP(attempted_hash)</t>
                         <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
                     </list></t>
