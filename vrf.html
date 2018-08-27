@@ -797,7 +797,7 @@
 <li>G - subgroup of E of large prime order</li>
 <li>q - prime order of group G; must be less than 2^{2n}</li>
 <li>cofactor - number of points on E divided by q</li>
-<li>g - generator of group G</li>
+<li>B - generator of group G</li>
 <li>Hash - cryptographic hash function</li>
 <li>hLen - output length in octets of Hash; must be at least 2n</li>
 <li>suite_string - a single nonzero octet specifying the ECVRF ciphersuite, which determines the above options</li>
@@ -837,7 +837,7 @@
 <li>x - VRF secret scalar, an integer <ul class="empty"><li>Note: depending on the ciphersuite used, the VRF secret scalar may be equal to SK; else, it is derived from SK </li></ul>
 <p> </p>
 </li>
-<li>y = g^x - VRF public key, an EC point</li>
+<li>y = B^x - VRF public key, an EC point</li>
 </ul>
 
 <p> </p>
@@ -851,7 +851,7 @@
 <ul class="empty">
 <li>SK - VRF private key</li>
 <li>x - VRF secret scalar</li>
-<li>y = g^x - VRF public key</li>
+<li>y = B^x - VRF public key</li>
 <li>alpha_string = input alpha, an octet string</li>
 </ul>
 
@@ -868,7 +868,7 @@
 <li>h_string = point_to_string(h)</li>
 <li>gamma = h^x</li>
 <li>k = ECVRF_nonce_generation(SK, h_string)</li>
-<li>c = ECVRF_hash_points(h, gamma, g^k, h^k)</li>
+<li>c = ECVRF_hash_points(h, gamma, B^k, h^k)</li>
 <li>s = (k + c*x) mod q (where * denotes integer multiplication)</li>
 <li>pi_string = point_to_string(gamma) || int_to_string(c, n) || int_to_string(s, 2n)</li>
 <li>Output pi_string</li>
@@ -927,8 +927,8 @@
 <li>D = ECVRF_decode_proof(pi_string)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
-<li>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</li>
 <li>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</li>
+<li>u = B^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to B^s and the inverse of y^c)</li>
 <li>v = h^s / gamma^c  (where / again denotes EC point subtraction)</li>
 <li>c' = ECVRF_hash_points(h, gamma, u, v)</li>
 <li>If c and c' are equal, output "VALID"; else output "INVALID" </li>
@@ -1194,7 +1194,7 @@
 <ul>
 <li>suite_string = 0x01 = int_to_string(1, 1). </li>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
-<li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, g, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
+<li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, B, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
 <li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (omitting Step a and using h_string that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
 </li>
 <li>The int_to_string function is the I2OSP function specified in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a>. (This is big endian representation.)</li>
@@ -1234,7 +1234,7 @@
 <a href="#rfc.section.5.6">5.6.</a> <a href="#keycheck" id="keycheck">When the ECVRF Keys are Untrusted</a>
 </h1>
 <p id="rfc.section.5.6.p.1">The ECVRF as specified above is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef" class="xref">Section 3</a>.  In order to obtain "full uniqueness" and "full collision resistance" (which provide protection against a malicious VRF public key), the Verifier MUST perform the following additional validation procedure upon receipt of the public VRF key. The public VRF key MUST NOT be used if this procedure returns "INVALID".  </p>
-<p id="rfc.section.5.6.p.2">Note that this procedure is not sufficient if the elliptic curve E or the point g, the generator of group G, is untrusted. If the prover is untrusted, the Verifier MUST obtain E and g from a trusted source, such as a ciphersuite specification, rather than from the prover.  </p>
+<p id="rfc.section.5.6.p.2">Note that this procedure is not sufficient if the elliptic curve E or the point B, the generator of group G, is untrusted. If the prover is untrusted, the Verifier MUST obtain E and B from a trusted source, such as a ciphersuite specification, rather than from the prover.  </p>
 <p id="rfc.section.5.6.p.3">This procedure supposes that the public key provided to the Verifier is an octet string. The procedure returns "INVALID" if the public key in invalid.  Otherwise, it returns y, the public key as an EC point.  </p>
 <h1 id="rfc.section.5.6.1">
 <a href="#rfc.section.5.6.1">5.6.1.</a> ECVRF Validate Key</h1>
@@ -1309,7 +1309,7 @@
 <h1 id="rfc.section.7.6">
 <a href="#rfc.section.7.6">7.6.</a> <a href="#prehash" id="prehash">Prehashing</a>
 </h1>
-<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite_string octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public key are included indirectly into subsequent hashes.</p>
+<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite_string octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator B) and the public key are included indirectly into subsequent hashes.</p>
 <h1 id="rfc.section.7.7">
 <a href="#rfc.section.7.7">7.7.</a> Hash function domain separation and future-proofing</h1>
 <p id="rfc.section.7.7.p.1">Hashing is used for four different purposes in ECVRF (namely, in hash_to_curve, nonce_generation, hash_points, and proof2hash). The theoretical analysis assumes each of these four functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because: </p>
@@ -1329,7 +1329,7 @@
 <ul class="empty">
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
-<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed g and PK=y from ECVRF_hash_points because they are already present via h, which is computed via hash_to_curve using the suite_string (which identifies g) and y.</li>
+<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed B and PK=y from ECVRF_hash_points because they are already present via h, which is computed via hash_to_curve using the suite_string (which identifies B) and y.</li>
 </ul>
 
 <p> </p>

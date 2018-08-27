@@ -525,7 +525,7 @@ Internet-Draft                     VRF                       August 2018
 
       cofactor - number of points on E divided by q
 
-      g - generator of group G
+      B - generator of group G
 
       Hash - cryptographic hash function
 
@@ -595,7 +595,7 @@ Internet-Draft                     VRF                       August 2018
          Note: depending on the ciphersuite used, the VRF secret scalar
          may be equal to SK; else, it is derived from SK
 
-      y = g^x - VRF public key, an EC point
+      y = B^x - VRF public key, an EC point
 
 5.1.  ECVRF Proving
 
@@ -620,7 +620,7 @@ Internet-Draft                     VRF                       August 2018
 
       x - VRF secret scalar
 
-      y = g^x - VRF public key
+      y = B^x - VRF public key
 
       alpha_string = input alpha, an octet string
 
@@ -638,7 +638,7 @@ Internet-Draft                     VRF                       August 2018
 
    4.  k = ECVRF_nonce_generation(SK, h_string)
 
-   5.  c = ECVRF_hash_points(h, gamma, g^k, h^k)
+   5.  c = ECVRF_hash_points(h, gamma, B^k, h^k)
 
    6.  s = (k + c*x) mod q (where * denotes integer multiplication)
 
@@ -711,10 +711,10 @@ Internet-Draft                     VRF                       August 2018
 
    3.  (gamma, c, s) = D
 
-   4.  u = g^s / y^c (where / denotes EC point subtraction, i.e. the
-       group operation applied to g^s and the inverse of y^c)
+   4.  h = ECVRF_hash_to_curve(suite_string, y, alpha_string)
 
-   5.  h = ECVRF_hash_to_curve(suite_string, y, alpha_string)
+   5.  u = B^s / y^c (where / denotes EC point subtraction, i.e. the
+       group operation applied to B^s and the inverse of y^c)
 
    6.  v = h^s / gamma^c (where / again denotes EC point subtraction)
 
@@ -1167,7 +1167,7 @@ Internet-Draft                     VRF                       August 2018
       1.
 
    o  The key pair generation primitive is specified in Section 3.2.1 of
-      [SECG1] (q, g, SK, and PK in this document correspond to in n, G,
+      [SECG1] (q, B, SK, and PK in this document correspond to in n, G,
       d, and Q in Section 3.2.1 of [SECG1]).  In this ciphersuite, the
       secret scalar x is equal to the private key SK.
 
@@ -1291,8 +1291,8 @@ Internet-Draft                     VRF                       August 2018
 
 
    Note that this procedure is not sufficient if the elliptic curve E or
-   the point g, the generator of group G, is untrusted.  If the prover
-   is untrusted, the Verifier MUST obtain E and g from a trusted source,
+   the point B, the generator of group G, is untrusted.  If the prover
+   is untrusted, the Verifier MUST obtain E and B from a trusted source,
    such as a ciphersuite specification, rather than from the prover.
 
    This procedure supposes that the public key provided to the Verifier
@@ -1514,7 +1514,7 @@ Goldberg, et al.        Expires February 28, 2019              [Page 27]
 Internet-Draft                     VRF                       August 2018
 
 
-   the generator g) and the public key are included indirectly into
+   the generator B) and the public key are included indirectly into
    subsequent hashes.
 
 7.7.  Hash function domain separation and future-proofing
@@ -1580,10 +1580,10 @@ Internet-Draft                     VRF                       August 2018
       functions by modifying hash_points and added discussion about
       domain separation.  Updated todos in the "additional
       pseudorandomness property" section.  Added an discussion of
-      secrecy into security considerations.  Removed g and PK=y from
+      secrecy into security considerations.  Removed B and PK=y from
       ECVRF_hash_points because they are already present via h, which is
       computed via hash_to_curve using the suite_string (which
-      identifies g) and y.
+      identifies B) and y.
 
 9.  Contributors
 
