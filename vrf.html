@@ -423,7 +423,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-02" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-27" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -447,7 +447,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: December 31, 2018</td>
+<td class="left">Expires: February 28, 2019</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -464,7 +464,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 29, 2018</td>
+<td class="right">August 27, 2018</td>
 </tr>
 
     	
@@ -480,7 +480,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 31, 2018.</p>
+<p>This Internet-Draft will expire on February 28, 2019.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -644,7 +644,7 @@
 <a href="#rfc.section.3.1">3.1.</a> Full Uniqueness or Trusted Uniqueness</h1>
 <p id="rfc.section.3.1.p.1">Uniqueness means that, for any fixed public VRF key and for any input alpha, there is a unique VRF output beta that can be proved to be valid.  Uniqueness must hold even for an adversarial Prover that knows the VRF private key SK.  </p>
 <p id="rfc.section.3.1.p.2">More percisely, "full uniqueness" states that a computationally-bounded adversary cannot choose a VRF public key PK, a VRF input alpha, two different VRF hash outputs beta1 and beta2, and two proofs pi1 and pi2 such that VRF_verify(PK, alpha, pi1) and VRF_verify(PK, alpha, pi2) both output VALID.  </p>
-<p id="rfc.section.3.1.p.3">A slightly weaker security property called "trusted uniquness" sufficies for many applications.  Trusted uniqueness is the same as full uniqueness, but it must hold only if the VRF keys PK and SK were generated in a trustworthy manner. In other words, uniqueness might not hold if keys were generated in an invalid manner or with bad randomness.  </p>
+<p id="rfc.section.3.1.p.3">A slightly weaker security property called "trusted uniqueness" sufficies for many applications.  Trusted uniqueness is the same as full uniqueness, but it must hold only if the VRF keys PK and SK were generated in a trustworthy manner. In other words, uniqueness might not hold if keys were generated in an invalid manner or with bad randomness.  </p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> Full Collison Resistance or Trusted Collision Resistance</h1>
 <p id="rfc.section.3.2.p.1">Like any cryprographic hash function, VRFs need to be collision resistant.  Collison resistance must hold even for an adversarial Prover that knows the VRF private key SK.  </p>
@@ -905,7 +905,7 @@
 
 <ul class="empty">
 <li>y -  public key, an EC point</li>
-<li>pi - VRF proof, octet string of length 5n+1</li>
+<li>pi - VRF proof, octet string of length m+3n</li>
 <li>alpha - VRF input, octet string</li>
 </ul>
 
@@ -968,7 +968,7 @@
 <li>CTR = I2OSP(ctr, 4)</li>
 <li>ctr = ctr + 1</li>
 <li>hash = Hash(suite || one || pk || alpha || CTR)</li>
-<li>attempted_hash = first 2n bits of hash</li>
+<li>attempted_hash = first 2n octects of hash</li>
 <li>h = RS2ECP(attempted_hash)</li>
 <li>If h is not "INVALID" and cofactor &gt; 1, set h = h^cofactor</li>
 </ol>
@@ -1009,7 +1009,7 @@
 <p> </p>
 <p id="rfc.section.5.4.1.2.p.6">Constraints on options: </p>
 
-<ul class="empty"><li>output length of Hash is at least 16n + 1 bits (i.e. greater than 2n octets)</li></ul>
+<ul class="empty"><li>output length of Hash is at least 16n (i.e., 256) bits</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.1.2.p.7">Steps: </p>
@@ -1018,29 +1018,38 @@
 <li>pk = EC2OSP(y)</li>
 <li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
 <li>hash = Hash(suite || one || pk || alpha )</li>
-<li>r = first 2n octets of hash</li>
-<li>x_0 = next unused bit of hash </li>
+<li>truncatedHash = hash[0]...hash[31] (first 32 octets of hash)</li>
+<li>OneTwentyEight = 0x80 = I2OSP(128, 1), a single octet with value 128</li>
+<li>OneTwentySeven = 0x7F = I2OSP(127, 1), a single octet with value 127</li>
+<li>x_0 = truncatedHash[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</li>
+<li>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</li>
+<li>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</li>
 <li>u = - A / (1 + 2*(r^2) )  mod p </li>
 <li>v = u * (u^2 + A*u + 1) mod p </li>
 <li>
 <a name="const1"></a>Let e equal the Legendre symbol of v modulo p</li>
 <li>
-<a name="const2"></a>If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p </li>
-<li>y = (finalu - 1) / (finalu + 1) mod p</li>
-<li>let h = (x_0,y), an EC point per the encoding in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>
+<a name="const2"></a>If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p (finalu is the Montgomery u-coordinate of the output)</li>
+<li>y = (finalu - 1) / (finalu + 1) mod p (y is the Edwards coordinate corresponding to finalu)</li>
+<li>Form an EC point h out of y and x_0 per the encoding in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>, as follows: <ol style="list-style-type: upper-alpha">
+<li>h = little-endian-integer-to-octet-string (y)</li>
+<li>h[31] = h[31] | x_0, where | denotes the bit-wise OR</li>
+</ol>
+<p> </p>
 </li>
-<li>h = h^cofactor</li>
+<li>hc = h^cofactor</li>
+<li>Output hc</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 7 and 8 above.  These steps can be implemented using the following approach: </p>
+<p id="rfc.section.5.4.1.2.p.8">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 8 and 9 above.  These steps can be implemented using the following approach: </p>
 
 <ul class="empty">
 <li>e = v ^ ((p-1)/2) mod p</li>
 <li>finalu = (e*u + (e-1) * (A/2)) mod p</li>
 </ul>
 
-<p> The first step will produce a value e that is either 1 or p-1. The second step is so fast compared to the first that that its dependence on e is likely to not matter; implementers can also ensure that it runs in the same amount of time regardless of e.  </p>
+<p> The first step will produce a value e that is either 1 or p-1. The second step is so fast compared to the first that that its dependence on e is likely to not matter; implementers can also ensure that it runs in the same amount of time regardless of e by ensuring that the multiplication operation * runs in constant time.  </p>
 <p id="rfc.section.5.4.1.2.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> ECVRF_hash_to_curve_other?</h1>
@@ -1304,7 +1313,7 @@
 <tr>
 <td class="reference"><b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b></td>
 <td class="top">
-<a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/draft-vcelak-nsec5-06">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-06, January 2018.</td>
+<a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/draft-vcelak-nsec5-07">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-07, June 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="Icart09">[Icart09]</b></td>

@@ -860,8 +860,7 @@
                 
                 <t> Constraints on options:
                     <list>
-                        <t> output length of Hash is at least 16n + 1 bits 
-                        (i.e. greater than 2n octets)</t>
+                        <t> output length of Hash is at least 16n (i.e., 256) bits</t>
                     </list>
                 </t>
                 
@@ -871,16 +870,26 @@
                         <t>pk = EC2OSP(y)</t>
                         <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
                         <t>hash = Hash(suite || one || pk || alpha )</t>
-                        <t>r = first 2n octets of hash</t>
-                        <t>x_0 = next unused bit of hash </t>
+                        <t>truncatedHash = hash[0]...hash[31] (first 32 octets of hash)</t>
+                        <t>OneTwentyEight = 0x80 = I2OSP(128, 1), a single octet with value 128</t>
+                        <t>OneTwentySeven = 0x7F = I2OSP(127, 1), a single octet with value 127</t>
+                        <t>x_0 = truncatedHash[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</t>
+                        <t>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</t>
+                        <t>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p </t>
                         <t>v = u * (u^2 + A*u + 1) mod p </t>
                         <t anchor="const1">Let e equal the Legendre symbol of v modulo p</t>
-                        <t anchor="const2">If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p </t>
-                        <t>y = (finalu - 1) / (finalu + 1) mod p</t>
-                        <t>let h = (x_0,y), an EC point per the encoding in Section 5.1.2 of
-                            <xref target="RFC8032" /></t>
-                        <t>h = h^cofactor</t>
+                        <t anchor="const2">If e is equal to 1 then finalu = u; else finalu = (-A - u) mod p (finalu is the Montgomery u-coordinate of the output)</t>
+                        <t>y = (finalu - 1) / (finalu + 1) mod p (y is the Edwards coordinate corresponding to finalu)</t>
+                        <t>Form an EC point h out of y and x_0 per the encoding in Section 5.1.2 of
+                            <xref target="RFC8032" />, as follows:
+                            <list style="letters">
+                                <t>h = little-endian-integer-to-octet-string (y)</t>
+                                <t>h[31] = h[31] | x_0, where | denotes the bit-wise OR</t>
+                            </list>
+                        </t>
+                        <t>hc = h^cofactor</t>
+                        <t>Output hc</t>
                     </list>
                 </t>
                 
