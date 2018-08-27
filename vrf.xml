@@ -593,17 +593,6 @@
                 <!--<t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>-->
                 <t>p^k - When p is an EC point: point multiplication, i.e. k repetitions of the EC group operation applied to the EC point p. When p is an integer: exponentiation </t>
                 <t>|| - octet string concatenation</t>
-                <t>int_to_string(a, len) - conversion of nonnegative integer a to 
-                to octet string of length len as specified in <xref target="suites"/>.</t>
-                <t> string_to_int(a_string) - coversion of an octet string a_string
-                to a nonnegative integer as specified in <xref target="suites"/>.</t>
-                <t>point_to_string - conversion of EC point to an m-octet string
-                    as specified in <xref target="suites"/></t>
-                <t>string_to_point - conversion of an m-octet string to EC point
-                    as specified in <xref target="suites"/>.
-                    string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>rand_string_to_point - conversion of a random 2n-octet string to an
-                    EC point as specified in <xref target="suites"/></t>
                 <t>ECVRF_hash_to_curve - collision resistant hash of strings
                     to an EC point; options described in <xref target="ecvrfH2C" /> and specified in <xref target="suites"/>.</t>
                 <t>ECVRF_nonce_generation - derives a pseudorandom nonce
@@ -613,6 +602,22 @@
                     to an n-octet string. Specified in <xref target="ecvrfHashPoints"/>.</t>
             </list>
         </t>
+        <t>
+            Type conversions:
+            <list>
+                <t>int_to_string(a, len) - conversion of nonnegative integer a to 
+                to octet string of length len as specified in <xref target="suites"/>.</t>
+                <t> string_to_int(a_string) - conversion of an octet string a_string
+                to a nonnegative integer as specified in <xref target="suites"/>.</t>
+                <t>point_to_string - conversion of EC point to an m-octet string
+                    as specified in <xref target="suites"/></t>
+                <t>string_to_point - conversion of an m-octet string to EC point
+                    as specified in <xref target="suites"/>.
+                    string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
+                <t>rand_string_to_point - conversion of a random 2n-octet string to an
+                    EC point as specified in <xref target="suites"/></t>
+            </list>
+        </t>    
 
           <t>
             Parameters used (the generation of these parameters is specified in <xref target="suites"/>):
@@ -1115,11 +1120,11 @@
         ECVRF_nonce_generation), with the hash function
         SHA-256 as specified in <xref target="RFC6234" /></t>
         
-        <t>The int_to_string function is the I2OSP specified in Section 
-        4.1 of <xref target="RFC8017" />.</t>
+        <t>The int_to_string function is the I2OSP function specified in Section 
+        4.1 of <xref target="RFC8017" />. (This is big endian representation.)</t>
 
-        <t>The string_to_int function is the OS2IP specified in Section 
-        4.2 of <xref target="RFC8017" />.</t>
+        <t>The string_to_int function is the OS2IP function specified in Section 
+        4.2 of <xref target="RFC8017" />. (This is big endian representation.)</t>
 
         <t>
             The point_to_string function is specified in Section 2.3.3 of 
@@ -1163,6 +1168,12 @@
         with dom2(F, C) equal to the empty string and PH(M) equal to h_string. 
         Reduce the output modulo q.</t>
         
+        <t>The int_to_string function as specified in the first paragraph of
+        Section 5.1.2 of <xref target="RFC8032" />. (This is little endian representation.)</t>
+
+        <t>The string_to_int function interprets the string as an integer in little-endian
+       representation.</t>
+                
         <t> The point_to_string function is specified in Section 5.1.2 of <xref target="RFC8032" />. 
         This implies m = 2n = 32.</t>
         
