@@ -242,7 +242,7 @@
     </t>
 
     <t>
-    More percisely, "full uniqueness" states that a computationally-bounded adversary cannot
+    More precisely, "full uniqueness" states that a computationally-bounded adversary cannot
 	choose 
     a VRF public key PK, 
     a VRF input alpha, 
@@ -270,7 +270,7 @@
     even for an adversarial Prover that knows the VRF private key SK.
     </t>
     
-    <t> More percisely, "full collision resistance" states that
+    <t> More precisely, "full collision resistance" states that
         it should be computationally 
         infeasible for an adversary to find two distinct VRF
 	    inputs alpha1 and alpha2 that have the same VRF hash beta, 
@@ -293,7 +293,7 @@
         then beta is indistinguishable from a random value.
     </t>
     
-    <t>  More percisely, suppose the public and private VRF keys (PK, SK) were generated
+    <t>  More precisely, suppose the public and private VRF keys (PK, SK) were generated
 	     in a trustworthy manner.
 	     Pseudorandomness ensures that the VRF hash output beta
          (without its corresponding VRF proof pi) on
@@ -1073,8 +1073,10 @@
         <t> The private key and generation of the secret scalar and the public 
         key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
         
-        <t> The ECVRF_nonce_generation function is as specified in 
-        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.</t>
+        <t> The ECVRF_nonce_generation function as follows.  Perform 
+        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, 
+        with dom2(F, C) equal to the empty string and PH(M) equal to h1. 
+        Reduce the output modulo q.</t>
         
         <t> EC2OSP is specified in Section 5.1.2 of <xref target="RFC8032" />. 
         This implies m = 2n = 32.</t>
@@ -1316,7 +1318,13 @@
     
     </section>
  
-  <section title="Timing attacks">
+  <section title="Side-channel attacks">
+    
+    <t>Side channel attacks on cryptographic primatives are an important issue.
+    Here we discuss only one such side channel:  timing attacks that can 
+    be used to leak information about the VRF input alpha.  Implementers should
+    take care to avoid side-channel attacks that leak information about 
+    the VRF private key SK (and the nonce k used in the ECVRF).</t>
         
     <t>The ECVRF_hash_to_curve_try_and_increment algorithm defined in
     <xref target="ecvrfH2C1" /> SHOULD NOT be used in applications where
@@ -1333,10 +1341,12 @@
     </t>
 
     
-    <t>Meanwhile, ECVRF-ED25519-SHA512-Elligator2 runs in constant time
+    <t>Meanwhile, ECVRF-ED25519-SHA512-Elligator2 runs in time constant in alpha 
     if the implementation of the ECVRF_hash_to_curve function
     specified in <xref target="elligator2"/> also runs in constant time.
     </t>
+    
+    
   </section>
 
 <section title="Proofs Provide No Secrecy for VRF Input">
