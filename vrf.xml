@@ -890,7 +890,7 @@
                         <t>OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet with value 127</t>
                         <t>x_0 = truncated_hash_string[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</t>
                         <t>truncated_hash_string[31] = truncated_hash_string[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</t>
-                        <t>r = point_to_string(truncatedHash) (convert truncatedHash to an integer)</t>
+                        <t>r = string_to_int(truncatedHash)</t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p (the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
                         <t>v_candidate = u * (u^2 + A*u + 1) mod p (evaluate the Montgomery equation for Curve25519)</t>
                         <t anchor="const1">Let e equal the Legendre symbol of v_candidate modulo p</t>
@@ -981,15 +981,15 @@
                     <list style="numbers">
                         <t>pk = EC2OSP(y)</t>
                         <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>hash = Hash(suite || one || pk || alpha_string )</t>
-                        <t>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</t>
+                        <t>hash_string = Hash(suite || one || pk || alpha_string )</t>
+                        <t>t = string_to_int(hash_string)</t>
                         <t>negative_t_squared = -t^2 mod p</t>
                         <t>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</t>
                         <t>if denominator = 0, x = default_x. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
                         <t>y_candidate = x^3 + a*x + b mod p</t>
                         <t>Let e equal the Legendre symbol of y_candidate modulo p</t>
                         <t>If e is equal to 1 then final_x = x; else final_x = negative_t_squared * x mod p (final_x is the x-coordinate of the output)</t>
-                        <t>h = OS2ECP(toString(final_x)</t>
+                        <t>h = OS2ECP(int_to_string(final_x, 2n))</t>
                         <t>hc = h^cofactor</t>
                         <t>Output hc</t>
                     </list>
