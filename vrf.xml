@@ -763,7 +763,7 @@
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve_try_and_increment(suite_string, y, alpha) algorithm
+            The following ECVRF_hash_to_curve_try_and_increment(suite_string, y, alpha_string) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve. 
             </t>
@@ -839,7 +839,7 @@
                     Input:
                     <list>
                         <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
-                        <t>alpha - value to be hashed, an octet string</t>
+                        <t>alpha_string - value to be hashed, an octet string</t>
                         <t>y - public key, an EC point</t>
                     </list>
                 </t>
@@ -870,7 +870,7 @@
                     <list style="numbers">
                         <t>pk = point_to_string(y)</t>
                         <t>one = 0x01 = int_to_string(1, 1), a single octet with value 1 </t>
-                        <t>hash = Hash(suite_string || one || pk || alpha )</t>
+                        <t>hash = Hash(suite_string || one || pk || alpha_string )</t>
                         <t>truncatedHash = hash[0]...hash[31] (first 32 octets of hash)</t>
                         <t>OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet with value 128</t>
                         <t>OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet with value 127</t>
@@ -945,7 +945,7 @@
                     Input:
                     <list>
                         <t>suite - a single octet specifying ECVRF ciphersuite. </t>
-                        <t>alpha - value to be hashed, an octet string</t>
+                        <t>alpha_string - value to be hashed, an octet string</t>
                         <t>y - public key, an EC point</t>
                     </list>
                 </t>
@@ -967,11 +967,11 @@
                     <list style="numbers">
                         <t>pk = EC2OSP(y)</t>
                         <t>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>hash = Hash(suite || one || pk || alpha )</t>
+                        <t>hash = Hash(suite || one || pk || alpha_string )</t>
                         <t>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</t>
                         <t>negative_t_squared = -t^2 mod p</t>
                         <t>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</t>
-                        <t>if denominator = 0, x = 0 [TODO: this won't always work]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
+                        <t>if denominator = 0, x = 0 [TODO: this won't work for every curve -- will work for P256, though]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</t>
                         <t>y_candidate = x^3 + a*x + b mod p</t>
                         <t>Let e equal the Legendre symbol of y_candidate modulo p</t>
                         <t>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</t>

@@ -698,8 +698,8 @@
 <p id="rfc.section.4.p.8">Primitives used: </p>
 
 <ul class="empty">
-<li>I2OSP - Coversion of a nonnegative integer to an octet string as defined in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
-<li>OS2IP - Coversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
+<li>I2OSP - Conversion of a nonnegative integer to an octet string as defined in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
+<li>OS2IP - Conversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
 <li>RSASP1 - RSA signature primitive as defined in Section 5.2.1 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
 <li>RSAVP1 - RSA verification primitive as defined in Section 5.2.2 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
 <li>MGF1 - Mask Generation Function based on a hash function as defined in Section B.2.1 of <a href="#RFC8017" class="xref">[RFC8017]</a> </li>
@@ -800,7 +800,7 @@
 <li>g - generator of group G</li>
 <li>Hash - cryptographic hash function</li>
 <li>hLen - output length in octets of Hash; must be at least 2n</li>
-<li>suite - a single nonzero octet specifying the ECVRF ciphersuite, which determines the above options</li>
+<li>suite_string - a single nonzero octet specifying the ECVRF ciphersuite, which determines the above options</li>
 </ul>
 
 <p> </p>
@@ -809,14 +809,12 @@
 <ul class="empty">
 <li>p^k - When p is an EC point: point multiplication, i.e. k repetitions of the EC group operation applied to the EC point p. When p is an integer: exponentiation </li>
 <li>|| - octet string concatenation</li>
-<li>I2OSP - nonnegative integer conversion to octet string as defined in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a>
+<li>int_to_string(a, len) - conversion of nonnegative integer a to to octet string of length len as specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
+<li>string_to_int(a_string) - coversion of an octet string a_string to a nonnegative integer as specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
+<li>point_to_string - conversion of EC point to an m-octet string as specified in <a href="#suites" class="xref">Section 5.5</a>
 </li>
-<li>OS2IP - Coversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a>
-</li>
-<li>EC2OSP - conversion of EC point to an m-octet string as specified in <a href="#suites" class="xref">Section 5.5</a>
-</li>
-<li>OS2ECP - conversion of an m-octet string to EC point as specified in <a href="#suites" class="xref">Section 5.5</a>.  OS2ECP returns INVALID if the octet string does not convert to a valid EC point.</li>
-<li>RS2ECP - conversion of a random 2n-octet string to an EC point as specified in <a href="#suites" class="xref">Section 5.5</a>
+<li>string_to_point - conversion of an m-octet string to EC point as specified in <a href="#suites" class="xref">Section 5.5</a>.  string_to_point returns INVALID if the octet string does not convert to a valid EC point.</li>
+<li>rand_string_to_point - conversion of a random 2n-octet string to an EC point as specified in <a href="#suites" class="xref">Section 5.5</a>
 </li>
 <li>ECVRF_hash_to_curve - collision resistant hash of strings to an EC point; options described in <a href="#ecvrfH2C" class="xref">Section 5.4.1</a> and specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
 <li>ECVRF_nonce_generation - derives a pseudorandom nonce from SK and the input as part of ECVRF proving.  Specified in <a href="#suites" class="xref">Section 5.5</a>
@@ -840,48 +838,49 @@
 <a href="#rfc.section.5.1">5.1.</a> <a href="#ecvrfprove" id="ecvrfprove">ECVRF Proving</a>
 </h1>
 <p id="rfc.section.5.1.p.1">Note: this function must have the VRF private key SK as input.  Below we make it more efficient by supplying it also with the secret scalar x and the public key y as additional inputs; however, each of these can be computed from SK if desired.  </p>
-<p id="rfc.section.5.1.p.2">ECVRF_prove(y, x, alpha) </p>
+<p id="rfc.section.5.1.p.2">ECVRF_prove(y, x, alpha_string) </p>
 <p id="rfc.section.5.1.p.3">Input: </p>
 
 <ul class="empty">
 <li>SK - VRF private key</li>
 <li>x - VRF secret scalar</li>
 <li>y = g^x - VRF public key</li>
+<li>alpha_string = input alpha, an octet string</li>
 </ul>
 
 <p> </p>
 <p id="rfc.section.5.1.p.4">Output: </p>
 
-<ul class="empty"><li>pi - VRF proof, octet string of length m+3n</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string of length m+3n</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.1.p.5">Steps: </p>
 
 <ol>
-<li>h = ECVRF_hash_to_curve(suite, y, alpha)</li>
-<li>h1 = EC2OSP(h)</li>
+<li>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</li>
+<li>h_string = point_to_string(h)</li>
 <li>gamma = h^x</li>
-<li>k = ECVRF_nonce_generation(SK, h1)</li>
+<li>k = ECVRF_nonce_generation(SK, h_string)</li>
 <li>c = ECVRF_hash_points(h, gamma, g^k, h^k)</li>
 <li>s = (k + c*x) mod q (where * denotes integer multiplication)</li>
-<li>pi = EC2OSP(gamma) || I2OSP(c, n) || I2OSP(s, 2n)</li>
-<li>Output pi</li>
+<li>pi_string = point_to_string(gamma) || int_to_string(c, n) || int_to_string(s, 2n)</li>
+<li>Output pi_string</li>
 </ol>
 
 <p> </p>
 <h1 id="rfc.section.5.2">
 <a href="#rfc.section.5.2">5.2.</a> ECVRF Proof To Hash</h1>
-<p id="rfc.section.5.2.p.1">ECVRF_proof2hash(pi) </p>
+<p id="rfc.section.5.2.p.1">ECVRF_proof2hash(pi_string) </p>
 <p id="rfc.section.5.2.p.2">Input: </p>
 
-<ul class="empty"><li>pi - VRF proof, octet string of length m+3n</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string of length m+3n</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.2.p.3">Output: </p>
 
 <ul class="empty">
 <li>"INVALID", or </li>
-<li>beta - VRF hash output, octet string of length 2n</li>
+<li>beta_string - VRF hash output, octet string of length 2n</li>
 </ul>
 
 <p> </p>
@@ -891,22 +890,22 @@
 <li>D = ECVRF_decode_proof(pi)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
-<li>three = 0x03 = I2OSP(3, 1), a single octet with value 3 </li>
-<li>preBeta = Hash(suite || three || EC2OSP(gamma^cofactor))</li>
-<li>beta = first 2n octets of preBeta</li>
-<li>Output beta</li>
+<li>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </li>
+<li>b_string = Hash(suite_string || three_string || point_to_string(gamma^cofactor))</li>
+<li>beta_string = first 2n octets of b_string</li>
+<li>Output beta_string</li>
 </ol>
 
 <p> </p>
 <h1 id="rfc.section.5.3">
 <a href="#rfc.section.5.3">5.3.</a> ECVRF Verifying</h1>
-<p id="rfc.section.5.3.p.1">ECVRF_verify(y, pi, alpha) </p>
+<p id="rfc.section.5.3.p.1">ECVRF_verify(y, pi_string, alpha_string) </p>
 <p id="rfc.section.5.3.p.2">Input: </p>
 
 <ul class="empty">
 <li>y -  public key, an EC point</li>
-<li>pi - VRF proof, octet string of length m+3n</li>
-<li>alpha - VRF input, octet string</li>
+<li>pi_string - VRF proof, octet string of length m+3n</li>
+<li>alpha_string - VRF input, octet string</li>
 </ul>
 
 <p> </p>
@@ -918,11 +917,11 @@
 <p id="rfc.section.5.3.p.4">Steps: </p>
 
 <ol>
-<li>D = ECVRF_decode_proof(pi)</li>
+<li>D = ECVRF_decode_proof(pi_string)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(gamma, c, s) = D</li>
 <li>u = g^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to g^s and the inverse of y^c)</li>
-<li>h = ECVRF_hash_to_curve(suite, y, alpha)</li>
+<li>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</li>
 <li>v = h^s / gamma^c  (where / again denotes EC point subtraction)</li>
 <li>c' = ECVRF_hash_points(h, gamma, u, v)</li>
 <li>If c and c' are equal, output "VALID"; else output "INVALID" </li>
@@ -939,16 +938,16 @@
 <h1 id="rfc.section.5.4.1.1">
 <a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve_try_and_increment</a>
 </h1>
-<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve_try_and_increment(suite, y, alpha) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
+<p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve_try_and_increment(suite_string, y, alpha_string) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
 <p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09" class="xref">[Icart09]</a>.  </p>
 <p id="rfc.section.5.4.1.1.p.3">However, because the running time of algorithm depends on alpha, this algorithm SHOULD be avoided in applications where it is important that the VRF input alpha remain secret.  </p>
-<p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_try_and_increment(suite, y, alpha) </p>
+<p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_try_and_increment(suite_string, y, alpha_string) </p>
 <p id="rfc.section.5.4.1.1.p.5">Input: </p>
 
 <ul class="empty">
-<li>suite - a single octet specifying ECVRF ciphersuite. </li>
+<li>suite_string - a single octet specifying ECVRF ciphersuite. </li>
 <li>y - public key, an EC point</li>
-<li>alpha - value to be hashed, an octet string</li>
+<li>alpha_string - value to be hashed, an octet string</li>
 </ul>
 
 <p> </p>
@@ -961,15 +960,15 @@
 
 <ol>
 <li>ctr = 0</li>
-<li>pk = EC2OSP(y)</li>
-<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
+<li>pk_string = point_to_string(y)</li>
+<li>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
 <li>h = "INVALID"</li>
 <li>While h is "INVALID" or h is EC point at infinity: <ol style="list-style-type: upper-alpha">
-<li>CTR = I2OSP(ctr, 4)</li>
+<li>ctr_string = int_to_string(ctr, 4)</li>
 <li>ctr = ctr + 1</li>
-<li>hash = Hash(suite || one || pk || alpha || CTR)</li>
-<li>attempted_hash = first 2n octects of hash</li>
-<li>h = RS2ECP(attempted_hash)</li>
+<li>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</li>
+<li>attempted_hash_string = first 2n octects of hash_string</li>
+<li>h = rand_string_to_point(attempted_hash_string)</li>
 <li>If h is not "INVALID" and cofactor &gt; 1, set h = h^cofactor</li>
 </ol>
 </li>
@@ -980,13 +979,13 @@
 <h1 id="rfc.section.5.4.1.2">
 <a href="#rfc.section.5.4.1.2">5.4.1.2.</a> <a href="#elligator2" id="elligator2">ECVRF_hash_to_curve_elligator2_25519</a>
 </h1>
-<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
+<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite_string, y, alpha) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
 <p id="rfc.section.5.4.1.2.p.2">ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha) </p>
 <p id="rfc.section.5.4.1.2.p.3">Input: </p>
 
 <ul class="empty">
-<li>suite - a single octet specifying ECVRF ciphersuite. </li>
-<li>alpha - value to be hashed, an octet string</li>
+<li>suite_string - a single octet specifying ECVRF ciphersuite. </li>
+<li>alpha_string - value to be hashed, an octet string</li>
 <li>y - public key, an EC point</li>
 </ul>
 
@@ -1013,12 +1012,12 @@
 <p id="rfc.section.5.4.1.2.p.7">Steps: </p>
 
 <ol>
-<li>pk = EC2OSP(y)</li>
-<li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>hash = Hash(suite || one || pk || alpha )</li>
+<li>pk = point_to_string(y)</li>
+<li>one = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
+<li>hash = Hash(suite_string || one || pk || alpha_string )</li>
 <li>truncatedHash = hash[0]...hash[31] (first 32 octets of hash)</li>
-<li>OneTwentyEight = 0x80 = I2OSP(128, 1), a single octet with value 128</li>
-<li>OneTwentySeven = 0x7F = I2OSP(127, 1), a single octet with value 127</li>
+<li>OneTwentyEight = 0x80 = int_to_string(128, 1), a single octet with value 128</li>
+<li>OneTwentySeven = 0x7F = int_to_string(127, 1), a single octet with value 127</li>
 <li>x_0 = truncatedHash[31] &amp; OneTwentyEight, where &amp; denotes the bit-wise AND (let x_0 equal highest-order bit of octet 31 of truncated hash)</li>
 <li>truncatedHash[31] = truncatedHash[31] &amp; OneTwentySeven (clear the high-order bit of octet 31 of truncatedHash)</li>
 <li>r = little-endian-to-integer(truncatedHash) (convert truncatedHash to an integer, using little-endian encoding)</li>
@@ -1035,7 +1034,7 @@
 </ol>
 <p> </p>
 </li>
-<li>h = OS2ECP(hEncoded)</li>
+<li>h = string_to_point(hEncoded)</li>
 <li>hc = h^cofactor</li>
 <li>Output hc</li>
 </ol>
@@ -1069,7 +1068,7 @@
 
 <ul class="empty">
 <li>suite - a single octet specifying ECVRF ciphersuite. </li>
-<li>alpha - value to be hashed, an octet string</li>
+<li>alpha_string - value to be hashed, an octet string</li>
 <li>y - public key, an EC point</li>
 </ul>
 
@@ -1089,11 +1088,11 @@
 <ol>
 <li>pk = EC2OSP(y)</li>
 <li>one = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>hash = Hash(suite || one || pk || alpha )</li>
+<li>hash = Hash(suite || one || pk || alpha_string )</li>
 <li>t = big-endian-to-integer(hash) (convert hash to an integer, using big-endian encoding)</li>
 <li>negative_t_squared = -t^2 mod p</li>
 <li>denominator = negative_t_squared^2 + negative_t_squared mod p (denominator is t^4-t^2 mod p)</li>
-<li>if denominator = 0, x = 0 [TODO: this won't always work]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
+<li>if denominator = 0, x = 0 [TODO: this won't work for every curve -- will work for P256, though]. Else x = (-b/a) * (1 + (1/denominator)) mod p.</li>
 <li>y_candidate = x^3 + a*x + b mod p</li>
 <li>Let e equal the Legendre symbol of y_candidate modulo p</li>
 <li>If e is equal to 1 then final_x = x; else final_x = negative_t_square * x mod p (final_x is the x-coordinate of the output)</li>
@@ -1125,10 +1124,10 @@
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfHashPoints" id="ecvrfHashPoints">ECVRF Hash Points</a>
 </h1>
-<p id="rfc.section.5.4.2.p.1">ECVRF_hash_points(p_1, p_2, ..., p_j) </p>
+<p id="rfc.section.5.4.2.p.1">ECVRF_hash_points(p1, p2, ..., pm) </p>
 <p id="rfc.section.5.4.2.p.2">Input: </p>
 
-<ul class="empty"><li>p_i - EC point in G</li></ul>
+<ul class="empty"><li>pj - EC point in G</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.2.p.3">Output: </p>
@@ -1139,22 +1138,22 @@
 <p id="rfc.section.5.4.2.p.4">Steps: </p>
 
 <ol>
-<li>two = 0x02 = I2OSP(2, 1), a single octet with value 2 </li>
-<li>Initialize str = suite || two </li>
-<li>for p_i in [p_1, p_2, ... p_j]: <br>str = str || EC2OSP(p_i) </li>
-<li>c1 = Hash(str)</li>
-<li>c2 = first n octets of c1</li>
-<li>c = OS2IP(c2)</li>
+<li>two_string = 0x02 = int_to_string(2, 1), a single octet with value 2 </li>
+<li>Initialize str = suite_string || two_string </li>
+<li>for pj in [p1, p2, ... pm]: <br>str = str || point_to_string(pj) </li>
+<li>c_string = Hash(str)</li>
+<li>truncated_c_string = first n octets of c_string</li>
+<li>c = string_to_int(truncated_c_string)</li>
 <li>Output c</li>
 </ol>
 
 <p> </p>
 <h1 id="rfc.section.5.4.3">
 <a href="#rfc.section.5.4.3">5.4.3.</a> ECVRF Decode Proof</h1>
-<p id="rfc.section.5.4.3.p.1">ECVRF_decode_proof(pi) </p>
+<p id="rfc.section.5.4.3.p.1">ECVRF_decode_proof(pi_string) </p>
 <p id="rfc.section.5.4.3.p.2">Input: </p>
 
-<ul class="empty"><li>pi - VRF proof, octet string (m+3n octets)</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string (m+3n octets)</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.3.p.3">Output: </p>
@@ -1170,11 +1169,11 @@
 <p id="rfc.section.5.4.3.p.4">Steps: </p>
 
 <ol>
-<li>let gamma', c', s' be pi split after m-th and m+n-th octet</li>
-<li>gamma = OS2ECP(gamma')</li>
+<li>let gamma_string, c_string, s_string be pi_string split after m-th and m+n-th octet</li>
+<li>gamma = string_to_point(gamma_string)</li>
 <li>if gamma = "INVALID" output "INVALID" and stop.</li>
-<li>c = OS2IP(c')</li>
-<li>s = OS2IP(s')</li>
+<li>c = string_to_int(c_string)</li>
+<li>s = string_to_int(s_string)</li>
 <li>Output gamma, c, and s</li>
 </ol>
 
@@ -1185,14 +1184,16 @@
 <p id="rfc.section.5.5.p.1">This document defines ECVRF-P256-SHA256 as follows: </p>
 
 <ul>
-<li>suite = 0x01 = I2OSP(1, 1). </li>
+<li>suite_string = 0x01 = int_to_string(1, 1). </li>
 <li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, g, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
-<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (omitting Step a and using h1 that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
+<li>The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (omitting Step a and using h_string that is provided as input to ECVRF_nonce_generation), with the hash function SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>
 </li>
-<li>EC2OSP is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
-<li>OS2ECP is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
-<li>RS2ECP(h) = OS2ECP(0x02 || h) (where 0x02 is a single octet with value 2, 0x02=I2OSP(2, 1)). The input h is a 32-octet string and the output is either an EC point or "INVALID". </li>
+<li>The int_to_string function is the I2OSP specified in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a>.</li>
+<li>The string_to_int function is the OS2IP specified in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a>.</li>
+<li>The point_to_string function is specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  </li>
+<li>The string_to_point function is specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>.  </li>
+<li>rand_string_to_point(h_string) = string_to_point(0x02 || h_string) (where 0x02 is a single octet with value 2, 0x02=int_to_string(2, 1)). The input h is a 32-octet string and the output is either an EC point or "INVALID". </li>
 <li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -1201,14 +1202,14 @@
 <p id="rfc.section.5.5.p.2">This document defines ECVRF-ED25519-SHA512 as follows: </p>
 
 <ul>
-<li>suite = 0x02 = I2OSP(2, 1). </li>
+<li>suite_string = 0x02 = int_to_string(2, 1). </li>
 <li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
 <li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
-<li>The ECVRF_nonce_generation function as follows.  Perform <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h1.  Reduce the output modulo q.</li>
-<li>EC2OSP is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.</li>
-<li>OS2ECP is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
-<li>RS2ECP is equivalent to OS2ECP.</li>
+<li>The ECVRF_nonce_generation function as follows.  Perform <a href="#RFC8032" class="xref">[RFC8032]</a> Section 5.1.6 Steps 1-2, with dom2(F, C) equal to the empty string and PH(M) equal to h_string.  Reduce the output modulo q.</li>
+<li>The point_to_string function is specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.</li>
+<li>The string_to_point function is specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  </li>
+<li>rand_string_to_point function is equivalent to the string_to_point function.</li>
 <li>The hash function Hash is SHA-512 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -1216,7 +1217,7 @@
 <p> </p>
 <p id="rfc.section.5.5.p.3">This document defines ECVRF-ED25519-SHA512-Elligator2 as follows: </p>
 
-<ul><li>This ciphersuite is identical to ECVRF-ED25519-SHA512 except that the ECVRF_hash_to_curve function is as specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> and suite = 0x03 = I2OSP(3, 1).  </li></ul>
+<ul><li>This ciphersuite is identical to ECVRF-ED25519-SHA512 except that the ECVRF_hash_to_curve function is as specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> and suite_string = 0x03 = int_to_string(3, 1).  </li></ul>
 
 <p> </p>
 <h1 id="rfc.section.5.6">
@@ -1244,7 +1245,7 @@
 <p id="rfc.section.5.6.1.p.4">Steps: </p>
 
 <ol>
-<li>y = OS2ECP(PK)</li>
+<li>y = string_to_point(PK)</li>
 <li>If y is "INVALID", output "INVALID" and stop</li>
 <li>If y^cofactor is the EC point at infinty, output "INVALID" and stop</li>
 <li>Output y</li>
@@ -1298,7 +1299,7 @@
 <h1 id="rfc.section.7.6">
 <a href="#rfc.section.7.6">7.6.</a> <a href="#prehash" id="prehash">Prehashing</a>
 </h1>
-<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public key are included indirectly into subsequent hashes.</p>
+<p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point h becomes the representative of alpha thereafter. Note that the suite_string octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator g) and the public key are included indirectly into subsequent hashes.</p>
 <h1 id="rfc.section.7.7">
 <a href="#rfc.section.7.7">7.7.</a> Hash function domain separation and future-proofing</h1>
 <p id="rfc.section.7.7.p.1">Hashing is used for four different purposes in ECVRF (namely, in hash_to_curve, nonce_generation, hash_points, and proof2hash). The theoretical analysis assumes each of these four functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because: </p>
@@ -1309,7 +1310,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.7.7.p.2">If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document, then, to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant, they should specify a different suite constant. This way, the inputs to the hash_to_curve hash function used in producing h are guaranteed to be different; since all the other hashing done by the prover depends on h, inputs all the hash functions used by the prover will also be different as long as hash_to_curve is collision resistant.  </p>
+<p id="rfc.section.7.7.p.2">If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document, then, to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant, they should specify a different suite_string constant. This way, the inputs to the hash_to_curve hash function used in producing h are guaranteed to be different; since all the other hashing done by the prover depends on h, inputs all the hash functions used by the prover will also be different as long as hash_to_curve is collision resistant.  </p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> Change Log</h1>
 <p id="rfc.section.8.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.  </p>
@@ -1318,7 +1319,7 @@
 <ul class="empty">
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
-<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed g and PK=y from ECVRF_hash_points because they are already present via h, which is computed via hash_to_curve using the suite (which identifies g) and y.</li>
+<li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed g and PK=y from ECVRF_hash_points because they are already present via h, which is computed via hash_to_curve using the suite_string (which identifies g) and y.</li>
 </ul>
 
 <p> </p>
