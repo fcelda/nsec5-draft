@@ -204,13 +204,13 @@
    The VRFs defined in this document allow anyone to deterministically
    obtain the VRF hash output beta directly from the proof value pi as
    <list>
-   <t> beta = VRF_proof2hash(pi)</t>
+   <t> beta = VRF_proof_to_hash(pi)</t>
    </list>
    Notice that this means that 
    <list>
-   <t> VRF_hash(SK, alpha) = VRF_proof2hash(VRF_prove(SK, alpha))</t>
+   <t> VRF_hash(SK, alpha) = VRF_proof_to_hash(VRF_prove(SK, alpha))</t>
    </list>
-   and thus this document will specify VRF_prove and VRF_proof2hash
+   and thus this document will specify VRF_prove and VRF_proof_to_hash
    rather than VRF_hash.
    </t>
    
@@ -221,8 +221,8 @@
    <list>
    <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
-   that outputs VALID if beta=VRF_proof2hash(pi) is the correct 
-   VRF hash of alpha under key PK, and outputs INVALID otherwise.
+   that outputs VALID if pi was correctly produced,
+   and outputs INVALID otherwise.
    </t>   
    </section>
    
@@ -246,11 +246,10 @@
 	choose 
     a VRF public key PK, 
     a VRF input alpha, 
-    two different VRF hash outputs beta1 and beta2, 
-    and two proofs pi1 and pi2 such that 
+    and two proofs pi1 and pi2 such that
     VRF_verify(PK, alpha, pi1)
     and VRF_verify(PK, alpha, pi2)
-	both output VALID.
+	both output VALID, and VRF_proof_to_hash(pi1) is not equal to VRF_proof_to_hash(pi2).
     </t>
     
     <t>
@@ -331,7 +330,7 @@
 	if this party does not know the private VRF key SK.
 	Such a party can easily distinguish beta from a random value by
     checking whether VRF_verify(PK, alpha, pi) returns "VALID" and
-    beta = VRF_proof2hash(pi).
+    beta = VRF_proof_to_hash(pi).
 	</t>
 
     
@@ -354,7 +353,7 @@
    can satisfy this property. 
    Preliminary analysis suggests that acheiving this property
    requires ECVRF verifiers to run an VRF_validate_key() key function upon receipt
-   of VRF public keys and the proof2hash function to be modified to take in
+   of VRF public keys and the proof_to_hash function to be modified to take in
    (Gamma, beta, pk) rather than just Gamma.]</t>
       
    <t>Pseudorandomness, as defined in <xref target="pseudodef"/>, does not 
@@ -416,14 +415,8 @@
             <list>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of hash function Hash</t>
-            </list>
-        </t>
-
-        <t>
-            Constraints on options:
-            <list>
-                <t>Cryptographic security of Hash is at least as high as the 
-                cryptographic security level of the RSA key.</t>
+                <t>suite_string - a single nonzero octet specifying the RSAVRF ciphersuite, which determines the above options</t>
+                <t>[TODO: what should it be? Should we also hash PK and key length into the MGF1 hash?]</t>
             </list>
         </t>
 
@@ -447,8 +440,11 @@
                     Section 5.2.2 of <xref target="RFC8017" />
                 </t>
                 <t>
-                    MGF1 - Mask Generation Function based on a hash function as defined in
+                    MGF1 - Mask Generation Function based on the hash function Hash as defined in
                     Section B.2.1 of <xref target="RFC8017" />
+                </t>
+                <t>
+                    || - octet string concatenation
                 </t>
             </list>
         </t>
@@ -462,68 +458,70 @@
                 Input:
                 <list>
                     <t>K - RSA private key</t>
-                    <t>alpha - VRF hash input, an octet string</t>
+                    <t>alpha_string - VRF hash input, an octet string</t>
                 </list>
             </t>
 
             <t>
                 Output:
                 <list>
-                    <t>pi - proof, an octet string of length k</t>
+                    <t>pi_string - proof, an octet string of length k</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>EM = MGF1(alpha, k - 1)</t>
+                    <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
+                    <t>EM = MGF1(suite_string || one_string || alpha_string, k - 1)</t>
                     <t>m = OS2IP(EM)</t>
                     <t>s = RSASP1(K, m)</t>
-                    <t>pi = I2OSP(s, k)</t>
-                    <t>Output pi</t>
+                    <t>pi_string = I2OSP(s, k)</t>
+                    <t>Output pi_string</t>
                 </list>
             </t>
         </section>
         
         <section title="RSA-FDH-VRF Proof To Hash">
             <t>
-                RSAFDHVRF_proof2hash(pi)
+                RSAFDHVRF_proof_to_hash(pi)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>pi - proof, an octet string of length k</t>
+                    <t>pi_string - proof, an octet string of length k</t>
                 </list>
             </t>
             
             <t>
                 Output:
                 <list>
-                    <t>beta - VRF hash output, an octet string of length hLen</t>
+                    <t>beta_string - VRF hash output, an octet string of length hLen</t>
                 </list>
             </t>
 
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>beta = Hash(pi)</t>
-                    <t>Output beta</t>
+                    <t>two_string = 0x02 = I2OSP(2, 1), a single octet with value 2</t>
+                    <t>beta_string = Hash(suite_string || two_string || pi)</t>
+                    <t>Output beta_string</t>
                 </list>
             </t>
         </section>
 
         <section title="RSA-FDH-VRF Verifying">
             <t>
-                RSAFDHVRF_verify((n, e), alpha, pi)
+                RSAFDHVRF_verify((n, e), alpha_string, pi_string)
             </t>
 
             <t>
                 Input:
                 <list>
                     <t>(n, e) - RSA public key</t>
-                    <t>alpha - VRF hash input, an octet string</t>
-                    <t>pi - proof to be verified, an octet string of length n</t>
+                    <t>alpha_string - VRF hash input, an octet string</t>
+                    <t>pi_string - proof to be verified, an octet string of length n</t>
                 </list>
             </t>
 
@@ -537,10 +535,11 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>s = OS2IP(pi)</t>
+                    <t>s = OS2IP(pi_string)</t>
                     <t>m = RSAVP1((n, e), s)</t>
                     <t>EM = I2OSP(m, k - 1)</t>
-                    <t>EM' = MGF1(alpha, k - 1)</t>
+                    <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
+                    <t>EM' = MGF1(suite_string || one_string || alpha_string, k - 1)</t>
                     <t>
                         If EM and EM' are equal, output "VALID";
                         else output "INVALID".
@@ -572,11 +571,11 @@
             Fixed options (specified in <xref target="suites"/>):
             <list>
                 <t>F - finite field</t>
-                <t>2n - length, in octets, of a field element in F; must be even</t>
+                <t>2n - length, in octets, of a field element in F, rounded up to the nearest even integer</t>
                 <t>E - elliptic curve (EC) defined over F</t>
                 <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
                 <t>G - subgroup of E of large prime order</t>
-                <t>q - prime order of group G; must be less than 2^{2n}</t>
+                <t>q - prime order of group G; must be less than 2^{16n}</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>B - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
@@ -692,7 +691,7 @@
 
         <section title="ECVRF Proof To Hash">
             <t>
-                ECVRF_proof2hash(pi_string)
+                ECVRF_proof_to_hash(pi_string)
             </t>
             <t>
                 Input:
@@ -914,7 +913,8 @@
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
                         </t>
-                        <t>H = string_to_point(h_string)</t>
+                        <t>H = string_to_point(h_string)
+                        <vspace/> (this call to string_to_point will not return INVALID by correctness of the Elligator2 method)</t>
                         <t>Set H = cofactor * H</t>
                         <t>Output H</t>
                     </list>
@@ -1005,7 +1005,8 @@
                         <vspace/>(see note below on how to compute it)</t>
                         <t>If e is equal to 1 then final_x = x; else final_x = r * x mod p
                             <vspace/>(final_x is the x-coordinate of the output; see note below on how to compute it)</t>
-                        <t>H = arbitrary_string_to_point(int_to_string(final_x, 2n))</t>
+                        <t>H = arbitrary_string_to_point(int_to_string(final_x, 2n))
+                            <vspace/> (this call to arbitrary_string_to_point will not return INVALID by correctness of the Simple SWU method)</t>
                         <t>If cofactor > 1, set H = cofactor * H</t>
                         <t>Output H</t>
                     </list>
@@ -1046,6 +1047,62 @@
                 
             </section>
             
+        </section>
+        <section title="ECVRF Nonce Generation" anchor="ecvrfNonceGeneration">
+            <section title = "ECVRF Nonce Generation From RFC 6979" anchor="nonceP256">
+                
+                <t>
+                    ECVRF_nonce_generation_RFC6979(SK, h_string)
+                </t>
+                <t>
+                    Input:
+                    <list>
+                        <t>SK - an ECVRF secret key</t>
+                        <t>h_string - an octet string</t>
+                    </list>
+                </t>
+                <t>
+                    Output:
+                    <list>
+                        <t>k - an integer between 1 and q-1</t>
+                    </list>
+                </t>
+                
+                <t>
+                    The ECVRF_nonce_generation function is as specified in <xref target="RFC6979"/> Section 3.2 Steps b-h
+                    (omitting Step a and using h_1=h_string; and omitting the "suitable for DSA or ECDSA" check in step h.3), with the hash function H = Hash, its output length hlen = hLen*8, the secret key x = the VRF secret scalar x, the prime q same as in this specification, and all the other values and primitives as defined in <xref target="RFC6979"/>.
+                </t>
+            </section>
+            
+            <section title = "ECVRF Nonce Generation From RFC 8032" anchor="nonce25519">
+
+                <t>
+                    ECVRF_nonce_generation_RFC8032(SK, h_string)
+                </t>
+                <t>
+                    Input:
+                    <list>
+                        <t>SK - an ECVRF secret key</t>
+                        <t>h_string - an octet string</t>
+                    </list>
+                </t>
+                <t>
+                    Output:
+                    <list>
+                        <t>k - an integer between 0 and q-1</t>
+                    </list>
+                </t>
+                
+                <t>
+                    Steps:
+                    <list style="numbers">
+                        <t>hashed_sk_string = Hash (SK)</t>
+                        <t>truncated_hashed_sk_string = hashed_sk_string[32]...hashed_sk_string[63]</t>
+                        <t>k_string = Hash(truncated_hashed_sk_string || h_string)</t>
+                        <t>k = string_to_int(k_string) mod q</t>
+                    </list>
+                </t>
+            </section>
         </section>
 
         <section title="ECVRF Hash Points" anchor="ecvrfHashPoints">
@@ -1140,11 +1197,7 @@
             correspond to in n, G, d, and Q in Section 3.2.1 of <xref target="SECG1" />).
             In this ciphersuite, the secret scalar x is equal to the private key SK.
         </t>
-        <t> The ECVRF_nonce_generation function is as specified in 
-        <xref target="RFC6979" /> Section 3.2 Steps b-h 
-        (omitting Step a and using h_string that is provided as input to 
-        ECVRF_nonce_generation), with the hash function
-        SHA-256 as specified in <xref target="RFC6234" /></t>
+        <t> The ECVRF_nonce_generation function is as specified in <xref target="nonceP256" />.</t>
         
         <t>The int_to_string function is the I2OSP function specified in Section 
         4.1 of <xref target="RFC8017" />. (This is big endian representation.)</t>
@@ -1184,10 +1237,21 @@
         </list>
         </t>
         
+        <t>This document defines ECVRF-P256-SHA256-SWU as follows:
+            
+            <list style="symbols">
+                <t> This ciphersuite is identical to ECVRF-P256-SHA256 except that
+                    the ECVRF_hash_to_curve function is as specified in <xref target="SimpleSWU"/> and
+                    suite_string = 0x02 = int_to_string(2, 1).
+                </t>
+            </list>
+        </t>
+
+        
         <t>This document defines ECVRF-ED25519-SHA512 as follows:
         <list style="symbols">
         <t>
-        suite_string = 0x02 = int_to_string(2, 1). </t>
+        suite_string = 0x03 = int_to_string(3, 1). </t>
         <t>
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
@@ -1197,11 +1261,8 @@
         <t> The private key and generation of the secret scalar and the public 
         key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
         
-        <t> The ECVRF_nonce_generation function as follows.  Perform 
-        <xref target="RFC8032" /> Section 5.1.6 Steps 1-2, 
-        with dom2(F, C) equal to the empty string and PH(M) equal to h_string. 
-        Reduce the output modulo q.</t>
-        
+        <t> The ECVRF_nonce_generation function is as specified in <xref target="nonce25519" />.</t>
+
         <t>The int_to_string function as specified in the first paragraph of
         Section 5.1.2 of <xref target="RFC8032" />. (This is little endian representation.)</t>
 
@@ -1241,7 +1302,7 @@
         <list style="symbols">
         <t> This ciphersuite is identical to ECVRF-ED25519-SHA512 except that
         the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/> and 
-        suite_string = 0x03 = int_to_string(3, 1).
+        suite_string = 0x04 = int_to_string(4, 1).
         </t>
         </list>
         </t>
@@ -1520,23 +1581,24 @@
  
  
  <section title="Hash function domain separation and future-proofing">
-     
      <t>
-         Hashing is used for four different purposes in ECVRF (namely, in hash_to_curve, nonce_generation, hash_points, and proof2hash). The
-         theoretical analysis assumes each of these four functions is a separate random oracle. 
+         Hashing is used for different purposes in the two VRFs (namely, in the RSA-FDH-VRF, in MGF1 and in proof_to_hash; in the ECVRF, in hash_to_curve, nonce_generation, hash_points, and proof_to_hash). The
+         theoretical analysis assumes each of these functions is a separate random oracle.
          This analysis still holds even if the same hash function is used, as long as the four 
          queries made to the hash function for a given SK and alpha are overwhelmingly unlikely 
          to equal each other or to any queries made to the hash function for the same SK and 
          different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
           <t>inputs to the hash function used during nonce_generation are unlikely to equal 
-          to inputs given to hash_to_curve, proof2hash, and hash_points. This
+          to inputs given to hash_to_curve, proof_to_hash, and hash_points. This
           follows since nonce_generation inputs a secret to the hash function that is not used by 
           honest parties as input to any other hash function, and is not available to the adversary</t>
           <t>the second octet of the input to the hash function used in 
-          hash_to_curve, proof2hash, and 
+          hash_to_curve, proof_to_hash, and
           hash_points are all different</t>
          </list>
+         It is also the case for the RSA-FDH-VRF ciphersuites defined in this document, because the second octets
+         of the input to the hash function used in MGF1 and in proof_to_hash are different.
      </t>
      
      <t>If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document,
@@ -1575,7 +1637,7 @@
                 </t>
                 <t>
                     draft-goldbe-vrf-01 - Fixed ECVRF to work when cofactor > 1.  
-                    Changed ECVRF_proof2hash(pi) so that it outputs a value raised
+                    Changed ECVRF_proof_to_hash(pi) so that it outputs a value raised
                     to the cofactor and then processed by the cryptographic hash function Hash. 
                     Included the VRF public key Y as input to the hash function
                     ECVRF_hash_to_curve1.
