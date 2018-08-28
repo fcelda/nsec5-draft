@@ -321,8 +321,8 @@ Internet-Draft                     VRF                       August 2018
    ECVRF scheme can satisfy this property.  Preliminary analysis
    suggests that acheiving this property requires ECVRF verifiers to run
    an VRF_validate_key() key function upon receipt of VRF public keys
-   and the proof2hash function to be modified to take in (gamma, beta,
-   pk) rather than just gamma.]
+   and the proof2hash function to be modified to take in (Gamma, beta,
+   pk) rather than just Gamma.]
 
    Pseudorandomness, as defined in Section 3.3, does not hold if the VRF
    keys were generated adversarially.
@@ -536,9 +536,7 @@ Internet-Draft                     VRF                       August 2018
 
    Notation and primitives used:
 
-      p^k - When p is an EC point: point multiplication, i.e. k
-      repetitions of the EC group operation applied to the EC point p.
-      When p is an integer: exponentiation
+      a^b - exponentiation
 
       || - octet string concatenation
 
@@ -554,6 +552,8 @@ Internet-Draft                     VRF                       August 2018
 
    Type conversions:
 
+      int_to_string(a, len) - conversion of nonnegative integer a to to
+      octet string of length len as specified in Section 5.5.
 
 
 
@@ -561,9 +561,6 @@ Goldberg, et al.        Expires February 28, 2019              [Page 10]
 
 Internet-Draft                     VRF                       August 2018
 
-
-      int_to_string(a, len) - conversion of nonnegative integer a to to
-      octet string of length len as specified in Section 5.5.
 
       string_to_int(a_string) - conversion of an octet string a_string
       to a nonnegative integer as specified in Section 5.5.
@@ -595,21 +592,24 @@ Internet-Draft                     VRF                       August 2018
          Note: depending on the ciphersuite used, the VRF secret scalar
          may be equal to SK; else, it is derived from SK
 
-      y = B^x - VRF public key, an EC point
+      Y = x*B - VRF public key, an EC point
 
 5.1.  ECVRF Proving
 
    Note: this function must have the VRF private key SK as input.  Below
    we make it more efficient by supplying it also with the secret scalar
-   x and the public key y as additional inputs; however, each of these
+   x and the public key Y as additional inputs; however, each of these
    can be computed from SK if desired.
 
-   ECVRF_prove(y, x, alpha_string)
+   ECVRF_prove(Y, x, alpha_string)
 
    Input:
 
       SK - VRF private key
 
+      x - VRF secret scalar
+
+      Y = x*B - VRF public key
 
 
 
@@ -617,10 +617,6 @@ Goldberg, et al.        Expires February 28, 2019              [Page 11]
 
 Internet-Draft                     VRF                       August 2018
 
-
-      x - VRF secret scalar
-
-      y = B^x - VRF public key
 
       alpha_string = input alpha, an octet string
 
@@ -630,19 +626,19 @@ Internet-Draft                     VRF                       August 2018
 
    Steps:
 
-   1.  h = ECVRF_hash_to_curve(suite_string, y, alpha_string)
+   1.  H = ECVRF_hash_to_curve(suite_string, Y, alpha_string)
 
-   2.  h_string = point_to_string(h)
+   2.  h_string = point_to_string(H)
 
-   3.  gamma = h^x
+   3.  Gamma = x*H
 
    4.  k = ECVRF_nonce_generation(SK, h_string)
 
-   5.  c = ECVRF_hash_points(h, gamma, B^k, h^k)
+   5.  c = ECVRF_hash_points(H, Gamma, k*b, k*H)
 
-   6.  s = (k + c*x) mod q (where * denotes integer multiplication)
+   6.  s = (k + c*x) mod q
 
-   7.  pi_string = point_to_string(gamma) || int_to_string(c, n) ||
+   7.  pi_string = point_to_string(Hamma) || int_to_string(c, n) ||
        int_to_string(s, 2n)
 
    8.  Output pi_string
@@ -667,6 +663,10 @@ Internet-Draft                     VRF                       August 2018
 
    2.  If D is "INVALID", output "INVALID" and stop
 
+   3.  (Gamma, c, s) = D
+
+
+
 
 
 Goldberg, et al.        Expires February 28, 2019              [Page 12]
@@ -674,13 +674,11 @@ Goldberg, et al.        Expires February 28, 2019              [Page 12]
 Internet-Draft                     VRF                       August 2018
 
 
-   3.  (gamma, c, s) = D
-
    4.  three_string = 0x03 = int_to_string(3, 1), a single octet with
        value 3
 
    5.  b_string = Hash(suite_string || three_string ||
-       point_to_string(gamma^cofactor))
+       point_to_string(cofactor * Gamma))
 
    6.  beta_string = b_string[0]...b_string[2n-1] (first 2n octets of
        b_string)
@@ -689,11 +687,11 @@ Internet-Draft                     VRF                       August 2018
 
 5.3.  ECVRF Verifying
 
-   ECVRF_verify(y, pi_string, alpha_string)
+   ECVRF_verify(Y, pi_string, alpha_string)
 
    Input:
 
-      y - public key, an EC point
+      Y - public key, an EC point
 
       pi_string - VRF proof, octet string of length m+3n
 
@@ -709,18 +707,20 @@ Internet-Draft                     VRF                       August 2018
 
    2.  If D is "INVALID", output "INVALID" and stop
 
-   3.  (gamma, c, s) = D
+   3.  (Gamma, c, s) = D
 
-   4.  h = ECVRF_hash_to_curve(suite_string, y, alpha_string)
+   4.  H = ECVRF_hash_to_curve(suite_string, Y, alpha_string)
 
-   5.  u = B^s / y^c (where / denotes EC point subtraction, i.e. the
-       group operation applied to B^s and the inverse of y^c)
+   5.  U = s*B - c*Y
 
-   6.  v = h^s / gamma^c (where / again denotes EC point subtraction)
+   6.  V = s*H - c*Gamma
 
-   7.  c' = ECVRF_hash_points(h, gamma, u, v)
+   7.  c' = ECVRF_hash_points(H, Gamma, U, V)
 
    8.  If c and c' are equal, output "VALID"; else output "INVALID"
+
+
+
 
 
 
@@ -735,7 +735,7 @@ Internet-Draft                     VRF                       August 2018
 5.4.1.  ECVRF Hash To Curve
 
    The ECVRF_hash_to_curve algorithm takes in the VRF input alpha and
-   converts it to h, an EC point in G.  This algorithm is the only place
+   converts it to H, an EC point in G.  This algorithm is the only place
    alpha is used in the proving and verfying.  See Section 7.6 for
    further discussion.
 
@@ -744,38 +744,38 @@ Internet-Draft                     VRF                       August 2018
 
 5.4.1.1.  ECVRF_hash_to_curve_try_and_increment
 
-   The following ECVRF_hash_to_curve_try_and_increment(suite_string, y,
+   The following ECVRF_hash_to_curve_try_and_increment(suite_string, Y,
    alpha_string) algorithm implements ECVRF_hash_to_curve in a simple
    and generic way that works for any elliptic curve.
 
-   The running time of this algorithm depends on alpha.  For the
+   The running time of this algorithm depends on alpha_string.  For the
    ciphersuites specified in Section 5.5, this algorithm is expected to
    find a valid curve point after approximately two attempts (i.e., when
    ctr=1) on average.  See also [Icart09].
 
-   However, because the running time of algorithm depends on alpha, this
-   algorithm SHOULD be avoided in applications where it is important
-   that the VRF input alpha remain secret.
+   However, because the running time of algorithm depends on
+   alpha_string, this algorithm SHOULD be avoided in applications where
+   it is important that the VRF input alpha remain secret.
 
-   ECVRF_hash_to_try_and_increment(suite_string, y, alpha_string)
+   ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string)
 
    Input:
 
       suite_string - a single octet specifying ECVRF ciphersuite.
 
-      y - public key, an EC point
+      Y - public key, an EC point
 
       alpha_string - value to be hashed, an octet string
 
    Output:
 
-      h - hashed value, a finite EC point in G
+      H - hashed value, a finite EC point in G
 
    Steps:
 
    1.  ctr = 0
 
-   2.  pk_string = point_to_string(y)
+   2.  pk_string = point_to_string(Y)
 
 
 
@@ -789,9 +789,9 @@ Internet-Draft                     VRF                       August 2018
    3.  one_string = 0x01 = int_to_string(1, 1), a single octet with
        value 1
 
-   4.  h = "INVALID"
+   4.  H = "INVALID"
 
-   5.  While h is "INVALID" or h is EC point at infinity:
+   5.  While H is "INVALID" or H is EC point at infinity:
 
        A.  ctr_string = int_to_string(ctr, 4)
 
@@ -803,19 +803,19 @@ Internet-Draft                     VRF                       August 2018
        D.  attempted_hash_string = hash_string[0]...hash_string[2n-1]
            (first 2n octects of hash_string)
 
-       E.  h = arbitrary_string_to_point(attempted_hash_string)
+       E.  H = arbitrary_string_to_point(attempted_hash_string)
 
-       F.  If h is not "INVALID" and cofactor > 1, set h = h^cofactor
+       F.  If H is not "INVALID" and cofactor > 1, set H = cofactor * H
 
-   6.  Output h
+   6.  Output H
 
 5.4.1.2.  ECVRF_hash_to_curve_elligator2_25519
 
-   The following ECVRF_hash_to_curve_elligator2_25519(suite_string, y,
-   alpha) algorithm implements ECVRF_hash_to_curve using the elligator2
-   algorithm exclusively for Curve25519.
+   The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y,
+   alpha_string) algorithm implements ECVRF_hash_to_curve using the
+   elligator2 algorithm exclusively for Curve25519.
 
-   ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha)
+   ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
 
    Input:
 
@@ -823,7 +823,7 @@ Internet-Draft                     VRF                       August 2018
 
       alpha_string - value to be hashed, an octet string
 
-      y - public key, an EC point
+      Y - public key, an EC point
 
    Output:
 
@@ -852,7 +852,7 @@ Internet-Draft                     VRF                       August 2018
 
    Steps:
 
-   1.   pk_string = point_to_string(y)
+   1.   pk_string = point_to_string(Y)
 
    2.   one_string = 0x01 = int_to_string(1, 1), a single octet with
         value 1
@@ -889,7 +889,7 @@ Internet-Draft                     VRF                       August 2018
         (this step evaluates the Montgomery equation for Curve25519)
 
    12.  Let e equal the Legendre symbol of w and p
-
+        (see note below on how to compute it)
 
 
 
@@ -900,7 +900,8 @@ Internet-Draft                     VRF                       August 2018
 
    13.  If e is equal to 1 then final_u = u; else final_u = (-A - u) mod
         p
-        (final_u is the Montgomery u-coordinate of the output)
+        (final_u is the Montgomery u-coordinate of the output; see note
+        below on how to compute it)
 
    14.  y_coordinate = (final_u - 1) / (final_u + 1) mod p
         (y_coordinate is the Edwards coordinate corresponding to
@@ -914,11 +915,11 @@ Internet-Draft                     VRF                       August 2018
         B.  h_string[31] = h_string[31] | x0
             (where | denotes the bit-wise OR)
 
-   16.  h = string_to_point(h_string)
+   16.  H = string_to_point(h_string)
 
-   17.  hc = h^cofactor
+   17.  Set H = cofactor * H
 
-   18.  Output hc
+   18.  Output H
 
    In order to make this algorithm run in time that is (almost)
    independent of the input alpha_string (so-called "constant-time"),
@@ -939,10 +940,9 @@ Internet-Draft                     VRF                       August 2018
    when selector is 0.  If CMOV is implemented in constant time, then
    steps 12 and 13 above can be implemented as follows:
 
-      e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)
+      e = (w ^ ((p-1)/2))+1 mod p
 
-      b = e/2 (note that only the least significant byte of e is needed
-      for this operation)
+      b = e/2
 
       other_u = (-A-u) mod p
 
@@ -956,9 +956,11 @@ Internet-Draft                     VRF                       August 2018
 
       final_u = CMOV(u, other_u, b)
 
-   [TODO: Should we explain how to implement CMOV in constant time?]
-   [TODO: Do we have appropriate references to the literature where
-   Elligator2 was proposed and to other standards?]
+   (Note that after the first step, e is either 0 or 2, and only the
+   least significant byte of e is needed in the second step).  [TODO:
+   Should we explain how to implement CMOV in constant time?]  [TODO: Do
+   we have appropriate references to the literature where Elligator2 was
+   proposed and to other standards?]
 
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
@@ -967,25 +969,25 @@ Internet-Draft                     VRF                       August 2018
 
 5.4.1.3.  ECVRF_hash_to_curve_Simplified_SWU
 
-   The following ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
-   algorithm implements ECVRF_hash_to_curve using the simplified
-   Shallue-Woestijne-Ulas algorithm from [TODO: add reference to
-   [BCIMRT10] and [SW18], latest version] for any curve with prime p
+   The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y,
+   alpha_string) algorithm implements ECVRF_hash_to_curve using the
+   simplified Shallue-Woestijne-Ulas algorithm from [TODO: add reference
+   to [BCIMRT10] and [SW18], latest version] for any curve with prime p
    that is congruent to 3 modulo 4.
 
-   ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
+   ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
 
    Input:
 
-      suite - a single octet specifying ECVRF ciphersuite.
+      suite_string - a single octet specifying ECVRF ciphersuite.
 
       alpha_string - value to be hashed, an octet string
 
-      y - public key, an EC point
+      Y - public key, an EC point
 
    Output:
 
-      h - hashed value, a finite EC point in G
+      H - hashed value, a finite EC point in G
 
    Fixed options:
 
@@ -997,11 +999,9 @@ Internet-Draft                     VRF                       August 2018
 
    Steps:
 
-   1.   pk_string = EC2OSP(y)
+   1.   pk_string = EC2OSP(Y)
 
    2.   one_string = 0x01 = I2OSP(1, 1), a single octet with value 1
-
-
 
 
 
@@ -1026,24 +1026,26 @@ Internet-Draft                     VRF                       August 2018
    8.   w = (x^3 + a*x + b) mod p
 
    9.   Let e equal the Legendre symbol of w and p
+        (see note below on how to compute it)
 
    10.  If e is equal to 1 then final_x = x; else final_x = r * x mod p
-        (final_x is the x-coordinate of the output)
+        (final_x is the x-coordinate of the output; see note below on
+        how to compute it)
 
-   11.  h = arbitrary_string_to_point(int_to_string(final_x, 2n))
+   11.  H = arbitrary_string_to_point(int_to_string(final_x, 2n))
 
-   12.  hc = h^cofactor
+   12.  If cofactor > 1, set H = cofactor * H
 
-   13.  Output hc
+   13.  Output H
 
    In order to make this algorithm run in time that is (almost)
    independent of the input (so-called "constant-time"), implementers
    should pay particular attention to Steps 9 and 10 above.  These steps
    can be implemented using the following approach:
 
-      e = x ^ ((p-1)/2) mod p
+      e = w ^ ((p-1)/2) mod p
 
-      final_x = (e*(1+r)/2 + (1-r)/2)*x mod p
+      final_x = (e*(1-r) + (1+r))*x/2 mod p
 
    The first step will produce a value e that is either 1 or p-1.
    Implementers should also ensure that the second step runs in the same
@@ -1057,14 +1059,14 @@ Internet-Draft                     VRF                       August 2018
 
       e = (w ^ ((p-1)/2))+1 mod p
 
-      b = e/2
-
 
 
 Goldberg, et al.        Expires February 28, 2019              [Page 19]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      b = e/2
 
       other_x = r * x mod p
 
@@ -1081,11 +1083,11 @@ Internet-Draft                     VRF                       August 2018
 
 5.4.2.  ECVRF Hash Points
 
-   ECVRF_hash_points(p1, p2, ..., pm)
+   ECVRF_hash_points(P1, P2, ..., PM)
 
    Input:
 
-      pj - EC point in G
+      P1...PM - EC points in G
 
    Output:
 
@@ -1098,8 +1100,8 @@ Internet-Draft                     VRF                       August 2018
 
    2.  Initialize str = suite_string || two_string
 
-   3.  for pj in [p1, p2, ... pm]:
-       str = str || point_to_string(pj)
+   3.  for PJ in [P1, P2, ... PM]:
+       str = str || point_to_string(PJ)
 
    4.  c_string = Hash(str)
 
@@ -1109,8 +1111,6 @@ Internet-Draft                     VRF                       August 2018
    6.  c = string_to_int(truncated_c_string)
 
    7.  Output c
-
-
 
 
 
@@ -1134,7 +1134,7 @@ Internet-Draft                     VRF                       August 2018
 
       "INVALID", or
 
-      gamma - EC point
+      Gamma - EC point
 
       c - integer between 0 and 2^(8n)-1
 
@@ -1145,15 +1145,15 @@ Internet-Draft                     VRF                       August 2018
    1.  let gamma_string, c_string, s_string be pi_string split after
        m-th and m+n-th octet
 
-   2.  gamma = string_to_point(gamma_string)
+   2.  Gamma = string_to_point(gamma_string)
 
-   3.  if gamma = "INVALID" output "INVALID" and stop.
+   3.  if Gamma = "INVALID" output "INVALID" and stop.
 
    4.  c = string_to_int(c_string)
 
    5.  s = string_to_int(s_string)
 
-   6.  Output gamma, c, and s
+   6.  Output Gamma, c, and s
 
 5.5.  ECVRF Ciphersuites
 
@@ -1205,8 +1205,8 @@ Internet-Draft                     VRF                       August 2018
 
    o  arbitrary_string_to_point(h_string) = string_to_point(0x02 ||
       h_string) (where 0x02 is a single octet with value 2,
-      0x02=int_to_string(2, 1)).  The input h is a 32-octet string and
-      the output is either an EC point or "INVALID".
+      0x02=int_to_string(2, 1)).  The input h_string is a 32-octet
+      string and the output is either an EC point or "INVALID".
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
@@ -1297,7 +1297,7 @@ Internet-Draft                     VRF                       August 2018
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
-   key in invalid.  Otherwise, it returns y, the public key as an EC
+   key in invalid.  Otherwise, it returns Y, the public key as an EC
    point.
 
 5.6.1.  ECVRF Validate Key
@@ -1312,18 +1312,18 @@ Internet-Draft                     VRF                       August 2018
 
       "INVALID", or
 
-      y - public key, an EC point
+      Y - public key, an EC point
 
    Steps:
 
-   1.  y = string_to_point(PK)
+   1.  Y = string_to_point(PK)
 
-   2.  If y is "INVALID", output "INVALID" and stop
+   2.  If Y is "INVALID", output "INVALID" and stop
 
-   3.  If y^cofactor is the EC point at infinty, output "INVALID" and
+   3.  If cofactor*Y is the EC point at infinty, output "INVALID" and
        stop
 
-   4.  Output y
+   4.  Output Y
 
 6.  Implementation Status
 
@@ -1370,15 +1370,15 @@ Internet-Draft                     VRF                       August 2018
    "trusted uniqueness" and "trusted collision resistance" properties as
    long as the VRF keys are generated correctly, with good randomness.
    If the Verifier trusts the VRF keys are generated correctly, it MAY
-   use the public key y as is.
+   use the public key Y as is.
 
    However, if the ECVRF uses keys that could be generated
    adversarially, then the the Verfier MUST first perform the validation
    procedure ECVRF_validate_key(PK) (specified in Section 5.6) upon
    receipt of the public key PK as an octet string.  If the validation
    procedure outputs "INVALID", then the public key MUST not be used.
-   Otherwise, the procedure will output a valid public key y, and the
-   ECVRF with public key y satisfies the "full uniqueness" and "full
+   Otherwise, the procedure will output a valid public key Y, and the
+   ECVRF with public key Y satisfies the "full uniqueness" and "full
    collision resistance" properties.
 
    The RSA-FDH-VRF statisfies the "trusted uniqueness" and "trusted
@@ -1503,7 +1503,7 @@ Internet-Draft                     VRF                       August 2018
    interface (in such an interface, alpha is not supplied all at once,
    but rather in pieces by a sequence of calls to Update).  The ECVRF,
    in particular, uses alpha only in ECVRF_hash_to_curve.  The curve
-   point h becomes the representative of alpha thereafter.  Note that
+   point H becomes the representative of alpha thereafter.  Note that
    the suite_string octet and the public key are hashed together with
    alpha in ECVRF_hash_to_curve, which ensures that the curve (including
 
@@ -1544,9 +1544,9 @@ Internet-Draft                     VRF                       August 2018
    possibility that an adversary can obtain a VRF output under one
    variant, and then claim it was obtained under another variant, they
    should specify a different suite_string constant.  This way, the
-   inputs to the hash_to_curve hash function used in producing h are
+   inputs to the hash_to_curve hash function used in producing H are
    guaranteed to be different; since all the other hashing done by the
-   prover depends on h, inputs all the hash functions used by the prover
+   prover depends on H, inputs all the hash functions used by the prover
    will also be different as long as hash_to_curve is collision
    resistant.
 
@@ -1580,10 +1580,10 @@ Internet-Draft                     VRF                       August 2018
       functions by modifying hash_points and added discussion about
       domain separation.  Updated todos in the "additional
       pseudorandomness property" section.  Added an discussion of
-      secrecy into security considerations.  Removed B and PK=y from
-      ECVRF_hash_points because they are already present via h, which is
+      secrecy into security considerations.  Removed B and PK=Y from
+      ECVRF_hash_points because they are already present via H, which is
       computed via hash_to_curve using the suite_string (which
-      identifies B) and y.
+      identifies B) and Y.
 
 9.  Contributors
 

@@ -355,7 +355,7 @@
    Preliminary analysis suggests that acheiving this property
    requires ECVRF verifiers to run an VRF_validate_key() key function upon receipt
    of VRF public keys and the proof2hash function to be modified to take in
-   (gamma, beta, pk) rather than just gamma.]</t>
+   (Gamma, beta, pk) rather than just Gamma.]</t>
       
    <t>Pseudorandomness, as defined in <xref target="pseudodef"/>, does not 
    hold if the VRF keys were generated adversarially.
@@ -588,10 +588,10 @@
         </t>
         
         <t>
-            Notation and primitives used:
+            Notation and primitives used [TODO: add explanation of additive EC notation and scalar multiplication]:
             <list>
                 <!--<t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>-->
-                <t>p^k - When p is an EC point: point multiplication, i.e. k repetitions of the EC group operation applied to the EC point p. When p is an integer: exponentiation </t>
+                <t>a^b - exponentiation </t>
                 <t>|| - octet string concatenation</t>
                 <t>ECVRF_hash_to_curve - collision resistant hash of strings
                     to an EC point; options described in <xref target="ecvrfH2C" /> and specified in <xref target="suites"/>.</t>
@@ -638,7 +638,7 @@
                         to SK; else, it is derived from SK
                     </t></list>
                 </t>
-                <t>y = B^x - VRF public key, an EC point</t>
+                <t>Y = x*B - VRF public key, an EC point</t>
              </list>
         </t>
 
@@ -648,12 +648,12 @@
                 <t>
                     Note: this function must have the VRF private key SK as input. 
                     Below we make it more
-                    efficient by supplying it also with the secret scalar x and the public key y as 
+                    efficient by supplying it also with the secret scalar x and the public key Y as
                     additional inputs; however, each of these can be computed from SK if desired.
                 </t>
                 
             <t>
-                ECVRF_prove(y, x, alpha_string)
+                ECVRF_prove(Y, x, alpha_string)
             </t>
 
             <t>
@@ -661,7 +661,7 @@
                 <list>
                     <t>SK - VRF private key</t>
                     <t>x - VRF secret scalar</t>
-                    <t>y = B^x - VRF public key</t>
+                    <t>Y = x*B - VRF public key</t>
                     <t>alpha_string = input alpha, an octet string</t>
                 </list>
             </t>
@@ -676,13 +676,13 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</t>
-                    <t>h_string = point_to_string(h)</t>
-                    <t>gamma = h^x</t>
+                    <t>H = ECVRF_hash_to_curve(suite_string, Y, alpha_string)</t>
+                    <t>h_string = point_to_string(H)</t>
+                    <t>Gamma = x*H</t>
                     <t>k = ECVRF_nonce_generation(SK, h_string)</t>
-                    <t>c = ECVRF_hash_points(h, gamma, B^k, h^k)</t>
-                    <t>s = (k + c*x) mod q (where * denotes integer multiplication)</t>
-                    <t>pi_string = point_to_string(gamma) || int_to_string(c, n) || int_to_string(s, 2n)</t>
+                    <t>c = ECVRF_hash_points(H, Gamma, k*B, k*H)</t>
+                    <t>s = (k + c*x) mod q</t>
+                    <t>pi_string = point_to_string(Hamma) || int_to_string(c, n) || int_to_string(s, 2n)</t>
                     <t>Output pi_string</t>
                 </list>
             </t>
@@ -712,9 +712,9 @@
                 <list style="numbers">
                     <t>D = ECVRF_decode_proof(pi)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
-                    <t>(gamma, c, s) = D</t>
+                    <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
-                    <t>b_string = Hash(suite_string || three_string || point_to_string(gamma^cofactor))</t>
+                    <t>b_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
                     <t>beta_string = b_string[0]...b_string[2n-1] (first 2n octets of b_string)</t>
                     <t>Output beta_string</t>
                 </list>
@@ -723,13 +723,13 @@
 
         <section title="ECVRF Verifying">
             <t>
-                ECVRF_verify(y, pi_string, alpha_string)
+                ECVRF_verify(Y, pi_string, alpha_string)
             </t>
 
             <t>
                 Input:
                 <list>
-                    <t>y -  public key, an EC point</t>
+                    <t>Y -  public key, an EC point</t>
                     <t>pi_string - VRF proof, octet string of length m+3n</t>
                     <t>alpha_string - VRF input, octet string</t>
                 </list>
@@ -747,11 +747,11 @@
                 <list style="numbers">
                     <t>D = ECVRF_decode_proof(pi_string)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
-                    <t>(gamma, c, s) = D</t>
-                    <t>h = ECVRF_hash_to_curve(suite_string, y, alpha_string)</t>
-                    <t>u = B^s / y^c  (where / denotes EC point subtraction, i.e. the group operation applied to B^s and the inverse of y^c)</t>
-                    <t>v = h^s / gamma^c  (where / again denotes EC point subtraction)</t>
-                    <t>c' = ECVRF_hash_points(h, gamma, u, v)</t>
+                    <t>(Gamma, c, s) = D</t>
+                    <t>H = ECVRF_hash_to_curve(suite_string, Y, alpha_string)</t>
+                    <t>U = s*B - c*Y</t>
+                    <t>V = s*H - c*Gamma</t>
+                    <t>c' = ECVRF_hash_points(H, Gamma, U, V)</t>
                     <t>
                         If c and c' are equal, output "VALID";
                         else output "INVALID" 
@@ -767,7 +767,7 @@
         <section title="ECVRF Hash To Curve" anchor="ecvrfH2C">
         
             <t>The ECVRF_hash_to_curve algorithm takes in the VRF input alpha
-            and converts it to h, an EC point in G.
+            and converts it to H, an EC point in G.
             This algorithm is the only place alpha is used in the proving and verfying. See
             <xref target="prehash" /> for further discussion.
             </t>
@@ -777,13 +777,13 @@
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
             <t>
-            The following ECVRF_hash_to_curve_try_and_increment(suite_string, y, alpha_string) algorithm
+            The following ECVRF_hash_to_curve_try_and_increment(suite_string, Y, alpha_string) algorithm
             implements ECVRF_hash_to_curve in a simple and
             generic way that works for any elliptic curve. 
             </t>
             
             <t>
-            The running time of this algorithm depends on alpha. 
+            The running time of this algorithm depends on alpha_string.
             For the ciphersuites specified 
             in <xref target="suites"/>, this algorithm 
             is expected to find a valid curve point after approximately two attempts 
@@ -791,27 +791,27 @@
             </t>
             
             <t>
-            However, because the running time of algorithm depends on alpha, 
+            However, because the running time of algorithm depends on alpha_string,
             this algorithm SHOULD be avoided in 
             applications where it is important that
             the VRF input alpha remain secret. 
             </t>
             
             <t>
-                ECVRF_hash_to_try_and_increment(suite_string, y, alpha_string)
+                ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string)
             </t>
             <t>
                 Input:
                 <list>
                     <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
-                    <t>y - public key, an EC point</t>
+                    <t>Y - public key, an EC point</t>
                     <t>alpha_string - value to be hashed, an octet string</t>
                 </list>
             </t>
             <t>
                 Output:
                 <list>
-                    <t>h - hashed value, a finite EC point in G</t>
+                    <t>H - hashed value, a finite EC point in G</t>
                 </list>
             </t>
             
@@ -819,19 +819,19 @@
                 Steps:
                 <list style="numbers">
                     <t>ctr = 0</t>
-                    <t>pk_string = point_to_string(y)</t>
+                    <t>pk_string = point_to_string(Y)</t>
                     <t>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </t>
-                    <t>h = "INVALID"</t>
-                    <t>While h is "INVALID" or h is EC point at infinity:
+                    <t>H = "INVALID"</t>
+                    <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
                         <t>ctr_string = int_to_string(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] (first 2n octects of hash_string)</t>
-                        <t>h = arbitrary_string_to_point(attempted_hash_string)</t>
-                        <t>If h is not "INVALID" and cofactor > 1, set h = h^cofactor</t>
+                        <t>H = arbitrary_string_to_point(attempted_hash_string)</t>
+                        <t>If H is not "INVALID" and cofactor > 1, set H = cofactor * H</t>
                     </list></t>
-                    <t>Output h</t>
+                    <t>Output H</t>
                 </list>
             </t>
             
@@ -841,20 +841,20 @@
             
             <section title="ECVRF_hash_to_curve_elligator2_25519" anchor="elligator2">
             
-                <t> The following ECVRF_hash_to_curve_elligator2_25519(suite_string, y, alpha)
+                <t> The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
                 algorithm implements ECVRF_hash_to_curve using the elligator2
                 algorithm exclusively for Curve25519. 
                 </t>
                                 
                 <t>
-                    ECVRF_hash_to_curve_elligator2_25519(suite, y, alpha)
+                    ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
                 </t>
                 <t>
                     Input:
                     <list>
                         <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
                         <t>alpha_string - value to be hashed, an octet string</t>
-                        <t>y - public key, an EC point</t>
+                        <t>Y - public key, an EC point</t>
                     </list>
                 </t>
                 <t>
@@ -882,7 +882,7 @@
                 <t>
                     Steps:
                     <list style="numbers">
-                        <t>pk_string = point_to_string(y)</t>
+                        <t>pk_string = point_to_string(Y)</t>
                         <t>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </t>
                         <t>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</t>
                         <t>truncated_h_string = h_string[0]...h_string[31]
@@ -901,9 +901,10 @@
                             <vspace/>(note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
                         <t>w = u * (u^2 + A*u + 1) mod p
                             <vspace/>(this step evaluates the Montgomery equation for Curve25519)</t>
-                        <t>Let e equal the Legendre symbol of w and p</t>
+                        <t>Let e equal the Legendre symbol of w and p
+                        <vspace/>(see note below on how to compute it)</t>
                         <t>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p
-                            <vspace/>(final_u is the Montgomery u-coordinate of the output)</t>
+                            <vspace/>(final_u is the Montgomery u-coordinate of the output; see note below on how to compute it)</t>
                         <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
                             <vspace/>(y_coordinate is the Edwards coordinate corresponding to final_u)</t>
                         <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
@@ -913,9 +914,9 @@
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
                         </t>
-                        <t>h = string_to_point(h_string)</t>
-                        <t>hc = h^cofactor</t>
-                        <t>Output hc</t>
+                        <t>H = string_to_point(h_string)</t>
+                        <t>Set H = cofactor * H</t>
+                        <t>Output H</t>
                     </list>
                 </t>
                 
@@ -937,11 +938,12 @@
                 Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
                 selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 12 and 13 above can be implemented as follows:
                 <list>
-                    <t>e = (w ^ ((p-1)/2))+1 mod p (at this point e is either 0 or 2)</t>
-                    <t>b = e/2 (note that only the least significant byte of e is needed for this operation)</t>
+                    <t>e = (w ^ ((p-1)/2))+1 mod p</t>
+                    <t>b = e/2</t>
                     <t>other_u = (-A-u) mod p</t>
                     <t>final_u = CMOV(u, other_u, b)</t>
                 </list>
+                (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).
                 [TODO: Should we explain how to implement CMOV in constant time?]
                 [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?]
                 </t>
@@ -956,27 +958,27 @@
             
             <section title="ECVRF_hash_to_curve_Simplified_SWU" anchor="SimpleSWU">
                 
-                <t> The following ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
+                <t> The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
                     algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne-Ulas
                     algorithm from [TODO: add reference to <xref target="BCIMRT10"/> and <xref target="SW18"/>, latest version] for any curve with prime p that is congruent
                     to 3 modulo 4.
                 </t>
                 
                 <t>
-                    ECVRF_hash_to_curve_Simplified_SWU(suite, y, alpha)
+                    ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
                 </t>
                 <t>
                     Input:
                     <list>
-                        <t>suite - a single octet specifying ECVRF ciphersuite. </t>
+                        <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
                         <t>alpha_string - value to be hashed, an octet string</t>
-                        <t>y - public key, an EC point</t>
+                        <t>Y - public key, an EC point</t>
                     </list>
                 </t>
                 <t>
                     Output:
                     <list>
-                        <t>h - hashed value, a finite EC point in G
+                        <t>H - hashed value, a finite EC point in G
                         </t>
                     </list>
                 </t>
@@ -990,7 +992,7 @@
                 <t>
                     Steps:
                     <list style="numbers">
-                        <t>pk_string = EC2OSP(y)</t>
+                        <t>pk_string = EC2OSP(Y)</t>
                         <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
                         <t>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</t>
                         <t>t = string_to_int(h_string)</t>
@@ -999,12 +1001,13 @@
                             <vspace/>(d is t^4-t^2 mod p)</t>
                         <t>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</t>
                         <t>w = (x^3 + a*x + b) mod p</t>
-                        <t>Let e equal the Legendre symbol of w and p</t>
+                        <t>Let e equal the Legendre symbol of w and p
+                        <vspace/>(see note below on how to compute it)</t>
                         <t>If e is equal to 1 then final_x = x; else final_x = r * x mod p
-                            <vspace/>(final_x is the x-coordinate of the output)</t>
-                        <t>h = arbitrary_string_to_point(int_to_string(final_x, 2n))</t>
-                        <t>hc = h^cofactor</t>
-                        <t>Output hc</t>
+                            <vspace/>(final_x is the x-coordinate of the output; see note below on how to compute it)</t>
+                        <t>H = arbitrary_string_to_point(int_to_string(final_x, 2n))</t>
+                        <t>If cofactor > 1, set H = cofactor * H</t>
+                        <t>Output H</t>
                     </list>
                 </t>
                 
@@ -1014,8 +1017,8 @@
                     to Steps 9 and 10 above.
                     These steps can be implemented using the following approach:
                     <list>
-                        <t> e = x ^ ((p-1)/2) mod p</t>
-                        <t>final_x = (e*(1+r)/2 + (1-r)/2)*x mod p</t>
+                        <t> e = w ^ ((p-1)/2) mod p</t>
+                        <t>final_x = (e*(1-r) + (1+r))*x/2 mod p</t>
                     </list>
                     The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step
                     runs in the same amount of time regardless of e by ensuring that
@@ -1048,12 +1051,12 @@
         <section title="ECVRF Hash Points" anchor="ecvrfHashPoints">
                      
             <t>
-                ECVRF_hash_points(p1, p2, ..., pm)
+                ECVRF_hash_points(P1, P2, ..., PM)
             </t>
             <t>
                 Input:
                 <list>
-                    <t>pj - EC point in G</t>
+                    <t>P1...PM - EC points in G</t>
                 </list>
             </t>
             <t>
@@ -1067,8 +1070,8 @@
                 <list style="numbers">
                     <t>two_string = 0x02 = int_to_string(2, 1), a single octet with value 2 </t>
                     <t>Initialize str = suite_string || two_string </t>
-                    <t>for pj in [p1, p2, ... pm]:
-                       <vspace/>str = str || point_to_string(pj)
+                    <t>for PJ in [P1, P2, ... PM]:
+                       <vspace/>str = str || point_to_string(PJ)
                     </t>
                     <t>c_string = Hash(str)</t>
                     <t>truncated_c_string = c_string[0]...c_string[n-1] (first n octets of c_string)</t>
@@ -1095,7 +1098,7 @@
                 Output:
                 <list>
                     <t>"INVALID", or </t>
-                    <t>gamma - EC point</t>
+                    <t>Gamma - EC point</t>
                     <t>
                     c - integer between 0 and 2^(8n)-1
                     </t>
@@ -1109,11 +1112,11 @@
                 <list style="numbers">
                     <t>let gamma_string, c_string, s_string be 
                     pi_string split after m-th and m+n-th octet</t>
-                    <t>gamma = string_to_point(gamma_string)</t>
-                    <t>if gamma = "INVALID" output "INVALID" and stop.</t>
+                    <t>Gamma = string_to_point(gamma_string)</t>
+                    <t>if Gamma = "INVALID" output "INVALID" and stop.</t>
                     <t>c = string_to_int(c_string)</t>
                     <t>s = string_to_int(s_string)</t>
-                    <t>Output gamma, c, and s</t>
+                    <t>Output Gamma, c, and s</t>
                 </list>
             </t>
         </section>
@@ -1169,7 +1172,7 @@
         
         <t> arbitrary_string_to_point(h_string) = string_to_point(0x02 || h_string)
         (where 0x02 is a single 
-        octet with value 2, 0x02=int_to_string(2, 1)). The input h is a 32-octet string
+        octet with value 2, 0x02=int_to_string(2, 1)). The input h_string is a 32-octet string
         and the output is either an EC point or "INVALID". </t>
         
         <t>
@@ -1269,7 +1272,7 @@
         
         <t> This procedure supposes that the public key provided to the Verifier is an octet 
         string. The procedure returns "INVALID" if the public key in invalid. 
-        Otherwise, it returns y, the public key as an EC point.
+        Otherwise, it returns Y, the public key as an EC point.
         </t>
         
         
@@ -1288,16 +1291,16 @@
                 Output:
                 <list>
                     <t>"INVALID", or </t>
-                    <t>y - public key, an EC point</t>
+                    <t>Y - public key, an EC point</t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>y = string_to_point(PK)</t>
-                    <t>If y is "INVALID", output "INVALID" and stop</t>
-                    <t>If y^cofactor is the EC point at infinty, output "INVALID" and stop</t>
-                    <t>Output y</t>
+                    <t>Y = string_to_point(PK)</t>
+                    <t>If Y is "INVALID", output "INVALID" and stop</t>
+                    <t>If cofactor*Y is the EC point at infinty, output "INVALID" and stop</t>
+                    <t>Output Y</t>
                 </list>
             </t>
         
@@ -1363,7 +1366,7 @@
     statisfies the "trusted uniqueness" and "trusted collision resistance" properties
     as long as the VRF keys are generated correctly, with good randomness.
     If the Verifier trusts the VRF keys are generated correctly, it MAY use 
-    the public key y as is.
+    the public key Y as is.
     </t>
     
     <t>
@@ -1372,8 +1375,8 @@
     (specified in <xref target="keycheck"/>)  upon receipt of the
     public key PK as an octet string.  If the validation procedure
     outputs "INVALID", then the public key MUST not be used.  
-    Otherwise, the procedure will output a valid public key y, 
-    and the ECVRF with public key y satisfies the "full uniqueness" and
+    Otherwise, the procedure will output a valid public key Y,
+    and the ECVRF with public key Y satisfies the "full uniqueness" and
     "full collision resistance" properties.
     </t>
     
@@ -1508,7 +1511,7 @@
         alpha is not supplied
         all at once, but rather in pieces by a sequence of calls to Update).
         The ECVRF, in particular, uses alpha only in
-        ECVRF_hash_to_curve. The curve point h becomes the representative 
+        ECVRF_hash_to_curve. The curve point H becomes the representative
         of alpha thereafter. Note that the suite_string octet and the public key
         are hashed together with alpha in ECVRF_hash_to_curve, which ensures
         that the curve (including the generator B) and the public
@@ -1541,9 +1544,9 @@
          that an adversary can obtain a VRF output under one variant, and then claim it was obtained under
          another variant,
         they should specify a different suite_string constant. This way, the inputs
-        to the hash_to_curve hash function used in producing h are 
+        to the hash_to_curve hash function used in producing H are
         guaranteed to be different; since all the other hashing done by the prover
-        depends on h, inputs all the hash functions used by the prover will also be
+        depends on H, inputs all the hash functions used by the prover will also be
         different as long as hash_to_curve is collision resistant.
     </t>
      
@@ -1574,7 +1577,7 @@
                     draft-goldbe-vrf-01 - Fixed ECVRF to work when cofactor > 1.  
                     Changed ECVRF_proof2hash(pi) so that it outputs a value raised
                     to the cofactor and then processed by the cryptographic hash function Hash. 
-                    Included the VRF public key y as input to the hash function
+                    Included the VRF public key Y as input to the hash function
                     ECVRF_hash_to_curve1.
                     Cleaned up ciphersuites and ECVRF description so that it works with
                     EC point encodings for both P256 and Ed25519 curves.
@@ -1601,8 +1604,8 @@
                 discussion about domain separation.
                 Updated todos in the "additional pseudorandomness property" 
                 section. Added an discussion of secrecy into security considerations.
-                Removed B and PK=y from ECVRF_hash_points because they are already present
-                via h, which is computed via hash_to_curve using the suite_string (which identifies B) and y.</t>
+                Removed B and PK=Y from ECVRF_hash_points because they are already present
+                via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
             </list>
         </t>
     </section>
