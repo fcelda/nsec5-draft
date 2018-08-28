@@ -1318,14 +1318,16 @@
 </ol>
 
 <p> </p>
+<p id="rfc.section.5.6.1.p.5">Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply check Y against a fixed list of such points.  </p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
-<p id="rfc.section.6.p.1">An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256 was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  The ECVRF implementation may be out of date as this spec has evolved.  </p>
-<p id="rfc.section.6.p.2">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
-<p id="rfc.section.6.p.3">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.4">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.5">Open Whisper Systems also uses a VRF very similar to ECVRF-ED25519-SHA512-Elligator, called VXEdDSA, and specified here: <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> </p>
+<p id="rfc.section.6.p.1">[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</p>
+<p id="rfc.section.6.p.2">An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256 was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  The ECVRF implementation may be out of date as this spec has evolved.  </p>
+<p id="rfc.section.6.p.3">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
+<p id="rfc.section.6.p.4">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.5">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.6">Open Whisper Systems also uses a VRF very similar to ECVRF-ED25519-SHA512-Elligator, called VXEdDSA, and specified here: <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> </p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#securitycons" id="securitycons">Security Considerations</a>
 </h1>
@@ -1391,7 +1393,7 @@
 <p> </p>
 <h1 id="rfc.section.9">
 <a href="#rfc.section.9">9.</a> Contributors</h1>
-<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided valuable input to this draft.  </p>
+<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided valuable input to this draft. [TODO: Add more people who commented] </p>
 <h1 id="rfc.references">
 <a href="#rfc.references">10.</a> References</h1>
 <h1 id="rfc.references.1">

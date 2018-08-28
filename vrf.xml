@@ -1364,6 +1364,11 @@
                     <t>Output Y</t>
                 </list>
             </t>
+            <t>Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices
+                to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number
+                of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply
+                check Y against a fixed list of such points.
+            </t>
         
         </section>       
         </section><!-- Untrusted keys -->
@@ -1372,6 +1377,7 @@
     
     
     <section title="Implementation Status" anchor="imp">
+        <t>[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</t>
     
         <t>
             An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256 was
@@ -1681,7 +1687,7 @@
             Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
             Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided
-            valuable input to this draft.
+            valuable input to this draft. [TODO: Add more people who commented]
         </t>
     </section>
 
