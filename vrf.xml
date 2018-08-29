@@ -909,7 +909,8 @@
                         <t>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p
                             <vspace/>(note: final_u is the Montgomery u-coordinate of the output; see note below on how to compute it)</t>
                         <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
-                            <vspace/>(note: y_coordinate is the Edwards coordinate corresponding to final_u)</t>
+                            <vspace/>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u)
+                            <vspace/>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</t>
                         <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
                             <list style="letters">
                                 <t>h_string = int_to_string (y_coordinate, 32)</t>
@@ -919,7 +920,9 @@
                         </t>
                         <t>H = string_to_point(h_string)
                         <vspace/> (note: string_to_point will not return INVALID by correctness of Elligator2)</t>
-                        <t>Set H = cofactor * H</t>
+                        <t>Set H = cofactor * H
+                            <vspace/>[TODO: There is a tiny chance this operation will produce point at infinity. The chance is so tiny
+                        that it shouldn't be a problem, but will it break some implementations and cause testing headaches for developers?]</t>
                         <t>Output H</t>
                     </list>
                 </t>
