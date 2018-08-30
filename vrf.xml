@@ -1096,6 +1096,9 @@
             
             <section title = "ECVRF Nonce Generation From RFC 8032" anchor="nonce25519">
 
+                <t> The following is from Steps 2-3 of Section 5.1.6
+                in <xref target="RFC8032"/>.
+                </t> 
                 <t>
                     ECVRF_nonce_generation_RFC8032(SK, h_string)
                 </t>
