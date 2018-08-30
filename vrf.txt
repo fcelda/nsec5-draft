@@ -1020,7 +1020,8 @@ Internet-Draft                     VRF                       August 2018
       equation y^2 = x^3 + ax +b for the curve E
 
       default_x, to be used in the negligbly likely case that this
-      algorithm cannot compute an answer because of division by 0
+      algorithm cannot compute an answer because of division by 0 [TODO:
+      what should this be?]
 
    Steps:
 
@@ -1057,7 +1058,6 @@ Internet-Draft                     VRF                       August 2018
         correctness of Simple SWU)
 
    12.  If cofactor > 1, set H = cofactor * H
-
 
 
 
