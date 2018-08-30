@@ -920,7 +920,8 @@ Internet-Draft                     VRF                       August 2018
 
         A.  h_string = int_to_string (y_coordinate, 32)
 
-        B.  h_string[31] = h_string[31] | x0
+        B.  h_string[31] = h_string[31] | x0 [TODO: should we do this?
+            hash-to-curve draft doesn't]
             (where | denotes the bit-wise OR)
 
    16.  H = string_to_point(h_string)
@@ -944,7 +945,6 @@ Internet-Draft                     VRF                       August 2018
       e = w ^ ((p-1)/2) mod p
 
       final_u = (e*u + (e-1) * (A/2)) mod p
-
 
 
 

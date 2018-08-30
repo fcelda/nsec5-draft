@@ -1037,7 +1037,7 @@
 <li>y_coordinate = (final_u - 1) / (final_u + 1) mod p <br>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u) <br>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</li>
 <li>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows: <ol style="list-style-type: upper-alpha">
 <li>h_string = int_to_string (y_coordinate, 32)</li>
-<li>h_string[31] = h_string[31] | x0 <br>(where | denotes the bit-wise OR)</li>
+<li>h_string[31] = h_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't] <br>(where | denotes the bit-wise OR)</li>
 </ol>
 <p> </p>
 </li>

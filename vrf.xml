@@ -912,7 +912,7 @@
                         <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
                             <list style="letters">
                                 <t>h_string = int_to_string (y_coordinate, 32)</t>
-                                <t>h_string[31] = h_string[31] | x0
+                                <t>h_string[31] = h_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't]
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
                         </t>
