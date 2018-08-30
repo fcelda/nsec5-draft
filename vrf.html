@@ -383,7 +383,7 @@
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Full Uniqueness or Trusted Uniqueness">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Full Collison Resistance or Trusted Collision Resistance">
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Full Pseudorandomness or Selective Pseudorandomness">
-<link href="#rfc.section.3.4" rel="Chapter" title="3.4 An additional pseudorandomness property">
+<link href="#rfc.section.3.4" rel="Chapter" title="3.4 A random-oracle-like unpredictability property">
 <link href="#rfc.section.4" rel="Chapter" title="4 RSA Full Domain Hash VRF (RSA-FDH-VRF)">
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 RSA-FDH-VRF Proving">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 RSA-FDH-VRF Proof To Hash">
@@ -509,7 +509,7 @@
 </li>
 <li>3.3.   <a href="#rfc.section.3.3">Full Pseudorandomness or Selective Pseudorandomness</a>
 </li>
-<li>3.4.   <a href="#rfc.section.3.4">An additional pseudorandomness property</a>
+<li>3.4.   <a href="#rfc.section.3.4">A random-oracle-like unpredictability property</a>
 </li>
 </ul><li>4.   <a href="#rfc.section.4">RSA Full Domain Hash VRF (RSA-FDH-VRF)</a>
 </li>
@@ -664,11 +664,12 @@
 <p id="rfc.section.3.3.p.6">Also, the VRF output beta does not look random to any party that knows valid VRF proof pi corresponding to the VRF input alpha, even if this party does not know the private VRF key SK.  Such a party can easily distinguish beta from a random value by checking whether VRF_verify(PK, alpha, pi) returns "VALID" and beta = VRF_proof_to_hash(pi).  </p>
 <p id="rfc.section.3.3.p.7">Also, the VRF output beta may not look random if VRF key generation was not done in a trustworthy fashion. (For example, if VRF keys were generated with bad randomness.) </p>
 <h1 id="rfc.section.3.4">
-<a href="#rfc.section.3.4">3.4.</a> An additional pseudorandomness property</h1>
+<a href="#rfc.section.3.4">3.4.</a> A random-oracle-like unpredictability property</h1>
 <p id="rfc.section.3.4.p.1">[TODO:   This property is not needed for applications that use VRFs to prevent enumeration of hash-based data structures.  However, we noticed that some other applications of VRF (e.g. Algorand, Oroborus) rely on this property.  We are waiting on a formal definition of this property in the literature, and a proof that our ECVRF scheme can satisfy this property.  Preliminary analysis suggests that acheiving this property requires ECVRF verifiers to run an VRF_validate_key() key function upon receipt of VRF public keys and the proof_to_hash function to be modified to take in (Gamma, beta, pk) rather than just Gamma.]</p>
-<p id="rfc.section.3.4.p.2">Pseudorandomness, as defined in <a href="#pseudodef" class="xref">Section 3.3</a>, does not hold if the VRF keys were generated adversarially.  </p>
-<p id="rfc.section.3.4.p.3">There is, however, a different type of pseudorandomness that could hold even if the VRF keys are generated adversarially, as long as the VRF input alpha is unpredictable.  This property is similar to the pseudorandomness achieved by an (ordinary, unkeyed) cryptographic hash function.  </p>
-<p id="rfc.section.3.4.p.4">[TODO: Formal definition here.]</p>
+<p id="rfc.section.3.4.p.2">Pseudorandomness, as defined in <a href="#pseudodef" class="xref">Section 3.3</a>, does not hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.  </p>
+<p id="rfc.section.3.4.p.3">There is, however, a different type of unpredictability that could hold even if the VRF keys are generated adversarially, as long as the VRF input alpha is unpredictable.  This property is similar to the unpredictability achieved by an (ordinary, unkeyed) cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the output is indistinguishable from uniform.  </p>
+<p id="rfc.section.3.4.p.4">The ECVRF scheme presented in this specification satisfies this property if the public key satisfies the key validation procedure in <a href="#keycheck" class="xref">Section 5.6</a>.</p>
+<p id="rfc.section.3.4.p.5">[TODO: edit further or decide to leave this alone.] </p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#fdh" id="fdh">RSA Full Domain Hash VRF (RSA-FDH-VRF)</a>
 </h1>
@@ -1104,37 +1105,29 @@
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
 <li>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</li>
 <li>w = (x^3 + a*x + b) mod p <br>(this step evaluates the curve equation)</li>
-<li>Let e equal the Legendre symbol of w and p <br>[TODO: do we know this Legendre symbol won't be 0?] <br>(see note below on how to compute e)</li>
-<li>If e is equal to 1 then final_x = x; else final_x = r * x mod p <br>(final_x is the x-coordinate of the output; see note below on how to compute it)</li>
+<li>Let e equal the Legendre symbol of w and p <br>(see note below on how to compute e)</li>
+<li>If e is equal to 0 or 1 then final_x = x; else final_x = r * x mod p <br>(final_x is the x-coordinate of the output; see note below on how to compute it)</li>
 <li>H = arbitrary_string_to_point(int_to_string(final_x, 2n)) <br> (note: arbitrary_string_to_point will not return INVALID by correctness of Simple SWU)</li>
 <li>If cofactor &gt; 1, set H = cofactor * H</li>
 <li>Output H</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 9 and 10 above.  These steps can be implemented using the following approach: </p>
+<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 9 and 10 above.  These steps can be implemented using the following approach.  Let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If arithmetic and CMOV are implemented in constant time, then steps 9 and 10 above can be implemented as follows: </p>
 
 <ul class="empty">
-<li>e = w ^ ((p-1)/2) mod p</li>
-<li>final_x = (e*(1-r) + (1+r))*x/2 mod p</li>
-</ul>
-
-<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that arithmetic operations run constant time.  </p>
-<p id="rfc.section.5.4.1.3.p.8">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 13 and 14 above can be implemented as follows: </p>
-
-<ul class="empty">
-<li>e = (w ^ ((p-1)/2))+1 mod p</li>
-<li>b = e/2</li>
+<li>e = (w ^ ((p-1)/2))+1 mod p <br>(At this point, e is 0, 1, or 2, as an integer.)</li>
+<li>Let b = (e+1) / 2, where / denotes integer division with rounding down.  <br>(Note carefully that this step is integer, not modular, division. Only the last byte of e is needed for this step. This step converts 0, 1, or 2 to 0 or 1.)</li>
 <li>other_x = r * x mod p</li>
 <li>final_x = CMOV(x, other_x, b)</li>
 </ul>
 
-<p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  [TODO: Should we explain how to implement CMOV in constant time?] </p>
-<p id="rfc.section.5.4.1.3.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p> [TODO: Should we explain how to implement CMOV in constant time?] </p>
+<p id="rfc.section.5.4.1.3.p.8">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfNonceGeneration" id="ecvrfNonceGeneration">ECVRF Nonce Generation</a>
 </h1>
-<p id="rfc.section.5.4.2.p.1">The following subroutines generate the nonce value k in a deterministic fashion.</p>
+<p id="rfc.section.5.4.2.p.1">The following subroutines generate the nonce value k in a deterministic pseudorandom fashion.</p>
 <h1 id="rfc.section.5.4.2.1">
 <a href="#rfc.section.5.4.2.1">5.4.2.1.</a> <a href="#nonceP256" id="nonceP256">ECVRF Nonce Generation From RFC 6979</a>
 </h1>
