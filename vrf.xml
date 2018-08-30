@@ -158,13 +158,13 @@
                     <t hangText="PK:">
                         The public key for the VRF. 
                     </t>
-                    <t hangText="alpha:">
+                    <t hangText="alpha or alpha_string:">
                         The input to be hashed by the VRF. 
                     </t>
-                    <t hangText="beta:">
+                    <t hangText="beta or beta_string:">
                         The VRF hash output. 
                     </t>
-                    <t hangText="pi:">
+                    <t hangText="pi or pi_string:">
                         The VRF proof. 
                     </t>
                     <t hangText="Prover:">
@@ -406,7 +406,7 @@
                 <!-- do not change the names, these are from RFC8017 -->
                 <t>(n, e) - RSA public key</t>
                 <t>K - RSA private key</t>
-                <t>k - length in octets of the RSA modulus n</t>
+                <t>k - length in octets of the RSA modulus n (k must be less than 2^32)</t>
             </list>
         </t>
 
@@ -415,8 +415,6 @@
             <list>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of hash function Hash</t>
-                <t>suite_string - a single nonzero octet specifying the RSAVRF ciphersuite, which determines the above options</t>
-                <t>[TODO: what should it be? Should we also hash PK and key length into the MGF1 hash?]</t>
             </list>
         </t>
 
@@ -451,7 +449,7 @@
 
         <section title="RSA-FDH-VRF Proving">
             <t>
-                RSAFDHVRF_prove(K, alpha)
+                RSAFDHVRF_prove(K, alpha_string)
             </t>
 
             <t>
@@ -473,7 +471,7 @@
                 Steps:
                 <list style="numbers">
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM = MGF1(suite_string || one_string || alpha_string, k - 1)</t>
+                    <t>EM = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
                     <t>m = OS2IP(EM)</t>
                     <t>s = RSASP1(K, m)</t>
                     <t>pi_string = I2OSP(s, k)</t>
@@ -484,7 +482,7 @@
         
         <section title="RSA-FDH-VRF Proof To Hash">
             <t>
-                RSAFDHVRF_proof_to_hash(pi)
+                RSAFDHVRF_proof_to_hash(pi_string)
             </t>
 
             <t>
@@ -505,7 +503,7 @@
                 Steps:
                 <list style="numbers">
                     <t>two_string = 0x02 = I2OSP(2, 1), a single octet with value 2</t>
-                    <t>beta_string = Hash(suite_string || two_string || pi)</t>
+                    <t>beta_string = Hash(two_string || pi_string)</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -539,7 +537,7 @@
                     <t>m = RSAVP1((n, e), s)</t>
                     <t>EM = I2OSP(m, k - 1)</t>
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM' = MGF1(suite_string || one_string || alpha_string, k - 1)</t>
+                    <t>EM' = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
                     <t>
                         If EM and EM' are equal, output "VALID";
                         else output "INVALID".
@@ -709,7 +707,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>D = ECVRF_decode_proof(pi)</t>
+                    <t>D = ECVRF_decode_proof(pi_string)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
@@ -820,14 +818,14 @@
                 Steps:
                 <list style="numbers">
                     <t>ctr = 0</t>
-                    <t>pk_string = point_to_string(Y)</t>
+                    <t>PK_string = point_to_string(Y)</t>
                     <t>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </t>
                     <t>H = "INVALID"</t>
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
                         <t>ctr_string = int_to_string(ctr, 4)</t>
                         <t>ctr = ctr + 1</t>
-                        <t>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</t>
+                        <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] 
                         <!--(first 2n octects of hash_string)--></t>
                         <t>H = arbitrary_string_to_point(attempted_hash_string)</t>
@@ -845,7 +843,7 @@
             
                 <t> The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
                 algorithm implements ECVRF_hash_to_curve using the elligator2
-                algorithm exclusively for Curve25519. 
+                algorithm exclusively for the Ed25519 elliptic curve (which the Edwards equivalent of Curve25519).
                 </t>
                                 
                 <t>
@@ -884,10 +882,10 @@
                 <t>
                     Steps:
                     <list style="numbers">
-                        <t>pk_string = point_to_string(Y)</t>
+                        <t>PK_string = point_to_string(Y)</t>
                         <t>one_string = 0x01 = int_to_string(1, 1)
                         <vspace/>(a single octet with value 1) </t>
-                        <t>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</t>
+                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
                         <t>truncated_h_string = h_string[0]...h_string[31]
                             <!--<vspace/>(first 32 octets of hash)--></t>
                         <t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
@@ -922,7 +920,7 @@
                         <vspace/> (note: string_to_point will not return INVALID by correctness of Elligator2)</t>
                         <t>Set H = cofactor * H
                             <vspace/>[TODO: There is a tiny chance this operation will produce point at infinity. The chance is so tiny
-                        that it shouldn't be a problem, but will it break some implementations and cause testing headaches for developers?]</t>
+                        that it shouldn't be a problem and it's perfecty encodable (y_1 = 1, x = 0), but will it break some implementations and cause testing headaches for developers?]</t>
                         <t>Output H</t>
                     </list>
                 </t>
@@ -999,9 +997,9 @@
                 <t>
                     Steps:
                     <list style="numbers">
-                        <t>pk_string = EC2OSP(Y)</t>
+                        <t>PK_string = EC2OSP(Y)</t>
                         <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</t>
+                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
                         <t>t = string_to_int(h_string)</t>
                         <t>r = -(t^2) mod p</t>
                         <t>d = (r^2 + r) mod p
@@ -1348,12 +1346,12 @@
         <section title="ECVRF Validate Key">
       
             <t>
-                ECVRF_validate_key(PK)
+                ECVRF_validate_key(PK_string)
             </t>
             <t>
                 Input:
                 <list>
-                    <t>pk_string - public key, an octet string</t>
+                    <t>PK_string - public key, an octet string</t>
                 </list>
             </t>
             <t>
@@ -1366,7 +1364,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>Y = string_to_point(pk_string)</t>
+                    <t>Y = string_to_point(PK_string)</t>
                     <t>If Y is "INVALID", output "INVALID" and stop</t>
                     <t>If cofactor*Y is the EC point at infinty, output "INVALID" and stop</t>
                     <t>Output Y</t>
@@ -1375,7 +1373,28 @@
             <t>Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices
                 to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number
                 of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply
-                check Y against a fixed list of such points.
+                check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve:
+                <list style="numbers">
+                    <t>Y = string_to_point(PK_string)</t>
+                    <t>If Y is "INVALID", output "INVALID" and stop</t>
+                    <t>y_string = PK_string</t>
+                    <t>oneTwentySeven_string = 0x7F = int_to_string(127, 1)
+                        <vspace/>(a single octet with value 127)</t>
+                    <t>y_string[31] = y_string[31] &amp; oneTwentySeven_string
+                        <vspace/>(this step clears the high-order bit of octet 31)</t>
+                    <t>bad_pk[0] = int_to_string(0, 32)</t>
+                    <t>bad_pk[1] = int_to_string(1, 32)</t>
+                    <t>bad_y2 = 2707385501144840649318225287225658788936804267575313519463743609750303402022</t>
+                    <t>bad_pk[2] = int_to_string(bad_y2, 32)</t>
+                    <t>bad_pk[3] = int_to_string(p-bad_y2, 32)</t>
+                    <t>bad_pk[4] = int_to_string(p-1, 32)</t>
+                    <t>bad_pk[5] = int_to_string(p, 32)</t>
+                    <t>bad_pk[6] = int_to_string(p+1, 32)</t>
+                    <t>If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and stop</t>
+                    <t>Output Y</t>
+                </list>
+                (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.)
+                [TODO: what's the sources for these?]
             </t>
         
         </section>       
@@ -1601,7 +1620,9 @@
          This analysis still holds even if the same hash function is used, as long as the four 
          queries made to the hash function for a given SK and alpha are overwhelmingly unlikely 
          to equal each other or to any queries made to the hash function for the same SK and 
-         different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because:
+         different alpha. This is indeed the case for the RSA-FDH-VRF defined in this document, because the first octets
+         of the input to the hash function used in MGF1 and in proof_to_hash are different.
+         This is also the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
           <t>inputs to the hash function used during nonce_generation are unlikely to equal 
           to inputs given to hash_to_curve, proof_to_hash, and hash_points. This
@@ -1611,11 +1632,14 @@
           hash_to_curve, proof_to_hash, and
           hash_points are all different</t>
          </list>
-         It is also the case for the RSA-FDH-VRF ciphersuites defined in this document, because the second octets
-         of the input to the hash function used in MGF1 and in proof_to_hash are different.
+         
      </t>
      
-     <t>If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document,
+     <t>For the RSA VRF, if future designs need to specify variants of the design in this document, such variants should use different first octets in inputs to MGF1 and to the hash funciton used in proof_to_hash, in order to avoid the possibility
+         that an adversary can obtain a VRF output under one variant, and then claim it was obtained under
+         another variant
+     </t>
+     <t>For the elliptic curve VRF, if future designs need to specify variants (e.g., additional ciphersuites) of the design in this document,
          then, to avoid the possibility
          that an adversary can obtain a VRF output under one variant, and then claim it was obtained under
          another variant,

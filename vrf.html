@@ -424,7 +424,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-03" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-30" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -448,7 +448,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: March 2, 2019</td>
+<td class="left">Expires: March 3, 2019</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -465,7 +465,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">August 29, 2018</td>
+<td class="right">August 30, 2018</td>
 </tr>
 
     	
@@ -481,7 +481,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 2, 2019.</p>
+<p>This Internet-Draft will expire on March 3, 2019.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -601,11 +601,11 @@
 <dd style="margin-left: 8">The private key for the VRF.  </dd>
 <dt>PK:</dt>
 <dd style="margin-left: 8">The public key for the VRF.  </dd>
-<dt>alpha:</dt>
+<dt>alpha or alpha_string:</dt>
 <dd style="margin-left: 8">The input to be hashed by the VRF.  </dd>
-<dt>beta:</dt>
+<dt>beta or beta_string:</dt>
 <dd style="margin-left: 8">The VRF hash output.  </dd>
-<dt>pi:</dt>
+<dt>pi or pi_string:</dt>
 <dd style="margin-left: 8">The VRF proof.  </dd>
 <dt>Prover:</dt>
 <dd style="margin-left: 8">The Prover holds the private VRF key SK and public VRF key PK.  </dd>
@@ -681,7 +681,7 @@
 <ul class="empty">
 <li>(n, e) - RSA public key</li>
 <li>K - RSA private key</li>
-<li>k - length in octets of the RSA modulus n</li>
+<li>k - length in octets of the RSA modulus n (k must be less than 2^32)</li>
 </ul>
 
 <p> </p>
@@ -690,8 +690,6 @@
 <ul class="empty">
 <li>Hash - cryptographic hash function</li>
 <li>hLen - output length in octets of hash function Hash</li>
-<li>suite_string - a single nonzero octet specifying the RSAVRF ciphersuite, which determines the above options</li>
-<li>[TODO: what should it be? Should we also hash PK and key length into the MGF1 hash?]</li>
 </ul>
 
 <p> </p>
@@ -709,7 +707,7 @@
 <p> </p>
 <h1 id="rfc.section.4.1">
 <a href="#rfc.section.4.1">4.1.</a> RSA-FDH-VRF Proving</h1>
-<p id="rfc.section.4.1.p.1">RSAFDHVRF_prove(K, alpha) </p>
+<p id="rfc.section.4.1.p.1">RSAFDHVRF_prove(K, alpha_string) </p>
 <p id="rfc.section.4.1.p.2">Input: </p>
 
 <ul class="empty">
@@ -727,7 +725,7 @@
 
 <ol>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</li>
-<li>EM = MGF1(suite_string || one_string || alpha_string, k - 1)</li>
+<li>EM = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</li>
 <li>m = OS2IP(EM)</li>
 <li>s = RSASP1(K, m)</li>
 <li>pi_string = I2OSP(s, k)</li>
@@ -737,7 +735,7 @@
 <p> </p>
 <h1 id="rfc.section.4.2">
 <a href="#rfc.section.4.2">4.2.</a> RSA-FDH-VRF Proof To Hash</h1>
-<p id="rfc.section.4.2.p.1">RSAFDHVRF_proof_to_hash(pi) </p>
+<p id="rfc.section.4.2.p.1">RSAFDHVRF_proof_to_hash(pi_string) </p>
 <p id="rfc.section.4.2.p.2">Input: </p>
 
 <ul class="empty"><li>pi_string - proof, an octet string of length k</li></ul>
@@ -752,7 +750,7 @@
 
 <ol>
 <li>two_string = 0x02 = I2OSP(2, 1), a single octet with value 2</li>
-<li>beta_string = Hash(suite_string || two_string || pi)</li>
+<li>beta_string = Hash(two_string || pi_string)</li>
 <li>Output beta_string</li>
 </ol>
 
@@ -781,7 +779,7 @@
 <li>m = RSAVP1((n, e), s)</li>
 <li>EM = I2OSP(m, k - 1)</li>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</li>
-<li>EM' = MGF1(suite_string || one_string || alpha_string, k - 1)</li>
+<li>EM' = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</li>
 <li>If EM and EM' are equal, output "VALID"; else output "INVALID".  </li>
 </ol>
 
@@ -898,7 +896,7 @@
 <p id="rfc.section.5.2.p.4">Steps: </p>
 
 <ol>
-<li>D = ECVRF_decode_proof(pi)</li>
+<li>D = ECVRF_decode_proof(pi_string)</li>
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(Gamma, c, s) = D</li>
 <li>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </li>
@@ -971,13 +969,13 @@
 
 <ol>
 <li>ctr = 0</li>
-<li>pk_string = point_to_string(Y)</li>
+<li>PK_string = point_to_string(Y)</li>
 <li>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
 <li>H = "INVALID"</li>
 <li>While H is "INVALID" or H is EC point at infinity: <ol style="list-style-type: upper-alpha">
 <li>ctr_string = int_to_string(ctr, 4)</li>
 <li>ctr = ctr + 1</li>
-<li>hash_string = Hash(suite_string || one_string || pk_string || alpha_string || ctr_string)</li>
+<li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</li>
 <li>attempted_hash_string = hash_string[0]...hash_string[2n-1] </li>
 <li>H = arbitrary_string_to_point(attempted_hash_string)</li>
 <li>If H is not "INVALID" and cofactor &gt; 1, set H = cofactor * H</li>
@@ -990,7 +988,7 @@
 <h1 id="rfc.section.5.4.1.2">
 <a href="#rfc.section.5.4.1.2">5.4.1.2.</a> <a href="#elligator2" id="elligator2">ECVRF_hash_to_curve_elligator2_25519</a>
 </h1>
-<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for Curve25519.  </p>
+<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for the Ed25519 elliptic curve (which the Edwards equivalent of Curve25519).  </p>
 <p id="rfc.section.5.4.1.2.p.2">ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) </p>
 <p id="rfc.section.5.4.1.2.p.3">Input: </p>
 
@@ -1023,9 +1021,9 @@
 <p id="rfc.section.5.4.1.2.p.7">Steps: </p>
 
 <ol>
-<li>pk_string = point_to_string(Y)</li>
+<li>PK_string = point_to_string(Y)</li>
 <li>one_string = 0x01 = int_to_string(1, 1) <br>(a single octet with value 1) </li>
-<li>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</li>
+<li>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</li>
 <li>truncated_h_string = h_string[0]...h_string[31] </li>
 <li>oneTwentyEight_string = 0x80 = int_to_string(128, 1) <br>(a single octet with value 128)</li>
 <li>oneTwentySeven_string = 0x7F = int_to_string(127, 1) <br>(a single octet with value 127)</li>
@@ -1044,7 +1042,7 @@
 <p> </p>
 </li>
 <li>H = string_to_point(h_string) <br> (note: string_to_point will not return INVALID by correctness of Elligator2)</li>
-<li>Set H = cofactor * H <br>[TODO: There is a tiny chance this operation will produce point at infinity. The chance is so tiny that it shouldn't be a problem, but will it break some implementations and cause testing headaches for developers?]</li>
+<li>Set H = cofactor * H <br>[TODO: There is a tiny chance this operation will produce point at infinity. The chance is so tiny that it shouldn't be a problem and it's perfecty encodable (y_1 = 1, x = 0), but will it break some implementations and cause testing headaches for developers?]</li>
 <li>Output H</li>
 </ol>
 
@@ -1098,9 +1096,9 @@
 <p id="rfc.section.5.4.1.3.p.6">Steps: </p>
 
 <ol>
-<li>pk_string = EC2OSP(Y)</li>
+<li>PK_string = EC2OSP(Y)</li>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>h_string = Hash(suite_string || one_string || pk_string || alpha_string )</li>
+<li>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</li>
 <li>t = string_to_int(h_string)</li>
 <li>r = -(t^2) mod p</li>
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
@@ -1294,10 +1292,10 @@
 <p id="rfc.section.5.6.p.3">This procedure supposes that the public key provided to the Verifier is an octet string. The procedure returns "INVALID" if the public key in invalid.  Otherwise, it returns Y, the public key as an EC point.  </p>
 <h1 id="rfc.section.5.6.1">
 <a href="#rfc.section.5.6.1">5.6.1.</a> ECVRF Validate Key</h1>
-<p id="rfc.section.5.6.1.p.1">ECVRF_validate_key(PK) </p>
+<p id="rfc.section.5.6.1.p.1">ECVRF_validate_key(PK_string) </p>
 <p id="rfc.section.5.6.1.p.2">Input: </p>
 
-<ul class="empty"><li>pk_string - public key, an octet string</li></ul>
+<ul class="empty"><li>PK_string - public key, an octet string</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.6.1.p.3">Output: </p>
@@ -1311,14 +1309,34 @@
 <p id="rfc.section.5.6.1.p.4">Steps: </p>
 
 <ol>
-<li>Y = string_to_point(pk_string)</li>
+<li>Y = string_to_point(PK_string)</li>
 <li>If Y is "INVALID", output "INVALID" and stop</li>
 <li>If cofactor*Y is the EC point at infinty, output "INVALID" and stop</li>
 <li>Output Y</li>
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.6.1.p.5">Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply check Y against a fixed list of such points.  </p>
+<p id="rfc.section.5.6.1.p.5">Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve: </p>
+
+<ol>
+<li>Y = string_to_point(PK_string)</li>
+<li>If Y is "INVALID", output "INVALID" and stop</li>
+<li>y_string = PK_string</li>
+<li>oneTwentySeven_string = 0x7F = int_to_string(127, 1) <br>(a single octet with value 127)</li>
+<li>y_string[31] = y_string[31] &amp; oneTwentySeven_string <br>(this step clears the high-order bit of octet 31)</li>
+<li>bad_pk[0] = int_to_string(0, 32)</li>
+<li>bad_pk[1] = int_to_string(1, 32)</li>
+<li>bad_y2 = 2707385501144840649318225287225658788936804267575313519463743609750303402022</li>
+<li>bad_pk[2] = int_to_string(bad_y2, 32)</li>
+<li>bad_pk[3] = int_to_string(p-bad_y2, 32)</li>
+<li>bad_pk[4] = int_to_string(p-1, 32)</li>
+<li>bad_pk[5] = int_to_string(p, 32)</li>
+<li>bad_pk[6] = int_to_string(p+1, 32)</li>
+<li>If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and stop</li>
+<li>Output Y</li>
+</ol>
+
+<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these?] </p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
@@ -1370,15 +1388,16 @@
 <p id="rfc.section.7.6.p.1">The VRFs specified in this document allow for read-once access to the input alpha for both signing and verifying. Thus, additional prehashing of alpha (as specified, for example, in <a href="#RFC8032" class="xref">[RFC8032]</a> for EdDSA signatures) is not needed, even for applications that need to handle long alpha or to support the Initialized-Update-Finalize (IUF) interface (in such an interface, alpha is not supplied all at once, but rather in pieces by a sequence of calls to Update).  The ECVRF, in particular, uses alpha only in ECVRF_hash_to_curve. The curve point H becomes the representative of alpha thereafter. Note that the suite_string octet and the public key are hashed together with alpha in ECVRF_hash_to_curve, which ensures that the curve (including the generator B) and the public key are included indirectly into subsequent hashes.</p>
 <h1 id="rfc.section.7.7">
 <a href="#rfc.section.7.7">7.7.</a> Hash function domain separation and future-proofing</h1>
-<p id="rfc.section.7.7.p.1">Hashing is used for different purposes in the two VRFs (namely, in the RSA-FDH-VRF, in MGF1 and in proof_to_hash; in the ECVRF, in hash_to_curve, nonce_generation, hash_points, and proof_to_hash). The theoretical analysis assumes each of these functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the ECVRF ciphersuites defined in this document, because: </p>
+<p id="rfc.section.7.7.p.1">Hashing is used for different purposes in the two VRFs (namely, in the RSA-FDH-VRF, in MGF1 and in proof_to_hash; in the ECVRF, in hash_to_curve, nonce_generation, hash_points, and proof_to_hash). The theoretical analysis assumes each of these functions is a separate random oracle.  This analysis still holds even if the same hash function is used, as long as the four queries made to the hash function for a given SK and alpha are overwhelmingly unlikely to equal each other or to any queries made to the hash function for the same SK and different alpha. This is indeed the case for the RSA-FDH-VRF defined in this document, because the first octets of the input to the hash function used in MGF1 and in proof_to_hash are different.  This is also the case for the ECVRF ciphersuites defined in this document, because: </p>
 
 <ul>
 <li>inputs to the hash function used during nonce_generation are unlikely to equal to inputs given to hash_to_curve, proof_to_hash, and hash_points. This follows since nonce_generation inputs a secret to the hash function that is not used by honest parties as input to any other hash function, and is not available to the adversary</li>
 <li>the second octet of the input to the hash function used in hash_to_curve, proof_to_hash, and hash_points are all different</li>
 </ul>
 
-<p> It is also the case for the RSA-FDH-VRF ciphersuites defined in this document, because the second octets of the input to the hash function used in MGF1 and in proof_to_hash are different.  </p>
-<p id="rfc.section.7.7.p.2">If future designs need to specify variants (e.g., additional ciphersuites) of the design in this document, then, to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant, they should specify a different suite_string constant. This way, the inputs to the hash_to_curve hash function used in producing H are guaranteed to be different; since all the other hashing done by the prover depends on H, inputs all the hash functions used by the prover will also be different as long as hash_to_curve is collision resistant.  </p>
+<p> </p>
+<p id="rfc.section.7.7.p.2">For the RSA VRF, if future designs need to specify variants of the design in this document, such variants should use different first octets in inputs to MGF1 and to the hash funciton used in proof_to_hash, in order to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant </p>
+<p id="rfc.section.7.7.p.3">For the elliptic curve VRF, if future designs need to specify variants (e.g., additional ciphersuites) of the design in this document, then, to avoid the possibility that an adversary can obtain a VRF output under one variant, and then claim it was obtained under another variant, they should specify a different suite_string constant. This way, the inputs to the hash_to_curve hash function used in producing H are guaranteed to be different; since all the other hashing done by the prover depends on H, inputs all the hash functions used by the prover will also be different as long as hash_to_curve is collision resistant.  </p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> Change Log</h1>
 <p id="rfc.section.8.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.  </p>
