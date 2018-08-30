@@ -999,13 +999,14 @@
                     <list style="numbers">
                         <t>PK_string = EC2OSP(Y)</t>
                         <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
+                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string)</t>
                         <t>t = string_to_int(h_string)</t>
                         <t>r = -(t^2) mod p</t>
                         <t>d = (r^2 + r) mod p
                             <vspace/>(d is t^4-t^2 mod p)</t>
                         <t>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</t>
-                        <t>w = (x^3 + a*x + b) mod p</t>
+                        <t>w = (x^3 + a*x + b) mod p
+                        <vspace/>(this step evaluates the curve equation)</t>
                         <t>Let e equal the Legendre symbol of w and p
 <vspace/>[TODO: do we know this Legendre symbol won't be 0?]
                         <vspace/>(see note below on how to compute e)</t>

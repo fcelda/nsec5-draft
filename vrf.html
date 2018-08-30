@@ -1098,12 +1098,12 @@
 <ol>
 <li>PK_string = EC2OSP(Y)</li>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</li>
+<li>h_string = Hash(suite_string || one_string || PK_string || alpha_string)</li>
 <li>t = string_to_int(h_string)</li>
 <li>r = -(t^2) mod p</li>
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
 <li>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</li>
-<li>w = (x^3 + a*x + b) mod p</li>
+<li>w = (x^3 + a*x + b) mod p <br>(this step evaluates the curve equation)</li>
 <li>Let e equal the Legendre symbol of w and p <br>[TODO: do we know this Legendre symbol won't be 0?] <br>(see note below on how to compute e)</li>
 <li>If e is equal to 1 then final_x = x; else final_x = r * x mod p <br>(final_x is the x-coordinate of the output; see note below on how to compute it)</li>
 <li>H = arbitrary_string_to_point(int_to_string(final_x, 2n)) <br> (note: arbitrary_string_to_point will not return INVALID by correctness of Simple SWU)</li>
