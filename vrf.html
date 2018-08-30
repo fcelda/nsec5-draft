@@ -638,7 +638,7 @@
 
 <ul class="empty"><li>VRF_verify(PK, alpha, pi)</li></ul>
 
-<p> that outputs VALID if pi was correctly produced, and outputs INVALID otherwise.  </p>
+<p> that outputs VALID if pi was correctly produced, and outputs INVALID otherwise. [TODO: should we force proof_to_hash to run verify first in our spec, to prevent possible mistakes?] </p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#secdef" id="secdef">VRF Security Properties</a>
 </h1>
@@ -797,7 +797,7 @@
 <li>E - elliptic curve (EC) defined over F</li>
 <li>m - length, in octets, of an EC point encoded as an octet string</li>
 <li>G - subgroup of E of large prime order</li>
-<li>q - prime order of group G; must be less than 2^{16n}</li>
+<li>q - prime order of group G; must be less than 2^{16n} [TODO: why limit it so? It could be one octet longer -- e.g., curve 192. Maybe introduce qLen.]</li>
 <li>cofactor - number of points on E divided by q</li>
 <li>B - generator of group G</li>
 <li>Hash - cryptographic hash function</li>
@@ -948,7 +948,7 @@
 <a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve_try_and_increment</a>
 </h1>
 <p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve_try_and_increment(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
-<p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha_string.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09" class="xref">[Icart09]</a>.  </p>
+<p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha_string.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09" class="xref">[Icart09]</a>. [TODO: do we need this reference?] </p>
 <p id="rfc.section.5.4.1.1.p.3">However, because the running time of algorithm depends on alpha_string, this algorithm SHOULD be avoided in applications where it is important that the VRF input alpha remain secret.  </p>
 <p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string) </p>
 <p id="rfc.section.5.4.1.1.p.5">Input: </p>
@@ -973,7 +973,7 @@
 <li>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
 <li>H = "INVALID"</li>
 <li>While H is "INVALID" or H is EC point at infinity: <ol style="list-style-type: upper-alpha">
-<li>ctr_string = int_to_string(ctr, 4)</li>
+<li>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty.]</li>
 <li>ctr = ctr + 1</li>
 <li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</li>
 <li>attempted_hash_string = hash_string[0]...hash_string[2n-1] </li>
@@ -1054,7 +1054,7 @@
 <li>final_u = (e*u + (e-1) * (A/2)) mod p</li>
 </ul>
 
-<p> The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that arithmetic in constant time.  </p>
+<p> The first step will produce a value e that is either 1 or p-1 (it is guaranteed not to be any other value, because w is guaranteed to be nonzero). Implementers should also ensure that the second step runs in the same amount of time regardless of e by ensuring that arithmetic in constant time.  </p>
 <p id="rfc.section.5.4.1.2.p.9">Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 12 and 13 above can be implemented as follows: </p>
 
 <ul class="empty">
@@ -1064,7 +1064,7 @@
 <li>final_u = CMOV(u, other_u, b)</li>
 </ul>
 
-<p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  [TODO: Should we explain how to implement CMOV in constant time?] [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?] </p>
+<p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  [TODO: Should we explain how to implement CMOV in constant time? ] [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?] </p>
 <p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#SimpleSWU" id="SimpleSWU">ECVRF_hash_to_curve_Simplified_SWU</a>
@@ -1104,7 +1104,7 @@
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
 <li>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</li>
 <li>w = (x^3 + a*x + b) mod p</li>
-<li>Let e equal the Legendre symbol of w and p <br>(see note below on how to compute e)</li>
+<li>Let e equal the Legendre symbol of w and p <br>[TODO: do we know this Legendre symbol won't be 0?] <br>(see note below on how to compute e)</li>
 <li>If e is equal to 1 then final_x = x; else final_x = r * x mod p <br>(final_x is the x-coordinate of the output; see note below on how to compute it)</li>
 <li>H = arbitrary_string_to_point(int_to_string(final_x, 2n)) <br> (note: arbitrary_string_to_point will not return INVALID by correctness of Simple SWU)</li>
 <li>If cofactor &gt; 1, set H = cofactor * H</li>
@@ -1253,7 +1253,7 @@
 <h1 id="rfc.section.5.5">
 <a href="#rfc.section.5.5">5.5.</a> <a href="#suites" id="suites">ECVRF Ciphersuites</a>
 </h1>
-<p id="rfc.section.5.5.p.1">This document defines ECVRF-P256-SHA256 as follows: </p>
+<p id="rfc.section.5.5.p.1">This document defines ECVRF-P256-SHA256 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -SWU version?] </p>
 
 <ul>
 <li>suite_string = 0x01 = int_to_string(1, 1). </li>
@@ -1275,7 +1275,7 @@
 <ul><li>This ciphersuite is identical to ECVRF-P256-SHA256 except that the ECVRF_hash_to_curve function is as specified in <a href="#SimpleSWU" class="xref">Section 5.4.1.3</a> and suite_string = 0x02 = int_to_string(2, 1).  </li></ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.3">This document defines ECVRF-ED25519-SHA512 as follows: </p>
+<p id="rfc.section.5.5.p.3">This document defines ECVRF-ED25519-SHA512 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -Elligator version?] </p>
 
 <ul>
 <li>suite_string = 0x03 = int_to_string(3, 1). </li>
@@ -1350,7 +1350,7 @@
 <li>Output Y</li>
 </ol>
 
-<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these?] </p>
+<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original] </p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
@@ -1421,12 +1421,13 @@
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
 <li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed B and PK=Y from ECVRF_hash_points because they are already present via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</li>
+<li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section</li>
 </ul>
 
 <p> </p>
 <h1 id="rfc.section.9">
 <a href="#rfc.section.9">9.</a> Contributors</h1>
-<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided valuable input to this draft. [TODO: Add more people who commented] </p>
+<p id="rfc.section.9.p.1">This document also would not be possible without the work of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), and Asaf Ziv (Facebook).  Shumon Huque, David C. Lawerence, Trevor Perrin, Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova, Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, and Gary Belvin provided valuable input to this draft. [TODO: Add more people who commented] </p>
 <h1 id="rfc.references">
 <a href="#rfc.references">10.</a> References</h1>
 <h1 id="rfc.references.1">

@@ -222,7 +222,7 @@
    <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
    that outputs VALID if pi was correctly produced,
-   and outputs INVALID otherwise.
+   and outputs INVALID otherwise. [TODO: should we force proof_to_hash to run verify first in our spec, to prevent possible mistakes?]
    </t>   
    </section>
    
@@ -573,7 +573,7 @@
                 <t>E - elliptic curve (EC) defined over F</t>
                 <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
                 <t>G - subgroup of E of large prime order</t>
-                <t>q - prime order of group G; must be less than 2^{16n}</t>
+                <t>q - prime order of group G; must be less than 2^{16n} [TODO: why limit it so? It could be one octet longer -- e.g., curve 192. Maybe introduce qLen.]</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>B - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
@@ -786,7 +786,7 @@
             For the ciphersuites specified 
             in <xref target="suites"/>, this algorithm 
             is expected to find a valid curve point after approximately two attempts 
-            (i.e., when ctr=1) on average. See also <xref target="Icart09"/>.
+            (i.e., when ctr=1) on average. See also <xref target="Icart09"/>. [TODO: do we need this reference?]
             </t>
             
             <t>
@@ -823,7 +823,7 @@
                     <t>H = "INVALID"</t>
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
-                        <t>ctr_string = int_to_string(ctr, 4)</t>
+                        <t>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty.]</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] 
@@ -934,7 +934,7 @@
                     <t> e = w ^ ((p-1)/2) mod p</t>
                     <t>final_u = (e*u + (e-1) * (A/2)) mod p</t>
                 </list>
-                The first step will produce a value e that is either 1 or p-1. Implementers should also ensure that the second step
+                The first step will produce a value e that is either 1 or p-1 (it is guaranteed not to be any other value, because w is guaranteed to be nonzero). Implementers should also ensure that the second step
                 runs in the same amount of time regardless of e by ensuring that
                 arithmetic in constant time.
                 </t>
@@ -949,7 +949,7 @@
                     <t>final_u = CMOV(u, other_u, b)</t>
                 </list>
                 (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).
-                [TODO: Should we explain how to implement CMOV in constant time?]
+                [TODO: Should we explain how to implement CMOV in constant time? ]
                 [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?]
                 </t>
 
@@ -1007,6 +1007,7 @@
                         <t>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</t>
                         <t>w = (x^3 + a*x + b) mod p</t>
                         <t>Let e equal the Legendre symbol of w and p
+<vspace/>[TODO: do we know this Legendre symbol won't be 0?]
                         <vspace/>(see note below on how to compute e)</t>
                         <t>If e is equal to 1 then final_x = x; else final_x = r * x mod p
                             <vspace/>(final_x is the x-coordinate of the output; see note below on how to compute it)</t>
@@ -1204,7 +1205,7 @@
 
         <section title="ECVRF Ciphersuites" anchor="suites">
                 
-        <t>This document defines ECVRF-P256-SHA256 as follows:
+        <t>This document defines ECVRF-P256-SHA256 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -SWU version?]
         <list style="symbols">
         <t>
         suite_string = 0x01 = int_to_string(1, 1). </t>
@@ -1270,7 +1271,7 @@
         </t>
 
         
-        <t>This document defines ECVRF-ED25519-SHA512 as follows:
+        <t>This document defines ECVRF-ED25519-SHA512 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -Elligator version?]
         <list style="symbols">
         <t>
         suite_string = 0x03 = int_to_string(3, 1). </t>
@@ -1410,7 +1411,7 @@
                     <t>Output Y</t>
                 </list>
                 (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.)
-                [TODO: what's the sources for these?]
+                [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original]
             </t>
         
         </section>       
@@ -1722,6 +1723,7 @@
                 section. Added an discussion of secrecy into security considerations.
                 Removed B and PK=Y from ECVRF_hash_points because they are already present
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
+                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section</t>
             </list>
         </t>
     </section>
@@ -1734,7 +1736,8 @@
             Moni Naor (Weizmann Institute),
             Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
-            Shumon Huque (Salesforce), David C. Lawerence (Akamai), and Trevor Perrin provided
+            Shumon Huque, David C. Lawerence, Trevor Perrin, Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova,
+            Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, and Gary Belvin provided
             valuable input to this draft. [TODO: Add more people who commented]
         </t>
     </section>
