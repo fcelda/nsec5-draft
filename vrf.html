@@ -1134,6 +1134,7 @@
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfNonceGeneration" id="ecvrfNonceGeneration">ECVRF Nonce Generation</a>
 </h1>
+<p id="rfc.section.5.4.2.p.1">The following subroutines generate the nonce value k in a deterministic fashion.</p>
 <h1 id="rfc.section.5.4.2.1">
 <a href="#rfc.section.5.4.2.1">5.4.2.1.</a> <a href="#nonceP256" id="nonceP256">ECVRF Nonce Generation From RFC 6979</a>
 </h1>
@@ -1151,12 +1152,25 @@
 <ul class="empty"><li>k - an integer between 1 and q-1</li></ul>
 
 <p> </p>
-<p id="rfc.section.5.4.2.1.p.4">The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 Steps b-h (omitting Step a and using h_1=h_string; and omitting the "suitable for DSA or ECDSA" check in step h.3), with the hash function H = Hash, its output length hlen = hLen*8, the secret key x = the VRF secret scalar x, the prime q same as in this specification, and all the other values and primitives as defined in <a href="#RFC6979" class="xref">[RFC6979]</a>.  </p>
+<p id="rfc.section.5.4.2.1.p.4">The ECVRF_nonce_generation function is as specified in <a href="#RFC6979" class="xref">[RFC6979]</a> Section 3.2 where </p>
+
+<ul class="empty">
+<li>Step a is omitted</li>
+<li>h_1 is set equal to h_string</li>
+<li>The "suitable for DSA or ECDSA" check in step h.3 is omitted</li>
+<li>The hash function H is Hash and its output length hlen is set as hLen*8</li>
+<li>The secret key x is set equal to the VRF secret scalar x </li>
+<li>The prime q is the same as in this specification</li>
+<li>All the other values and primitives as defined in <a href="#RFC6979" class="xref">[RFC6979]</a> </li>
+</ul>
+
+<p> </p>
 <h1 id="rfc.section.5.4.2.2">
 <a href="#rfc.section.5.4.2.2">5.4.2.2.</a> <a href="#nonce25519" id="nonce25519">ECVRF Nonce Generation From RFC 8032</a>
 </h1>
-<p id="rfc.section.5.4.2.2.p.1">ECVRF_nonce_generation_RFC8032(SK, h_string) </p>
-<p id="rfc.section.5.4.2.2.p.2">Input: </p>
+<p id="rfc.section.5.4.2.2.p.1">The following is from Steps 2-3 of Section 5.1.6 in <a href="#RFC8032" class="xref">[RFC8032]</a>.  </p>
+<p id="rfc.section.5.4.2.2.p.2">ECVRF_nonce_generation_RFC8032(SK, h_string) </p>
+<p id="rfc.section.5.4.2.2.p.3">Input: </p>
 
 <ul class="empty">
 <li>SK - an ECVRF secret key</li>
@@ -1164,12 +1178,12 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.4.2.2.p.3">Output: </p>
+<p id="rfc.section.5.4.2.2.p.4">Output: </p>
 
 <ul class="empty"><li>k - an integer between 0 and q-1</li></ul>
 
 <p> </p>
-<p id="rfc.section.5.4.2.2.p.4">Steps: </p>
+<p id="rfc.section.5.4.2.2.p.5">Steps: </p>
 
 <ol>
 <li>hashed_sk_string = Hash (SK)</li>
