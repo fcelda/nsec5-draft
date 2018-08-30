@@ -1054,6 +1054,10 @@
             
         </section>
         <section title="ECVRF Nonce Generation" anchor="ecvrfNonceGeneration">
+        
+        <t>The following subroutines generate the 
+        nonce value k in a deterministic fashion.</t>
+        
             <section title = "ECVRF Nonce Generation From RFC 6979" anchor="nonceP256">
                 
                 <t>
@@ -1074,13 +1078,25 @@
                 </t>
                 
                 <t>
-                    The ECVRF_nonce_generation function is as specified in <xref target="RFC6979"/> Section 3.2 Steps b-h
-                    (omitting Step a and using h_1=h_string; and omitting the "suitable for DSA or ECDSA" check in step h.3), with the hash function H = Hash, its output length hlen = hLen*8, the secret key x = the VRF secret scalar x, the prime q same as in this specification, and all the other values and primitives as defined in <xref target="RFC6979"/>.
+                    The ECVRF_nonce_generation function is as specified in 
+                    <xref target="RFC6979"/> Section 3.2 where
+                    <list>
+                    <t> Step a is omitted</t>
+                    <t> h_1 is set equal to h_string</t>
+                    <t> The "suitable for DSA or ECDSA" check in step h.3 is omitted</t>
+                    <t> The hash function H is Hash and its output length hlen is set as hLen*8</t>
+                    <t> The secret key x is set equal to the VRF secret scalar x </t>
+                    <t> The prime q is the same as in this specification</t>
+                    <t> All the other values and primitives as defined in <xref target="RFC6979"/> </t>
+                    </list>
                 </t>
             </section>
             
             <section title = "ECVRF Nonce Generation From RFC 8032" anchor="nonce25519">
 
+                <t> The following is from Steps 2-3 of Section 5.1.6
+                in <xref target="RFC8032"/>.
+                </t> 
                 <t>
                     ECVRF_nonce_generation_RFC8032(SK, h_string)
                 </t>
