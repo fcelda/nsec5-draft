@@ -828,7 +828,7 @@
                     <t>H = "INVALID"</t>
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
-                        <t>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty.]</t>
+                        <t>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty. 1 is better because no big-endian/little-endian confusion and bug possibility (this counter will not a bigint, so actual programmers will have to do conversions differently for it)]</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] 
@@ -890,8 +890,8 @@
                         <t>PK_string = point_to_string(Y)</t>
                         <t>one_string = 0x01 = int_to_string(1, 1)
                         <vspace/>(a single octet with value 1) </t>
-                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
-                        <t>truncated_h_string = h_string[0]...h_string[31]
+                        <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
+                        <t>truncated_h_string = hash_string[0]...hash_string[31]
                             <!--<vspace/>(first 32 octets of hash)--></t>
                         <t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
                             <vspace/>(a single octet with value 128)</t>

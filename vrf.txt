@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: March 3, 2019                                   D. Papadopoulos
+Expires: March 4, 2019                                   D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                         August 30, 2018
+                                                         August 31, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 3, 2019.
+   This Internet-Draft will expire on March 4, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 1]
+Goldberg, et al.          Expires March 4, 2019                 [Page 1]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 2]
+Goldberg, et al.          Expires March 4, 2019                 [Page 2]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 3]
+Goldberg, et al.          Expires March 4, 2019                 [Page 3]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 4]
+Goldberg, et al.          Expires March 4, 2019                 [Page 4]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 5]
+Goldberg, et al.          Expires March 4, 2019                 [Page 5]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 6]
+Goldberg, et al.          Expires March 4, 2019                 [Page 6]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 7]
+Goldberg, et al.          Expires March 4, 2019                 [Page 7]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 8]
+Goldberg, et al.          Expires March 4, 2019                 [Page 8]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                 [Page 9]
+Goldberg, et al.          Expires March 4, 2019                 [Page 9]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 10]
+Goldberg, et al.          Expires March 4, 2019                [Page 10]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -613,7 +613,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 11]
+Goldberg, et al.          Expires March 4, 2019                [Page 11]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -669,7 +669,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 12]
+Goldberg, et al.          Expires March 4, 2019                [Page 12]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -725,7 +725,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 13]
+Goldberg, et al.          Expires March 4, 2019                [Page 13]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -781,7 +781,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 14]
+Goldberg, et al.          Expires March 4, 2019                [Page 14]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -806,7 +806,10 @@ Internet-Draft                     VRF                       August 2018
    5.  While H is "INVALID" or H is EC point at infinity:
 
        A.  ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is
-           plenty.]
+           plenty. 1 is better because no big-endian/little-endian
+           confusion and bug possibility (this counter will not a
+           bigint, so actual programmers will have to do conversions
+           differently for it)]
 
        B.  ctr = ctr + 1
 
@@ -832,15 +835,14 @@ Internet-Draft                     VRF                       August 2018
 
    Input:
 
-      suite_string - a single octet specifying ECVRF ciphersuite.
 
 
-
-
-Goldberg, et al.          Expires March 3, 2019                [Page 15]
+Goldberg, et al.          Expires March 4, 2019                [Page 15]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      suite_string - a single octet specifying ECVRF ciphersuite.
 
       alpha_string - value to be hashed, an octet string
 
@@ -870,10 +872,10 @@ Internet-Draft                     VRF                       August 2018
    2.   one_string = 0x01 = int_to_string(1, 1)
         (a single octet with value 1)
 
-   3.   h_string = Hash(suite_string || one_string || PK_string ||
+   3.   hash_string = Hash(suite_string || one_string || PK_string ||
         alpha_string )
 
-   4.   truncated_h_string = h_string[0]...h_string[31]
+   4.   truncated_h_string = hash_string[0]...hash_string[31]
 
    5.   oneTwentyEight_string = 0x80 = int_to_string(128, 1)
         (a single octet with value 128)
@@ -889,14 +891,14 @@ Internet-Draft                     VRF                       August 2018
         oneTwentySeven_string
         (this step clears the high-order bit of octet 31)
 
-   9.   r = string_to_int(truncated_h_string)
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 16]
+Goldberg, et al.          Expires March 4, 2019                [Page 16]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   9.   r = string_to_int(truncated_h_string)
 
    10.  u = - A / (1 + 2*(r^2) ) mod p
         (note: the inverse of (1+2*(r^2)) modulo p is guaranteed to
@@ -943,16 +945,17 @@ Internet-Draft                     VRF                       August 2018
 
    In order to make this algorithm run in time that is (almost)
    independent of the input alpha_string (so-called "constant-time"),
-   implementers should pay particular attention to Steps 12 and 13
-   above.  These steps can be implemented using the following approach:
 
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 17]
+Goldberg, et al.          Expires March 4, 2019                [Page 17]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   implementers should pay particular attention to Steps 12 and 13
+   above.  These steps can be implemented using the following approach:
 
       e = w ^ ((p-1)/2) mod p
 
@@ -1000,15 +1003,14 @@ Internet-Draft                     VRF                       August 2018
 
    Input:
 
-      suite_string - a single octet specifying ECVRF ciphersuite.
 
 
-
-
-Goldberg, et al.          Expires March 3, 2019                [Page 18]
+Goldberg, et al.          Expires March 4, 2019                [Page 18]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      suite_string - a single octet specifying ECVRF ciphersuite.
 
       alpha_string - value to be hashed, an octet string
 
@@ -1057,15 +1059,14 @@ Internet-Draft                     VRF                       August 2018
         (final_x is the x-coordinate of the output; see note below on
         how to compute it)
 
-   11.  H = arbitrary_string_to_point(int_to_string(final_x, 2n))
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 19]
+Goldberg, et al.          Expires March 4, 2019                [Page 19]
 
 Internet-Draft                     VRF                       August 2018
 
 
+   11.  H = arbitrary_string_to_point(int_to_string(final_x, 2n))
         (note: arbitrary_string_to_point will not return INVALID by
         correctness of Simple SWU)
 
@@ -1113,14 +1114,15 @@ Internet-Draft                     VRF                       August 2018
 
    Input:
 
-      SK - an ECVRF secret key
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 20]
+Goldberg, et al.          Expires March 4, 2019                [Page 20]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      SK - an ECVRF secret key
 
       h_string - an octet string
 
@@ -1169,14 +1171,14 @@ Internet-Draft                     VRF                       August 2018
    2.  truncated_hashed_sk_string =
        hashed_sk_string[32]...hashed_sk_string[63]
 
-   3.  k_string = Hash(truncated_hashed_sk_string || h_string)
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 21]
+Goldberg, et al.          Expires March 4, 2019                [Page 21]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   3.  k_string = Hash(truncated_hashed_sk_string || h_string)
 
    4.  k = string_to_int(k_string) mod q
 
@@ -1224,15 +1226,15 @@ Internet-Draft                     VRF                       August 2018
 
       Gamma - EC point
 
-      c - integer between 0 and 2^(8n)-1
 
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 22]
+Goldberg, et al.          Expires March 4, 2019                [Page 22]
 
 Internet-Draft                     VRF                       August 2018
 
+
+      c - integer between 0 and 2^(8n)-1
 
       s - integer between 0 and 2^(16n)-1
 
@@ -1280,16 +1282,16 @@ Internet-Draft                     VRF                       August 2018
 
    o  The point_to_string function converts an EC point to an octet
       string according to the encoding specified in Section 2.3.3 of
-      [SECG1] with point compression on.  This implies m = 2n + 1 = 33.
-      (Note that certain software implementations do not introduce a
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 23]
+Goldberg, et al.          Expires March 4, 2019                [Page 23]
 
 Internet-Draft                     VRF                       August 2018
 
 
+      [SECG1] with point compression on.  This implies m = 2n + 1 = 33.
+      (Note that certain software implementations do not introduce a
       seperate elliptic curve point type and instead directly treat the
       EC point as an octet string per above encoding.  When using such
       an implementation, the point_to_string function can be treated as
@@ -1336,15 +1338,16 @@ Internet-Draft                     VRF                       August 2018
       Section 5.1.2 of [RFC8032].  (This is little endian
       representation.)
 
-   o  The string_to_int function interprets the string as an integer in
-      little-endian representation.
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 24]
+Goldberg, et al.          Expires March 4, 2019                [Page 24]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   o  The string_to_int function interprets the string as an integer in
+      little-endian representation.
 
    o  The point_to_string function converts an EC point to an octect
       string according to the encoding specified in Section 5.1.2 of
@@ -1391,16 +1394,16 @@ Internet-Draft                     VRF                       August 2018
 
    This procedure supposes that the public key provided to the Verifier
    is an octet string.  The procedure returns "INVALID" if the public
-   key in invalid.  Otherwise, it returns Y, the public key as an EC
-   point.
 
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 25]
+Goldberg, et al.          Expires March 4, 2019                [Page 25]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   key in invalid.  Otherwise, it returns Y, the public key as an EC
+   point.
 
 5.6.1.  ECVRF Validate Key
 
@@ -1447,16 +1450,17 @@ Internet-Draft                     VRF                       August 2018
    5.   y_string[31] = y_string[31] & oneTwentySeven_string
         (this step clears the high-order bit of octet 31)
 
-   6.   bad_pk[0] = int_to_string(0, 32)
-
-   7.   bad_pk[1] = int_to_string(1, 32)
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 26]
+Goldberg, et al.          Expires March 4, 2019                [Page 26]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   6.   bad_pk[0] = int_to_string(0, 32)
+
+   7.   bad_pk[1] = int_to_string(1, 32)
 
    8.   bad_y2 = 2707385501144840649318225287225658788936804267575313519
         463743609750303402022
@@ -1502,17 +1506,17 @@ Internet-Draft                     VRF                       August 2018
    The Key Transparency project at Google uses a VRF implemention that
    is similar to the ECVRF-P256-SHA256, with a few minor changes
    including the use of SHA-512 instead of SHA-256.  Its implementation
-   is available
-   <https://github.com/google/keytransparency/blob/master/core/vrf/
-   vrf.go>
 
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 27]
+Goldberg, et al.          Expires March 4, 2019                [Page 27]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   is available
+   <https://github.com/google/keytransparency/blob/master/core/vrf/
+   vrf.go>
 
    An implementation by Yahoo! similar to the ECVRF is available at
    <https://github.com/r2ishiguro/vrf>.
@@ -1558,17 +1562,16 @@ Internet-Draft                     VRF                       August 2018
    by an adversary.  The RSA-FDH-VRF defined in this document does not
    have these properties.  However, if adversarial key generation is a
    concern, the RSA-FDH-VRF may be modifed to have these properties by
-   adding additional cryptographic checks that its public key has the
-   right form.  These modifications are left for future specification.
 
 
 
-
-
-Goldberg, et al.          Expires March 3, 2019                [Page 28]
+Goldberg, et al.          Expires March 4, 2019                [Page 28]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   adding additional cryptographic checks that its public key has the
+   right form.  These modifications are left for future specification.
 
 7.1.2.  Pseudorandomness with untrusted keys
 
@@ -1614,17 +1617,17 @@ Internet-Draft                     VRF                       August 2018
    Otherwise, an adversary may be able to recover the private VRF key x
    (and thus break pseudorandomness of the VRF) after observing several
    valid VRF proofs pi.  The nonce generation methods specified in the
-   ECVRF ciphersuites of Section 5.5 are designed with this requirement
-   in mind.
 
 
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 29]
+Goldberg, et al.          Expires March 4, 2019                [Page 29]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   ECVRF ciphersuites of Section 5.5 are designed with this requirement
+   in mind.
 
 7.4.  Side-channel attacks
 
@@ -1671,17 +1674,17 @@ Internet-Draft                     VRF                       August 2018
    interface (in such an interface, alpha is not supplied all at once,
    but rather in pieces by a sequence of calls to Update).  The ECVRF,
    in particular, uses alpha only in ECVRF_hash_to_curve.  The curve
-   point H becomes the representative of alpha thereafter.  Note that
-   the suite_string octet and the public key are hashed together with
-   alpha in ECVRF_hash_to_curve, which ensures that the curve (including
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 30]
+Goldberg, et al.          Expires March 4, 2019                [Page 30]
 
 Internet-Draft                     VRF                       August 2018
 
 
+   point H becomes the representative of alpha thereafter.  Note that
+   the suite_string octet and the public key are hashed together with
+   alpha in ECVRF_hash_to_curve, which ensures that the curve (including
    the generator B) and the public key are included indirectly into
    subsequent hashes.
 
@@ -1726,17 +1729,17 @@ Internet-Draft                     VRF                       August 2018
    constant.  This way, the inputs to the hash_to_curve hash function
    used in producing H are guaranteed to be different; since all the
    other hashing done by the prover depends on H, inputs all the hash
-   functions used by the prover will also be different as long as
-   hash_to_curve is collision resistant.
 
 
 
 
-
-Goldberg, et al.          Expires March 3, 2019                [Page 31]
+Goldberg, et al.          Expires March 4, 2019                [Page 31]
 
 Internet-Draft                     VRF                       August 2018
 
+
+   functions used by the prover will also be different as long as
+   hash_to_curve is collision resistant.
 
 8.  Change Log
 
@@ -1786,10 +1789,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-
-
-
-Goldberg, et al.          Expires March 3, 2019                [Page 32]
+Goldberg, et al.          Expires March 4, 2019                [Page 32]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 33]
+Goldberg, et al.          Expires March 4, 2019                [Page 33]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -1901,7 +1901,7 @@ Authors' Addresses
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 34]
+Goldberg, et al.          Expires March 4, 2019                [Page 34]
 
 Internet-Draft                     VRF                       August 2018
 
@@ -1957,4 +1957,4 @@ Internet-Draft                     VRF                       August 2018
 
 
 
-Goldberg, et al.          Expires March 3, 2019                [Page 35]
+Goldberg, et al.          Expires March 4, 2019                [Page 35]
