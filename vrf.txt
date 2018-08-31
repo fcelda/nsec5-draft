@@ -696,7 +696,8 @@ Internet-Draft                     VRF                       August 2018
    5.  b_string = Hash(suite_string || three_string ||
        point_to_string(cofactor * Gamma))
 
-   6.  beta_string = b_string[0]...b_string[2n-1]
+   6.  beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating
+       the right thing to do?  What if you want all 512 bits?]
 
    7.  Output beta_string
 
@@ -721,7 +722,6 @@ Internet-Draft                     VRF                       August 2018
    1.  D = ECVRF_decode_proof(pi_string)
 
    2.  If D is "INVALID", output "INVALID" and stop
-
 
 
 

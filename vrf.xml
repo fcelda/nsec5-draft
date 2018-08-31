@@ -717,7 +717,7 @@
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
                     <t>b_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
-                    <t>beta_string = b_string[0]...b_string[2n-1] 
+                    <t>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits?]
                     <!--<vspace/>(first 2n octets of b_string)--></t>
                     <t>Output beta_string</t>
                 </list>
