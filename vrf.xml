@@ -828,7 +828,7 @@
                     <t>H = "INVALID"</t>
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
-                        <t>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty. 1 is better because no big-endian/little-endian confusion and bug possibility (this counter will not a bigint, so actual programmers will have to do conversions differently for it)]</t>
+                        <t>ctr_string = int_to_string(ctr, 1)</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] 
@@ -1719,7 +1719,7 @@
                 section. Added an discussion of secrecy into security considerations.
                 Removed B and PK=Y from ECVRF_hash_points because they are already present
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
-                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section</t>
+                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues</t>
             </list>
         </t>
     </section>

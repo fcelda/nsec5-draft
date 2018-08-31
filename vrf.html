@@ -974,7 +974,7 @@
 <li>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
 <li>H = "INVALID"</li>
 <li>While H is "INVALID" or H is EC point at infinity: <ol style="list-style-type: upper-alpha">
-<li>ctr_string = int_to_string(ctr, 4) [TODO: why 4 bytes? 1 is plenty. 1 is better because no big-endian/little-endian confusion and bug possibility (this counter will not a bigint, so actual programmers will have to do conversions differently for it)]</li>
+<li>ctr_string = int_to_string(ctr, 1)</li>
 <li>ctr = ctr + 1</li>
 <li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</li>
 <li>attempted_hash_string = hash_string[0]...hash_string[2n-1] </li>
@@ -1414,7 +1414,7 @@
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
 <li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed B and PK=Y from ECVRF_hash_points because they are already present via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</li>
-<li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section</li>
+<li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues</li>
 </ul>
 
 <p> </p>
