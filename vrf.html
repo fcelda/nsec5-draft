@@ -416,6 +416,7 @@
 <link href="#rfc.references" rel="Chapter" title="10 References">
 <link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References">
 <link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -424,7 +425,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-03" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-31" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-03" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -448,7 +449,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: March 4, 2019</td>
+<td class="left">Expires: March 7, 2019</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -465,7 +466,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">August 31, 2018</td>
+<td class="right">September 3, 2018</td>
 </tr>
 
     	
@@ -481,7 +482,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 4, 2019.</p>
+<p>This Internet-Draft will expire on March 7, 2019.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -575,7 +576,9 @@
 </li>
 <li>10.2.   <a href="#rfc.references.2">Informative References</a>
 </li>
-</ul><li><a href="#rfc.authors">Authors' Addresses</a>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
 
 
@@ -949,7 +952,7 @@
 <a href="#rfc.section.5.4.1.1">5.4.1.1.</a> <a href="#ecvrfH2C1" id="ecvrfH2C1">ECVRF_hash_to_curve_try_and_increment</a>
 </h1>
 <p id="rfc.section.5.4.1.1.p.1">The following ECVRF_hash_to_curve_try_and_increment(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve in a simple and generic way that works for any elliptic curve.  </p>
-<p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha_string.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average. See also <a href="#Icart09" class="xref">[Icart09]</a>. [TODO: do we need this reference?] </p>
+<p id="rfc.section.5.4.1.1.p.2">The running time of this algorithm depends on alpha_string.  For the ciphersuites specified in <a href="#suites" class="xref">Section 5.5</a>, this algorithm is expected to find a valid curve point after approximately two attempts (i.e., when ctr=1) on average.  </p>
 <p id="rfc.section.5.4.1.1.p.3">However, because the running time of algorithm depends on alpha_string, this algorithm SHOULD be avoided in applications where it is important that the VRF input alpha remain secret.  </p>
 <p id="rfc.section.5.4.1.1.p.4">ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string) </p>
 <p id="rfc.section.5.4.1.1.p.5">Input: </p>
@@ -989,7 +992,7 @@
 <h1 id="rfc.section.5.4.1.2">
 <a href="#rfc.section.5.4.1.2">5.4.1.2.</a> <a href="#elligator2" id="elligator2">ECVRF_hash_to_curve_elligator2_25519</a>
 </h1>
-<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm exclusively for the Ed25519 elliptic curve (which the Edwards equivalent of Curve25519).  </p>
+<p id="rfc.section.5.4.1.2.p.1">The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the elligator2 algorithm from Section 5 of <a href="#BHKT13" class="xref">[BHKT13]</a> (see also <a href="#I-D.irtf-cfrg-hash-to-curve" class="xref">[I-D.irtf-cfrg-hash-to-curve]</a>) exclusively for the Ed25519 elliptic curve (which the Edwards equivalent of Curve25519). It can be implemented with running time that is independent of the input alpha (so-called "constant-time").  </p>
 <p id="rfc.section.5.4.1.2.p.2">ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string) </p>
 <p id="rfc.section.5.4.1.2.p.3">Input: </p>
 
@@ -1043,7 +1046,7 @@
 <p> </p>
 </li>
 <li>H = string_to_point(h_string) <br> (note: string_to_point will not return INVALID by correctness of Elligator2)</li>
-<li>Set H = cofactor * H <br>[TODO: There is a tiny chance this operation will produce point at infinity. The chance is so tiny that it shouldn't be a problem and it's perfecty encodable (y_1 = 1, x = 0), but will it break some implementations and cause testing headaches for developers?]</li>
+<li>Set H = cofactor * H</li>
 <li>Output H</li>
 </ol>
 
@@ -1065,12 +1068,12 @@
 <li>final_u = CMOV(u, other_u, b)</li>
 </ul>
 
-<p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  [TODO: Should we explain how to implement CMOV in constant time? ] [TODO: Do we have appropriate references to the literature where Elligator2 was proposed and to other standards?] </p>
+<p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
 <p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#SimpleSWU" id="SimpleSWU">ECVRF_hash_to_curve_Simplified_SWU</a>
 </h1>
-<p id="rfc.section.5.4.1.3.p.1">The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne-Ulas algorithm from [TODO: add reference to <a href="#BCIMRT10" class="xref">[BCIMRT10]</a> and <a href="#SW18" class="xref">[SW18]</a>, latest version] for any curve with prime p that is congruent to 3 modulo 4.  </p>
+<p id="rfc.section.5.4.1.3.p.1">The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string) algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne <a href="#SW06" class="xref">[SW06]</a> and Ulas <a href="#Ulas07" class="xref">[Ulas07]</a> algorithm from Section 7 of <a href="#BCIMRT10" class="xref">[BCIMRT10]</a> (see also <a href="#I-D.irtf-cfrg-hash-to-curve" class="xref">[I-D.irtf-cfrg-hash-to-curve]</a>[TODO: Update to latest version]).  It can be implemented with running time that is independent of the input alpha (so-called "constant-time"). Generally, this method can be used for any curve with prime p that is congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in step 6 below may need to be handled differently depending on the curve equation, to ensure that the result is a point on the curve.  </p>
 <p id="rfc.section.5.4.1.3.p.2">ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string) </p>
 <p id="rfc.section.5.4.1.3.p.3">Input: </p>
 
@@ -1088,10 +1091,7 @@
 <p> </p>
 <p id="rfc.section.5.4.1.3.p.5">Fixed options: </p>
 
-<ul class="empty">
-<li>a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</li>
-<li>default_x, to be used in the negligbly likely case that this algorithm cannot compute an answer because of division by 0 [TODO: what should this be?]</li>
-</ul>
+<ul class="empty"><li>a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.1.3.p.6">Steps: </p>
@@ -1100,10 +1100,11 @@
 <li>PK_string = EC2OSP(Y)</li>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
 <li>h_string = Hash(suite_string || one_string || PK_string || alpha_string)</li>
-<li>t = string_to_int(h_string)</li>
+<li>t = string_to_int(h_string) mod p</li>
 <li>r = -(t^2) mod p</li>
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
-<li>If d = 0 then x = default_x; else x = ((-b/a) * (1 + (1/d))) mod p.</li>
+<li>If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p <br>(as long as Hash is secure, the case of d = 0 is an utterly improbably occurrence; <br>the two cases can be combined into one by computing d_inverse = d^(p-2) mod p)</li>
+<li>x = ((-b/a) * (1 + d_inverse)) mod p</li>
 <li>w = (x^3 + a*x + b) mod p <br>(this step evaluates the curve equation)</li>
 <li>Let e equal the Legendre symbol of w and p <br>(see note below on how to compute e)</li>
 <li>If e is equal to 0 or 1 then final_x = x; else final_x = r * x mod p <br>(final_x is the x-coordinate of the output; see note below on how to compute it)</li>
@@ -1113,7 +1114,7 @@
 </ol>
 
 <p> </p>
-<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 9 and 10 above.  These steps can be implemented using the following approach.  Let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If arithmetic and CMOV are implemented in constant time, then steps 9 and 10 above can be implemented as follows: </p>
+<p id="rfc.section.5.4.1.3.p.7">In order to make this algorithm run in time that is (almost) independent of the input (so-called "constant-time"), implementers should pay particular attention to Steps 10 and 11 above.  These steps can be implemented using the following approach.  Let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when selector is 1 and  result_if_0 when selector is 0. If arithmetic and CMOV are implemented in constant time, then steps 9 and 10 above can be implemented as follows: </p>
 
 <ul class="empty">
 <li>e = (w ^ ((p-1)/2))+1 mod p <br>(At this point, e is 0, 1, or 2, as an integer.)</li>
@@ -1122,7 +1123,7 @@
 <li>final_x = CMOV(x, other_x, b)</li>
 </ul>
 
-<p> [TODO: Should we explain how to implement CMOV in constant time?] </p>
+<p> CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
 <p id="rfc.section.5.4.1.3.p.8">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfNonceGeneration" id="ecvrfNonceGeneration">ECVRF Nonce Generation</a>
@@ -1473,17 +1474,22 @@
 <tr>
 <td class="reference"><b id="BCIMRT10">[BCIMRT10]</b></td>
 <td class="top">
-<a>Brier, E.</a>, <a>Coron, J.</a>, <a>Icart, T.</a>, <a>Madore, D.</a>, <a>Randriam, H.</a> and <a>M. Tibouchi</a>, "<a>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</a>", in CRYPTO, 2010.</td>
+<a>Brier, E.</a>, <a>Coron, J.</a>, <a>Icart, T.</a>, <a>Madore, D.</a>, <a>Randriam, H.</a> and <a>M. Tibouchi</a>, "<a>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</a>", in Advances in Cryptology - CRYPTO, 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="BHKT13">[BHKT13]</b></td>
+<td class="top">
+<a>Bernstein, D.</a>, <a>Hamburg, M.</a>, <a>Krasnova, A.</a> and <a>T. Lange</a>, "<a>Elligator: elliptic-curve points indistinguishable from uniform random strings.</a>", in ACM SIGSAC Conference on Computer and Communications Security (CCS), 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.irtf-cfrg-hash-to-curve">[I-D.irtf-cfrg-hash-to-curve]</b></td>
+<td class="top">
+<a>Scott, S.</a>, <a>Sullivan, N.</a> and <a>C. Wood</a>, "<a href="https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-01">Hashing to Elliptic Curves</a>", Internet-Draft draft-irtf-cfrg-hash-to-curve-01, July 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b></td>
 <td class="top">
 <a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/draft-vcelak-nsec5-07">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-07, June 2018.</td>
-</tr>
-<tr>
-<td class="reference"><b id="Icart09">[Icart09]</b></td>
-<td class="top">
-<a>Icart, T.</a>, "<a>How to Hash into Elliptic Curves</a>", in CRYPTO, 2009.</td>
 </tr>
 <tr>
 <td class="reference"><b id="MRV99">[MRV99]</b></td>
@@ -1501,11 +1507,19 @@
 <a>Shoup, V.</a>, "<a href="http://www.shoup.net/ntb/ntb-v2.pdf">A Computational Introduction to Number Theory and Algebra</a>", 2008.</td>
 </tr>
 <tr>
-<td class="reference"><b id="SW18">[SW18]</b></td>
+<td class="reference"><b id="SW06">[SW06]</b></td>
 <td class="top">
-<a>Sullivan, E.</a> and <a>C. Wood</a>, "<a>Hashing to Elliptic Curves</a>", 2018.</td>
+<a>Shallue, A.</a> and <a>C. van de Woestijne</a>, "<a>Construction of rational points on elliptic curves over finite fields.</a>", in Algorithmic Number Theory - ANTS, 2006.</td>
+</tr>
+<tr>
+<td class="reference"><b id="Ulas07">[Ulas07]</b></td>
+<td class="top">
+<a>Ulas, M.</a>, "<a>Rational points on certain hyperelliptic curves over finite fields.</a>", in Bull. Polish Acad. Sci. Math., 2007.</td>
 </tr>
 </tbody></table>
+<h1 id="rfc.appendix.A">
+<a href="#rfc.appendix.A">Appendix A.</a> Test Vectors</h1>
+<p id="rfc.section.A.p.1">[TODO]</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
