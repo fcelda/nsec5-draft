@@ -954,6 +954,7 @@
                 (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).
                 CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b)
                 </t>
+                <t>[TODO: explain that legendre computation can be combined with square root computation (at point decoding) to speed things up]</t>
 
                 <t>
                     If having this algorithm run in constant time is not important, then there are much faster algorithms
@@ -1041,7 +1042,8 @@
                     </list>
                     CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b)
                 </t>
-                
+                <t>[TODO: explain that legendre computation can be combined with square root computation (at point decoding) to speed things up]</t>
+
                 <t>
                     If having this algorithm run in constant time is not important, then there are much faster algorithms
                     to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).

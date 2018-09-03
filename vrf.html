@@ -1069,7 +1069,8 @@
 </ul>
 
 <p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
-<p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p id="rfc.section.5.4.1.2.p.10">[TODO: explain that legendre computation can be combined with square root computation (at point decoding) to speed things up]</p>
+<p id="rfc.section.5.4.1.2.p.11">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#SimpleSWU" id="SimpleSWU">ECVRF_hash_to_curve_Simplified_SWU</a>
 </h1>
@@ -1124,7 +1125,8 @@
 </ul>
 
 <p> CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
-<p id="rfc.section.5.4.1.3.p.8">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p id="rfc.section.5.4.1.3.p.8">[TODO: explain that legendre computation can be combined with square root computation (at point decoding) to speed things up]</p>
+<p id="rfc.section.5.4.1.3.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfNonceGeneration" id="ecvrfNonceGeneration">ECVRF Nonce Generation</a>
 </h1>

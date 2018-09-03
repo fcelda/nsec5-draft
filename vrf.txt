@@ -985,6 +985,9 @@ Internet-Draft                     VRF                    September 2018
    and then applying bitwise XOR and AND operations as follows: other_x
    XOR ((x XOR other_x) AND b)
 
+   [TODO: explain that legendre computation can be combined with square
+   root computation (at point decoding) to speed things up]
+
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
    (which is the same as the Jacobi symbol because p is a prime).  See,
@@ -999,9 +1002,6 @@ Internet-Draft                     VRF                    September 2018
    Update to latest version]).  It can be implemented with running time
    that is independent of the input alpha (so-called "constant-time").
    Generally, this method can be used for any curve with prime p that is
-   congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
-   step 6 below may need to be handled differently depending on the
-   curve equation, to ensure that the result is a point on the curve.
 
 
 
@@ -1009,6 +1009,10 @@ Goldberg, et al.          Expires March 7, 2019                [Page 18]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
+   step 6 below may need to be handled differently depending on the
+   curve equation, to ensure that the result is a point on the curve.
 
    ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
 
@@ -1054,10 +1058,6 @@ Internet-Draft                     VRF                    September 2018
    8.   x = ((-b/a) * (1 + d_inverse)) mod p
 
    9.   w = (x^3 + a*x + b) mod p
-        (this step evaluates the curve equation)
-
-   10.  Let e equal the Legendre symbol of w and p
-        (see note below on how to compute e)
 
 
 
@@ -1065,6 +1065,11 @@ Goldberg, et al.          Expires March 7, 2019                [Page 19]
 
 Internet-Draft                     VRF                    September 2018
 
+
+        (this step evaluates the curve equation)
+
+   10.  Let e equal the Legendre symbol of w and p
+        (see note below on how to compute e)
 
    11.  If e is equal to 0 or 1 then final_x = x; else final_x = r * x
         mod p
@@ -1107,13 +1112,8 @@ Internet-Draft                     VRF                    September 2018
    and then applying bitwise XOR and AND operations as follows: other_x
    XOR ((x XOR other_x) AND b)
 
-   If having this algorithm run in constant time is not important, then
-   there are much faster algorithms to compute the Legendre symbol
-   (which is the same as the Jacobi symbol because p is a prime).  See,
-   for example, Section 12.3 of [ntb].
-
-
-
+   [TODO: explain that legendre computation can be combined with square
+   root computation (at point decoding) to speed things up]
 
 
 
@@ -1121,6 +1121,11 @@ Goldberg, et al.          Expires March 7, 2019                [Page 20]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   If having this algorithm run in constant time is not important, then
+   there are much faster algorithms to compute the Legendre symbol
+   (which is the same as the Jacobi symbol because p is a prime).  See,
+   for example, Section 12.3 of [ntb].
 
 5.4.2.  ECVRF Nonce Generation
 
@@ -1165,11 +1170,6 @@ Internet-Draft                     VRF                    September 2018
 
    ECVRF_nonce_generation_RFC8032(SK, h_string)
 
-   Input:
-
-      SK - an ECVRF secret key
-
-      h_string - an octet string
 
 
 
@@ -1177,6 +1177,12 @@ Goldberg, et al.          Expires March 7, 2019                [Page 21]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   Input:
+
+      SK - an ECVRF secret key
+
+      h_string - an octet string
 
    Output:
 
@@ -1221,18 +1227,14 @@ Internet-Draft                     VRF                    September 2018
 
    6.  c = string_to_int(truncated_c_string)
 
-   7.  Output c
-
-
-
-
-
 
 
 Goldberg, et al.          Expires March 7, 2019                [Page 22]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   7.  Output c
 
 5.4.4.  ECVRF Decode Proof
 
@@ -1280,8 +1282,6 @@ Internet-Draft                     VRF                    September 2018
       [RFC5114]  (Section 2.6).  For this group, 2n = 32 and cofactor =
       1.
 
-   o  The key pair generation primitive is specified in Section 3.2.1 of
-      [SECG1] (q, B, SK, and PK in this document correspond to in n, G,
 
 
 
@@ -1290,6 +1290,8 @@ Goldberg, et al.          Expires March 7, 2019                [Page 23]
 Internet-Draft                     VRF                    September 2018
 
 
+   o  The key pair generation primitive is specified in Section 3.2.1 of
+      [SECG1] (q, B, SK, and PK in this document correspond to in n, G,
       d, and Q in Section 3.2.1 of [SECG1]).  In this ciphersuite, the
       secret scalar x is equal to the private key SK.
 
@@ -1336,8 +1338,6 @@ Internet-Draft                     VRF                    September 2018
    this one by adding some kind of suffix to indicate try-and-increment,
    to avoid possibility of confusion with -Elligator version?]
 
-   o  suite_string = 0x03 = int_to_string(3, 1).
-
 
 
 
@@ -1345,6 +1345,8 @@ Goldberg, et al.          Expires March 7, 2019                [Page 24]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   o  suite_string = 0x03 = int_to_string(3, 1).
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -1389,8 +1391,6 @@ Internet-Draft                     VRF                    September 2018
    o  This ciphersuite is identical to ECVRF-ED25519-SHA512 except that
       the ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.2 and suite_string = 0x04 = int_to_string(4, 1).
-
-
 
 
 
