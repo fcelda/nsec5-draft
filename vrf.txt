@@ -90,14 +90,14 @@ Table of Contents
        5.4.2.  ECVRF Nonce Generation  . . . . . . . . . . . . . . .  21
        5.4.3.  ECVRF Hash Points . . . . . . . . . . . . . . . . . .  22
        5.4.4.  ECVRF Decode Proof  . . . . . . . . . . . . . . . . .  23
-     5.5.  ECVRF Ciphersuites  . . . . . . . . . . . . . . . . . . .  24
+     5.5.  ECVRF Ciphersuites  . . . . . . . . . . . . . . . . . . .  23
      5.6.  When the ECVRF Keys are Untrusted . . . . . . . . . . . .  26
        5.6.1.  ECVRF Validate Key  . . . . . . . . . . . . . . . . .  26
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  28
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  28
-     7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  29
+     7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  28
        7.1.1.  Uniqueness and collision resistance with untrusted
-               keys  . . . . . . . . . . . . . . . . . . . . . . . .  29
+               keys  . . . . . . . . . . . . . . . . . . . . . . . .  28
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  29
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  29
      7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  30
@@ -985,30 +985,10 @@ Internet-Draft                     VRF                    September 2018
    and then applying bitwise XOR and AND operations as follows: other_x
    XOR ((x XOR other_x) AND b)
 
-   For efficiency, the computation of e can be combined with the
-   computation of v as the square root of final_u * (final_u^2 +
-   A*final_u + 1) mod p (which is the square root of w or 2wr^2,
-   depending on e).  as described in Section 5.5 of [BHKT13] (notation
-   v, epsilon, x, y, u in [BHKT13] corresponds to u, e, final_u, v, and
-   2 in this specification) and the inverse of v as described in
-   Section 5 of [DBLSY12]; this inverse of v may make converting
-   h_string to H more efficient, because the x-coordinate will be u/v or
-   -u/v depending on x0.
-
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
    (which is the same as the Jacobi symbol because p is a prime).  See,
    for example, Section 12.3 of [ntb].
-
-
-
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 18]
-
-Internet-Draft                     VRF                    September 2018
-
 
 5.4.1.3.  ECVRF_hash_to_curve_Simplified_SWU
 
@@ -1022,6 +1002,13 @@ Internet-Draft                     VRF                    September 2018
    congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
    step 6 below may need to be handled differently depending on the
    curve equation, to ensure that the result is a point on the curve.
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 18]
+
+Internet-Draft                     VRF                    September 2018
+
 
    ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
 
@@ -1058,14 +1045,6 @@ Internet-Draft                     VRF                    September 2018
    6.   d = (r^2 + r) mod p
         (d is t^4-t^2 mod p)
 
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 19]
-
-Internet-Draft                     VRF                    September 2018
-
-
    7.   If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p
         (as long as Hash is secure, the case of d = 0 is an utterly
         improbably occurrence;
@@ -1079,6 +1058,13 @@ Internet-Draft                     VRF                    September 2018
 
    10.  Let e equal the Legendre symbol of w and p
         (see note below on how to compute e)
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 19]
+
+Internet-Draft                     VRF                    September 2018
+
 
    11.  If e is equal to 0 or 1 then final_x = x; else final_x = r * x
         mod p
@@ -1115,26 +1101,26 @@ Internet-Draft                     VRF                    September 2018
 
       final_x = CMOV(x, other_x, b)
 
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 20]
-
-Internet-Draft                     VRF                    September 2018
-
-
    CMOV can be implemented in constant time a variety of ways; for
    example, by expanding b from a single bit to an all-0 or all-1 string
    (accomplished by negating b in standard two's-complement arithmetic)
    and then applying bitwise XOR and AND operations as follows: other_x
    XOR ((x XOR other_x) AND b)
 
-   [TODO: explain that legendre computation can be combined with square
-   root computation (at point decoding) to speed things up]
-
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
    (which is the same as the Jacobi symbol because p is a prime).  See,
    for example, Section 12.3 of [ntb].
+
+
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 20]
+
+Internet-Draft                     VRF                    September 2018
+
 
 5.4.2.  ECVRF Nonce Generation
 
@@ -1171,13 +1157,6 @@ Internet-Draft                     VRF                    September 2018
 
       The prime q is the same as in this specification
 
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 21]
-
-Internet-Draft                     VRF                    September 2018
-
-
       All the other values and primitives as defined in [RFC6979]
 
 5.4.2.2.  ECVRF Nonce Generation From RFC 8032
@@ -1191,6 +1170,13 @@ Internet-Draft                     VRF                    September 2018
       SK - an ECVRF secret key
 
       h_string - an octet string
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 21]
+
+Internet-Draft                     VRF                    September 2018
+
 
    Output:
 
@@ -1226,14 +1212,6 @@ Internet-Draft                     VRF                    September 2018
 
    2.  Initialize str = suite_string || two_string
 
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 22]
-
-Internet-Draft                     VRF                    September 2018
-
-
    3.  for PJ in [P1, P2, ... PM]:
        str = str || point_to_string(PJ)
 
@@ -1244,6 +1222,17 @@ Internet-Draft                     VRF                    September 2018
    6.  c = string_to_int(truncated_c_string)
 
    7.  Output c
+
+
+
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 22]
+
+Internet-Draft                     VRF                    September 2018
+
 
 5.4.4.  ECVRF Decode Proof
 
@@ -1278,18 +1267,6 @@ Internet-Draft                     VRF                    September 2018
 
    6.  Output Gamma, c, and s
 
-
-
-
-
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 23]
-
-Internet-Draft                     VRF                    September 2018
-
-
 5.5.  ECVRF Ciphersuites
 
    This document defines ECVRF-P256-SHA256 as follows: [TODO: rename
@@ -1305,6 +1282,14 @@ Internet-Draft                     VRF                    September 2018
 
    o  The key pair generation primitive is specified in Section 3.2.1 of
       [SECG1] (q, B, SK, and PK in this document correspond to in n, G,
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 23]
+
+Internet-Draft                     VRF                    September 2018
+
+
       d, and Q in Section 3.2.1 of [SECG1]).  In this ciphersuite, the
       secret scalar x is equal to the private key SK.
 
@@ -1338,14 +1323,6 @@ Internet-Draft                     VRF                    September 2018
 
    o  The hash function Hash is SHA-256 as specified in [RFC6234].
 
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 24]
-
-Internet-Draft                     VRF                    September 2018
-
-
    o  The ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.1.
 
@@ -1360,6 +1337,14 @@ Internet-Draft                     VRF                    September 2018
    to avoid possibility of confusion with -Elligator version?]
 
    o  suite_string = 0x03 = int_to_string(3, 1).
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 24]
+
+Internet-Draft                     VRF                    September 2018
+
 
    o  The EC group G is the Ed25519 elliptic curve with parameters
       defined in Table 1 of [RFC8032].  For this group, 2n = 32 and
@@ -1394,14 +1379,6 @@ Internet-Draft                     VRF                    September 2018
    o  arbitrary_string_to_point function is equivalent to the
       string_to_point function.
 
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 25]
-
-Internet-Draft                     VRF                    September 2018
-
-
    o  The hash function Hash is SHA-512 as specified in [RFC6234].
 
    o  The ECVRF_hash_to_curve function is as specified in
@@ -1412,6 +1389,18 @@ Internet-Draft                     VRF                    September 2018
    o  This ciphersuite is identical to ECVRF-ED25519-SHA512 except that
       the ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.2 and suite_string = 0x04 = int_to_string(4, 1).
+
+
+
+
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 25]
+
+Internet-Draft                     VRF                    September 2018
+
 
 5.6.  When the ECVRF Keys are Untrusted
 
@@ -1450,14 +1439,6 @@ Internet-Draft                     VRF                    September 2018
 
    Steps:
 
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 26]
-
-Internet-Draft                     VRF                    September 2018
-
-
    1.  Y = string_to_point(PK_string)
 
    2.  If Y is "INVALID", output "INVALID" and stop
@@ -1469,6 +1450,14 @@ Internet-Draft                     VRF                    September 2018
 
    Note that if the cofactor = 1, then Step 3 need not multiply Y by the
    cofactor; instead, it suffices to output "INVALID" if Y is the point
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 26]
+
+Internet-Draft                     VRF                    September 2018
+
+
    at infinity.  Moreover, if the cofactor is small, the total number of
    points that could cause Step 3 to output "INVALID" may be small, and
    it may be more efficient to simply check Y against a fixed list of
@@ -1507,13 +1496,6 @@ Internet-Draft                     VRF                    September 2018
    14.  If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and
         stop
 
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 27]
-
-Internet-Draft                     VRF                    September 2018
-
-
    15.  Output Y
 
    (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys,
@@ -1524,6 +1506,14 @@ Internet-Draft                     VRF                    September 2018
    are simply bad_pk[0] and bad_pk[1] shifted by p, in case the
    y-coordinate had not been modular reduced.  There is no need to shift
    the other bad_pk values by p, because they will exceed 2^255.)
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 27]
+
+Internet-Draft                     VRF                    September 2018
+
+
    [TODO: what's the sources for these?  We got them from libsodium http
    s://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da
    409c55d58a/src/libsodium/crypto_core/ed25519/ref10/
@@ -1559,17 +1549,6 @@ Internet-Draft                     VRF                    September 2018
 
 7.  Security Considerations
 
-
-
-
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 28]
-
-Internet-Draft                     VRF                    September 2018
-
-
 7.1.  Key Generation
 
    Applications that use the VRFs defined in this document MUST ensure
@@ -1582,6 +1561,14 @@ Internet-Draft                     VRF                    September 2018
    long as the VRF keys are generated correctly, with good randomness.
    If the Verifier trusts the VRF keys are generated correctly, it MAY
    use the public key Y as is.
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 28]
+
+Internet-Draft                     VRF                    September 2018
+
 
    However, if the ECVRF uses keys that could be generated
    adversarially, then the the Verfier MUST first perform the validation
@@ -1618,14 +1605,6 @@ Internet-Draft                     VRF                    September 2018
    [nsec5ecc] presents cryptographic reductions to an underlying hard
    problem (e.g.  Decisional Diffie Hellman for the ECVRF, or the
    standard RSA assumption for RSA-FDH-VRF) that prove the VRFs
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 29]
-
-Internet-Draft                     VRF                    September 2018
-
-
    specificied in this document possess full pseudorandomness as well as
    selective pseudorandomness.  However, the cryptographic reductions
    are tighter for selective pseudorandomness than for full
@@ -1639,6 +1618,13 @@ Internet-Draft                     VRF                    September 2018
       sufficient for the application.  That is, that pseudorandomness of
       outputs matters only for inputs that are chosen independently of
       the VRF key.
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 29]
+
+Internet-Draft                     VRF                    September 2018
+
 
    o  If full pseudorandomness is required for the application, the
       application may increase security parameters to make up for the
@@ -1674,14 +1660,6 @@ Internet-Draft                     VRF                    September 2018
    because the algorithm's running time depends on the VRF input alpha,
    and thus creates a timing channel that can be used to learn
    information about alpha.  That said, for most inputs the amount of
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 30]
-
-Internet-Draft                     VRF                    September 2018
-
-
    information obtained from such a timing attack is likely to be small
    (1 bit, on average), since the algorithm is expected to find a valid
    curve point after only two attempts.  However, there might be inputs
@@ -1692,6 +1670,17 @@ Internet-Draft                     VRF                    September 2018
    Meanwhile, ECVRF-ED25519-SHA512-Elligator2 runs in time constant in
    alpha if the implementation of the ECVRF_hash_to_curve function
    specified in Section 5.4.1.2 also runs in constant time.
+
+
+
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 30]
+
+Internet-Draft                     VRF                    September 2018
+
 
 7.5.  Proofs Provide No Secrecy for VRF Input
 
@@ -1730,14 +1719,6 @@ Internet-Draft                     VRF                    September 2018
    equal each other or to any queries made to the hash function for the
    same SK and different alpha.  This is indeed the case for the RSA-
    FDH-VRF defined in this document, because the first octets of the
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 31]
-
-Internet-Draft                     VRF                    September 2018
-
-
    input to the hash function used in MGF1 and in proof_to_hash are
    different.  This is also the case for the ECVRF ciphersuites defined
    in this document, because:
@@ -1748,6 +1729,14 @@ Internet-Draft                     VRF                    September 2018
       secret to the hash function that is not used by honest parties as
       input to any other hash function, and is not available to the
       adversary
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 31]
+
+Internet-Draft                     VRF                    September 2018
+
 
    o  the second octet of the input to the hash function used in
       hash_to_curve, proof_to_hash, and hash_points are all different
@@ -1786,14 +1775,6 @@ Internet-Draft                     VRF                    September 2018
       SHA256.)  Made ECVRF nonce generation a separate component, so
       that nonces are determinsitic.  In ECVRF proving, changed + to -
       (and made corresponding verification changes) in order to be
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 32]
-
-Internet-Draft                     VRF                    September 2018
-
-
       consistent with EdDSA and ECDSA.  Highlighted that
       ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable
       to ECVRF for future-proofing.  Ensured domain separation for hash
@@ -1804,6 +1785,14 @@ Internet-Draft                     VRF                    September 2018
       ECVRF_hash_points because they are already present via H, which is
       computed via hash_to_curve using the suite_string (which
       identifies B) and Y.
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 32]
+
+Internet-Draft                     VRF                    September 2018
+
 
       03 - Changed Ed25519 conversions to little-endian, to match RFC
       8032; added simple key validation for Ed25519; added Simple SWU
@@ -1841,15 +1830,6 @@ Internet-Draft                     VRF                    September 2018
               DOI 10.17487/RFC5114, January 2008,
               <https://www.rfc-editor.org/info/rfc5114>.
 
-
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 33]
-
-Internet-Draft                     VRF                    September 2018
-
-
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
               DOI 10.17487/RFC6234, May 2011,
@@ -1859,6 +1839,16 @@ Internet-Draft                     VRF                    September 2018
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <https://www.rfc-editor.org/info/rfc6979>.
+
+
+
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 33]
+
+Internet-Draft                     VRF                    September 2018
+
 
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
@@ -1887,24 +1877,10 @@ Internet-Draft                     VRF                    September 2018
               uniform random strings.", in ACM SIGSAC Conference on
               Computer and Communications Security (CCS), 2013.
 
-   [DBLSY12]  Bernstein, D., Duif, N., Lange, T., Schwabe, P., and B.
-              Yang, "High-speed high-security signatures.", in J.
-              Cryptographic Engineering, 2012.
-
    [I-D.irtf-cfrg-hash-to-curve]
               Scott, S., Sullivan, N., and C. Wood, "Hashing to Elliptic
               Curves", draft-irtf-cfrg-hash-to-curve-01 (work in
               progress), July 2018.
-
-
-
-
-
-
-Goldberg, et al.          Expires March 7, 2019                [Page 34]
-
-Internet-Draft                     VRF                    September 2018
-
 
    [I-D.vcelak-nsec5]
               Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
@@ -1922,6 +1898,14 @@ Internet-Draft                     VRF                    September 2018
               2017/099, February 2017,
               <https://eprint.iacr.org/2017/099.pdf>.
 
+
+
+
+Goldberg, et al.          Expires March 7, 2019                [Page 34]
+
+Internet-Draft                     VRF                    September 2018
+
+
    [ntb]      Shoup, V., "A Computational Introduction to Number Theory
               and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
 
@@ -1932,6 +1916,22 @@ Internet-Draft                     VRF                    September 2018
    [Ulas07]   Ulas, M., "Rational points on certain hyperelliptic curves
               over finite fields.", in Bull. Polish Acad. Sci. Math.,
               2007.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

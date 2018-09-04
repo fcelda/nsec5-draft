@@ -1069,8 +1069,7 @@
 </ul>
 
 <p> (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).  CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
-<p id="rfc.section.5.4.1.2.p.10">For efficiency, the computation of e can be combined with the computation of v as the square root of final_u * (final_u^2 + A*final_u + 1) mod p (which is the square root of w or 2wr^2, depending on e).  as described in Section 5.5 of <a href="#BHKT13" class="xref">[BHKT13]</a> (notation v, epsilon, x, y, u in <a href="#BHKT13" class="xref">[BHKT13]</a> corresponds to u, e, final_u, v, and 2 in this specification) and the inverse of v as described in Section 5 of <a href="#DBLSY12" class="xref">[DBLSY12]</a>; this inverse of v may make converting h_string to H more efficient, because the x-coordinate will be u/v or -u/v depending on x0.  </p>
-<p id="rfc.section.5.4.1.2.p.11">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p id="rfc.section.5.4.1.2.p.10">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.1.3">
 <a href="#rfc.section.5.4.1.3">5.4.1.3.</a> <a href="#SimpleSWU" id="SimpleSWU">ECVRF_hash_to_curve_Simplified_SWU</a>
 </h1>
@@ -1125,8 +1124,7 @@
 </ul>
 
 <p> CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b) </p>
-<p id="rfc.section.5.4.1.3.p.8">[TODO: explain that legendre computation can be combined with square root computation (at point decoding) to speed things up]</p>
-<p id="rfc.section.5.4.1.3.p.9">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
+<p id="rfc.section.5.4.1.3.p.8">If having this algorithm run in constant time is not important, then there are much faster algorithms to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).  See, for example, Section 12.3 of <a href="#ntb" class="xref">[ntb]</a>.  </p>
 <h1 id="rfc.section.5.4.2">
 <a href="#rfc.section.5.4.2">5.4.2.</a> <a href="#ecvrfNonceGeneration" id="ecvrfNonceGeneration">ECVRF Nonce Generation</a>
 </h1>
@@ -1482,11 +1480,6 @@
 <td class="reference"><b id="BHKT13">[BHKT13]</b></td>
 <td class="top">
 <a>Bernstein, D.</a>, <a>Hamburg, M.</a>, <a>Krasnova, A.</a> and <a>T. Lange</a>, "<a>Elligator: elliptic-curve points indistinguishable from uniform random strings.</a>", in ACM SIGSAC Conference on Computer and Communications Security (CCS), 2013.</td>
-</tr>
-<tr>
-<td class="reference"><b id="DBLSY12">[DBLSY12]</b></td>
-<td class="top">
-<a>Bernstein, D.</a>, <a>Duif, N.</a>, <a>Lange, T.</a>, <a>Schwabe, P.</a> and <a>B. Yang</a>, "<a>High-speed high-security signatures.</a>", in J. Cryptographic Engineering, 2012.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.irtf-cfrg-hash-to-curve">[I-D.irtf-cfrg-hash-to-curve]</b></td>
