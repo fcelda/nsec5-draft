@@ -222,7 +222,7 @@
    <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
    that outputs VALID if pi was correctly produced,
-   and outputs INVALID otherwise. [TODO: should we force proof_to_hash to run verify first in our spec, to prevent possible mistakes?]
+   and outputs INVALID otherwise.
    </t>   
    </section>
    
@@ -503,6 +503,14 @@
                     <t>beta_string - VRF hash output, an octet string of length hLen</t>
                 </list>
             </t>
+            <t>
+                Important note:
+                <list>
+                    <t>RSAFDHVRF_proof_to_hash should be run only on pi_string that is known to have been produced by RSAFDHVRF_prove or
+                        has passed verification through RSAFDHVRF_verify</t>
+                </list>
+            </t>
+
 
             <t>
                 Steps:
@@ -709,6 +717,14 @@
                     <t>beta_string - VRF hash output, octet string of length 2n</t>
                 </list>
             </t>
+            <t>
+                Important note:
+                <list>
+                    <t>ECVRF_proof_to_hash should be run only on pi_string that is known to have been produced by ECVRF_prove or
+                        has passed verification through ECVRF_verify</t>
+                </list>
+            </t>
+
             <t>
                 Steps:
                 <list style="numbers">
