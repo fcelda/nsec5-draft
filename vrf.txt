@@ -94,12 +94,12 @@ Table of Contents
      5.6.  When the ECVRF Keys are Untrusted . . . . . . . . . . . .  26
        5.6.1.  ECVRF Validate Key  . . . . . . . . . . . . . . . . .  26
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  28
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  28
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  29
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  29
        7.1.1.  Uniqueness and collision resistance with untrusted
                keys  . . . . . . . . . . . . . . . . . . . . . . . .  29
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  29
-     7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  29
+     7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  30
      7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  30
      7.4.  Side-channel attacks  . . . . . . . . . . . . . . . . . .  30
      7.5.  Proofs Provide No Secrecy for VRF Input . . . . . . . . .  31
@@ -1292,9 +1292,7 @@ Internet-Draft                     VRF                    September 2018
 
 5.5.  ECVRF Ciphersuites
 
-   This document defines ECVRF-P256-SHA256 as follows: [TODO: rename
-   this one by adding some kind of suffix to indicate try-and-increment,
-   to avoid possibility of confusion with -SWU version?]
+   This document defines ECVRF-P256-SHA256-TAI as follows:
 
    o  suite_string = 0x01 = int_to_string(1, 1).
 
@@ -1341,6 +1339,8 @@ Internet-Draft                     VRF                    September 2018
 
 
 
+
+
 Goldberg, et al.          Expires March 9, 2019                [Page 24]
 
 Internet-Draft                     VRF                    September 2018
@@ -1351,13 +1351,11 @@ Internet-Draft                     VRF                    September 2018
 
    This document defines ECVRF-P256-SHA256-SWU as follows:
 
-   o  This ciphersuite is identical to ECVRF-P256-SHA256 except that the
-      ECVRF_hash_to_curve function is as specified in Section 5.4.1.3
-      and suite_string = 0x02 = int_to_string(2, 1).
+   o  This ciphersuite is identical to ECVRF-P256-SHA256-TAI except that
+      the ECVRF_hash_to_curve function is as specified in
+      Section 5.4.1.3 and suite_string = 0x02 = int_to_string(2, 1).
 
-   This document defines ECVRF-ED25519-SHA512 as follows: [TODO: rename
-   this one by adding some kind of suffix to indicate try-and-increment,
-   to avoid possibility of confusion with -Elligator version?]
+   This document defines ECVRF-ED25519-SHA512-TAI as follows:
 
    o  suite_string = 0x03 = int_to_string(3, 1).
 
@@ -1397,6 +1395,8 @@ Internet-Draft                     VRF                    September 2018
 
 
 
+
+
 Goldberg, et al.          Expires March 9, 2019                [Page 25]
 
 Internet-Draft                     VRF                    September 2018
@@ -1410,8 +1410,8 @@ Internet-Draft                     VRF                    September 2018
 
    This document defines ECVRF-ED25519-SHA512-Elligator2 as follows:
 
-   o  This ciphersuite is identical to ECVRF-ED25519-SHA512 except that
-      the ECVRF_hash_to_curve function is as specified in
+   o  This ciphersuite is identical to ECVRF-ED25519-SHA512-TAI except
+      that the ECVRF_hash_to_curve function is as specified in
       Section 5.4.1.2 and suite_string = 0x04 = int_to_string(4, 1).
 
 5.6.  When the ECVRF Keys are Untrusted
@@ -1534,13 +1534,14 @@ Internet-Draft                     VRF                    September 2018
    [TODO: Needs Updating; include also implementations of various parts,
    so developers can access them]
 
-   An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256
-   was first developed as a part of the NSEC5 project [I-D.vcelak-nsec5]
-   and is available at <http://github.com/fcelda/nsec5-crypto>.  The
-   ECVRF implementation may be out of date as this spec has evolved.
+   An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-
+   P256-SHA256-TAI was first developed as a part of the NSEC5 project
+   [I-D.vcelak-nsec5] and is available at <http://github.com/fcelda/
+   nsec5-crypto>.  The ECVRF implementation may be out of date as this
+   spec has evolved.
 
    The Key Transparency project at Google uses a VRF implemention that
-   is similar to the ECVRF-P256-SHA256, with a few minor changes
+   is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes
    including the use of SHA-512 instead of SHA-256.  Its implementation
    is available
    <https://github.com/google/keytransparency/blob/master/core/vrf/
@@ -1557,7 +1558,6 @@ Internet-Draft                     VRF                    September 2018
    ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
    <https://whispersystems.org/docs/specifications/xeddsa/>
 
-7.  Security Considerations
 
 
 
@@ -1569,6 +1569,8 @@ Goldberg, et al.          Expires March 9, 2019                [Page 28]
 
 Internet-Draft                     VRF                    September 2018
 
+
+7.  Security Considerations
 
 7.1.  Key Generation
 
@@ -1613,11 +1615,9 @@ Internet-Draft                     VRF                    September 2018
    generate the VRF keys, and thus, the VRF output may not be
    pseudorandom.
 
-7.2.  Selective vs Full Pseudorandomness
 
-   [nsec5ecc] presents cryptographic reductions to an underlying hard
-   problem (e.g.  Decisional Diffie Hellman for the ECVRF, or the
-   standard RSA assumption for RSA-FDH-VRF) that prove the VRFs
+
+
 
 
 
@@ -1626,6 +1626,11 @@ Goldberg, et al.          Expires March 9, 2019                [Page 29]
 Internet-Draft                     VRF                    September 2018
 
 
+7.2.  Selective vs Full Pseudorandomness
+
+   [nsec5ecc] presents cryptographic reductions to an underlying hard
+   problem (e.g.  Decisional Diffie Hellman for the ECVRF, or the
+   standard RSA assumption for RSA-FDH-VRF) that prove the VRFs
    specificied in this document possess full pseudorandomness as well as
    selective pseudorandomness.  However, the cryptographic reductions
    are tighter for selective pseudorandomness than for full
@@ -1668,12 +1673,7 @@ Internet-Draft                     VRF                    September 2018
    information about the VRF private key SK (and the nonce k used in the
    ECVRF).
 
-   The ECVRF_hash_to_curve_try_and_increment algorithm defined in
-   Section 5.4.1.1 SHOULD NOT be used in applications where the VRF
-   input alpha is secret and is hashed by the VRF on-the-fly.  This is
-   because the algorithm's running time depends on the VRF input alpha,
-   and thus creates a timing channel that can be used to learn
-   information about alpha.  That said, for most inputs the amount of
+
 
 
 
@@ -1682,6 +1682,12 @@ Goldberg, et al.          Expires March 9, 2019                [Page 30]
 Internet-Draft                     VRF                    September 2018
 
 
+   The ECVRF_hash_to_curve_try_and_increment algorithm defined in
+   Section 5.4.1.1 SHOULD NOT be used in applications where the VRF
+   input alpha is secret and is hashed by the VRF on-the-fly.  This is
+   because the algorithm's running time depends on the VRF input alpha,
+   and thus creates a timing channel that can be used to learn
+   information about alpha.  That said, for most inputs the amount of
    information obtained from such a timing attack is likely to be small
    (1 bit, on average), since the algorithm is expected to find a valid
    curve point after only two attempts.  However, there might be inputs
@@ -1724,12 +1730,6 @@ Internet-Draft                     VRF                    September 2018
    the RSA-FDH-VRF, in MGF1 and in proof_to_hash; in the ECVRF, in
    hash_to_curve, nonce_generation, hash_points, and proof_to_hash).
    The theoretical analysis assumes each of these functions is a
-   separate random oracle.  This analysis still holds even if the same
-   hash function is used, as long as the four queries made to the hash
-   function for a given SK and alpha are overwhelmingly unlikely to
-   equal each other or to any queries made to the hash function for the
-   same SK and different alpha.  This is indeed the case for the RSA-
-   FDH-VRF defined in this document, because the first octets of the
 
 
 
@@ -1738,6 +1738,12 @@ Goldberg, et al.          Expires March 9, 2019                [Page 31]
 Internet-Draft                     VRF                    September 2018
 
 
+   separate random oracle.  This analysis still holds even if the same
+   hash function is used, as long as the four queries made to the hash
+   function for a given SK and alpha are overwhelmingly unlikely to
+   equal each other or to any queries made to the hash function for the
+   same SK and different alpha.  This is indeed the case for the RSA-
+   FDH-VRF defined in this document, because the first octets of the
    input to the hash function used in MGF1 and in proof_to_hash are
    different.  This is also the case for the ECVRF ciphersuites defined
    in this document, because:
@@ -1779,13 +1785,7 @@ Internet-Draft                     VRF                    September 2018
 
       01 - Minor updates, mostly highlighting TODO items.
 
-      02 - Added specification of elligator2 for Curve25519, along with
-      ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-
-      ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512.  (This change
-      made because Ed25519 in [RFC8032] signatures use SHA512 and not
-      SHA256.)  Made ECVRF nonce generation a separate component, so
-      that nonces are determinsitic.  In ECVRF proving, changed + to -
-      (and made corresponding verification changes) in order to be
+
 
 
 
@@ -1794,6 +1794,13 @@ Goldberg, et al.          Expires March 9, 2019                [Page 32]
 Internet-Draft                     VRF                    September 2018
 
 
+      02 - Added specification of elligator2 for Curve25519, along with
+      ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-
+      ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512.  (This change
+      made because Ed25519 in [RFC8032] signatures use SHA512 and not
+      SHA256.)  Made ECVRF nonce generation a separate component, so
+      that nonces are determinsitic.  In ECVRF proving, changed + to -
+      (and made corresponding verification changes) in order to be
       consistent with EdDSA and ECDSA.  Highlighted that
       ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable
       to ECVRF for future-proofing.  Ensured domain separation for hash
@@ -1810,7 +1817,9 @@ Internet-Draft                     VRF                    September 2018
       cipher suite; clarified Elligator; added domain separation for RSA
       VRF; improved notation throughout; added nonce generation as a
       section; changed counter in try-and-increment from four bytes to
-      one, to avoid endian issues
+      one, to avoid endian issues; renamed try-and-increment
+      ciphersuites to -TAI; added qLen as a separate paremeter; changed
+      output length to hLen for ECVRF, to match RSAVRF
 
 9.  Contributors
 
@@ -1831,15 +1840,6 @@ Internet-Draft                     VRF                    September 2018
               National Institute for Standards and Technology, "Digital
               Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
-              Groups for Use with IETF Standards", RFC 5114,
-              DOI 10.17487/RFC5114, January 2008,
-              <https://www.rfc-editor.org/info/rfc5114>.
 
 
 
@@ -1849,6 +1849,16 @@ Goldberg, et al.          Expires March 9, 2019                [Page 33]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
+              Groups for Use with IETF Standards", RFC 5114,
+              DOI 10.17487/RFC5114, January 2008,
+              <https://www.rfc-editor.org/info/rfc5114>.
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
@@ -1887,6 +1897,15 @@ Internet-Draft                     VRF                    September 2018
               uniform random strings.", in ACM SIGSAC Conference on
               Computer and Communications Security (CCS), 2013.
 
+
+
+
+
+Goldberg, et al.          Expires March 9, 2019                [Page 34]
+
+Internet-Draft                     VRF                    September 2018
+
+
    [I-D.irtf-cfrg-hash-to-curve]
               Scott, S., Sullivan, N., and C. Wood, "Hashing to Elliptic
               Curves", draft-irtf-cfrg-hash-to-curve-01 (work in
@@ -1897,14 +1916,6 @@ Internet-Draft                     VRF                    September 2018
               D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
               Existence", draft-vcelak-nsec5-07 (work in progress), June
               2018.
-
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 34]
-
-Internet-Draft                     VRF                    September 2018
-
 
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999.
@@ -1926,17 +1937,6 @@ Internet-Draft                     VRF                    September 2018
    [Ulas07]   Ulas, M., "Rational points on certain hyperelliptic curves
               over finite fields.", in Bull. Polish Acad. Sci. Math.,
               2007.
-
-
-
-
-
-
-
-
-
-
-
 
 
 

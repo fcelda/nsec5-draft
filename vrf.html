@@ -1259,7 +1259,7 @@
 <h1 id="rfc.section.5.5">
 <a href="#rfc.section.5.5">5.5.</a> <a href="#suites" id="suites">ECVRF Ciphersuites</a>
 </h1>
-<p id="rfc.section.5.5.p.1">This document defines ECVRF-P256-SHA256 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -SWU version?] </p>
+<p id="rfc.section.5.5.p.1">This document defines ECVRF-P256-SHA256-TAI as follows: </p>
 
 <ul>
 <li>suite_string = 0x01 = int_to_string(1, 1). </li>
@@ -1278,10 +1278,10 @@
 <p> </p>
 <p id="rfc.section.5.5.p.2">This document defines ECVRF-P256-SHA256-SWU as follows: </p>
 
-<ul><li>This ciphersuite is identical to ECVRF-P256-SHA256 except that the ECVRF_hash_to_curve function is as specified in <a href="#SimpleSWU" class="xref">Section 5.4.1.3</a> and suite_string = 0x02 = int_to_string(2, 1).  </li></ul>
+<ul><li>This ciphersuite is identical to ECVRF-P256-SHA256-TAI except that the ECVRF_hash_to_curve function is as specified in <a href="#SimpleSWU" class="xref">Section 5.4.1.3</a> and suite_string = 0x02 = int_to_string(2, 1).  </li></ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.3">This document defines ECVRF-ED25519-SHA512 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -Elligator version?] </p>
+<p id="rfc.section.5.5.p.3">This document defines ECVRF-ED25519-SHA512-TAI as follows: </p>
 
 <ul>
 <li>suite_string = 0x03 = int_to_string(3, 1). </li>
@@ -1301,7 +1301,7 @@
 <p> </p>
 <p id="rfc.section.5.5.p.4">This document defines ECVRF-ED25519-SHA512-Elligator2 as follows: </p>
 
-<ul><li>This ciphersuite is identical to ECVRF-ED25519-SHA512 except that the ECVRF_hash_to_curve function is as specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> and suite_string = 0x04 = int_to_string(4, 1).  </li></ul>
+<ul><li>This ciphersuite is identical to ECVRF-ED25519-SHA512-TAI except that the ECVRF_hash_to_curve function is as specified in <a href="#elligator2" class="xref">Section 5.4.1.2</a> and suite_string = 0x04 = int_to_string(4, 1).  </li></ul>
 
 <p> </p>
 <h1 id="rfc.section.5.6">
@@ -1361,8 +1361,8 @@
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
 <p id="rfc.section.6.p.1">[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</p>
-<p id="rfc.section.6.p.2">An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256 was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  The ECVRF implementation may be out of date as this spec has evolved.  </p>
-<p id="rfc.section.6.p.3">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
+<p id="rfc.section.6.p.2">An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  The ECVRF implementation may be out of date as this spec has evolved.  </p>
+<p id="rfc.section.6.p.3">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
 <p id="rfc.section.6.p.4">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.5">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.6">Open Whisper Systems also uses a VRF very similar to ECVRF-ED25519-SHA512-Elligator, called VXEdDSA, and specified here: <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> </p>
@@ -1427,7 +1427,7 @@
 <li>00 - Forked this document from draft-goldbe-vrf-01.</li>
 <li>01 - Minor updates, mostly highlighting TODO items.</li>
 <li>02 - Added specification of elligator2 for Curve25519, along with ciphersuites for ECVRF-ED25519-SHA512-Elligator.  Changed ECVRF-ED25519-SHA256 suite_string to ECVRF-ED25519-SHA512. (This change made because Ed25519 in <a href="#RFC8032" class="xref">[RFC8032]</a> signatures use SHA512 and not SHA256.) Made ECVRF nonce generation a separate component, so that nonces are determinsitic.  In ECVRF proving, changed + to - (and made corresponding verification changes) in order to be consistent with EdDSA and ECDSA.  Highlighted that ECVRF_hash_to_curve acts like a prehash.  Added "suites" variable to ECVRF for future-proofing.  Ensured domain separation for hash functions by modifying hash_points and added discussion about domain separation.  Updated todos in the "additional pseudorandomness property" section. Added an discussion of secrecy into security considerations.  Removed B and PK=Y from ECVRF_hash_points because they are already present via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</li>
-<li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues</li>
+<li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF</li>
 </ul>
 
 <p> </p>

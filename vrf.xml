@@ -1215,7 +1215,7 @@
 
         <section title="ECVRF Ciphersuites" anchor="suites">
                 
-        <t>This document defines ECVRF-P256-SHA256 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -SWU version?]
+        <t>This document defines ECVRF-P256-SHA256-TAI as follows:
         <list style="symbols">
         <t>
         suite_string = 0x01 = int_to_string(1, 1). </t>
@@ -1273,7 +1273,7 @@
         <t>This document defines ECVRF-P256-SHA256-SWU as follows:
             
             <list style="symbols">
-                <t> This ciphersuite is identical to ECVRF-P256-SHA256 except that
+                <t> This ciphersuite is identical to ECVRF-P256-SHA256-TAI except that
                     the ECVRF_hash_to_curve function is as specified in <xref target="SimpleSWU"/> and
                     suite_string = 0x02 = int_to_string(2, 1).
                 </t>
@@ -1281,7 +1281,7 @@
         </t>
 
         
-        <t>This document defines ECVRF-ED25519-SHA512 as follows: [TODO: rename this one by adding some kind of suffix to indicate try-and-increment, to avoid possibility of confusion with -Elligator version?]
+        <t>This document defines ECVRF-ED25519-SHA512-TAI as follows:
         <list style="symbols">
         <t>
         suite_string = 0x03 = int_to_string(3, 1). </t>
@@ -1333,7 +1333,7 @@
    <t>This document defines ECVRF-ED25519-SHA512-Elligator2 as follows:
     
         <list style="symbols">
-        <t> This ciphersuite is identical to ECVRF-ED25519-SHA512 except that
+        <t> This ciphersuite is identical to ECVRF-ED25519-SHA512-TAI except that
         the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/> and 
         suite_string = 0x04 = int_to_string(4, 1).
         </t>
@@ -1434,7 +1434,7 @@
         <t>[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</t>
     
         <t>
-            An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256 was
+            An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was
             first developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
             at <eref target="http://github.com/fcelda/nsec5-crypto" />. 
@@ -1444,7 +1444,7 @@
     <t>
     The Key Transparency project at Google
     uses a VRF implemention that is similar to
-    the ECVRF-P256-SHA256, with a few minor changes
+    the ECVRF-P256-SHA256-TAI, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
     is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
@@ -1733,7 +1733,7 @@
                 section. Added an discussion of secrecy into security considerations.
                 Removed B and PK=Y from ECVRF_hash_points because they are already present
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
-                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues</t>
+                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF</t>
             </list>
         </t>
     </section>
