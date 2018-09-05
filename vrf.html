@@ -804,9 +804,10 @@
 <li>F - finite field</li>
 <li>2n - length, in octets, of a field element in F, rounded up to the nearest even integer</li>
 <li>E - elliptic curve (EC) defined over F</li>
-<li>m - length, in octets, of an EC point encoded as an octet string</li>
+<li>ptLen - length, in octets, of an EC point encoded as an octet string</li>
 <li>G - subgroup of E of large prime order</li>
-<li>q - prime order of group G; must be less than 2^{16n} [TODO: why limit it so? It could be one octet longer -- e.g., curve 192. Maybe introduce qLen.]</li>
+<li>q - prime order of group G</li>
+<li>qLen - length of q in octets, i.e., smallest integer such that 2^(8qLen)&gt;q (note that in the typical case, qLen equals 2n or is close to 2n)</li>
 <li>cofactor - number of points on E divided by q</li>
 <li>B - generator of group G</li>
 <li>Hash - cryptographic hash function</li>
@@ -832,12 +833,12 @@
 <ul class="empty">
 <li>int_to_string(a, len) - conversion of nonnegative integer a to to octet string of length len as specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
 <li>string_to_int(a_string) - conversion of an octet string a_string to a nonnegative integer as specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
-<li>point_to_string - conversion of EC point to an m-octet string as specified in <a href="#suites" class="xref">Section 5.5</a>
+<li>point_to_string - conversion of EC point to an ptLen-octet string as specified in <a href="#suites" class="xref">Section 5.5</a>
 </li>
-<li>string_to_point - conversion of an m-octet string to EC point as specified in <a href="#suites" class="xref">Section 5.5</a>.  string_to_point returns INVALID if the octet string does not convert to a valid EC point.</li>
-<li>arbitrary_string_to_point - conversion of an arbitrary 2n-octet string to an EC point as specified in <a href="#suites" class="xref">Section 5.5</a>
+<li>string_to_point - conversion of an ptLen-octet string to EC point as specified in <a href="#suites" class="xref">Section 5.5</a>.  string_to_point returns INVALID if the octet string does not convert to a valid EC point.</li>
+<li>arbitrary_string_to_point - conversion of an arbitrary octet string of length hLen to an EC point as specified in <a href="#suites" class="xref">Section 5.5</a>
 </li>
-<li>Note that with certain software libraries (for big integer and elliptic curve arithmetic), the int_to_string and point_to_string conversions are not needed.  For example, in some implementations, EC point operations will take octet strings as inputs and produce octet strings as outputs, without introducing a seperate elliptic curve point type.) </li>
+<li>Note that with certain software libraries (for big integer and elliptic curve arithmetic), the int_to_string and point_to_string conversions are not needed.  For example, in some implementations, EC point operations will take octet strings as inputs and produce octet strings as outputs, without introducing a seperate elliptic curve point type.  </li>
 </ul>
 
 <p> </p>
@@ -869,7 +870,7 @@
 <p> </p>
 <p id="rfc.section.5.1.p.4">Output: </p>
 
-<ul class="empty"><li>pi_string - VRF proof, octet string of length m+3n</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string of length ptLen+n+qLen</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.1.p.5">Steps: </p>
@@ -881,7 +882,7 @@
 <li>k = ECVRF_nonce_generation(SK, h_string)</li>
 <li>c = ECVRF_hash_points(H, Gamma, k*B, k*H)</li>
 <li>s = (k + c*x) mod q</li>
-<li>pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, 2n)</li>
+<li>pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, qLen)</li>
 <li>Output pi_string</li>
 </ol>
 
@@ -891,7 +892,7 @@
 <p id="rfc.section.5.2.p.1">ECVRF_proof_to_hash(pi_string) </p>
 <p id="rfc.section.5.2.p.2">Input: </p>
 
-<ul class="empty"><li>pi_string - VRF proof, octet string of length m+3n</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string of length ptLen+n+qLen</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.2.p.3">Output: </p>
@@ -915,7 +916,7 @@
 <li>(Gamma, c, s) = D</li>
 <li>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </li>
 <li>b_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</li>
-<li>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits?] </li>
+<li>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits? I think we should output hLen octets and let users decide to truncate.] </li>
 <li>Output beta_string</li>
 </ol>
 
@@ -927,7 +928,7 @@
 
 <ul class="empty">
 <li>Y -  public key, an EC point</li>
-<li>pi_string - VRF proof, octet string of length m+3n</li>
+<li>pi_string - VRF proof, octet string of length ptLen+n+qLen</li>
 <li>alpha_string - VRF input, octet string</li>
 </ul>
 
@@ -990,8 +991,7 @@
 <li>ctr_string = int_to_string(ctr, 1)</li>
 <li>ctr = ctr + 1</li>
 <li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</li>
-<li>attempted_hash_string = hash_string[0]...hash_string[2n-1] </li>
-<li>H = arbitrary_string_to_point(attempted_hash_string)</li>
+<li>H = arbitrary_string_to_point(hash_string)</li>
 <li>If H is not "INVALID" and cofactor &gt; 1, set H = cofactor * H</li>
 </ol>
 </li>
@@ -1165,6 +1165,7 @@
 <li>The hash function H is Hash and its output length hlen is set as hLen*8</li>
 <li>The secret key x is set equal to the VRF secret scalar x </li>
 <li>The prime q is the same as in this specification</li>
+<li>qlen is the binary length of q, i.e., the smallest integer such that 2^qlen &gt; q</li>
 <li>All the other values and primitives as defined in <a href="#RFC6979" class="xref">[RFC6979]</a> </li>
 </ul>
 
@@ -1229,7 +1230,7 @@
 <p id="rfc.section.5.4.4.p.1">ECVRF_decode_proof(pi_string) </p>
 <p id="rfc.section.5.4.4.p.2">Input: </p>
 
-<ul class="empty"><li>pi_string - VRF proof, octet string (m+3n octets)</li></ul>
+<ul class="empty"><li>pi_string - VRF proof, octet string (ptLen+n+qLen octets)</li></ul>
 
 <p> </p>
 <p id="rfc.section.5.4.4.p.3">Output: </p>
@@ -1238,14 +1239,16 @@
 <li>"INVALID", or </li>
 <li>Gamma - EC point</li>
 <li>c - integer between 0 and 2^(8n)-1 </li>
-<li>s - integer between 0 and 2^(16n)-1 </li>
+<li>s - integer between 0 and 2^(8qLen)-1 </li>
 </ul>
 
 <p> </p>
 <p id="rfc.section.5.4.4.p.4">Steps: </p>
 
 <ol>
-<li>let gamma_string, c_string, s_string be pi_string split after m-th and m+n-th octet</li>
+<li>let gamma_string = pi_string[0]...p_string[ptLen-1]</li>
+<li>let c_string = pi_string[ptLen]...pi_string[ptLen+n-1]</li>
+<li>let s_string =pi_string[ptLen+n]...pi_string[ptLen+n+qLen-1]</li>
 <li>Gamma = string_to_point(gamma_string)</li>
 <li>if Gamma = "INVALID" output "INVALID" and stop.</li>
 <li>c = string_to_int(c_string)</li>
@@ -1261,12 +1264,12 @@
 
 <ul>
 <li>suite_string = 0x01 = int_to_string(1, 1). </li>
-<li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = 32 and cofactor = 1.  </li>
+<li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = qLen =  32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, B, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
 <li>The ECVRF_nonce_generation function is as specified in <a href="#nonceP256" class="xref">Section 5.4.2.1</a>.</li>
 <li>The int_to_string function is the I2OSP function specified in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a>. (This is big endian representation.)</li>
 <li>The string_to_int function is the OS2IP function specified in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a>. (This is big endian representation.)</li>
-<li>The point_to_string function converts an EC point to an octet string according to the encoding specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies m = 2n + 1 = 33.  (Note that certain software implementations do not introduce a seperate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such an implementation, the point_to_string function can be treated as the identity function.) </li>
+<li>The point_to_string function converts an EC point to an octet string according to the encoding specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies ptLen = 2n + 1 = 33.  (Note that certain software implementations do not introduce a seperate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such an implementation, the point_to_string function can be treated as the identity function.) </li>
 <li>The string_to_point function converts an octet string to an EC point according to the encoding specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>. This function MUST output INVALID if the octet string does not decode to an EC point.  </li>
 <li>arbitrary_string_to_point(h_string) = string_to_point(0x02 || h_string) (where 0x02 is a single octet with value 2, 0x02=int_to_string(2, 1)). The input h_string is a 32-octet string and the output is either an EC point or "INVALID". </li>
 <li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
@@ -1283,15 +1286,15 @@
 
 <ul>
 <li>suite_string = 0x03 = int_to_string(3, 1). </li>
-<li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = 32 and cofactor = 8.  </li>
+<li>The EC group G is the Ed25519 elliptic curve with parameters defined in Table 1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  For this group, 2n = qLen = 32 and cofactor = 8.  </li>
 <li>The private key and generation of the secret scalar and the public key are specified in Section 5.1.5 of <a href="#RFC8032" class="xref">[RFC8032]</a>
 </li>
 <li>The ECVRF_nonce_generation function is as specified in <a href="#nonce25519" class="xref">Section 5.4.2.2</a>.</li>
 <li>The int_to_string function as specified in the first paragraph of Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>. (This is little endian representation.)</li>
 <li>The string_to_int function interprets the string as an integer in little-endian representation.</li>
-<li>The point_to_string function converts an EC point to an octect string according to the encoding specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies m = 2n = 32.  (Note that certain software implementations do not introduce a seperate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such and implementation, the point_to_string function can be treated as the identity function.) </li>
+<li>The point_to_string function converts an EC point to an octect string according to the encoding specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies ptLen = 2n = 32.  (Note that certain software implementations do not introduce a seperate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such and implementation, the point_to_string function can be treated as the identity function.) </li>
 <li>The string_to_point function converts an octet string to an EC point according to the encoding specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This function MUST output INVALID if the octet string does not decode to an EC point.  </li>
-<li>arbitrary_string_to_point function is equivalent to the string_to_point function.</li>
+<li>arbitrary_string_to_point(h_string) = string_to_point(h_string[0]...h_string[31])</li>
 <li>The hash function Hash is SHA-512 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -1354,7 +1357,7 @@
 <li>Output Y</li>
 </ol>
 
-<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original] </p>
+<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original] </p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>

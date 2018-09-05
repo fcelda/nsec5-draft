@@ -584,9 +584,10 @@
                 <t>F - finite field</t>
                 <t>2n - length, in octets, of a field element in F, rounded up to the nearest even integer</t>
                 <t>E - elliptic curve (EC) defined over F</t>
-                <t>m - length, in octets, of an EC point encoded as an octet string</t> <!-- remove? -->
+                <t>ptLen - length, in octets, of an EC point encoded as an octet string</t>
                 <t>G - subgroup of E of large prime order</t>
-                <t>q - prime order of group G; must be less than 2^{16n} [TODO: why limit it so? It could be one octet longer -- e.g., curve 192. Maybe introduce qLen.]</t>
+                <t>q - prime order of group G</t>
+                <t>qLen - length of q in octets, i.e., smallest integer such that 2^(8qLen)>q (note that in the typical case, qLen equals 2n or is close to 2n)</t>
                 <t>cofactor - number of points on E divided by q</t>
                 <t>B - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
@@ -619,12 +620,12 @@
                     to octet string of length len as specified in <xref target="suites"/>.</t>
                 <t> string_to_int(a_string) - conversion of an octet string a_string
                     to a nonnegative integer as specified in <xref target="suites"/>.</t>
-                <t>point_to_string - conversion of EC point to an m-octet string
+                <t>point_to_string - conversion of EC point to an ptLen-octet string
                     as specified in <xref target="suites"/></t>
-                <t>string_to_point - conversion of an m-octet string to EC point
+                <t>string_to_point - conversion of an ptLen-octet string to EC point
                     as specified in <xref target="suites"/>.
                     string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>arbitrary_string_to_point - conversion of an arbitrary 2n-octet string to an
+                <t>arbitrary_string_to_point - conversion of an arbitrary octet string of length hLen to an
                     EC point as specified in <xref target="suites"/></t>
                 <t>
                     Note that with certain software libraries 
@@ -633,7 +634,7 @@
                     For example, in some implementations, EC point 
                     operations will take octet strings as inputs and 
                     produce octet strings as outputs, without introducing 
-                    a seperate elliptic curve point type.)
+                    a seperate elliptic curve point type.
                 </t>
             </list>
         </t>
@@ -679,7 +680,7 @@
             <t>
                 Output:
                 <list>
-                    <t>pi_string - VRF proof, octet string of length m+3n</t>
+                    <t>pi_string - VRF proof, octet string of length ptLen+n+qLen</t>
                 </list>
             </t>
 
@@ -692,7 +693,7 @@
                     <t>k = ECVRF_nonce_generation(SK, h_string)</t>
                     <t>c = ECVRF_hash_points(H, Gamma, k*B, k*H)</t>
                     <t>s = (k + c*x) mod q</t>
-                    <t>pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, 2n)</t>
+                    <t>pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, qLen)</t>
                     <t>Output pi_string</t>
                 </list>
             </t>
@@ -707,7 +708,7 @@
             <t>
                 Input:
                 <list>
-                    <t>pi_string - VRF proof, octet string of length m+3n</t> 
+                    <t>pi_string - VRF proof, octet string of length ptLen+n+qLen</t>
                 </list>
             </t>
             <t>
@@ -733,7 +734,7 @@
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
                     <t>b_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
-                    <t>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits?]
+                    <t>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits? I think we should output hLen octets and let users decide to truncate.]
                     <!--<vspace/>(first 2n octets of b_string)--></t>
                     <t>Output beta_string</t>
                 </list>
@@ -749,7 +750,7 @@
                 Input:
                 <list>
                     <t>Y -  public key, an EC point</t>
-                    <t>pi_string - VRF proof, octet string of length m+3n</t>
+                    <t>pi_string - VRF proof, octet string of length ptLen+n+qLen</t>
                     <t>alpha_string - VRF input, octet string</t>
                 </list>
             </t>
@@ -847,9 +848,7 @@
                         <t>ctr_string = int_to_string(ctr, 1)</t>
                         <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
-                        <t>attempted_hash_string = hash_string[0]...hash_string[2n-1] 
-                        <!--(first 2n octects of hash_string)--></t>
-                        <t>H = arbitrary_string_to_point(attempted_hash_string)</t>
+                        <t>H = arbitrary_string_to_point(hash_string)</t>
                         <t>If H is not "INVALID" and cofactor > 1, set H = cofactor * H</t>
                     </list></t>
                     <t>Output H</t>
@@ -1099,6 +1098,7 @@
                     <t> The hash function H is Hash and its output length hlen is set as hLen*8</t>
                     <t> The secret key x is set equal to the VRF secret scalar x </t>
                     <t> The prime q is the same as in this specification</t>
+                    <t> qlen is the binary length of q, i.e., the smallest integer such that 2^qlen > q</t>
                     <t> All the other values and primitives as defined in <xref target="RFC6979"/> </t>
                     </list>
                 </t>
@@ -1182,7 +1182,7 @@
             <t>
                 Input:
                 <list>
-                    <t>pi_string - VRF proof, octet string (m+3n octets)</t>
+                    <t>pi_string - VRF proof, octet string (ptLen+n+qLen octets)</t>
                 </list>
             </t>
             <t>
@@ -1194,15 +1194,16 @@
                     c - integer between 0 and 2^(8n)-1
                     </t>
                     <t>
-                    s - integer between 0 and 2^(16n)-1
+                    s - integer between 0 and 2^(8qLen)-1
                     </t>
                 </list>
             </t>
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>let gamma_string, c_string, s_string be 
-                    pi_string split after m-th and m+n-th octet</t>
+                    <t>let gamma_string = pi_string[0]...p_string[ptLen-1]</t>
+                    <t>let c_string = pi_string[ptLen]...pi_string[ptLen+n-1]</t>
+                    <t>let s_string =pi_string[ptLen+n]...pi_string[ptLen+n+qLen-1]</t>
                     <t>Gamma = string_to_point(gamma_string)</t>
                     <t>if Gamma = "INVALID" output "INVALID" and stop.</t>
                     <t>c = string_to_int(c_string)</t>
@@ -1224,7 +1225,7 @@
             The EC group G is the NIST-P256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
             and <xref target="RFC5114"></xref>  (Section 2.6). For this group,
-            2n = 32 and cofactor = 1.
+            2n = qLen =  32 and cofactor = 1.
         </t>
         <t> The key pair generation primitive is specified in
             Section 3.2.1 of <xref target="SECG1" /> (q, B, SK, and PK in this document
@@ -1243,7 +1244,7 @@
             The point_to_string function converts an EC point to an octet string
             according to the encoding specified in Section 2.3.3 of 
             <xref target="SECG1" /> with point compression on.
-            This implies m = 2n + 1 = 33. 
+            This implies ptLen = 2n + 1 = 33.
             (Note that certain software implementations do not introduce a
              seperate elliptic curve point type and instead directly treat the
              EC point as an octet string per above encoding. When using such 
@@ -1290,7 +1291,7 @@
             The EC group G is the Ed25519
             elliptic curve with parameters defined in Table 1 of
              <xref target="RFC8032" />.       
-            For this group, 2n = 32 and cofactor = 8.
+            For this group, 2n = qLen = 32 and cofactor = 8.
         </t>
         <t> The private key and generation of the secret scalar and the public 
         key are specified in Section 5.1.5 of <xref target="RFC8032" /></t>
@@ -1306,7 +1307,7 @@
         <t> The point_to_string function converts an EC point to an 
             octect string according to the encoding specified
              in Section 5.1.2 of <xref target="RFC8032" />. 
-            This implies m = 2n = 32.
+            This implies ptLen = 2n = 32.
             (Note that certain software implementations do not introduce a
              seperate elliptic curve point type and instead directly treat the
              EC point as an octet string per above encoding. When using such
@@ -1320,7 +1321,7 @@
             the octet string does not decode to an EC point.
         </t>
 
-        <t>arbitrary_string_to_point function is equivalent to the string_to_point function.</t>
+        <t>arbitrary_string_to_point(h_string) = string_to_point(h_string[0]...h_string[31])</t>
 
         <t>
             The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>.
@@ -1421,7 +1422,7 @@
                     <t>If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and stop</t>
                     <t>Output Y</t>
                 </list>
-                (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.)
+                (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.)
                 [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original]
             </t>
         
