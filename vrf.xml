@@ -625,7 +625,7 @@
                 <t>string_to_point - conversion of an ptLen-octet string to EC point
                     as specified in <xref target="suites"/>.
                     string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>arbitrary_string_to_point - conversion of an arbitrary octet string of length hLen to an
+                <t>arbitrary_string_to_point - conversion of an arbitrary octet string to an
                     EC point as specified in <xref target="suites"/></t>
                 <t>
                     Note that with certain software libraries 
@@ -715,7 +715,7 @@
                 Output:
                 <list>
                     <t>"INVALID", or </t>
-                    <t>beta_string - VRF hash output, octet string of length 2n</t>
+                    <t>beta_string - VRF hash output, octet string of length hLen</t>
                 </list>
             </t>
             <t>
@@ -733,9 +733,7 @@
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
-                    <t>b_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
-                    <t>beta_string = b_string[0]...b_string[2n-1] [TODO: Is truncating the right thing to do? What if you want all 512 bits? I think we should output hLen octets and let users decide to truncate.]
-                    <!--<vspace/>(first 2n octets of b_string)--></t>
+                    <t>beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -1264,7 +1262,7 @@
         and the output is either an EC point or "INVALID". </t>
         
         <t>
-            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>.
+            The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>, with hLen = 32.
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
@@ -1324,7 +1322,7 @@
         <t>arbitrary_string_to_point(h_string) = string_to_point(h_string[0]...h_string[31])</t>
 
         <t>
-            The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>.
+            The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>, with hLen = 64.
         </t>
         <t>
             The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
