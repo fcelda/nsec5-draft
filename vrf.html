@@ -669,12 +669,12 @@
 <h1 id="rfc.section.3.4">
 <a href="#rfc.section.3.4">3.4.</a> A random-oracle-like unpredictability property</h1>
 <p id="rfc.section.3.4.p.1">Pseudorandomness, as defined in <a href="#pseudodef" class="xref">Section 3.3</a>, does not hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.  </p>
-<p id="rfc.section.3.4.p.2">There is, however, a different type of unpredictability that is desirable in certain VRF applications.[TODO: Mention them by name?] This property is similar to the unpredictability achieved by an (ordinary, unkeyed) cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable from uniform. The property has not been formally specified in cryptographic literature.  </p>
+<p id="rfc.section.3.4.p.2">There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <a href="#GHMVZ17" class="xref">[GHMVZ17]</a> and <a href="#KRDO17" class="xref">[KRDO17]</a>) This property is similar to the unpredictability achieved by an (ordinary, unkeyed) cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable from uniform. The property has not been formally specified in cryptographic literature.  </p>
 <p id="rfc.section.3.4.p.3">Although neither formal definitions nor proofs of this property have appeared in cryptographic literature, the VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy manner. Additionally, the ECVRF also satisifies this property even if the public key was not generated in a trustworthy manner, as long as the public key satisfies the key validation procedure in <a href="#keycheck" class="xref">Section 5.6</a>.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#fdh" id="fdh">RSA Full Domain Hash VRF (RSA-FDH-VRF)</a>
 </h1>
-<p id="rfc.section.4.p.1">The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef" class="xref">Section 3</a>.  Its security follows from the standard RSA assumption in the random oracle model.  Formal security proofs are in <a href="#nsec5ecc" class="xref">[nsec5ecc]</a>.  </p>
+<p id="rfc.section.4.p.1">The RSA Full Domain Hash  VRF (RSA-FDH-VRF) is a VRF that satisfies the "trusted uniqueness", "trusted collision resistance", and "full pseudorandomness" properties defined in <a href="#secdef" class="xref">Section 3</a>.  Its security follows from the standard RSA assumption in the random oracle model.  Formal security proofs are in <a href="#PWHVNRG17" class="xref">[PWHVNRG17]</a>.  </p>
 <p id="rfc.section.4.p.2">The VRF computes the proof pi as a deterministic RSA signature on input alpha using the RSA Full Domain Hash Algorithm <a href="#RFC8017" class="xref">[RFC8017]</a> parametrized with the selected hash algorithm.  RSA signature verification is used to verify the correctness of the proof. The VRF hash output beta is simply obtained by hashing the proof pi with the selected hash algorithm.  </p>
 <p id="rfc.section.4.p.3">The key pair for RSA-FDH-VRF MUST be generated in a way that it satisfies the conditions specified in Section 3 of <a href="#RFC8017" class="xref">[RFC8017]</a>.  </p>
 <p id="rfc.section.4.p.4">In this document, the notation from <a href="#RFC8017" class="xref">[RFC8017]</a> is used.  </p>
@@ -794,7 +794,7 @@
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#ecvrf" id="ecvrf">Elliptic Curve VRF (ECVRF)</a>
 </h1>
-<p id="rfc.section.5.p.1">The Elliptic Curve Verifiable Random Function (ECVRF) is a VRF that satisfies the trusted uniqueness, trusted collision resistance, and full pseudorandomness properties defined in <a href="#secdef" class="xref">Section 3</a>.  The security of this VRF follows from the decisional Diffie-Hellman (DDH) assumption in the random oracle model. Formal security proofs are in <a href="#nsec5ecc" class="xref">[nsec5ecc]</a>.  </p>
+<p id="rfc.section.5.p.1">The Elliptic Curve Verifiable Random Function (ECVRF) is a VRF that satisfies the trusted uniqueness, trusted collision resistance, and full pseudorandomness properties defined in <a href="#secdef" class="xref">Section 3</a>.  The security of this VRF follows from the decisional Diffie-Hellman (DDH) assumption in the random oracle model. Formal security proofs are in <a href="#PWHVNRG17" class="xref">[PWHVNRG17]</a>.  </p>
 <p id="rfc.section.5.p.2">To additionally satisfy "full uniqueness" and "full collision resistance", the Verifier MUST additionally perform the validation procedure specified in <a href="#keycheck" class="xref">Section 5.6</a>  upon receipt of the public VRF key.  </p>
 <p id="rfc.section.5.p.3">Fixed options (specified in <a href="#suites" class="xref">Section 5.5</a>): </p>
 
@@ -1263,7 +1263,7 @@
 
 <ul>
 <li>suite_string = 0x01 = int_to_string(1, 1). </li>
-<li>The EC group G is the NIST-P256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-3" class="xref">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = qLen =  32 and cofactor = 1.  </li>
+<li>The EC group G is the NIST P-256 elliptic curve, with curve parameters as specified in <a href="#FIPS-186-4" class="xref">[FIPS-186-4]</a> (Section D.1.2.3) and <a href="#RFC5114" class="xref">[RFC5114]</a>  (Section 2.6). For this group, 2n = qLen =  32 and cofactor = 1.  </li>
 <li>The key pair generation primitive is specified in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a> (q, B, SK, and PK in this document correspond to in n, G, d, and Q in Section 3.2.1 of <a href="#SECG1" class="xref">[SECG1]</a>).  In this ciphersuite, the secret scalar x is equal to the private key SK.  </li>
 <li>The ECVRF_nonce_generation function is as specified in <a href="#nonceP256" class="xref">Section 5.4.2.1</a>.</li>
 <li>The int_to_string function is the I2OSP function specified in Section 4.1 of <a href="#RFC8017" class="xref">[RFC8017]</a>. (This is big endian representation.)</li>
@@ -1384,7 +1384,7 @@
 <p id="rfc.section.7.1.2.p.1">Without good randomness, the "pseudorandomness" properties of the VRF may not hold. Note that it is not possible to guarantee pseudorandomness in the face of adversarially generated VRF keys.  This is because an adversary can always use bad randomness to generate the VRF keys, and thus, the VRF output may not be pseudorandom.  </p>
 <h1 id="rfc.section.7.2">
 <a href="#rfc.section.7.2">7.2.</a> Selective vs Full Pseudorandomness</h1>
-<p><a href="#nsec5ecc" class="xref">[nsec5ecc]</a> presents cryptographic reductions to an underlying hard problem (e.g. Decisional Diffie Hellman for the ECVRF, or the standard RSA assumption for RSA-FDH-VRF) that prove the VRFs specificied in this document possess full pseudorandomness as well as selective pseudorandomness.  However, the cryptographic reductions are tighter for selective pseudorandomness than for full pseudorandomness.  This means the the VRFs have quantitavely stronger security guarentees for selective pseudorandomness.  </p>
+<p><a href="#PWHVNRG17" class="xref">[PWHVNRG17]</a> presents cryptographic reductions to an underlying hard problem (e.g. Decisional Diffie Hellman for the ECVRF, or the standard RSA assumption for RSA-FDH-VRF) that prove the VRFs specificied in this document possess full pseudorandomness as well as selective pseudorandomness.  However, the cryptographic reductions are tighter for selective pseudorandomness than for full pseudorandomness.  This means the the VRFs have quantitavely stronger security guarentees for selective pseudorandomness.  </p>
 <p id="rfc.section.7.2.p.2">Applications that are concerned about tightness of cryptographic reductions therefore have two options.  </p>
 
 <ul>
@@ -1442,9 +1442,9 @@
 <a href="#rfc.references.1">10.1.</a> Normative References</h1>
 <table><tbody>
 <tr>
-<td class="reference"><b id="FIPS-186-3">[FIPS-186-3]</b></td>
+<td class="reference"><b id="FIPS-186-4">[FIPS-186-4]</b></td>
 <td class="top">
-<a>National Institute for Standards and Technology</a>, "<a>Digital Signature Standard (DSS)</a>", FIPS PUB 186-3, June 2009.</td>
+<a>National Institute for Standards and Technology</a>, "<a href="https://csrc.nist.gov/publications/detail/fips/186/4/final">Digital Signature Standard (DSS)</a>", FIPS PUB 186-4, July 2013.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
@@ -1488,12 +1488,17 @@
 <tr>
 <td class="reference"><b id="BCIMRT10">[BCIMRT10]</b></td>
 <td class="top">
-<a>Brier, E.</a>, <a>Coron, J.</a>, <a>Icart, T.</a>, <a>Madore, D.</a>, <a>Randriam, H.</a> and <a>M. Tibouchi</a>, "<a>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</a>", in Advances in Cryptology - CRYPTO, 2010.</td>
+<a>Brier, E.</a>, <a>Coron, J.</a>, <a>Icart, T.</a>, <a>Madore, D.</a>, <a>Randriam, H.</a> and <a>M. Tibouchi</a>, "<a href="https://eprint.iacr.org/2009/340">Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</a>", in Advances in Cryptology - CRYPTO, 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="BHKT13">[BHKT13]</b></td>
 <td class="top">
-<a>Bernstein, D.</a>, <a>Hamburg, M.</a>, <a>Krasnova, A.</a> and <a>T. Lange</a>, "<a>Elligator: elliptic-curve points indistinguishable from uniform random strings.</a>", in ACM SIGSAC Conference on Computer and Communications Security (CCS), 2013.</td>
+<a>Bernstein, D.</a>, <a>Hamburg, M.</a>, <a>Krasnova, A.</a> and <a>T. Lange</a>, "<a href="https://elligator.cr.yp.to/elligator-20130828.pdf">Elligator: elliptic-curve points indistinguishable from uniform random strings</a>", in ACM SIGSAC Conference on Computer and Communications Security (CCS), 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="GHMVZ17">[GHMVZ17]</b></td>
+<td class="top">
+<a>Gilad, Y.</a>, <a>Hemo, R.</a>, <a>Micali, Y.</a>, <a>Vlachos, Y.</a> and <a>Y. Zeldovich</a>, "<a href="https://eprint.iacr.org/2017/454">Algorand: Scaling Byzantine Agreements for Cryptocurrencies</a>", in Proceedings of the 26th Symposium on Operating Systems Principles (SOSP), 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.irtf-cfrg-hash-to-curve">[I-D.irtf-cfrg-hash-to-curve]</b></td>
@@ -1506,14 +1511,14 @@
 <a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/draft-vcelak-nsec5-07">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-07, June 2018.</td>
 </tr>
 <tr>
-<td class="reference"><b id="MRV99">[MRV99]</b></td>
+<td class="reference"><b id="KRDO17">[KRDO17]</b></td>
 <td class="top">
-<a>Michali, S.</a>, <a>Rabin, M.</a> and <a>S. Vadhan</a>, "<a>Verifiable Random Functions</a>", in FOCS, 1999.</td>
+<a>Kiayias, A.</a>, <a>Russell, A.</a>, <a>David, B.</a> and <a>R. Oliynykov</a>, "<a href="https://eprint.iacr.org/2016/889">Ouroboros: A Provably Secure Proof-of-Stake Blockchain Protocol</a>", in Advances in Cryptology - CRYPTO, 2017.</td>
 </tr>
 <tr>
-<td class="reference"><b id="nsec5ecc">[nsec5ecc]</b></td>
+<td class="reference"><b id="MRV99">[MRV99]</b></td>
 <td class="top">
-<a>Papadopoulos, D.</a>, <a>Wessels, D.</a>, <a>Huque, S.</a>, <a>Vcelak, J.</a>, <a>Naor, M.</a>, <a>Reyzin, L.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2017/099.pdf">Making NSEC5 Practical for DNSSEC</a>", in ePrint Cryptology Archive 2017/099, February 2017.</td>
+<a>Michali, S.</a>, <a>Rabin, M.</a> and <a>S. Vadhan</a>, "<a href="https://dash.harvard.edu/handle/1/5028196">Verifiable Random Functions</a>", in FOCS, 1999.</td>
 </tr>
 <tr>
 <td class="reference"><b id="ntb">[ntb]</b></td>
@@ -1521,14 +1526,19 @@
 <a>Shoup, V.</a>, "<a href="http://www.shoup.net/ntb/ntb-v2.pdf">A Computational Introduction to Number Theory and Algebra</a>", 2008.</td>
 </tr>
 <tr>
+<td class="reference"><b id="PWHVNRG17">[PWHVNRG17]</b></td>
+<td class="top">
+<a>Papadopoulos, D.</a>, <a>Wessels, D.</a>, <a>Huque, S.</a>, <a>Vcelak, J.</a>, <a>Naor, M.</a>, <a>Reyzin, L.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2017/099.pdf">Making NSEC5 Practical for DNSSEC</a>", in ePrint Cryptology Archive 2017/099, February 2017.</td>
+</tr>
+<tr>
 <td class="reference"><b id="SW06">[SW06]</b></td>
 <td class="top">
-<a>Shallue, A.</a> and <a>C. van de Woestijne</a>, "<a>Construction of rational points on elliptic curves over finite fields.</a>", in Algorithmic Number Theory - ANTS, 2006.</td>
+<a>Shallue, A.</a> and <a>C. van de Woestijne</a>, "<a href="https://works.bepress.com/andrew_shallue/1/">Construction of rational points on elliptic curves over finite fields</a>", in Algorithmic Number Theory - ANTS, 2006.</td>
 </tr>
 <tr>
 <td class="reference"><b id="Ulas07">[Ulas07]</b></td>
 <td class="top">
-<a>Ulas, M.</a>, "<a>Rational points on certain hyperelliptic curves over finite fields.</a>", in Bull. Polish Acad. Sci. Math., 2007.</td>
+<a>Ulas, M.</a>, "<a href="https://arxiv.org/abs/0706.1448">Rational points on certain hyperelliptic curves over finite fields</a>", in Bull. Polish Acad. Sci. Math., 2007.</td>
 </tr>
 <tr>
 <td class="reference"><b id="X25519">[X25519]</b></td>

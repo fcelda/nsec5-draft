@@ -348,7 +348,7 @@
    hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.
    </t>
    
-   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications.[TODO: Mention them by name?] This property is similar
+   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <xref target="GHMVZ17" /> and <xref target="KRDO17" />) This property is similar
        to the unpredictability achieved by an (ordinary, unkeyed)
        cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable
        from uniform. The property has not been formally specified in cryptographic literature.
@@ -369,7 +369,7 @@
             collision resistance", and "full pseudorandomness" properties defined in <xref target="secdef"/>.
             Its security follows from the
             standard RSA assumption in the random oracle model.  Formal
-            security proofs are in <xref target="nsec5ecc" />.  
+            security proofs are in <xref target="PWHVNRG17" />.
         </t>
 
         <t>
@@ -554,7 +554,7 @@
             and full pseudorandomness properties defined in <xref target="secdef"/>.
             The security of this VRF follows from the decisional 
             Diffie-Hellman (DDH) assumption in the random oracle model. Formal security proofs are
-            in <xref target="nsec5ecc" />.  
+            in <xref target="PWHVNRG17" />.
         </t>
         
         <t> To additionally satisfy "full uniqueness" and "full collision resistance", 
@@ -1206,8 +1206,8 @@
         <t>
         suite_string = 0x01 = int_to_string(1, 1). </t>
         <t>
-            The EC group G is the NIST-P256 elliptic curve, with curve parameters
-            as specified in <xref target="FIPS-186-3"></xref> (Section D.1.2.3) 
+            The EC group G is the NIST P-256 elliptic curve, with curve parameters
+            as specified in <xref target="FIPS-186-4"></xref> (Section D.1.2.3)
             and <xref target="RFC5114"></xref>  (Section 2.6). For this group,
             2n = qLen =  32 and cofactor = 1.
         </t>
@@ -1524,7 +1524,7 @@
     
     <section title="Selective vs Full Pseudorandomness">
     
-    <t><xref target="nsec5ecc"/> presents cryptographic reductions to an 
+    <t><xref target="PWHVNRG17"/> presents cryptographic reductions to an 
     underlying hard problem (e.g. Decisional Diffie Hellman for the ECVRF, or the
     standard RSA assumption for RSA-FDH-VRF) that prove the VRFs specificied in this 
     document possess full pseudorandomness
@@ -1767,13 +1767,13 @@
         <?rfc include="reference.RFC.8032.xml"?>
         <?rfc include="reference.RFC.6979.xml"?>
 
-        <reference anchor="FIPS-186-3">
+        <reference anchor="FIPS-186-4" target = "https://csrc.nist.gov/publications/detail/fips/186/4/final">
             <front>
                 <title>Digital Signature Standard (DSS)</title>
                 <author><organization>National Institute for Standards and Technology</organization></author>
-                <date year="2009" month="June" />
+                <date year="2013" month="July" />
             </front>
-            <seriesInfo name="FIPS" value="PUB 186-3" />
+            <seriesInfo name="FIPS" value="PUB 186-4" />
         </reference>
 
         <reference anchor="SECG1" target="http://www.secg.org/sec1-v2.pdf">
@@ -1797,7 +1797,7 @@
             </front>
         </reference>
 
-        <reference anchor="nsec5ecc" target="https://eprint.iacr.org/2017/099.pdf">
+        <reference anchor="PWHVNRG17" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
                 <title>Making NSEC5 Practical for DNSSEC</title>
                 <author initials="D." surname="Papadopoulos"><organization /></author>
@@ -1812,7 +1812,7 @@
             <seriesInfo name="in" value="ePrint Cryptology Archive 2017/099" />
         </reference>
 
-        <reference anchor="MRV99">
+        <reference anchor="MRV99" target = "https://dash.harvard.edu/handle/1/5028196">
             <front>
                 <title>Verifiable Random Functions</title>
                 <author initials="S." surname="Michali"><organization /></author>
@@ -1823,9 +1823,9 @@
             <seriesInfo name="in" value="FOCS" />
         </reference>
 
-        <reference anchor="BHKT13">
+        <reference anchor="BHKT13" target = "https://elligator.cr.yp.to/elligator-20130828.pdf">
             <front>
-                <title>Elligator: elliptic-curve points indistinguishable from uniform random strings.</title>
+                <title>Elligator: elliptic-curve points indistinguishable from uniform random strings</title>
                 <author initials = "D.J." surname = "Bernstein"><organization /></author>
                 <author initials = "M." surname = "Hamburg"><organization /></author>
                 <author initials = "A." surname = "Krasnova"><organization /></author>
@@ -1835,7 +1835,7 @@
             <seriesInfo name="in" value="ACM SIGSAC Conference on Computer and Communications Security (CCS)" />
         </reference>
         
-        <reference anchor="BCIMRT10">
+        <reference anchor="BCIMRT10" target = "https://eprint.iacr.org/2009/340">
             <front>
                 <title>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</title>
                 <author initials= "E." surname="Brier"><organization /></author>
@@ -1849,9 +1849,9 @@
             <seriesInfo name="in" value="Advances in Cryptology - CRYPTO" />
         </reference>
         
-        <reference anchor="SW06">
+        <reference anchor="SW06" target = "https://works.bepress.com/andrew_shallue/1/">
             <front>
-                <title>Construction of rational points on elliptic curves over finite fields.</title>
+                <title>Construction of rational points on elliptic curves over finite fields</title>
                 <author initials ="A." surname = "Shallue"><organization /></author>
                 <author initials ="C." surname = "van de Woestijne"><organization /></author>
                 <date year = "2006" />
@@ -1859,9 +1859,9 @@
         <seriesInfo name="in" value="Algorithmic Number Theory - ANTS" />
         </reference>
     
-        <reference anchor="Ulas07">
+        <reference anchor="Ulas07" target = "https://arxiv.org/abs/0706.1448">
             <front>
-                <title>Rational points on certain hyperelliptic curves over finite fields.</title>
+                <title>Rational points on certain hyperelliptic curves over finite fields</title>
                 <author initials ="M." surname = "Ulas"><organization /></author>
                 <date year = "2007" />
             </front>
@@ -1875,8 +1875,31 @@
                 <date year = "2006" />
             </front>
         </reference>
-                
+        
+        <reference anchor = "GHMVZ17" target = "https://eprint.iacr.org/2017/454">
+            <front>
+                <title>Algorand: Scaling Byzantine Agreements for Cryptocurrencies</title>
+                <author initials ="Y." surname = "Gilad"><organization /></author>
+                <author initials ="R." surname = "Hemo"><organization /></author>
+                <author initials ="Y." surname = "Micali"><organization /></author>
+                <author initials ="Y." surname = "Vlachos"><organization /></author>
+                <author initials ="Y." surname = "Zeldovich"><organization /></author>
+                <date year = "2017" />
+            </front>
+            <seriesInfo name="in" value="Proceedings of the 26th Symposium on Operating Systems Principles (SOSP)" />
+        </reference>
 
+    <reference anchor = "KRDO17" target = "https://eprint.iacr.org/2016/889">
+        <front>
+            <title>Ouroboros: A Provably Secure Proof-of-Stake Blockchain Protocol</title>
+            <author initials ="A." surname = "Kiayias"><organization /></author>
+            <author initials ="A." surname = "Russell"><organization /></author>
+            <author initials ="B." surname = "David"><organization /></author>
+            <author initials ="R." surname = "Oliynykov"><organization /></author>
+            <date year = "2017" />
+        </front>
+        <seriesInfo name="in" value="Advances in Cryptology - CRYPTO" />
+    </reference>
 
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 

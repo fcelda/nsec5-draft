@@ -319,11 +319,11 @@ Internet-Draft                     VRF                    September 2018
    and publicly known), then the outputs are easily derived by anyone.
 
    There is, however, a different type of unpredictability that is
-   desirable in certain VRF applications.[TODO: Mention them by name?]
-   This property is similar to the unpredictability achieved by an
-   (ordinary, unkeyed) cryptographic hash function: if the input has
-   enough entropy (i.e., cannot be predicted), then the correct output
-   is indistinguishable from uniform.  The property has not been
+   desirable in certain VRF applications (such as [GHMVZ17] and
+   [KRDO17]) This property is similar to the unpredictability achieved
+   by an (ordinary, unkeyed) cryptographic hash function: if the input
+   has enough entropy (i.e., cannot be predicted), then the correct
+   output is indistinguishable from uniform.  The property has not been
    formally specified in cryptographic literature.
 
    Although neither formal definitions nor proofs of this property have
@@ -348,7 +348,7 @@ Internet-Draft                     VRF                    September 2018
    the "trusted uniqueness", "trusted collision resistance", and "full
    pseudorandomness" properties defined in Section 3.  Its security
    follows from the standard RSA assumption in the random oracle model.
-   Formal security proofs are in [nsec5ecc].
+   Formal security proofs are in [PWHVNRG17].
 
    The VRF computes the proof pi as a deterministic RSA signature on
    input alpha using the RSA Full Domain Hash Algorithm [RFC8017]
@@ -513,7 +513,7 @@ Internet-Draft                     VRF                    September 2018
    full pseudorandomness properties defined in Section 3.  The security
    of this VRF follows from the decisional Diffie-Hellman (DDH)
    assumption in the random oracle model.  Formal security proofs are in
-   [nsec5ecc].
+   [PWHVNRG17].
 
    To additionally satisfy "full uniqueness" and "full collision
    resistance", the Verifier MUST additionally perform the validation
@@ -1296,8 +1296,8 @@ Internet-Draft                     VRF                    September 2018
 
    o  suite_string = 0x01 = int_to_string(1, 1).
 
-   o  The EC group G is the NIST-P256 elliptic curve, with curve
-      parameters as specified in [FIPS-186-3] (Section D.1.2.3) and
+   o  The EC group G is the NIST P-256 elliptic curve, with curve
+      parameters as specified in [FIPS-186-4] (Section D.1.2.3) and
       [RFC5114]  (Section 2.6).  For this group, 2n = qLen = 32 and
       cofactor = 1.
 
@@ -1628,7 +1628,7 @@ Internet-Draft                     VRF                    September 2018
 
 7.2.  Selective vs Full Pseudorandomness
 
-   [nsec5ecc] presents cryptographic reductions to an underlying hard
+   [PWHVNRG17] presents cryptographic reductions to an underlying hard
    problem (e.g.  Decisional Diffie Hellman for the ECVRF, or the
    standard RSA assumption for RSA-FDH-VRF) that prove the VRFs
    specificied in this document possess full pseudorandomness as well as
@@ -1836,11 +1836,11 @@ Internet-Draft                     VRF                    September 2018
 
 10.1.  Normative References
 
-   [FIPS-186-3]
+   [FIPS-186-4]
               National Institute for Standards and Technology, "Digital
-              Signature Standard (DSS)", FIPS PUB 186-3, June 2009.
-
-
+              Signature Standard (DSS)", FIPS PUB 186-4, July 2013,
+              <https://csrc.nist.gov/publications/detail/fips/186/4/
+              final>.
 
 
 
@@ -1890,13 +1890,13 @@ Internet-Draft                     VRF                    September 2018
               Brier, E., Coron, J., Icart, T., Madore, D., Randriam, H.,
               and M. Tibouchi, "Efficient Indifferentiable Hashing into
               Ordinary Elliptic Curves", in Advances in Cryptology -
-              CRYPTO, 2010.
+              CRYPTO, 2010, <https://eprint.iacr.org/2009/340>.
 
    [BHKT13]   Bernstein, D., Hamburg, M., Krasnova, A., and T. Lange,
               "Elligator: elliptic-curve points indistinguishable from
-              uniform random strings.", in ACM SIGSAC Conference on
-              Computer and Communications Security (CCS), 2013.
-
+              uniform random strings", in ACM SIGSAC Conference on
+              Computer and Communications Security (CCS), 2013,
+              <https://elligator.cr.yp.to/elligator-20130828.pdf>.
 
 
 
@@ -1905,6 +1905,12 @@ Goldberg, et al.         Expires March 11, 2019                [Page 34]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
+              Zeldovich, "Algorand: Scaling Byzantine Agreements for
+              Cryptocurrencies", in Proceedings of the 26th Symposium on
+              Operating Systems Principles (SOSP), 2017,
+              <https://eprint.iacr.org/2017/454>.
 
    [I-D.irtf-cfrg-hash-to-curve]
               Scott, S., Sullivan, N., and C. Wood, "Hashing to Elliptic
@@ -1917,42 +1923,36 @@ Internet-Draft                     VRF                    September 2018
               Existence", draft-vcelak-nsec5-07 (work in progress), June
               2018.
 
-   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
-              Functions", in FOCS, 1999.
+   [KRDO17]   Kiayias, A., Russell, A., David, B., and R. Oliynykov,
+              "Ouroboros: A Provably Secure Proof-of-Stake Blockchain
+              Protocol", in Advances in Cryptology - CRYPTO, 2017,
+              <https://eprint.iacr.org/2016/889>.
 
-   [nsec5ecc]
+   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
+              Functions", in FOCS, 1999,
+              <https://dash.harvard.edu/handle/1/5028196>.
+
+   [ntb]      Shoup, V., "A Computational Introduction to Number Theory
+              and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
+
+   [PWHVNRG17]
               Papadopoulos, D., Wessels, D., Huque, S., Vcelak, J.,
               Naor, M., Reyzin, L., and S. Goldberg, "Making NSEC5
               Practical for DNSSEC", in ePrint Cryptology Archive
               2017/099, February 2017,
               <https://eprint.iacr.org/2017/099.pdf>.
 
-   [ntb]      Shoup, V., "A Computational Introduction to Number Theory
-              and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
-
    [SW06]     Shallue, A. and C. van de Woestijne, "Construction of
-              rational points on elliptic curves over finite fields.",
-              in Algorithmic Number Theory - ANTS, 2006.
+              rational points on elliptic curves over finite fields",
+              in Algorithmic Number Theory - ANTS, 2006,
+              <https://works.bepress.com/andrew_shallue/1/>.
 
    [Ulas07]   Ulas, M., "Rational points on certain hyperelliptic curves
-              over finite fields.", in Bull. Polish Acad. Sci. Math.,
-              2007.
+              over finite fields", in Bull. Polish Acad. Sci. Math.,
+              2007, <https://arxiv.org/abs/0706.1448>.
 
    [X25519]   Bernstein, D., "How do I validate Curve25519 public
               keys?", 2006, <https://cr.yp.to/ecdh.html#validate>.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
