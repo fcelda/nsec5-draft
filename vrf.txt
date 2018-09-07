@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: March 9, 2019                                   D. Papadopoulos
+Expires: March 11, 2019                                  D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                       September 5, 2018
+                                                       September 7, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 9, 2019.
+   This Internet-Draft will expire on March 11, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.          Expires March 9, 2019                 [Page 1]
+Goldberg, et al.         Expires March 11, 2019                 [Page 1]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -79,7 +79,7 @@ Table of Contents
      3.4.  A random-oracle-like unpredictability property  . . . . .   6
    4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)  . . . . . . . . . . .   7
      4.1.  RSA-FDH-VRF Proving . . . . . . . . . . . . . . . . . . .   8
-     4.2.  RSA-FDH-VRF Proof To Hash . . . . . . . . . . . . . . . .   9
+     4.2.  RSA-FDH-VRF Proof To Hash . . . . . . . . . . . . . . . .   8
      4.3.  RSA-FDH-VRF Verifying . . . . . . . . . . . . . . . . . .   9
    5.  Elliptic Curve VRF (ECVRF)  . . . . . . . . . . . . . . . . .  10
      5.1.  ECVRF Proving . . . . . . . . . . . . . . . . . . . . . .  12
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.          Expires March 9, 2019                 [Page 2]
+Goldberg, et al.         Expires March 11, 2019                 [Page 2]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                 [Page 3]
+Goldberg, et al.         Expires March 11, 2019                 [Page 3]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                 [Page 4]
+Goldberg, et al.         Expires March 11, 2019                 [Page 4]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                 [Page 5]
+Goldberg, et al.         Expires March 11, 2019                 [Page 5]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -313,43 +313,34 @@ Internet-Draft                     VRF                    September 2018
 
 3.4.  A random-oracle-like unpredictability property
 
-   [TODO: This property is not needed for applications that use VRFs to
-   prevent enumeration of hash-based data structures.  However, we
-   noticed that some other applications of VRF (e.g.  Algorand,
-   Oroborus) rely on this property.  We are waiting on a formal
-   definition of this property in the literature, and a proof that our
-   ECVRF scheme can satisfy this property.  Preliminary analysis
-   suggests that acheiving this property requires ECVRF verifiers to run
-   an VRF_validate_key() key function upon receipt of VRF public keys
-   and the proof_to_hash function to be modified to take in (Gamma,
-   beta, pk) rather than just Gamma.]
-
    Pseudorandomness, as defined in Section 3.3, does not hold if the VRF
    keys were generated adversarially.  For instance, if an adversary
    outputs VRF keys that are deterministically generated (or hard-coded
    and publicly known), then the outputs are easily derived by anyone.
 
+   There is, however, a different type of unpredictability that is
+   desirable in certain VRF applications.[TODO: Mention them by name?]
+   This property is similar to the unpredictability achieved by an
+   (ordinary, unkeyed) cryptographic hash function: if the input has
+   enough entropy (i.e., cannot be predicted), then the correct output
+   is indistinguishable from uniform.  The property has not been
+   formally specified in cryptographic literature.
+
+   Although neither formal definitions nor proofs of this property have
+   appeared in cryptographic literature, the VRF schemes presented in
+   this specification are believed to satisfy this property if the
+   public key was generated in a trustworthy manner.  Additionally, the
 
 
 
-
-Goldberg, et al.          Expires March 9, 2019                 [Page 6]
+Goldberg, et al.         Expires March 11, 2019                 [Page 6]
 
 Internet-Draft                     VRF                    September 2018
 
 
-   There is, however, a different type of unpredictability that could
-   hold even if the VRF keys are generated adversarially, as long as the
-   VRF input alpha is unpredictable.  This property is similar to the
-   unpredictability achieved by an (ordinary, unkeyed) cryptographic
-   hash function: if the input has enough entropy (i.e., cannot be
-   predicted), then the output is indistinguishable from uniform.
-
-   The ECVRF scheme presented in this specification satisfies this
-   property if the public key satisfies the key validation procedure in
-   Section 5.6.
-
-   [TODO: edit further or decide to leave this alone.]
+   ECVRF also satisifies this property even if the public key was not
+   generated in a trustworthy manner, as long as the public key
+   satisfies the key validation procedure in Section 5.6.
 
 4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)
 
@@ -386,14 +377,6 @@ Internet-Draft                     VRF                    September 2018
 
       hLen - output length in octets of hash function Hash
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                 [Page 7]
-
-Internet-Draft                     VRF                    September 2018
-
-
    Primitives used:
 
       I2OSP - Conversion of a nonnegative integer to an octet string as
@@ -401,6 +384,15 @@ Internet-Draft                     VRF                    September 2018
 
       OS2IP - Conversion of an octet string to a nonnegative integer as
       defined in Section 4.2 of [RFC8017]
+
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                 [Page 7]
+
+Internet-Draft                     VRF                    September 2018
+
 
       RSASP1 - RSA signature primitive as defined in Section 5.2.1 of
       [RFC8017]
@@ -442,14 +434,6 @@ Internet-Draft                     VRF                    September 2018
 
    6.  Output pi_string
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                 [Page 8]
-
-Internet-Draft                     VRF                    September 2018
-
-
 4.2.  RSA-FDH-VRF Proof To Hash
 
    RSAFDHVRF_proof_to_hash(pi_string)
@@ -457,6 +441,14 @@ Internet-Draft                     VRF                    September 2018
    Input:
 
       pi_string - proof, an octet string of length k
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                 [Page 8]
+
+Internet-Draft                     VRF                    September 2018
+
 
    Output:
 
@@ -498,14 +490,6 @@ Internet-Draft                     VRF                    September 2018
 
    2.  m = RSAVP1((n, e), s)
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                 [Page 9]
-
-Internet-Draft                     VRF                    September 2018
-
-
    3.  EM = I2OSP(m, k - 1)
 
    4.  one_string = 0x01 = I2OSP(1, 1), a single octet with value 1
@@ -514,6 +498,13 @@ Internet-Draft                     VRF                    September 2018
        alpha_string, k - 1)
 
    6.  If EM and EM' are equal, output "VALID"; else output "INVALID".
+
+
+
+Goldberg, et al.         Expires March 11, 2019                 [Page 9]
+
+Internet-Draft                     VRF                    September 2018
+
 
 5.  Elliptic Curve VRF (ECVRF)
 
@@ -555,13 +546,6 @@ Internet-Draft                     VRF                    September 2018
 
       Hash - cryptographic hash function
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 10]
-
-Internet-Draft                     VRF                    September 2018
-
-
       hLen - output length in octets of Hash; must be at least 2n
 
       suite_string - a single nonzero octet specifying the ECVRF
@@ -569,6 +553,14 @@ Internet-Draft                     VRF                    September 2018
 
    Notation and primitives used [TODO: add explanation of additive EC
    notation and scalar multiplication]:
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 10]
+
+Internet-Draft                     VRF                    September 2018
+
 
       a^b - exponentiation
 
@@ -609,15 +601,6 @@ Internet-Draft                     VRF                    September 2018
       octet strings as outputs, without introducing a seperate elliptic
       curve point type.
 
-
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 11]
-
-Internet-Draft                     VRF                    September 2018
-
-
    Parameters used (the generation of these parameters is specified in
    Section 5.5):
 
@@ -627,6 +610,13 @@ Internet-Draft                     VRF                    September 2018
 
          Note: depending on the ciphersuite used, the VRF secret scalar
          may be equal to SK; else, it is derived from SK
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 11]
+
+Internet-Draft                     VRF                    September 2018
+
 
       Y = x*B - VRF public key, an EC point
 
@@ -667,17 +657,22 @@ Internet-Draft                     VRF                    September 2018
 
    6.  s = (k + c*x) mod q
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 12]
-
-Internet-Draft                     VRF                    September 2018
-
-
    7.  pi_string = point_to_string(Gamma) || int_to_string(c, n) ||
        int_to_string(s, qLen)
 
    8.  Output pi_string
+
+
+
+
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 12]
+
+Internet-Draft                     VRF                    September 2018
+
 
 5.2.  ECVRF Proof To Hash
 
@@ -723,16 +718,17 @@ Internet-Draft                     VRF                    September 2018
 
       Y - public key, an EC point
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 13]
-
-Internet-Draft                     VRF                    September 2018
-
-
       pi_string - VRF proof, octet string of length ptLen+n+qLen
 
       alpha_string - VRF input, octet string
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 13]
+
+Internet-Draft                     VRF                    September 2018
+
 
    Output:
 
@@ -779,16 +775,16 @@ Internet-Draft                     VRF                    September 2018
    find a valid curve point after approximately two attempts (i.e., when
    ctr=1) on average.
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 14]
-
-Internet-Draft                     VRF                    September 2018
-
-
    However, because the running time of algorithm depends on
    alpha_string, this algorithm SHOULD be avoided in applications where
    it is important that the VRF input alpha remain secret.
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 14]
+
+Internet-Draft                     VRF                    September 2018
+
 
    ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string)
 
@@ -819,28 +815,16 @@ Internet-Draft                     VRF                    September 2018
 
        A.  ctr_string = int_to_string(ctr, 1)
 
-       B.  ctr = ctr + 1
-
-       C.  hash_string = Hash(suite_string || one_string || PK_string ||
+       B.  hash_string = Hash(suite_string || one_string || PK_string ||
            alpha_string || ctr_string)
 
-       D.  H = arbitrary_string_to_point(hash_string)
+       C.  H = arbitrary_string_to_point(hash_string)
 
-       E.  If H is not "INVALID" and cofactor > 1, set H = cofactor * H
+       D.  If H is not "INVALID" and cofactor > 1, set H = cofactor * H
+
+       E.  ctr = ctr + 1
 
    6.  Output H
-
-
-
-
-
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 15]
-
-Internet-Draft                     VRF                    September 2018
-
 
 5.4.1.2.  ECVRF_hash_to_curve_elligator2_25519
 
@@ -849,6 +833,15 @@ Internet-Draft                     VRF                    September 2018
    elligator2 algorithm from Section 5 of [BHKT13] (see also
    [I-D.irtf-cfrg-hash-to-curve]) exclusively for the Ed25519 elliptic
    curve (which the Edwards equivalent of Curve25519).  It can be
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 15]
+
+Internet-Draft                     VRF                    September 2018
+
+
    implemented with running time that is independent of the input alpha
    (so-called "constant-time").
 
@@ -891,18 +884,19 @@ Internet-Draft                     VRF                    September 2018
 
    4.   truncated_h_string = hash_string[0]...hash_string[31]
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 16]
-
-Internet-Draft                     VRF                    September 2018
-
-
    5.   oneTwentyEight_string = 0x80 = int_to_string(128, 1)
         (a single octet with value 128)
 
    6.   oneTwentySeven_string = 0x7F = int_to_string(127, 1)
         (a single octet with value 127)
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 16]
+
+Internet-Draft                     VRF                    September 2018
+
 
    7.   x0 = truncated_h_string[31] & oneTwentyEight_string
         (where & denotes the bit-wise AND)
@@ -945,21 +939,20 @@ Internet-Draft                     VRF                    September 2018
             (where | denotes the bit-wise OR)
 
    16.  H = string_to_point(h_string)
-
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 17]
-
-Internet-Draft                     VRF                    September 2018
-
-
         (note: string_to_point will not return INVALID by correctness of
         Elligator2)
 
    17.  Set H = cofactor * H
 
    18.  Output H
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 17]
+
+Internet-Draft                     VRF                    September 2018
+
 
    In order to make this algorithm run in time that is (almost)
    independent of the input alpha_string (so-called "constant-time"),
@@ -1002,14 +995,6 @@ Internet-Draft                     VRF                    September 2018
    (which is the same as the Jacobi symbol because p is a prime).  See,
    for example, Section 12.3 of [ntb].
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 18]
-
-Internet-Draft                     VRF                    September 2018
-
-
 5.4.1.3.  ECVRF_hash_to_curve_Simplified_SWU
 
    The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y,
@@ -1017,6 +1002,14 @@ Internet-Draft                     VRF                    September 2018
    simplified Shallue-Woestijne [SW06] and Ulas [Ulas07] algorithm from
    Section 7 of [BCIMRT10] (see also [I-D.irtf-cfrg-hash-to-curve][TODO:
    Update to latest version]).  It can be implemented with running time
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 18]
+
+Internet-Draft                     VRF                    September 2018
+
+
    that is independent of the input alpha (so-called "constant-time").
    Generally, this method can be used for any curve with prime p that is
    congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
@@ -1058,14 +1051,6 @@ Internet-Draft                     VRF                    September 2018
    6.   d = (r^2 + r) mod p
         (d is t^4-t^2 mod p)
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 19]
-
-Internet-Draft                     VRF                    September 2018
-
-
    7.   If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p
         (as long as Hash is secure, the case of d = 0 is an utterly
         improbably occurrence;
@@ -1073,6 +1058,13 @@ Internet-Draft                     VRF                    September 2018
         d^(p-2) mod p)
 
    8.   x = ((-b/a) * (1 + d_inverse)) mod p
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 19]
+
+Internet-Draft                     VRF                    September 2018
+
 
    9.   w = (x^3 + a*x + b) mod p
         (this step evaluates the curve equation)
@@ -1115,18 +1107,20 @@ Internet-Draft                     VRF                    September 2018
 
       final_x = CMOV(x, other_x, b)
 
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 20]
-
-Internet-Draft                     VRF                    September 2018
-
-
    CMOV can be implemented in constant time a variety of ways; for
    example, by expanding b from a single bit to an all-0 or all-1 string
    (accomplished by negating b in standard two's-complement arithmetic)
    and then applying bitwise XOR and AND operations as follows: other_x
    XOR ((x XOR other_x) AND b)
+
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 20]
+
+Internet-Draft                     VRF                    September 2018
+
 
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
@@ -1171,14 +1165,18 @@ Internet-Draft                     VRF                    September 2018
       qlen is the binary length of q, i.e., the smallest integer such
       that 2^qlen > q
 
+      All the other values and primitives as defined in [RFC6979]
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 21]
+
+
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 21]
 
 Internet-Draft                     VRF                    September 2018
 
-
-      All the other values and primitives as defined in [RFC6979]
 
 5.4.2.2.  ECVRF Nonce Generation From RFC 8032
 
@@ -1226,16 +1224,15 @@ Internet-Draft                     VRF                    September 2018
 
    2.  Initialize str = suite_string || two_string
 
+   3.  for PJ in [P1, P2, ... PM]:
+       str = str || point_to_string(PJ)
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 22]
+Goldberg, et al.         Expires March 11, 2019                [Page 22]
 
 Internet-Draft                     VRF                    September 2018
 
-
-   3.  for PJ in [P1, P2, ... PM]:
-       str = str || point_to_string(PJ)
 
    4.  c_string = Hash(str)
 
@@ -1285,7 +1282,10 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 23]
+
+
+
+Goldberg, et al.         Expires March 11, 2019                [Page 23]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 24]
+Goldberg, et al.         Expires March 11, 2019                [Page 24]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 25]
+Goldberg, et al.         Expires March 11, 2019                [Page 25]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 26]
+Goldberg, et al.         Expires March 11, 2019                [Page 26]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1469,11 +1469,12 @@ Internet-Draft                     VRF                    September 2018
 
    Note that if the cofactor = 1, then Step 3 need not multiply Y by the
    cofactor; instead, it suffices to output "INVALID" if Y is the point
-   at infinity.  Moreover, if the cofactor is small, the total number of
-   points that could cause Step 3 to output "INVALID" may be small, and
-   it may be more efficient to simply check Y against a fixed list of
-   such points.  For example, the following algorithm can be used for
-   the Ed25519 curve:
+   at infinity.  Moreover, when cofactor>1, it is not necessary to
+   verify that Y is in the subgroup G; Step 3 suffices.  Therefore, if
+   the cofactor is small, the total number of points that could cause
+   Step 3 to output "INVALID" may be small, and it may be more efficient
+   to simply check Y against a fixed list of such points.  For example,
+   the following algorithm can be used for the Ed25519 curve:
 
    1.   Y = string_to_point(PK_string)
 
@@ -1504,15 +1505,17 @@ Internet-Draft                     VRF                    September 2018
 
    13.  bad_pk[6] = int_to_string(p+1, 32)
 
-   14.  If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and
-        stop
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 27]
+
+Goldberg, et al.         Expires March 11, 2019                [Page 27]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   14.  If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and
+        stop
 
    15.  Output Y
 
@@ -1562,10 +1565,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-
-
-
-Goldberg, et al.          Expires March 9, 2019                [Page 28]
+Goldberg, et al.         Expires March 11, 2019                [Page 28]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 29]
+Goldberg, et al.         Expires March 11, 2019                [Page 29]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 30]
+Goldberg, et al.         Expires March 11, 2019                [Page 30]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 31]
+Goldberg, et al.         Expires March 11, 2019                [Page 31]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1789,7 +1789,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 32]
+Goldberg, et al.         Expires March 11, 2019                [Page 32]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 33]
+Goldberg, et al.         Expires March 11, 2019                [Page 33]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1901,7 +1901,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 34]
+Goldberg, et al.         Expires March 11, 2019                [Page 34]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1957,7 +1957,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 35]
+Goldberg, et al.         Expires March 11, 2019                [Page 35]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2013,4 +2013,4 @@ Authors' Addresses
 
 
 
-Goldberg, et al.          Expires March 9, 2019                [Page 36]
+Goldberg, et al.         Expires March 11, 2019                [Page 36]

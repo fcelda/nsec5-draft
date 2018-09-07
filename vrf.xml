@@ -344,35 +344,20 @@
    
    <section title="A random-oracle-like unpredictability property">
    
-   <t>[TODO:   This property is not needed for applications
-   that use VRFs to prevent enumeration of hash-based data structures.
-   However, we noticed that some other applications of VRF 
-   (e.g. Algorand, Oroborus) rely on 
-   this property.  We are waiting on a formal definition 
-   of this property in the literature, and a proof that our ECVRF scheme
-   can satisfy this property. 
-   Preliminary analysis suggests that acheiving this property
-   requires ECVRF verifiers to run an VRF_validate_key() key function upon receipt
-   of VRF public keys and the proof_to_hash function to be modified to take in
-   (Gamma, beta, pk) rather than just Gamma.]</t>
-      
-   <t>Pseudorandomness, as defined in <xref target="pseudodef"/>, does not 
+   <t>Pseudorandomness, as defined in <xref target="pseudodef"/>, does not
    hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.
    </t>
    
-   <t>There is, however, a different type of unpredictability that could hold
-   even if the VRF keys are generated adversarially, as long as 
-   the VRF input alpha is unpredictable.  This property is similar
-   to the unpredictability achieved by an (ordinary, unkeyed)
-   cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the output is indistinguishable
-   from uniform.
-   </t>
+   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications.[TODO: Mention them by name?] This property is similar
+       to the unpredictability achieved by an (ordinary, unkeyed)
+       cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable
+       from uniform. The property has not been formally specified in cryptographic literature.
+    </t>
    <t>
-       The ECVRF scheme presented in this specification satisfies this property if the public key satisfies the key validation
+       Although neither formal definitions nor proofs of this property have appeared in cryptographic literature, the VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy
+       manner. Additionally, the ECVRF also satisifies this property even if the public key was not generated in a trustworthy manner, as long as
+       the public key satisfies the key validation
    procedure in <xref target="keycheck"/>.</t>
-   <t>
-   [TODO: edit further or decide to leave this alone.]
-   </t>
    </section>
   
    </section>
@@ -844,10 +829,10 @@
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
                         <t>ctr_string = int_to_string(ctr, 1)</t>
-                        <t>ctr = ctr + 1</t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>H = arbitrary_string_to_point(hash_string)</t>
                         <t>If H is not "INVALID" and cofactor > 1, set H = cofactor * H</t>
+                        <t>ctr = ctr + 1</t>
                     </list></t>
                     <t>Output H</t>
                 </list>
@@ -1398,7 +1383,8 @@
                 </list>
             </t>
             <t>Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices
-                to output "INVALID" if Y is the point at infinity. Moreover, if the cofactor is small, the total number
+                to output "INVALID" if Y is the point at infinity. Moreover, when cofactor>1, it is not necessary to verify
+                that Y is in the subgroup G; Step 3 suffices. Therefore, if the cofactor is small, the total number
                 of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply
                 check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve:
                 <list style="numbers">
