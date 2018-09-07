@@ -1923,36 +1923,36 @@
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
                 PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <vspace />
-                M = 73616d706c65 (ASCII "sample") <vspace />
+                alpha = 73616d706c65 (ASCII "sample") <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = 02e2e1ab1b9f5a8a68fa4aad597e7493095648d3473b213bba120fe42d1a595f3e <vspace />
                 k = c1aba586552242e6b324ab4b7b26f86239226f3cfa85b1c3b675cc061cf147dc <vspace />
                 U = k*B = 02007fe22a3ed063db835a63a92cb1e487c4fea264c3f3700ae105f8f3d3fd391f <vspace />
                 V = k*H = 03d0a63fa7a7fefcc590cb997b21bbd21dc01304102df183fb7115adf6bcbc2a74 <vspace />
-                proof = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524193b7a850195ef3d5329018a8683114cb446c33fe16ebcc0bc775b043b5860dcb2e553d91268281688438df9394103ab <vspace />
+                pi = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524193b7a850195ef3d5329018a8683114cb446c33fe16ebcc0bc775b043b5860dcb2e553d91268281688438df9394103ab <vspace />
                 beta = 59ca3801ad3e981a88e36880a3aee1df38a0472d5be52d6e39663ea0314e594c</t>
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
                 PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <vspace />
-                M = 74657374 (ASCII "test") <vspace />
+                alpha = 74657374 (ASCII "test") <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = 02ca565721155f9fd596f1c529c7af15dad671ab30c76713889e3d45b767ff6433 <vspace />
                 k = 7fc43fbc2aa51886139614792c613e672624b3fb8d0cf3fa6f52543d6a2fc26c <vspace />
                 U = k*B = 037cd79cd8ab7b0324600b4d76c673a0726f3f1ff26b4b850d0c14b3aa272bf841 <vspace />
                 V = k*H = 02372cc8b56281e8d7f21ab7503c10af22164a4227e7433de0953a0df5e7a609bd <vspace />
-                proof = 03873a1cce2ca197e466cc116bca7b1156fff599be67ea40b17256c4f34ba2549c9c8b100049e76661dbcf6393e4d625597ed21d4de684e08dc6817b60938f3ff4148823ea46a47fa8a4d43f5fa6f77dc8 <vspace />
+                pi = 03873a1cce2ca197e466cc116bca7b1156fff599be67ea40b17256c4f34ba2549c9c8b100049e76661dbcf6393e4d625597ed21d4de684e08dc6817b60938f3ff4148823ea46a47fa8a4d43f5fa6f77dc8 <vspace />
                 beta = dc85c20f95100626eddc90173ab58d5e4f837bb047fb2f72e9a408feae5bc6c1</t>
             <t>This example secret key and message are taken from Appendix L.4.2 of <xref target="ANSI.X9-62-2005"/>.</t>
             <t>
                 SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <vspace />
                 PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <vspace />
-                M = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <vspace />
+                alpha = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <vspace />
                 try_and_increment succeded on ctr = 1 <vspace />
                 H = 02141e41d4d55802b0e3adaba114c81137d95fd3869b6b385d4487b1130126648d <vspace />
                 k = 111e1505c8531c885dab6607a0962cd40a0af77637cdf183c7c9fb799dded43e <vspace />
                 U = k*B = 02b3aceb619b90e811c8e50de73b27e65dd84669821055cb60dc1fa47199396c74 <vspace />
                 V = k*H = 02f117fe7daa8942d5492cc968784ced16025161b2dad374808eb7fbaf5eda5331 <vspace />
-                proof = 02abe3ce3b3aa2ab3c6855a7e729517ebfab6901c2fd228f6fa066f15ebc9b9d41fd212750d9ff775527943049053a77252e9fa59e332a2e5d5db6d0be734076e98befcdefdcbaf817a5c13d4e45fbf9bc <vspace />
+                pi = 02abe3ce3b3aa2ab3c6855a7e729517ebfab6901c2fd228f6fa066f15ebc9b9d41fd212750d9ff775527943049053a77252e9fa59e332a2e5d5db6d0be734076e98befcdefdcbaf817a5c13d4e45fbf9bc <vspace />
                 beta = e880bde34ac5263b2ce5c04626870be2cbff1edcdadabd7d4cb7cbc696467168</t>
         </section>
         <section title="ECVRF-P256-SHA256-SWU">
@@ -1960,7 +1960,7 @@
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
                 PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <vspace />
-                M = 73616d706c65 (ASCII "sample") <vspace />
+                alpha = 73616d706c65 (ASCII "sample") <vspace />
                 In SWU: t = f1523667d029b9119a319a5bb316ff846691600e3552514ec4f93f9c84d65a4f <vspace />
                 In SWU: w = d8125c3ae82fc2b7f1c326b6f3dbfdf3583272336a60cb08efb84e002e98a3b3 <vspace />
                 In SWU: e = -1 <vspace />
@@ -1968,12 +1968,12 @@
                 k = e15d8e7677f9473ae922d36977dbcc305a4ffd8149499dccfcb44fa097a2200c <vspace />
                 U = k*B = 035dc0dee6903dba1a3e7cae4e2a960609e873e6e696cc8d5e56dfa8efccdfc97a <vspace />
                 V = k*H = 03bec301c2930d69ed359eab2a54349d1431625c7a3ee0cfc2643ae5f8a21c3add <vspace />
-                proof = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024c35641fe838a72d0d9bc1bcf032f895f3b3f4c79d0f8f9d5705d83181fe82e19f49619eb8290930809b2b9651786e4f945 <vspace />
+                pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024c35641fe838a72d0d9bc1bcf032f895f3b3f4c79d0f8f9d5705d83181fe82e19f49619eb8290930809b2b9651786e4f945 <vspace />
                 beta = 143f36bf7175053315693cfcfdff5aebb13e5eb9c47f897f53f81561993cfcd2</t>
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
                 PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <vspace />
-                M = 74657374 (ASCII "test") <vspace />
+                alpha = 74657374 (ASCII "test") <vspace />
                 In SWU: t = e20da1d7386cb673deffec63d47ec65862dce55f113be168fa45cba2a6c1ddbc <vspace />
                 In SWU: w = 0eed10be2937c902c9612d80b8ea5b0783f81c419faedd57efc84e6dfcfe2c72 <vspace />
                 In SWU: e = 1 <vspace />
@@ -1981,13 +1981,13 @@
                 k = 2addf2924eea6557e87acd635f08b54156cba70d718d8a3b6268af795cfdb7f2 <vspace />
                 U = k*B = 028347e823490cb50becb229cf059942afff39d6b276b987a384e45f29d1bf0dc3 <vspace />
                 V = k*H = 034759927f83caf0ed5d7ad1505844548051ef90a2f29de30efaf8eb811afb3342 <vspace />
-                proof = 0376b758f457d2cabdfaeb18700e46e64f073eb98c119dee4db6c5bb1eaf677806895ab451335f6adb792d40c68351929fce44068ffdcbbeac12f058b0365856ed5d86aadba1f54c9db13f9c8759589609 <vspace />
+                pi = 0376b758f457d2cabdfaeb18700e46e64f073eb98c119dee4db6c5bb1eaf677806895ab451335f6adb792d40c68351929fce44068ffdcbbeac12f058b0365856ed5d86aadba1f54c9db13f9c8759589609 <vspace />
                 beta = 6b5bb622a6bc1387a7dcc4f46cfdcc3bce67669b32f3bc39e047c3b6cd3e65d9</t>
             <t>This example secret key and message are taken from Appendix L.4.2 of <xref target="ANSI.X9-62-2005"/>.</t>
             <t>
                 SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <vspace />
                 PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <vspace />
-                M = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <vspace />
+                alpha = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <vspace />
                 In SWU: t = e93da6ba2bca714061dc94c8c513343ad11bfc9678339e4a8bd86a08232aa6d7 <vspace />
                 In SWU: w = 76f564cca31934c80dd2a285ba43543df63a078b132c8f34d2ab1b7089cb3401 <vspace />
                 In SWU: e = -1 <vspace />
@@ -1995,7 +1995,7 @@
                 k = 2ba4cd5e9f7be946659555b3d052af618d2d3a14f5a756c8d56fab058d1831ff <vspace />
                 U = k*B = 025943c217f48354e297156ac7dce8d2b50f63867acc23ba1aea87a66578392ca8 <vspace />
                 V = k*H = 0399ccafce764acf0db264183d97c1ae968daf661b9931a145bb8cbfc5f3f8f9a5 <vspace />
-                proof = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f29477cd29f8754f3bbdea3dd129560e9ba0c73ae7894a8d0c0e1ac01e5c2685da67009d96e6ccdb634c7e0c5f38fa3e4908c02 <vspace />
+                pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f29477cd29f8754f3bbdea3dd129560e9ba0c73ae7894a8d0c0e1ac01e5c2685da67009d96e6ccdb634c7e0c5f38fa3e4908c02 <vspace />
                 beta = be1dcb17e9815ac6acf819e7ad4b75e575eafad25915c2608959d780364fc912</t>
         </section>
 
@@ -2004,38 +2004,38 @@
             <t>
                 SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />
                 PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <vspace />
-                M =  (the empty string) <vspace />
+                alpha =  (the empty string) <vspace />
                 x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = 5b2c80db3ce2d79cc85b1bfb269f02f915c5f0e222036dc82123f640205d0d24 <vspace />
                 k = 647ac2b3ca3f6a77e4c4f4f79c6c4c8ce1f421a9baaa294b0adf0244915130f7067640acb6fd9e7e84f8bc30d4e03a95e410b82f96a5ada97080e0f187758d38 <vspace />
                 U = k*B = a21c342b8704853ad10928e3db3e58ede289c798e3cdfd485fbbb8c1b620604f <vspace />
                 V = k*H = 426fe41752f0b27439eb3d0c342cb645174a720cae2d4e9bb37de034eefe27ad <vspace />
-                proof = 9275df67a68c8745c0ff97b48201ee6db447f7c93b23ae24cdc2400f52fdb08a1a6ac7ec71bf9c9c76e96ee4675ebff60625af28718501047bfd87b810c2d2139b73c23bd69de66360953a642c2a330a <vspace />
+                pi = 9275df67a68c8745c0ff97b48201ee6db447f7c93b23ae24cdc2400f52fdb08a1a6ac7ec71bf9c9c76e96ee4675ebff60625af28718501047bfd87b810c2d2139b73c23bd69de66360953a642c2a330a <vspace />
                 beta = a64c292ec45f6b252828aff9a02a0fe88d2fcc7f5fc61bb328f03f4c6c0657a9d26efb23b87647ff54f71cd51a6fa4c4e31661d8f72b41ff00ac4d2eec2ea7b3</t>
             <t>
                 SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <vspace />
                 PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <vspace />
-                M = 72 (1 byte) <vspace />
+                alpha = 72 (1 byte) <vspace />
                 x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <vspace />
                 try_and_increment succeded on ctr = 4 <vspace />
                 H = 08e18a34f3923db32e80834fb8ced4e878037cd0459c63ddd66e5004258cf76c <vspace />
                 k = 627237308294a8b344a09ad893997c630153ee514cd292eddd577a9068e2a6f24cbee0038beb0b1ee5df8be08215e9fc74608e6f9358b0e8d6383b1742a70628 <vspace />
                 U = k*B = 18b5e500cb34690ced061a0d6995e2722623c105221eb91b08d90bf0491cf979 <vspace />
                 V = k*H = 87e1f47346c86dbbd2c03eafc7271caa1f5307000a36d1f71e26400955f1f627 <vspace />
-                proof = 84a63e74eca8fdd64e9972dcda1c6f33d03ce3cd4d333fd6cc789db12b5a7b9d03f1cb6b2bf7cd81a2a20bacf6e1c04e59f2fa16d9119c73a45a97194b504fb9a5c8cf37f6da85e03368d6882e511008 <vspace />
+                pi = 84a63e74eca8fdd64e9972dcda1c6f33d03ce3cd4d333fd6cc789db12b5a7b9d03f1cb6b2bf7cd81a2a20bacf6e1c04e59f2fa16d9119c73a45a97194b504fb9a5c8cf37f6da85e03368d6882e511008 <vspace />
                 beta = cddaa399bb9c56d3be15792e43a6742fb72b1d248a7f24fd5cc585b232c26c934711393b4d97284b2bcca588775b72dc0b0f4b5a195bc41f8d2b80b6981c784e</t>
             <t>
                 SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <vspace />
                 PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <vspace />
-                M = af82 (2 bytes) <vspace />
+                alpha = af82 (2 bytes) <vspace />
                 x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = e4581824b70badf0e57af789dd8cf85513d4b9814566de0e3f738439becfba33 <vspace />
                 k = a950f736af2e3ae2dbcb76795f9cbd57c671eee64ab17069f945509cd6c4a74852fe1bbc331e1bd573038ec703ca28601d861ad1e9684ec89d57bc22986acb0e <vspace />
                 U = k*B = 5114dc4e741b7c4a28844bc585350240a51348a05f337b5fd75046d2c2423f7a <vspace />
                 V = k*H = a6d5780c472dea1ace78795208aaa05473e501ed4f53da57e1fb13b7e80d7f59 <vspace />
-                proof = aca8ade9b7f03e2b149637629f95654c94fc9053c225ec21e5838f193af2b727b84ad849b0039ad38b41513fe5a66cdd2367737a84b488d62486bd2fb110b4801a46bfca770af98e059158ac563b690f <vspace />
+                pi = aca8ade9b7f03e2b149637629f95654c94fc9053c225ec21e5838f193af2b727b84ad849b0039ad38b41513fe5a66cdd2367737a84b488d62486bd2fb110b4801a46bfca770af98e059158ac563b690f <vspace />
                 beta = d938b2012f2551b0e13a49568612effcbdca2aed5d1d3a13f47e180e01218916e049837bd246f66d5058e56d3413dbbbad964f5e9f160a81c9a1355dcd99b453</t>
         </section>
         <section title="ECVRF-ED25519-SHA512-Elligator2">
@@ -2043,7 +2043,7 @@
             <t>
                 SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />
                 PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <vspace />
-                M =  (the empty string) <vspace />
+                alpha =  (the empty string) <vspace />
                 x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <vspace />
                 In Elligator: r = 9ddd071cd5837e591a3a40c57a46701bb7f49b1b53c670d490c2766a08fa6e3d <vspace />
                 In Elligator: w = c7b5d6239e52a473a2b57a92825e0e5de4656e349bb198de5afd6a76e5a07066 <vspace />
@@ -2052,12 +2052,12 @@
                 k = 868b56b8b3faf5fc7e276ff0a65aaa896aa927294d768d0966277d94599b7afe4a6330770da5fdc2875121e0cbecbffbd4ea5e491eb35be53fa7511d9f5a61f2 <vspace />
                 U = k*B = c4743a22340131a2323174bfc397a6585cbe0cc521bfad09f34b11dd4bcf5936 <vspace />
                 V = k*H = e309cf5272f0af2f54d9dc4a6bad6998a9d097264e17ae6fce2b25dcbdd10e8b <vspace />
-                proof = b6b4699f87d56126c9117a7da55bd0085246f4c56dbc95d20172612e9d38e8d7ca65e573a126ed88d4e30a46f80a666854d675cf3ba81de0de043c3774f061560f55edc256a787afe701677c0f602900 <vspace />
+                pi = b6b4699f87d56126c9117a7da55bd0085246f4c56dbc95d20172612e9d38e8d7ca65e573a126ed88d4e30a46f80a666854d675cf3ba81de0de043c3774f061560f55edc256a787afe701677c0f602900 <vspace />
                 beta = 5b49b554d05c0cd5a5325376b3387de59d924fd1e13ded44648ab33c21349a603f25b84ec5ed887995b33da5e3bfcb87cd2f64521c4c62cf825cffabbe5d31cc</t>
             <t>
                 SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <vspace />
                 PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <vspace />
-                M = 72 (1 byte) <vspace />
+                alpha = 72 (1 byte) <vspace />
                 x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <vspace />
                 In Elligator: r = 92181bd612695e464049590eb1f9746750d6057441789c9759af8308ac77fd4a <vspace />
                 In Elligator: w = 7ff6d8b773bfbae57b2ab9d49f9d3cb7d9af40a03d3ed3c6beaaf2d486b1fe6e <vspace />
@@ -2066,12 +2066,12 @@
                 k = fd919e9d43c61203c4cd948cdaea0ad4488060db105d25b8fb4a5da2bd40e4b8330ca44a0538cc275ac7d568686660ccfd6323c805b917e91e28a4ab352b9575 <vspace />
                 U = k*B = 04b1ba4d8129f0d4cec522b0fd0dff84283401df791dcc9b93a219c51cf27324 <vspace />
                 V = k*H = ca8a97ce1947d2a0aaa280f03153388fa7aa754eedfca2b4a7ad405707599ba5 <vspace />
-                proof = ae5b66bdf04b4c010bfe32b2fc126ead2107b697634f6f7337b9bff8785ee111200095ece87dde4dbe87343f6df3b107d91798c8a7eb1245d3bb9c5aafb093358c13e6ae1111a55717e895fd15f99f07 <vspace />
+                pi = ae5b66bdf04b4c010bfe32b2fc126ead2107b697634f6f7337b9bff8785ee111200095ece87dde4dbe87343f6df3b107d91798c8a7eb1245d3bb9c5aafb093358c13e6ae1111a55717e895fd15f99f07 <vspace />
                 beta = 94f4487e1b2fec954309ef1289ecb2e15043a2461ecc7b2ae7d4470607ef82eb1cfa97d84991fe4a7bfdfd715606bc27e2967a6c557cfb5875879b671740b7d8</t>
             <t>
                 SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <vspace />
                 PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <vspace />
-                M = af82 (2 bytes) <vspace />
+                alpha = af82 (2 bytes) <vspace />
                 x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <vspace />
                 In Elligator: r = dcd7cda88d6798599e07216de5a48a27dcd1cde197ab39ccaf6a906ae6b25c7f <vspace />
                 In Elligator: w = 2ceaa2c2ff3028c34f9fbe076ff99520b925f18d652285b4daad5ccc467e523b <vspace />
@@ -2080,7 +2080,7 @@
                 k = 8f675784cdc984effc459e1054f8d386050ec400dc09d08d2372c6fe0850eaaa50defd02d965b79930dcbca5ba9222a3d99510411894e63f66bbd5d13d25db4b <vspace />
                 U = k*B = d6f8a95a4ce86812e3e50febd9d48196b3bc5d1d9fa7b6dfa33072641b45d029 <vspace />
                 V = k*H = f77cd4ce0b49b386e80c3ce404185f93bb07463600dc14c31b0a09beaff4d592 <vspace />
-                proof = dfa2cba34b611cc8c833a6ea83b8eb1bb5e2ef2dd1b0c481bc42ff36ae7847f6ab52b976cfd5def172fa412defde270c8b8bdfbaae1c7ece17d9833b1bcf31064fff78ef493f820055b561ece45e1009 <vspace />
+                pi = dfa2cba34b611cc8c833a6ea83b8eb1bb5e2ef2dd1b0c481bc42ff36ae7847f6ab52b976cfd5def172fa412defde270c8b8bdfbaae1c7ece17d9833b1bcf31064fff78ef493f820055b561ece45e1009 <vspace />
                 beta = 2031837f582cd17a9af9e0c7ef5a6540e3453ed894b62c293686ca3c1e319dde9d0aa489a4b59a9594fc2328bc3deff3c8a0929a369a72b1180a596e016b5ded</t>
         </section>
 
