@@ -814,10 +814,12 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.p.4">Notation and primitives used [TODO: add explanation of additive EC notation and scalar multiplication]: </p>
+<p id="rfc.section.5.p.4">Notation and primitives used: </p>
 
 <ul class="empty">
-<li>a^b - exponentiation </li>
+<li>Elliptic curve operations are written in additive notation, with P+Q denoting point addition and x*P denoting scalar multiplication of a point P by a scalar x</li>
+<li>x^y - a raised to the power b</li>
+<li>x*y - a multiplied by b</li>
 <li>|| - octet string concatenation</li>
 <li>ECVRF_hash_to_curve - collision resistant hash of strings to an EC point; options described in <a href="#ecvrfH2C" class="xref">Section 5.4.1</a> and specified in <a href="#suites" class="xref">Section 5.5</a>.</li>
 <li>ECVRF_nonce_generation - derives a pseudorandom nonce from SK and the input as part of ECVRF proving.  Specified in <a href="#suites" class="xref">Section 5.5</a>
@@ -1335,6 +1337,7 @@
 
 <p> </p>
 <p id="rfc.section.5.6.1.p.5">Note that if the cofactor = 1, then Step 3 need not multiply Y by the cofactor; instead, it suffices to output "INVALID" if Y is the point at infinity. Moreover, when cofactor&gt;1, it is not necessary to verify that Y is in the subgroup G; Step 3 suffices. Therefore, if the cofactor is small, the total number of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve: </p>
+<p></p>
 
 <ol>
 <li>Y = string_to_point(PK_string)</li>
@@ -1354,7 +1357,8 @@
 <li>Output Y</li>
 </ol>
 
-<p> (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.) [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original] </p>
+<p> </p>
+<p id="rfc.section.5.6.1.p.7">(bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255. These bad keys, which represent all points of order 1, 2, 4, and 8, have been obtained by converting the points specified in <a href="#X25519" class="xref">[X25519]</a> to Edwards coordinates.) </p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
@@ -1525,6 +1529,11 @@
 <td class="reference"><b id="Ulas07">[Ulas07]</b></td>
 <td class="top">
 <a>Ulas, M.</a>, "<a>Rational points on certain hyperelliptic curves over finite fields.</a>", in Bull. Polish Acad. Sci. Math., 2007.</td>
+</tr>
+<tr>
+<td class="reference"><b id="X25519">[X25519]</b></td>
+<td class="top">
+<a>Bernstein, D.</a>, "<a href="https://cr.yp.to/ecdh.html#validate">How do I validate Curve25519 public keys?</a>", 2006.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">

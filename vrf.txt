@@ -551,8 +551,8 @@ Internet-Draft                     VRF                    September 2018
       suite_string - a single nonzero octet specifying the ECVRF
       ciphersuite, which determines the above options
 
-   Notation and primitives used [TODO: add explanation of additive EC
-   notation and scalar multiplication]:
+   Notation and primitives used:
+
 
 
 
@@ -562,7 +562,13 @@ Goldberg, et al.         Expires March 11, 2019                [Page 10]
 Internet-Draft                     VRF                    September 2018
 
 
-      a^b - exponentiation
+      Elliptic curve operations are written in additive notation, with
+      P+Q denoting point addition and x*P denoting scalar multiplication
+      of a point P by a scalar x
+
+      x^y - a raised to the power b
+
+      x*y - a multiplied by b
 
       || - octet string concatenation
 
@@ -604,12 +610,6 @@ Internet-Draft                     VRF                    September 2018
    Parameters used (the generation of these parameters is specified in
    Section 5.5):
 
-      SK - VRF private key
-
-      x - VRF secret scalar, an integer
-
-         Note: depending on the ciphersuite used, the VRF secret scalar
-         may be equal to SK; else, it is derived from SK
 
 
 
@@ -617,6 +617,13 @@ Goldberg, et al.         Expires March 11, 2019                [Page 11]
 
 Internet-Draft                     VRF                    September 2018
 
+
+      SK - VRF private key
+
+      x - VRF secret scalar, an integer
+
+         Note: depending on the ciphersuite used, the VRF secret scalar
+         may be equal to SK; else, it is derived from SK
 
       Y = x*B - VRF public key, an EC point
 
@@ -660,19 +667,14 @@ Internet-Draft                     VRF                    September 2018
    7.  pi_string = point_to_string(Gamma) || int_to_string(c, n) ||
        int_to_string(s, qLen)
 
-   8.  Output pi_string
-
-
-
-
-
-
 
 
 Goldberg, et al.         Expires March 11, 2019                [Page 12]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   8.  Output pi_string
 
 5.2.  ECVRF Proof To Hash
 
@@ -720,8 +722,6 @@ Internet-Draft                     VRF                    September 2018
 
       pi_string - VRF proof, octet string of length ptLen+n+qLen
 
-      alpha_string - VRF input, octet string
-
 
 
 
@@ -729,6 +729,8 @@ Goldberg, et al.         Expires March 11, 2019                [Page 13]
 
 Internet-Draft                     VRF                    September 2018
 
+
+      alpha_string - VRF input, octet string
 
    Output:
 
@@ -775,9 +777,7 @@ Internet-Draft                     VRF                    September 2018
    find a valid curve point after approximately two attempts (i.e., when
    ctr=1) on average.
 
-   However, because the running time of algorithm depends on
-   alpha_string, this algorithm SHOULD be avoided in applications where
-   it is important that the VRF input alpha remain secret.
+
 
 
 
@@ -785,6 +785,10 @@ Goldberg, et al.         Expires March 11, 2019                [Page 14]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   However, because the running time of algorithm depends on
+   alpha_string, this algorithm SHOULD be avoided in applications where
+   it is important that the VRF input alpha remain secret.
 
    ECVRF_hash_to_try_and_increment(suite_string, Y, alpha_string)
 
@@ -826,13 +830,9 @@ Internet-Draft                     VRF                    September 2018
 
    6.  Output H
 
-5.4.1.2.  ECVRF_hash_to_curve_elligator2_25519
 
-   The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y,
-   alpha_string) algorithm implements ECVRF_hash_to_curve using the
-   elligator2 algorithm from Section 5 of [BHKT13] (see also
-   [I-D.irtf-cfrg-hash-to-curve]) exclusively for the Ed25519 elliptic
-   curve (which the Edwards equivalent of Curve25519).  It can be
+
+
 
 
 
@@ -842,6 +842,13 @@ Goldberg, et al.         Expires March 11, 2019                [Page 15]
 Internet-Draft                     VRF                    September 2018
 
 
+5.4.1.2.  ECVRF_hash_to_curve_elligator2_25519
+
+   The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y,
+   alpha_string) algorithm implements ECVRF_hash_to_curve using the
+   elligator2 algorithm from Section 5 of [BHKT13] (see also
+   [I-D.irtf-cfrg-hash-to-curve]) exclusively for the Ed25519 elliptic
+   curve (which the Edwards equivalent of Curve25519).  It can be
    implemented with running time that is independent of the input alpha
    (so-called "constant-time").
 
@@ -884,19 +891,18 @@ Internet-Draft                     VRF                    September 2018
 
    4.   truncated_h_string = hash_string[0]...hash_string[31]
 
-   5.   oneTwentyEight_string = 0x80 = int_to_string(128, 1)
-        (a single octet with value 128)
-
-   6.   oneTwentySeven_string = 0x7F = int_to_string(127, 1)
-        (a single octet with value 127)
-
-
 
 
 Goldberg, et al.         Expires March 11, 2019                [Page 16]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   5.   oneTwentyEight_string = 0x80 = int_to_string(128, 1)
+        (a single octet with value 128)
+
+   6.   oneTwentySeven_string = 0x7F = int_to_string(127, 1)
+        (a single octet with value 127)
 
    7.   x0 = truncated_h_string[31] & oneTwentyEight_string
         (where & denotes the bit-wise AND)
@@ -939,12 +945,6 @@ Internet-Draft                     VRF                    September 2018
             (where | denotes the bit-wise OR)
 
    16.  H = string_to_point(h_string)
-        (note: string_to_point will not return INVALID by correctness of
-        Elligator2)
-
-   17.  Set H = cofactor * H
-
-   18.  Output H
 
 
 
@@ -953,6 +953,13 @@ Goldberg, et al.         Expires March 11, 2019                [Page 17]
 
 Internet-Draft                     VRF                    September 2018
 
+
+        (note: string_to_point will not return INVALID by correctness of
+        Elligator2)
+
+   17.  Set H = cofactor * H
+
+   18.  Output H
 
    In order to make this algorithm run in time that is (almost)
    independent of the input alpha_string (so-called "constant-time"),
@@ -995,13 +1002,6 @@ Internet-Draft                     VRF                    September 2018
    (which is the same as the Jacobi symbol because p is a prime).  See,
    for example, Section 12.3 of [ntb].
 
-5.4.1.3.  ECVRF_hash_to_curve_Simplified_SWU
-
-   The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y,
-   alpha_string) algorithm implements ECVRF_hash_to_curve using the
-   simplified Shallue-Woestijne [SW06] and Ulas [Ulas07] algorithm from
-   Section 7 of [BCIMRT10] (see also [I-D.irtf-cfrg-hash-to-curve][TODO:
-   Update to latest version]).  It can be implemented with running time
 
 
 
@@ -1010,6 +1010,13 @@ Goldberg, et al.         Expires March 11, 2019                [Page 18]
 Internet-Draft                     VRF                    September 2018
 
 
+5.4.1.3.  ECVRF_hash_to_curve_Simplified_SWU
+
+   The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y,
+   alpha_string) algorithm implements ECVRF_hash_to_curve using the
+   simplified Shallue-Woestijne [SW06] and Ulas [Ulas07] algorithm from
+   Section 7 of [BCIMRT10] (see also [I-D.irtf-cfrg-hash-to-curve][TODO:
+   Update to latest version]).  It can be implemented with running time
    that is independent of the input alpha (so-called "constant-time").
    Generally, this method can be used for any curve with prime p that is
    congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
@@ -1051,13 +1058,6 @@ Internet-Draft                     VRF                    September 2018
    6.   d = (r^2 + r) mod p
         (d is t^4-t^2 mod p)
 
-   7.   If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p
-        (as long as Hash is secure, the case of d = 0 is an utterly
-        improbably occurrence;
-        the two cases can be combined into one by computing d_inverse =
-        d^(p-2) mod p)
-
-   8.   x = ((-b/a) * (1 + d_inverse)) mod p
 
 
 
@@ -1065,6 +1065,14 @@ Goldberg, et al.         Expires March 11, 2019                [Page 19]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   7.   If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p
+        (as long as Hash is secure, the case of d = 0 is an utterly
+        improbably occurrence;
+        the two cases can be combined into one by computing d_inverse =
+        d^(p-2) mod p)
+
+   8.   x = ((-b/a) * (1 + d_inverse)) mod p
 
    9.   w = (x^3 + a*x + b) mod p
         (this step evaluates the curve equation)
@@ -1107,20 +1115,18 @@ Internet-Draft                     VRF                    September 2018
 
       final_x = CMOV(x, other_x, b)
 
-   CMOV can be implemented in constant time a variety of ways; for
-   example, by expanding b from a single bit to an all-0 or all-1 string
-   (accomplished by negating b in standard two's-complement arithmetic)
-   and then applying bitwise XOR and AND operations as follows: other_x
-   XOR ((x XOR other_x) AND b)
-
-
-
 
 
 Goldberg, et al.         Expires March 11, 2019                [Page 20]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   CMOV can be implemented in constant time a variety of ways; for
+   example, by expanding b from a single bit to an all-0 or all-1 string
+   (accomplished by negating b in standard two's-complement arithmetic)
+   and then applying bitwise XOR and AND operations as follows: other_x
+   XOR ((x XOR other_x) AND b)
 
    If having this algorithm run in constant time is not important, then
    there are much faster algorithms to compute the Legendre symbol
@@ -1165,18 +1171,14 @@ Internet-Draft                     VRF                    September 2018
       qlen is the binary length of q, i.e., the smallest integer such
       that 2^qlen > q
 
-      All the other values and primitives as defined in [RFC6979]
-
-
-
-
-
 
 
 Goldberg, et al.         Expires March 11, 2019                [Page 21]
 
 Internet-Draft                     VRF                    September 2018
 
+
+      All the other values and primitives as defined in [RFC6979]
 
 5.4.2.2.  ECVRF Nonce Generation From RFC 8032
 
@@ -1224,8 +1226,6 @@ Internet-Draft                     VRF                    September 2018
 
    2.  Initialize str = suite_string || two_string
 
-   3.  for PJ in [P1, P2, ... PM]:
-       str = str || point_to_string(PJ)
 
 
 
@@ -1233,6 +1233,9 @@ Goldberg, et al.         Expires March 11, 2019                [Page 22]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   3.  for PJ in [P1, P2, ... PM]:
+       str = str || point_to_string(PJ)
 
    4.  c_string = Hash(str)
 
@@ -1277,9 +1280,6 @@ Internet-Draft                     VRF                    September 2018
    7.  s = string_to_int(s_string)
 
    8.  Output Gamma, c, and s
-
-
-
 
 
 
@@ -1526,11 +1526,10 @@ Internet-Draft                     VRF                    September 2018
    x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6]
    are simply bad_pk[0] and bad_pk[1] shifted by p, in case the
    y-coordinate had not been modular reduced by p.  There is no need to
-   shift the other bad_pk values by p, because they will exceed 2^255.)
-   [TODO: what's the sources for these?  We got them from libsodium http
-   s://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da
-   409c55d58a/src/libsodium/crypto_core/ed25519/ref10/
-   ed25519_ref10.c#L1003 but not sure if it's the original]
+   shift the other bad_pk values by p, because they will exceed 2^255.
+   These bad keys, which represent all points of order 1, 2, 4, and 8,
+   have been obtained by converting the points specified in [X25519] to
+   Edwards coordinates.)
 
 6.  Implementation Status
 
@@ -1560,6 +1559,7 @@ Internet-Draft                     VRF                    September 2018
    Open Whisper Systems also uses a VRF very similar to ECVRF-
    ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
    <https://whispersystems.org/docs/specifications/xeddsa/>
+
 
 
 
@@ -1938,8 +1938,8 @@ Internet-Draft                     VRF                    September 2018
               over finite fields.", in Bull. Polish Acad. Sci. Math.,
               2007.
 
-
-
+   [X25519]   Bernstein, D., "How do I validate Curve25519 public
+              keys?", 2006, <https://cr.yp.to/ecdh.html#validate>.
 
 
 

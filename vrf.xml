@@ -584,10 +584,11 @@
         </t>
         
         <t>
-            Notation and primitives used [TODO: add explanation of additive EC notation and scalar multiplication]:
+            Notation and primitives used:
             <list>
-                <!--<t>p1*p2 - point addition for EC points p1 and p2, i.e. group operation on two EC points p1 and p2</t>-->
-                <t>a^b - exponentiation </t>
+                <t>Elliptic curve operations are written in additive notation, with P+Q denoting point addition and x*P denoting scalar multiplication of a point P by a scalar x</t>
+                <t>x^y - a raised to the power b</t>
+                <t>x*y - a multiplied by b</t>
                 <t>|| - octet string concatenation</t>
                 <t>ECVRF_hash_to_curve - collision resistant hash of strings
                     to an EC point; options described in <xref target="ecvrfH2C" /> and specified in <xref target="suites"/>.</t>
@@ -1387,6 +1388,9 @@
                 that Y is in the subgroup G; Step 3 suffices. Therefore, if the cofactor is small, the total number
                 of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply
                 check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve:
+                </t>
+                
+                <t>
                 <list style="numbers">
                     <t>Y = string_to_point(PK_string)</t>
                     <t>If Y is "INVALID", output "INVALID" and stop</t>
@@ -1406,8 +1410,10 @@
                     <t>If y_string is in bad_pk[0]...bad_pk[6], output "INVALID" and stop</t>
                     <t>Output Y</t>
                 </list>
-                (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255.)
-                [TODO: what's the sources for these? We got them from libsodium  https://github.com/jedisct1/libsodium/blob/cfb0f94704841f943a5a11d9e335da409c55d58a/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c#L1003 but not sure if it's the original]
+                </t>
+                
+                <t>
+                (bad_pk[0], bad_pk[2], bad_pk[3] each match two bad public keys, depending on the sign of the x-coordinate, which was cleared in step 5, in order to make sure that it does not affect the comparison. bad_pk[1] and bad_pk[4] each match one bad public key, because x-coordinate is 0 for these two public keys. bad_pk[5] and bad_pk[6] are simply bad_pk[0] and bad_pk[1] shifted by p, in case the y-coordinate had not been modular reduced by p. There is no need to shift the other bad_pk values by p, because they will exceed 2^255. These bad keys, which represent all points of order 1, 2, 4, and 8, have been obtained by converting the points specified in <xref target="X25519"/> to Edwards coordinates.)
             </t>
         
         </section>       
@@ -1861,10 +1867,21 @@
             </front>
         <seriesInfo name="in" value="Bull. Polish Acad. Sci. Math." />
         </reference>
+        
+        <reference anchor = "X25519" target = "https://cr.yp.to/ecdh.html#validate">
+            <front>
+                <title>How do I validate Curve25519 public keys?</title>
+                <author initials ="D.J." surname = "Bernstein"><organization /></author>
+                <date year = "2006" />
+            </front>
+        </reference>
+                
+
 
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
         <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-01.xml"?>
+        
 
 
     </references>
