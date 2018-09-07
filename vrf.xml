@@ -892,13 +892,13 @@
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
                         <t>truncated_h_string = hash_string[0]...hash_string[31]
                             <!--<vspace/>(first 32 octets of hash)--></t>
-                        <t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
-                            <vspace/>(a single octet with value 128)</t>
+                        <!--<t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
+                            <vspace/>(a single octet with value 128)</t> -->
                         <t>oneTwentySeven_string = 0x7F = int_to_string(127, 1)
                             <vspace/>(a single octet with value 127)</t>
-                        <t>x0 = truncated_h_string[31] &amp; oneTwentyEight_string
+                        <!--<t>x0 = truncated_h_string[31] &amp; oneTwentyEight_string
                             <vspace/>(where &amp; denotes the bit-wise AND)
-                            <vspace/>(this step saves highest-order bit of octet 31 in x0)</t>
+                            <vspace/>(this step saves highest-order bit of octet 31 in x0)</t>-->
                         <t>truncated_h_string[31] = truncated_h_string[31] &amp; oneTwentySeven_string
                             <vspace/>(this step clears the high-order bit of octet 31)</t>
                         <t>r = string_to_int(truncated_h_string)</t>
@@ -913,13 +913,14 @@
                         <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
                             <vspace/>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u)
                             <vspace/>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</t>
-                        <t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
+                        <t>h_string = int_to_string (y_coordinate, 32)</t>
+                        <!--<t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
                             <list style="letters">
                                 <t>h_string = int_to_string (y_coordinate, 32)</t>
                                 <t>h_string[31] = h_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't]
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
-                        </t>
+                        </t>-->
                         <t>H_prelim = string_to_point(h_string)
                         <vspace/> (note: string_to_point will not return INVALID by correctness of Elligator2)</t>
                         <t>Set H = cofactor * H_prelim</t>
@@ -930,7 +931,7 @@
                 
                 <t> In order to make this algorithm run in time that is (almost) independent
                     of the input alpha_string (so-called "constant-time"), implementers should pay particular attention
-                    to Steps 12 and 13 above.
+                    to Steps 10 and 11 above.
                     These steps can be implemented using the following approach:
                 <list>
                     <t> e = w ^ ((p-1)/2) mod p</t>
@@ -1724,7 +1725,7 @@
                 section. Added an discussion of secrecy into security considerations.
                 Removed B and PK=Y from ECVRF_hash_points because they are already present
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
-                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; added test vectors.</t>
+                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; added test vectors.</t>
             </list>
         </t>
     </section>
@@ -2047,12 +2048,12 @@
                 In Elligator: r = 9ddd071cd5837e591a3a40c57a46701bb7f49b1b53c670d490c2766a08fa6e3d <vspace />
                 In Elligator: w = c7b5d6239e52a473a2b57a92825e0e5de4656e349bb198de5afd6a76e5a07066 <vspace />
                 In Elligator: e = -1 <vspace />
-                H = 1c5672d919cc0a800970cd7e05cb36ed27ed354c33519948e5a9eaf89aee1237 <vspace />
-                k = ddcae0f9473ea6b2591847616c286936200e7ce0d0f46dcf85d11d6b2f2a0b46532475e19ff2c12464c2a61a3c890b643e20f2ab9448f5554adafd5b71d20c19 <vspace />
-                U = k*B = 3e95d7ba9345aeac62001a480fb64ec7d73e169c86bef670d620d4943d47364b <vspace />
-                V = k*H = ae5d6d471425161fa094d7e6e2c7fe8bde9b04ce150e55d0ebbc72e512f6dd15 <vspace />
-                proof = b6b4699f87d56126c9117a7da55bd0085246f4c56dbc95d20172612e9d38e857482d43ec53e972da44af0b6acf5c9e82d414e3efe4804e1c8146da8b86ba3fa92e24ae0e770cfaf61ea6ce49c6567a0a <vspace />
-                beta = cf1376a61675e905658de12ec4f7377bfd04cd12cefc300ea905468de6ea6f41ea4bb2d1258498e471754051230ebf1340b031b8ee874bc724313c83beda76af</t>
+                H = 1c5672d919cc0a800970cd7e05cb36ed27ed354c33519948e5a9eaf89aee12b7 <vspace />
+                k = 868b56b8b3faf5fc7e276ff0a65aaa896aa927294d768d0966277d94599b7afe4a6330770da5fdc2875121e0cbecbffbd4ea5e491eb35be53fa7511d9f5a61f2 <vspace />
+                U = k*B = c4743a22340131a2323174bfc397a6585cbe0cc521bfad09f34b11dd4bcf5936 <vspace />
+                V = k*H = e309cf5272f0af2f54d9dc4a6bad6998a9d097264e17ae6fce2b25dcbdd10e8b <vspace />
+                proof = b6b4699f87d56126c9117a7da55bd0085246f4c56dbc95d20172612e9d38e8d7ca65e573a126ed88d4e30a46f80a666854d675cf3ba81de0de043c3774f061560f55edc256a787afe701677c0f602900 <vspace />
+                beta = 5b49b554d05c0cd5a5325376b3387de59d924fd1e13ded44648ab33c21349a603f25b84ec5ed887995b33da5e3bfcb87cd2f64521c4c62cf825cffabbe5d31cc</t>
             <t>
                 SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <vspace />
                 PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <vspace />
