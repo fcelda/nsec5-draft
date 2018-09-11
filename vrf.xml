@@ -620,7 +620,7 @@
                     For example, in some implementations, EC point 
                     operations will take octet strings as inputs and 
                     produce octet strings as outputs, without introducing 
-                    a seperate elliptic curve point type.
+                    a separate elliptic curve point type.
                 </t>
             </list>
         </t>
@@ -1231,7 +1231,7 @@
             <xref target="SECG1" /> with point compression on.
             This implies ptLen = 2n + 1 = 33.
             (Note that certain software implementations do not introduce a
-             seperate elliptic curve point type and instead directly treat the
+             separate elliptic curve point type and instead directly treat the
              EC point as an octet string per above encoding. When using such 
              an implementation, the point_to_string function 
              can be treated as the identity function.)
@@ -1294,7 +1294,7 @@
              in Section 5.1.2 of <xref target="RFC8032" />. 
             This implies ptLen = 2n = 32.
             (Note that certain software implementations do not introduce a
-             seperate elliptic curve point type and instead directly treat the
+             separate elliptic curve point type and instead directly treat the
              EC point as an octet string per above encoding. When using such
              and implementation, the point_to_string 
              function can be treated as the identity function.)
@@ -1425,15 +1425,24 @@
     
     <section title="Implementation Status" anchor="imp">
         <t>[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</t>
-    
+
+  <t>
+    A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-ED25519-SHA512-TAI, ECVRF-ED25519-SHA512-Elligator2
+    is available at <eref target ="https://github.com/reyzin/ecvrf" />. This implementation is neither secure nor especially effecient, but can be used to generate
+        test vectors.
+   </t>
+
+
         <t>
             An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was
             first developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
             at <eref target="http://github.com/fcelda/nsec5-crypto" />. 
-            The ECVRF implementation may be out of date as this spec has evolved.
+            These implementations may be out of date as this spec has evolved.
         </t>
-    
+
+
+
     <t>
     The Key Transparency project at Google
     uses a VRF implemention that is similar to

@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: March 11, 2019                                  D. Papadopoulos
+Expires: March 15, 2019                                  D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                       September 7, 2018
+                                                      September 11, 2018
 
 
                    Verifiable Random Functions (VRFs)
@@ -33,14 +33,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 11, 2019.
+   This Internet-Draft will expire on March 15, 2019.
 
 Copyright Notice
 
@@ -49,11 +49,11 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 1]
+Goldberg, et al.         Expires March 15, 2019                 [Page 1]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -97,7 +97,7 @@ Table of Contents
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  28
      7.1.  Key Generation  . . . . . . . . . . . . . . . . . . . . .  28
        7.1.1.  Uniqueness and collision resistance with untrusted
-               keys  . . . . . . . . . . . . . . . . . . . . . . . .  28
+               keys  . . . . . . . . . . . . . . . . . . . . . . . .  29
        7.1.2.  Pseudorandomness with untrusted keys  . . . . . . . .  29
      7.2.  Selective vs Full Pseudorandomness  . . . . . . . . . . .  29
      7.3.  Proper pseudorandom nonce for ECVRF . . . . . . . . . . .  30
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 2]
+Goldberg, et al.         Expires March 15, 2019                 [Page 2]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 3]
+Goldberg, et al.         Expires March 15, 2019                 [Page 3]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 4]
+Goldberg, et al.         Expires March 15, 2019                 [Page 4]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 5]
+Goldberg, et al.         Expires March 15, 2019                 [Page 5]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 6]
+Goldberg, et al.         Expires March 15, 2019                 [Page 6]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 7]
+Goldberg, et al.         Expires March 15, 2019                 [Page 7]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 8]
+Goldberg, et al.         Expires March 15, 2019                 [Page 8]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                 [Page 9]
+Goldberg, et al.         Expires March 15, 2019                 [Page 9]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 10]
+Goldberg, et al.         Expires March 15, 2019                [Page 10]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -604,7 +604,7 @@ Internet-Draft                     VRF                    September 2018
       elliptic curve arithmetic), the int_to_string and point_to_string
       conversions are not needed.  For example, in some implementations,
       EC point operations will take octet strings as inputs and produce
-      octet strings as outputs, without introducing a seperate elliptic
+      octet strings as outputs, without introducing a separate elliptic
       curve point type.
 
    Parameters used (the generation of these parameters is specified in
@@ -613,7 +613,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 11]
+Goldberg, et al.         Expires March 15, 2019                [Page 11]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -669,7 +669,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 12]
+Goldberg, et al.         Expires March 15, 2019                [Page 12]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -725,7 +725,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 13]
+Goldberg, et al.         Expires March 15, 2019                [Page 13]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -781,7 +781,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 14]
+Goldberg, et al.         Expires March 15, 2019                [Page 14]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -837,7 +837,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 15]
+Goldberg, et al.         Expires March 15, 2019                [Page 15]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -893,7 +893,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 16]
+Goldberg, et al.         Expires March 15, 2019                [Page 16]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -949,7 +949,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 17]
+Goldberg, et al.         Expires March 15, 2019                [Page 17]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 18]
+Goldberg, et al.         Expires March 15, 2019                [Page 18]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 19]
+Goldberg, et al.         Expires March 15, 2019                [Page 19]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 20]
+Goldberg, et al.         Expires March 15, 2019                [Page 20]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 21]
+Goldberg, et al.         Expires March 15, 2019                [Page 21]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 22]
+Goldberg, et al.         Expires March 15, 2019                [Page 22]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 23]
+Goldberg, et al.         Expires March 15, 2019                [Page 23]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1308,7 +1308,7 @@ Internet-Draft                     VRF                    September 2018
       string according to the encoding specified in Section 2.3.3 of
       [SECG1] with point compression on.  This implies ptLen = 2n + 1 =
       33.  (Note that certain software implementations do not introduce
-      a seperate elliptic curve point type and instead directly treat
+      a separate elliptic curve point type and instead directly treat
       the EC point as an octet string per above encoding.  When using
       such an implementation, the point_to_string function can be
       treated as the identity function.)
@@ -1341,7 +1341,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 24]
+Goldberg, et al.         Expires March 15, 2019                [Page 24]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1366,7 +1366,7 @@ Internet-Draft                     VRF                    September 2018
    o  The point_to_string function converts an EC point to an octect
       string according to the encoding specified in Section 5.1.2 of
       [RFC8032].  This implies ptLen = 2n = 32.  (Note that certain
-      software implementations do not introduce a seperate elliptic
+      software implementations do not introduce a separate elliptic
       curve point type and instead directly treat the EC point as an
       octet string per above encoding.  When using such and
       implementation, the point_to_string function can be treated as the
@@ -1397,7 +1397,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 25]
+Goldberg, et al.         Expires March 15, 2019                [Page 25]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 26]
+Goldberg, et al.         Expires March 15, 2019                [Page 26]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 27]
+Goldberg, et al.         Expires March 15, 2019                [Page 27]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -1524,11 +1524,17 @@ Internet-Draft                     VRF                    September 2018
    [TODO: Needs Updating; include also implementations of various parts,
    so developers can access them]
 
+   A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-
+   P256-SHA256-SWU, ECVRF-ED25519-SHA512-TAI, ECVRF-
+   ED25519-SHA512-Elligator2 is available at <https://github.com/reyzin/
+   ecvrf>.  This implementation is neither secure nor especially
+   effecient, but can be used to generate test vectors.
+
    An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-
    P256-SHA256-TAI was first developed as a part of the NSEC5 project
    [I-D.vcelak-nsec5] and is available at <http://github.com/fcelda/
-   nsec5-crypto>.  The ECVRF implementation may be out of date as this
-   spec has evolved.
+   nsec5-crypto>.  These implementations may be out of date as this spec
+   has evolved.
 
    The Key Transparency project at Google uses a VRF implemention that
    is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes
@@ -1555,6 +1561,15 @@ Internet-Draft                     VRF                    September 2018
    Applications that use the VRFs defined in this document MUST ensure
    that that the VRF key is generated correctly, using good randomness.
 
+
+
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 28]
+
+Internet-Draft                     VRF                    September 2018
+
+
 7.1.1.  Uniqueness and collision resistance with untrusted keys
 
    The ECVRF as specified in Section 5.1-Section 5.5 statisfies the
@@ -1562,13 +1577,6 @@ Internet-Draft                     VRF                    September 2018
    long as the VRF keys are generated correctly, with good randomness.
    If the Verifier trusts the VRF keys are generated correctly, it MAY
    use the public key Y as is.
-
-
-
-Goldberg, et al.         Expires March 11, 2019                [Page 28]
-
-Internet-Draft                     VRF                    September 2018
-
 
    However, if the ECVRF uses keys that could be generated
    adversarially, then the the Verfier MUST first perform the validation
@@ -1611,6 +1619,13 @@ Internet-Draft                     VRF                    September 2018
    pseudorandomness.  This means the the VRFs have quantitavely stronger
    security guarentees for selective pseudorandomness.
 
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 29]
+
+Internet-Draft                     VRF                    September 2018
+
+
    Applications that are concerned about tightness of cryptographic
    reductions therefore have two options.
 
@@ -1618,13 +1633,6 @@ Internet-Draft                     VRF                    September 2018
       sufficient for the application.  That is, that pseudorandomness of
       outputs matters only for inputs that are chosen independently of
       the VRF key.
-
-
-
-Goldberg, et al.         Expires March 11, 2019                [Page 29]
-
-Internet-Draft                     VRF                    September 2018
-
 
    o  If full pseudorandomness is required for the application, the
       application may increase security parameters to make up for the
@@ -1667,20 +1675,15 @@ Internet-Draft                     VRF                    September 2018
    valid curve point; for such inputs, the information leaked in a
    timing attack will be more than 1 bit.
 
-   Meanwhile, ECVRF-P256-SHA256-SWU and ECVRF-ED25519-SHA512-Elligator2
-   can be made to run in time constant in alpha.
 
 
-
-
-
-
-
-
-Goldberg, et al.         Expires March 11, 2019                [Page 30]
+Goldberg, et al.         Expires March 15, 2019                [Page 30]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   Meanwhile, ECVRF-P256-SHA256-SWU and ECVRF-ED25519-SHA512-Elligator2
+   can be made to run in time constant in alpha.
 
 7.5.  Proofs Provide No Secrecy for VRF Input
 
@@ -1727,16 +1730,16 @@ Internet-Draft                     VRF                    September 2018
       unlikely to equal to inputs given to hash_to_curve, proof_to_hash,
       and hash_points.  This follows since nonce_generation inputs a
       secret to the hash function that is not used by honest parties as
-      input to any other hash function, and is not available to the
-      adversary
 
 
 
-
-Goldberg, et al.         Expires March 11, 2019                [Page 31]
+Goldberg, et al.         Expires March 15, 2019                [Page 31]
 
 Internet-Draft                     VRF                    September 2018
 
+
+      input to any other hash function, and is not available to the
+      adversary
 
    o  the second octet of the input to the hash function used in
       hash_to_curve, proof_to_hash, and hash_points are all different
@@ -1783,16 +1786,16 @@ Internet-Draft                     VRF                    September 2018
       pseudorandomness property" section.  Added an discussion of
       secrecy into security considerations.  Removed B and PK=Y from
       ECVRF_hash_points because they are already present via H, which is
-      computed via hash_to_curve using the suite_string (which
-      identifies B) and Y.
 
 
 
-
-Goldberg, et al.         Expires March 11, 2019                [Page 32]
+Goldberg, et al.         Expires March 15, 2019                [Page 32]
 
 Internet-Draft                     VRF                    September 2018
 
+
+      computed via hash_to_curve using the suite_string (which
+      identifies B) and Y.
 
       03 - Changed Ed25519 conversions to little-endian, to match RFC
       8032; added simple key validation for Ed25519; added Simple SWU
@@ -1820,111 +1823,54 @@ Internet-Draft                     VRF                    September 2018
 
 10.1.  Normative References
 
-   [FIPS-186-4]
-              National Institute for Standards and Technology, "Digital
-              Signature Standard (DSS)", FIPS PUB 186-4, July 2013,
-              <https://csrc.nist.gov/publications/detail/fips/186/4/
-              final>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
-              Groups for Use with IETF Standards", RFC 5114,
-              DOI 10.17487/RFC5114, January 2008,
-              <https://www.rfc-editor.org/info/rfc5114>.
-
-   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
-              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
-              DOI 10.17487/RFC6234, May 2011,
-              <https://www.rfc-editor.org/info/rfc6234>.
-
-
-
-
-
-Goldberg, et al.         Expires March 11, 2019                [Page 33]
-
-Internet-Draft                     VRF                    September 2018
-
-
-   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
-              Algorithm (DSA) and Elliptic Curve Digital Signature
-              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
-              2013, <https://www.rfc-editor.org/info/rfc6979>.
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
               RFC 8017, DOI 10.17487/RFC8017, November 2016,
               <https://www.rfc-editor.org/info/rfc8017>.
 
+   [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
+              Groups for Use with IETF Standards", RFC 5114,
+              DOI 10.17487/RFC5114, January 2008, <https://www.rfc-
+              editor.org/info/rfc5114>.
+
+   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
+              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
+              DOI 10.17487/RFC6234, May 2011, <https://www.rfc-
+              editor.org/info/rfc6234>.
+
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 33]
+
+Internet-Draft                     VRF                    September 2018
+
+
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
-              DOI 10.17487/RFC8032, January 2017,
-              <https://www.rfc-editor.org/info/rfc8032>.
+              DOI 10.17487/RFC8032, January 2017, <https://www.rfc-
+              editor.org/info/rfc8032>.
+
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <https://www.rfc-editor.org/info/rfc6979>.
+
+   [FIPS-186-4]
+              National Institute for Standards and Technology, "Digital
+              Signature Standard (DSS)", FIPS PUB 186-4, July 2013,
+              <https://csrc.nist.gov/publications/detail/fips/186/4/
+              final>.
 
    [SECG1]    Standards for Efficient Cryptography Group (SECG), "SEC 1:
               Elliptic Curve Cryptography", Version 2.0, May 2009,
               <http://www.secg.org/sec1-v2.pdf>.
 
 10.2.  Informative References
-
-   [ANSI.X9-62-2005]
-              American National Standards Institute, "Public Key
-              Cryptography for the Financial Services Industry: The
-              Elliptic Curve Digital Signature Algorithm (ECDSA)",  ANSI
-              X9.62, 2005.
-
-   [BCIMRT10]
-              Brier, E., Coron, J., Icart, T., Madore, D., Randriam, H.,
-              and M. Tibouchi, "Efficient Indifferentiable Hashing into
-              Ordinary Elliptic Curves", in Advances in Cryptology -
-              CRYPTO, 2010, <https://eprint.iacr.org/2009/340>.
-
-   [BHKT13]   Bernstein, D., Hamburg, M., Krasnova, A., and T. Lange,
-              "Elligator: elliptic-curve points indistinguishable from
-              uniform random strings", in ACM SIGSAC Conference on
-              Computer and Communications Security (CCS), 2013,
-              <https://elligator.cr.yp.to/elligator-20130828.pdf>.
-
-   [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
-              Zeldovich, "Algorand: Scaling Byzantine Agreements for
-              Cryptocurrencies", in Proceedings of the 26th Symposium on
-              Operating Systems Principles (SOSP), 2017,
-              <https://eprint.iacr.org/2017/454>.
-
-
-
-
-
-
-
-Goldberg, et al.         Expires March 11, 2019                [Page 34]
-
-Internet-Draft                     VRF                    September 2018
-
-
-   [I-D.irtf-cfrg-hash-to-curve]
-              Scott, S., Sullivan, N., and C. Wood, "Hashing to Elliptic
-              Curves", draft-irtf-cfrg-hash-to-curve-01 (work in
-              progress), July 2018.
-
-   [I-D.vcelak-nsec5]
-              Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
-              D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
-              Existence", draft-vcelak-nsec5-07 (work in progress), June
-              2018.
-
-   [KRDO17]   Kiayias, A., Russell, A., David, B., and R. Oliynykov,
-              "Ouroboros: A Provably Secure Proof-of-Stake Blockchain
-              Protocol", in Advances in Cryptology - CRYPTO, 2017,
-              <https://eprint.iacr.org/2016/889>.
-
-   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
-              Functions", in FOCS, 1999,
-              <https://dash.harvard.edu/handle/1/5028196>.
 
    [ntb]      Shoup, V., "A Computational Introduction to Number Theory
               and Algebra", 2008, <http://www.shoup.net/ntb/ntb-v2.pdf>.
@@ -1935,6 +1881,30 @@ Internet-Draft                     VRF                    September 2018
               Practical for DNSSEC", in ePrint Cryptology Archive
               2017/099, February 2017,
               <https://eprint.iacr.org/2017/099.pdf>.
+
+   [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
+              Functions", in FOCS, 1999, <https://dash.harvard.edu/
+              handle/1/5028196>.
+
+   [BHKT13]   Bernstein, D., Hamburg, M., Krasnova, A., and T. Lange,
+              "Elligator: elliptic-curve points indistinguishable from
+              uniform random strings", in ACM SIGSAC Conference on
+              Computer and Communications Security (CCS), 2013,
+              <https://elligator.cr.yp.to/elligator-20130828.pdf>.
+
+   [BCIMRT10]
+              Brier, E., Coron, J., Icart, T., Madore, D., Randriam, H.,
+              and M. Tibouchi, "Efficient Indifferentiable Hashing into
+              Ordinary Elliptic Curves", in Advances in Cryptology -
+              CRYPTO, 2010, <https://eprint.iacr.org/2009/340>.
+
+
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 34]
+
+Internet-Draft                     VRF                    September 2018
+
 
    [SW06]     Shallue, A. and C. van de Woestijne, "Construction of
               rational points on elliptic curves over finite fields",
@@ -1948,6 +1918,33 @@ Internet-Draft                     VRF                    September 2018
    [X25519]   Bernstein, D., "How do I validate Curve25519 public
               keys?", 2006, <https://cr.yp.to/ecdh.html#validate>.
 
+   [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
+              Zeldovich, "Algorand: Scaling Byzantine Agreements for
+              Cryptocurrencies", in Proceedings of the 26th Symposium on
+              Operating Systems Principles (SOSP), 2017,
+              <https://eprint.iacr.org/2017/454>.
+
+   [KRDO17]   Kiayias, A., Russell, A., David, B., and R. Oliynykov,
+              "Ouroboros: A Provably Secure Proof-of-Stake Blockchain
+              Protocol", in Advances in Cryptology - CRYPTO, 2017,
+              <https://eprint.iacr.org/2016/889>.
+
+   [I-D.vcelak-nsec5]
+              Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
+              D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
+              Existence", draft-vcelak-nsec5-07 (work in progress), June
+              2018.
+
+   [I-D.irtf-cfrg-hash-to-curve]
+              Scott, S., Sullivan, N., and C. Wood, "Hashing to Elliptic
+              Curves", draft-irtf-cfrg-hash-to-curve-01 (work in
+              progress), July 2018.
+
+   [ANSI.X9-62-2005]
+              American National Standards Institute, , "Public Key
+              Cryptography for the Financial Services Industry: The
+              Elliptic Curve Digital Signature Algorithm (ECDSA)",  ANSI
+              X9.62, 2005.
 
 
 
@@ -1957,7 +1954,10 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 35]
+
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 35]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2013,7 +2013,7 @@ A.1.  ECVRF-P256-SHA256-TAI
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 36]
+Goldberg, et al.         Expires March 15, 2019                [Page 36]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2069,7 +2069,7 @@ A.2.  ECVRF-P256-SHA256-SWU
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 37]
+Goldberg, et al.         Expires March 15, 2019                [Page 37]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2125,7 +2125,7 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 38]
+Goldberg, et al.         Expires March 15, 2019                [Page 38]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2181,7 +2181,7 @@ A.3.  ECVRF-ED25519-SHA512-TAI
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 39]
+Goldberg, et al.         Expires March 15, 2019                [Page 39]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2237,7 +2237,7 @@ A.4.  ECVRF-ED25519-SHA512-Elligator2
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 40]
+Goldberg, et al.         Expires March 15, 2019                [Page 40]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2293,7 +2293,7 @@ Authors' Addresses
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 41]
+Goldberg, et al.         Expires March 15, 2019                [Page 41]
 
 Internet-Draft                     VRF                    September 2018
 
@@ -2349,4 +2349,4 @@ Internet-Draft                     VRF                    September 2018
 
 
 
-Goldberg, et al.         Expires March 11, 2019                [Page 42]
+Goldberg, et al.         Expires March 15, 2019                [Page 42]
