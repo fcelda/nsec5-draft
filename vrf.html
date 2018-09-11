@@ -416,7 +416,7 @@
 <link href="#rfc.references" rel="Chapter" title="10 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References"/>
-<link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors for the ECVRFs"/>
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 ECVRF-P256-SHA256-TAI"/>
 <link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 ECVRF-P256-SHA256-SWU"/>
 <link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 ECVRF-ED25519-SHA512-TAI"/>
@@ -544,7 +544,7 @@
 <li>10.   <a href="#rfc.references">References</a></li>
 <ul><li>10.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>10.2.   <a href="#rfc.references.2">Informative References</a></li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors for the ECVRFs</a></li>
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">ECVRF-P256-SHA256-TAI</a></li>
 <li>A.2.   <a href="#rfc.appendix.A.2">ECVRF-P256-SHA256-SWU</a></li>
 <li>A.3.   <a href="#rfc.appendix.A.3">ECVRF-ED25519-SHA512-TAI</a></li>
@@ -1515,7 +1515,8 @@
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> Test Vectors</h1>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> Test Vectors for the ECVRFs</h1>
+<p id="rfc.section.A.p.1">The test vectors in this section were genereated using the reference implementation at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>.</p>
 <h1 id="rfc.appendix.A.1"><a href="#rfc.appendix.A.1">A.1.</a> ECVRF-P256-SHA256-TAI</h1>
 <p id="rfc.section.A.1.p.1">These two example secret keys and messages are taken from Appendix A.2.5 of <a href="#RFC6979">[RFC6979]</a>.</p>
 <p id="rfc.section.A.1.p.2">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br/> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br/> alpha = 73616d706c65 (ASCII "sample") <br/> try_and_increment succeded on ctr = 0 <br/> H = 02e2e1ab1b9f5a8a68fa4aad597e7493095648d3473b213bba120fe42d1a595f3e <br/> k = c1aba586552242e6b324ab4b7b26f86239226f3cfa85b1c3b675cc061cf147dc <br/> U = k*B = 02007fe22a3ed063db835a63a92cb1e487c4fea264c3f3700ae105f8f3d3fd391f <br/> V = k*H = 03d0a63fa7a7fefcc590cb997b21bbd21dc01304102df183fb7115adf6bcbc2a74 <br/> pi = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524193b7a850195ef3d5329018a8683114cb446c33fe16ebcc0bc775b043b5860dcb2e553d91268281688438df9394103ab <br/> beta = 59ca3801ad3e981a88e36880a3aee1df38a0472d5be52d6e39663ea0314e594c</p>

@@ -118,12 +118,12 @@ Internet-Draft                     VRF                    September 2018
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  33
      10.2.  Informative References . . . . . . . . . . . . . . . . .  34
-   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  36
+   Appendix A.  Test Vectors for the ECVRFs  . . . . . . . . . . . .  36
      A.1.  ECVRF-P256-SHA256-TAI . . . . . . . . . . . . . . . . . .  36
      A.2.  ECVRF-P256-SHA256-SWU . . . . . . . . . . . . . . . . . .  37
      A.3.  ECVRF-ED25519-SHA512-TAI  . . . . . . . . . . . . . . . .  39
      A.4.  ECVRF-ED25519-SHA512-Elligator2 . . . . . . . . . . . . .  40
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
 
 1.  Introduction
 
@@ -1962,7 +1962,10 @@ Goldberg, et al.         Expires March 15, 2019                [Page 35]
 Internet-Draft                     VRF                    September 2018
 
 
-Appendix A.  Test Vectors
+Appendix A.  Test Vectors for the ECVRFs
+
+   The test vectors in this section were genereated using the reference
+   implementation at <https://github.com/reyzin/ecvrf>.
 
 A.1.  ECVRF-P256-SHA256-TAI
 
@@ -2007,9 +2010,6 @@ A.1.  ECVRF-P256-SHA256-TAI
    beta =
    dc85c20f95100626eddc90173ab58d5e4f837bb047fb2f72e9a408feae5bc6c1
 
-   This example secret key and message are taken from Appendix L.4.2 of
-   [ANSI.X9-62-2005].
-
 
 
 
@@ -2017,6 +2017,9 @@ Goldberg, et al.         Expires March 15, 2019                [Page 36]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   This example secret key and message are taken from Appendix L.4.2 of
+   [ANSI.X9-62-2005].
 
    SK = x =
    2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8
@@ -2061,11 +2064,8 @@ A.2.  ECVRF-P256-SHA256-SWU
    035dc0dee6903dba1a3e7cae4e2a960609e873e6e696cc8d5e56dfa8efccdfc97a
    V = k*H =
    03bec301c2930d69ed359eab2a54349d1431625c7a3ee0cfc2643ae5f8a21c3add
-   pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024
-   c35641fe838a72d0d9bc1bcf032f895f3b3f4c79d0f8f9d5705d83181fe82e19f4961
-   9eb8290930809b2b9651786e4f945
-   beta =
-   143f36bf7175053315693cfcfdff5aebb13e5eb9c47f897f53f81561993cfcd2
+
+
 
 
 
@@ -2073,6 +2073,12 @@ Goldberg, et al.         Expires March 15, 2019                [Page 37]
 
 Internet-Draft                     VRF                    September 2018
 
+
+   pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024
+   c35641fe838a72d0d9bc1bcf032f895f3b3f4c79d0f8f9d5705d83181fe82e19f4961
+   9eb8290930809b2b9651786e4f945
+   beta =
+   143f36bf7175053315693cfcfdff5aebb13e5eb9c47f897f53f81561993cfcd2
 
    SK = x =
    c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721
@@ -2115,13 +2121,7 @@ Internet-Draft                     VRF                    September 2018
    H =
    02429690b91e1783cd0d7e393db07cc44b48c226cb837adb2282251cabf431a484
    k = 2ba4cd5e9f7be946659555b3d052af618d2d3a14f5a756c8d56fab058d1831ff
-   U = k*B =
-   025943c217f48354e297156ac7dce8d2b50f63867acc23ba1aea87a66578392ca8
-   V = k*H =
-   0399ccafce764acf0db264183d97c1ae968daf661b9931a145bb8cbfc5f3f8f9a5
-   pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f2947
-   7cd29f8754f3bbdea3dd129560e9ba0c73ae7894a8d0c0e1ac01e5c2685da67009d96
-   e6ccdb634c7e0c5f38fa3e4908c02
+
 
 
 
@@ -2130,6 +2130,13 @@ Goldberg, et al.         Expires March 15, 2019                [Page 38]
 Internet-Draft                     VRF                    September 2018
 
 
+   U = k*B =
+   025943c217f48354e297156ac7dce8d2b50f63867acc23ba1aea87a66578392ca8
+   V = k*H =
+   0399ccafce764acf0db264183d97c1ae968daf661b9931a145bb8cbfc5f3f8f9a5
+   pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f2947
+   7cd29f8754f3bbdea3dd129560e9ba0c73ae7894a8d0c0e1ac01e5c2685da67009d96
+   e6ccdb634c7e0c5f38fa3e4908c02
    beta =
    be1dcb17e9815ac6acf819e7ad4b75e575eafad25915c2608959d780364fc912
 
@@ -2171,13 +2178,6 @@ A.3.  ECVRF-ED25519-SHA512-TAI
    pi = 84a63e74eca8fdd64e9972dcda1c6f33d03ce3cd4d333fd6cc789db12b5a7b9d
    03f1cb6b2bf7cd81a2a20bacf6e1c04e59f2fa16d9119c73a45a97194b504fb9a5c8c
    f37f6da85e03368d6882e511008
-   beta = cddaa399bb9c56d3be15792e43a6742fb72b1d248a7f24fd5cc585b232c26c
-   934711393b4d97284b2bcca588775b72dc0b0f4b5a195bc41f8d2b80b6981c784e
-
-   SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7
-   PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025
-   alpha = af82 (2 bytes)
-   x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c
 
 
 
@@ -2186,6 +2186,13 @@ Goldberg, et al.         Expires March 15, 2019                [Page 39]
 Internet-Draft                     VRF                    September 2018
 
 
+   beta = cddaa399bb9c56d3be15792e43a6742fb72b1d248a7f24fd5cc585b232c26c
+   934711393b4d97284b2bcca588775b72dc0b0f4b5a195bc41f8d2b80b6981c784e
+
+   SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7
+   PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025
+   alpha = af82 (2 bytes)
+   x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c
    try_and_increment succeded on ctr = 0
    H = e4581824b70badf0e57af789dd8cf85513d4b9814566de0e3f738439becfba33
    k = a950f736af2e3ae2dbcb76795f9cbd57c671eee64ab17069f945509cd6c4a7485
@@ -2227,13 +2234,6 @@ A.4.  ECVRF-ED25519-SHA512-Elligator2
    beta = 5b49b554d05c0cd5a5325376b3387de59d924fd1e13ded44648ab33c21349a
    603f25b84ec5ed887995b33da5e3bfcb87cd2f64521c4c62cf825cffabbe5d31cc
 
-   SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb
-   PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c
-   alpha = 72 (1 byte)
-   x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51
-   In Elligator: r =
-   92181bd612695e464049590eb1f9746750d6057441789c9759af8308ac77fd4a
-
 
 
 
@@ -2242,6 +2242,12 @@ Goldberg, et al.         Expires March 15, 2019                [Page 40]
 Internet-Draft                     VRF                    September 2018
 
 
+   SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb
+   PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c
+   alpha = 72 (1 byte)
+   x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51
+   In Elligator: r =
+   92181bd612695e464049590eb1f9746750d6057441789c9759af8308ac77fd4a
    In Elligator: w =
    7ff6d8b773bfbae57b2ab9d49f9d3cb7d9af40a03d3ed3c6beaaf2d486b1fe6e
    In Elligator: e = 1
@@ -2280,6 +2286,18 @@ Internet-Draft                     VRF                    September 2018
    beta = 2031837f582cd17a9af9e0c7ef5a6540e3453ed894b62c293686ca3c1e319d
    de9d0aa489a4b59a9594fc2328bc3deff3c8a0929a369a72b1180a596e016b5ded
 
+
+
+
+
+
+
+
+Goldberg, et al.         Expires March 15, 2019                [Page 41]
+
+Internet-Draft                     VRF                    September 2018
+
+
 Authors' Addresses
 
    Sharon Goldberg
@@ -2289,13 +2307,6 @@ Authors' Addresses
    USA
 
    EMail: goldbe@cs.bu.edu
-
-
-
-
-Goldberg, et al.         Expires March 15, 2019                [Page 41]
-
-Internet-Draft                     VRF                    September 2018
 
 
    Leonid Reyzin
@@ -2322,17 +2333,6 @@ Internet-Draft                     VRF                    September 2018
    USA
 
    EMail: jvcelak@ns1.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 

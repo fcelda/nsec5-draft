@@ -1926,7 +1926,8 @@
     </references>
     
     
-    <section title="Test Vectors">
+    <section title="Test Vectors for the ECVRFs">
+        <t>The test vectors in this section were genereated using the reference implementation at <eref target ="https://github.com/reyzin/ecvrf" />.</t>
         <section title="ECVRF-P256-SHA256-TAI">
             <t>These two example secret keys and messages are taken from Appendix A.2.5 of <xref target="RFC6979"/>.</t>
             <t>
