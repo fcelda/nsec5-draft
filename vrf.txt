@@ -991,13 +991,13 @@ Internet-Draft                     VRF                    September 2018
    The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y,
    alpha_string) algorithm implements ECVRF_hash_to_curve using the
    simplified Shallue-Woestijne [SW06] and Ulas [Ulas07] algorithm from
-   Section 7 of [BCIMRT10] (see also [I-D.irtf-cfrg-hash-to-curve][TODO:
-   Update to latest version]).  It can be implemented with running time
-   that is independent of the input alpha (so-called "constant-time").
-   Generally, this method can be used for any curve with prime p that is
-   congruent to 3 modulo 4; however, the (very unlikely) case of d=0 in
-   step 6 below may need to be handled differently depending on the
-   curve equation, to ensure that the result is a point on the curve.
+   Section 7 of [BCIMRT10] (see also [I-D.irtf-cfrg-hash-to-curve]).  It
+   can be implemented with running time that is independent of the input
+   alpha (so-called "constant-time").  Generally, this method can be
+   used for any curve with prime p that is congruent to 3 modulo 4;
+   however, the (very unlikely) case of d=0 in step 6 below may need to
+   be handled differently depending on the curve equation, to ensure
+   that the result is a point on the curve.
 
    ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
 
@@ -1521,9 +1521,6 @@ Internet-Draft                     VRF                    September 2018
 
 6.  Implementation Status
 
-   [TODO: Needs Updating; include also implementations of various parts,
-   so developers can access them]
-
    A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-
    P256-SHA256-SWU, ECVRF-ED25519-SHA512-TAI, ECVRF-
    ED25519-SHA512-Elligator2 is available at <https://github.com/reyzin/
@@ -1560,6 +1557,9 @@ Internet-Draft                     VRF                    September 2018
 
    Applications that use the VRFs defined in this document MUST ensure
    that that the VRF key is generated correctly, using good randomness.
+
+
+
 
 
 
@@ -1806,7 +1806,8 @@ Internet-Draft                     VRF                    September 2018
       four bytes to one, to avoid endian issues; renamed try-and-
       increment ciphersuites to -TAI; added qLen as a separate
       paremeter; changed output length to hLen for ECVRF, to match
-      RSAVRF; added test vectors.
+      RSAVRF; made Verify return beta so unverified proofs don't end up
+      in proof_to_hash; added test vectors.
 
 9.  Contributors
 
@@ -1816,8 +1817,7 @@ Internet-Draft                     VRF                    September 2018
    Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova, Tony
    Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood,
    Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, and Gary Belvin
-   provided valuable input to this draft.  [TODO: Add more people who
-   commented]
+   provided valuable input to this draft.
 
 10.  References
 
