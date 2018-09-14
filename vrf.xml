@@ -221,8 +221,8 @@
    <list>
    <t>   VRF_verify(PK, alpha, pi)</t>
    </list>
-   that outputs VALID if pi was correctly produced,
-   and outputs INVALID otherwise.
+   that outputs (VALID, beta = VRF_proof_to_hash(pi)) if pi is valid,
+   and INVALID otherwise.
    </t>   
    </section>
    
@@ -247,9 +247,9 @@
     a VRF public key PK, 
     a VRF input alpha, 
     and two proofs pi1 and pi2 such that
-    VRF_verify(PK, alpha, pi1)
-    and VRF_verify(PK, alpha, pi2)
-	both output VALID, and VRF_proof_to_hash(pi1) is not equal to VRF_proof_to_hash(pi2).
+    VRF_verify(PK, alpha, pi1) outputs (VALID, beta1),
+    VRF_verify(PK, alpha, pi2) outputs (VALID, beta2),
+    and beta1 is not equal to beta2.
     </t>
     
     <t>
@@ -329,8 +329,7 @@
 	knows valid VRF proof pi corresponding to the VRF input alpha, even
 	if this party does not know the private VRF key SK.
 	Such a party can easily distinguish beta from a random value by
-    checking whether VRF_verify(PK, alpha, pi) returns "VALID" and
-    beta = VRF_proof_to_hash(pi).
+    checking whether VRF_verify(PK, alpha, pi) returns (VALID, beta).
 	</t>
 
     
@@ -348,10 +347,10 @@
    hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.
    </t>
    
-   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <xref target="GHMVZ17" /> and <xref target="KRDO17" />) This property is similar
+   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <xref target="GHMVZ17" /> and <xref target="KRDO17" />). This property is similar
        to the unpredictability achieved by an (ordinary, unkeyed)
        cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable
-       from uniform. The property has not been formally specified in cryptographic literature.
+       from uniform.
     </t>
    <t>
        Although neither formal definitions nor proofs of this property have appeared in cryptographic literature, the VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy
@@ -491,8 +490,7 @@
             <t>
                 Important note:
                 <list>
-                    <t>RSAFDHVRF_proof_to_hash should be run only on pi_string that is known to have been produced by RSAFDHVRF_prove or
-                        has passed verification through RSAFDHVRF_verify</t>
+                    <t>RSAFDHVRF_proof_to_hash should be run only on pi_string that is known to have been produced by RSAFDHVRF_prove, or from within RSAFDHVRF_verify as specified in <xref target="rsaverify"/>.</t>
                 </list>
             </t>
 
@@ -507,7 +505,7 @@
             </t>
         </section>
 
-        <section title="RSA-FDH-VRF Verifying">
+        <section title="RSA-FDH-VRF Verifying" anchor = "rsaverify">
             <t>
                 RSAFDHVRF_verify((n, e), alpha_string, pi_string)
             </t>
@@ -524,7 +522,8 @@
             <t>
                 Output:
                 <list>
-                    <t>"VALID" or "INVALID"</t>
+                    <t>("VALID", beta_string), where beta_string is the VRF hash output, an octet string of length hLen; or
+                        <vspace/>"INVALID"</t>
                 </list>
             </t>
 
@@ -537,7 +536,7 @@
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
                     <t>EM' = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
                     <t>
-                        If EM and EM' are equal, output "VALID";
+                        If EM and EM' are equal, output ("VALID", RSAFDHVRF_proof_to_hash(pi_string));
                         else output "INVALID".
                     </t>
                 </list>
@@ -707,8 +706,8 @@
             <t>
                 Important note:
                 <list>
-                    <t>ECVRF_proof_to_hash should be run only on pi_string that is known to have been produced by ECVRF_prove or
-                        has passed verification through ECVRF_verify</t>
+                    <t>ECVRF_proof_to_hash should be run only on pi_string that is known to have been produced by ECVRF_prove, or
+                        from within ECVRF_verify as specified in <xref target="ecverify"/>.</t>
                 </list>
             </t>
 
@@ -725,7 +724,7 @@
             </t>
         </section>
 
-        <section title="ECVRF Verifying">
+        <section title="ECVRF Verifying" anchor="ecverify">
             <t>
                 ECVRF_verify(Y, pi_string, alpha_string)
             </t>
@@ -742,7 +741,8 @@
             <t>
                 Output:
                 <list>
-                    <t>"VALID" or "INVALID"</t>
+                    <t>("VALID", beta_string), where beta_string is the VRF hash output, octet string of length hLen; or
+                        <vspace/> "INVALID"</t>
                 </list>
             </t>
 
@@ -757,8 +757,8 @@
                     <t>V = s*H - c*Gamma</t>
                     <t>c' = ECVRF_hash_points(H, Gamma, U, V)</t>
                     <t>
-                        If c and c' are equal, output "VALID";
-                        else output "INVALID" 
+                        If c and c' are equal, output ("VALID", ECVRF_proof_to_hash(pi_string));
+                        else output "INVALID"
                     </t>
                 </list>
             </t>
@@ -966,7 +966,7 @@
                 
                 <t> The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
                     algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne <xref target="SW06"/> and Ulas <xref target="Ulas07"/>
-                    algorithm from Section 7 of <xref target="BCIMRT10"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>[TODO: Update to latest version]).  It can be implemented with running time that is independent of the input alpha (so-called "constant-time"). Generally,
+                    algorithm from Section 7 of <xref target="BCIMRT10"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>).  It can be implemented with running time that is independent of the input alpha (so-called "constant-time"). Generally,
                     this method can be used
                     for any curve with prime p that is congruent
                     to 3 modulo 4; however, the (very unlikely) case of d=0 in step 6 below may need to be handled differently depending on the curve equation, to ensure that the result is a point on the curve.
@@ -1424,7 +1424,6 @@
     
     
     <section title="Implementation Status" anchor="imp">
-        <t>[TODO: Needs Updating; include also implementations of various parts, so developers can access them]</t>
 
   <t>
     A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-ED25519-SHA512-TAI, ECVRF-ED25519-SHA512-Elligator2
@@ -1734,7 +1733,8 @@
                 section. Added an discussion of secrecy into security considerations.
                 Removed B and PK=Y from ECVRF_hash_points because they are already present
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
-                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; added test vectors.</t>
+                <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; made Verify return beta so unverified proofs don't end
+                    up in proof_to_hash; added test vectors.</t>
             </list>
         </t>
     </section>
@@ -1749,7 +1749,7 @@
             Asaf Ziv (Facebook).
             Shumon Huque, David C. Lawerence, Trevor Perrin, Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova,
             Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, and Gary Belvin provided
-            valuable input to this draft. [TODO: Add more people who commented]
+            valuable input to this draft.
         </t>
     </section>
 
