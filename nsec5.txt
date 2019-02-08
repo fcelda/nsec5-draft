@@ -5,14 +5,14 @@
 Network Working Group                                          J. Vcelak
 Internet-Draft                                                    CZ.NIC
 Intended status: Standards Track                             S. Goldberg
-Expires: December 31, 2018                             Boston University
+Expires: August 12, 2019                               Boston University
                                                          D. Papadopoulos
                                                                    HKUST
                                                                 S. Huque
                                                               Salesforce
                                                              D. Lawrence
                                                      Akamai Technologies
-                                                           June 29, 2018
+                                                        February 8, 2019
 
 
             NSEC5, DNSSEC Authenticated Denial of Existence
@@ -53,29 +53,29 @@ Status of This Memo
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 1]
+Vcelak, et al.           Expires August 12, 2019                [Page 1]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 31, 2018.
+   This Internet-Draft will expire on August 12, 2019.
 
 Copyright Notice
 
-   Copyright (c) 2018 IETF Trust and the persons identified as the
+   Copyright (c) 2019 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 2]
+Vcelak, et al.           Expires August 12, 2019                [Page 2]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
        8.2.2.  No Data Response, Opt-Out In Effect . . . . . . . . .  14
@@ -165,9 +165,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 3]
+Vcelak, et al.           Expires August 12, 2019                [Page 3]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    zone contents even if an adversary compromises one of the
@@ -221,9 +221,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 4]
+Vcelak, et al.           Expires August 12, 2019                [Page 4]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    +----------+-------------+---------------+----------------+---------+
@@ -277,9 +277,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 5]
+Vcelak, et al.           Expires August 12, 2019                [Page 5]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 1.2.  Requirements
@@ -323,7 +323,7 @@ Internet-Draft                    NSEC5                        June 2018
 
    NSEC5 algorithm:  A triple of VRF algorithms that compute an NSEC5
       proof (VRF_prove), verify an NSEC5 proof (VRF_verify), and process
-      an NSEC5 proof to obtain its NSEC5 hash (VRF_proof2hash).
+      an NSEC5 proof to obtain its NSEC5 hash (VRF_proof_to_hash).
 
 2.  Backward Compatibility
 
@@ -333,9 +333,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 6]
+Vcelak, et al.           Expires August 12, 2019                [Page 6]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    To prevent NSEC5-unaware resolvers from attempting to validate the
@@ -356,8 +356,8 @@ Internet-Draft                    NSEC5                        June 2018
        a given NSEC5 proof corresponds to a given domain name.
 
    2.  The NSEC5 proof is then processed using a publicly-computable VRF
-       proof2hash function to obtain the NSEC5 hash.  The NSEC5 hash can
-       be computed by anyone who knows the input NSEC5 proof.
+       VRF_proof_to_hash function to obtain the NSEC5 hash.  The NSEC5
+       hash can be computed by anyone who knows the input NSEC5 proof.
 
    The NSEC5 hash determines the position of a domain name in an NSEC5
    chain.
@@ -383,15 +383,15 @@ Internet-Draft                    NSEC5                        June 2018
       NSEC5KEY RR, to verify that the NSEC5 proof in the NSEC5PROOF RR
       corresponds to the queried name.
 
-   o  The client uses the VRF proof2hash function to compute the NSEC5
-      hash from the NSEC5 proof in the NSEC5PROOF RR.  The client
+   o  The client uses the VRF_proof_to_hash function to compute the
+      NSEC5 hash from the NSEC5 proof in the NSEC5PROOF RR.  The client
       verifies that the NSEC5 hash is covered by the NSEC5 RR.
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 7]
+Vcelak, et al.           Expires August 12, 2019                [Page 7]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    o  The client verifies that the NSEC5 RR is validly signed by the
@@ -405,14 +405,15 @@ Internet-Draft                    NSEC5                        June 2018
 
    The NSEC5 proof corresponding to a name is computed using
    ECVRF_prove(), as specified in [I-D.irtf-cfrg-vrf].  The input to
-   ECVRF_prove() is a public NSEC5 key followed by a private NSEC5 key
-   followed by an RR owner name in [RFC4034] canonical wire format.  The
-   output NSEC5 proof is an octet string.
+   ECVRF_prove() is a private NSEC5 key and the RR owner name in
+   [RFC4034] canonical wire format.  The output of ECVRF_prove() is an
+   octet string.
 
    An NSEC5 hash corresponding to a name is computed from its NSEC5
-   proof using ECVRF_proof2hash(), as specified in [I-D.irtf-cfrg-vrf].
-   The input to VRF_proof2hash() is an NSEC5 proof as an octet string.
-   The output NSEC5 hash is either an octet string, or INVALID.
+   proof using ECVRF_proof_to_hash(), as specified in
+   [I-D.irtf-cfrg-vrf].  The input to ECVRF_proof_to_hash() is an NSEC5
+   proof as an octet string.  The output NSEC5 hash is either an octet
+   string, or INVALID.
 
    An NSEC5 proof for a name is verified using ECVRF_verify(), as
    specified in [I-D.irtf-cfrg-vrf].  The input is the NSEC5 public key,
@@ -444,10 +445,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-
-Vcelak, et al.          Expires December 31, 2018               [Page 8]
+Vcelak, et al.           Expires August 12, 2019                [Page 8]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    o  The public key format to be used in the NSEC5KEY RR is defined in
@@ -501,9 +501,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018               [Page 9]
+Vcelak, et al.           Expires August 12, 2019                [Page 9]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 6.1.  NSEC5 RDATA Wire Format
@@ -557,9 +557,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 10]
+Vcelak, et al.           Expires August 12, 2019               [Page 10]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    The Opt-Out flag has the same semantics as in NSEC3.  The definition
@@ -613,9 +613,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 11]
+Vcelak, et al.           Expires August 12, 2019               [Page 11]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    Owner Name Hash is a variable-sized sequence of binary octets
@@ -669,9 +669,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 12]
+Vcelak, et al.           Expires August 12, 2019               [Page 12]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
       NSEC5PROOF for next closer name and covering NSEC5 RR.
@@ -725,9 +725,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 13]
+Vcelak, et al.           Expires August 12, 2019               [Page 13]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 8.2.2.  No Data Response, Opt-Out In Effect
@@ -781,9 +781,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 14]
+Vcelak, et al.           Expires August 12, 2019               [Page 14]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
       Non-existence of both the QTYPE and of the CNAME type that matches
@@ -837,9 +837,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 15]
+Vcelak, et al.           Expires August 12, 2019               [Page 15]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
        A.  The owner name of the NSEC5 RR is the NSEC5 hash of the
@@ -893,9 +893,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 16]
+Vcelak, et al.           Expires August 12, 2019               [Page 16]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    Precomputing NSEC5PROOF RRs can halve the number of online
@@ -949,9 +949,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 17]
+Vcelak, et al.           Expires August 12, 2019               [Page 17]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 9.3.  NSEC5KEY Rollover Mechanism
@@ -1005,9 +1005,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 18]
+Vcelak, et al.           Expires August 12, 2019               [Page 18]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    handle the issues surrounding the handling of empty non-terminals as
@@ -1061,9 +1061,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 19]
+Vcelak, et al.           Expires August 12, 2019               [Page 19]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
        NSEC5 hash.  The TTL values of the NSEC5 and NSEC5PROOF RRs must
@@ -1117,9 +1117,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 20]
+Vcelak, et al.           Expires August 12, 2019               [Page 20]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 12.3.  Domain Name Length Restrictions
@@ -1173,9 +1173,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 21]
+Vcelak, et al.           Expires August 12, 2019               [Page 21]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    cannot learn the NSEC5 hash value.  Thus, even an attacker that
@@ -1229,9 +1229,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 22]
+Vcelak, et al.           Expires August 12, 2019               [Page 22]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    effort.  Note that DNSSEC already relies on the assumption that a
@@ -1285,9 +1285,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 23]
+Vcelak, et al.           Expires August 12, 2019               [Page 23]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 18.  References
@@ -1301,7 +1301,7 @@ Internet-Draft                    NSEC5                        June 2018
    [I-D.irtf-cfrg-vrf]
               Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak,
               "Verifiable Random Functions (VRFs)", draft-irtf-cfrg-
-              vrf-01 (work in progress), March 2018.
+              vrf-03 (work in progress), September 2018.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
@@ -1313,8 +1313,8 @@ Internet-Draft                    NSEC5                        June 2018
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
               "Dynamic Updates in the Domain Name System (DNS UPDATE)",
@@ -1341,9 +1341,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 24]
+Vcelak, et al.           Expires August 12, 2019               [Page 24]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
@@ -1357,8 +1357,8 @@ Internet-Draft                    NSEC5                        June 2018
 
    [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
               Groups for Use with IETF Standards", RFC 5114,
-              DOI 10.17487/RFC5114, January 2008,
-              <https://www.rfc-editor.org/info/rfc5114>.
+              DOI 10.17487/RFC5114, January 2008, <https://www.rfc-
+              editor.org/info/rfc5114>.
 
    [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
               Security (DNSSEC) Hashed Authenticated Denial of
@@ -1367,13 +1367,13 @@ Internet-Draft                    NSEC5                        June 2018
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
-              DOI 10.17487/RFC6234, May 2011,
-              <https://www.rfc-editor.org/info/rfc6234>.
+              DOI 10.17487/RFC6234, May 2011, <https://www.rfc-
+              editor.org/info/rfc6234>.
 
    [RFC6605]  Hoffman, P. and W. Wijngaards, "Elliptic Curve Digital
               Signature Algorithm (DSA) for DNSSEC", RFC 6605,
-              DOI 10.17487/RFC6605, April 2012,
-              <https://www.rfc-editor.org/info/rfc6605>.
+              DOI 10.17487/RFC6605, April 2012, <https://www.rfc-
+              editor.org/info/rfc6605>.
 
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
@@ -1381,8 +1381,8 @@ Internet-Draft                    NSEC5                        June 2018
 
    [RFC8080]  Sury, O. and R. Edmonds, "Edwards-Curve Digital Security
               Algorithm (EdDSA) for DNSSEC", RFC 8080,
-              DOI 10.17487/RFC8080, February 2017,
-              <https://www.rfc-editor.org/info/rfc8080>.
+              DOI 10.17487/RFC8080, February 2017, <https://www.rfc-
+              editor.org/info/rfc8080>.
 
 18.2.  Informative References
 
@@ -1397,9 +1397,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 25]
+Vcelak, et al.           Expires August 12, 2019               [Page 25]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
@@ -1440,8 +1440,8 @@ Internet-Draft                    NSEC5                        June 2018
 
    [RFC6781]  Kolkman, O., Mekking, W., and R. Gieben, "DNSSEC
               Operational Practices, Version 2", RFC 6781,
-              DOI 10.17487/RFC6781, December 2012,
-              <https://www.rfc-editor.org/info/rfc6781>.
+              DOI 10.17487/RFC6781, December 2012, <https://www.rfc-
+              editor.org/info/rfc6781>.
 
    [RFC7129]  Gieben, R. and W. Mekking, "Authenticated Denial of
               Existence in the DNS", RFC 7129, DOI 10.17487/RFC7129,
@@ -1453,9 +1453,9 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 26]
+Vcelak, et al.           Expires August 12, 2019               [Page 26]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 Appendix A.  Examples
@@ -1509,9 +1509,9 @@ A.1.  Name Error Example
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 27]
+Vcelak, et al.           Expires August 12, 2019               [Page 27]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 ;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 5937
@@ -1565,9 +1565,9 @@ o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 28]
+Vcelak, et al.           Expires August 12, 2019               [Page 28]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 0o49pi.example.org. 86400 IN NSEC5      48566 0 BAPROH (
@@ -1621,9 +1621,9 @@ o4k89v.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 29]
+Vcelak, et al.           Expires August 12, 2019               [Page 29]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 A.3.  Delegation to an Unsigned Zone in an Opt-Out span Example
@@ -1677,9 +1677,9 @@ baproh.example.org. 86400 IN RRSIG   NSEC5 16 3 86400 (
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 30]
+Vcelak, et al.           Expires August 12, 2019               [Page 30]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    example.org.        86400 IN NSEC5PROOF      48566 AjwsPCJZ8zH/D0Tr
@@ -1733,9 +1733,9 @@ example.org.            3600 IN RRSIG   NS 16 2 3600 (
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 31]
+Vcelak, et al.           Expires August 12, 2019               [Page 31]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
   foo.a.example.org.     86400 IN NSEC5PROOF      48566 AjqF5FGGVso40Lda
@@ -1789,9 +1789,9 @@ example.org.       3600 IN RRSIG   SOA 16 2 3600 (
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 32]
+Vcelak, et al.           Expires August 12, 2019               [Page 32]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
 mpu6c4.example.org. 86400 IN NSEC5   48566 0 O4K89V TXT RRSIG
@@ -1845,9 +1845,9 @@ Appendix B.  Change Log
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 33]
+Vcelak, et al.           Expires August 12, 2019               [Page 33]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
       05 - Remove appendix specifying VRFs and add reference to draft-
@@ -1901,9 +1901,9 @@ Authors' Addresses
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 34]
+Vcelak, et al.           Expires August 12, 2019               [Page 34]
 
-Internet-Draft                    NSEC5                        June 2018
+Internet-Draft                    NSEC5                    February 2019
 
 
    David C Lawrence
@@ -1957,4 +1957,4 @@ Internet-Draft                    NSEC5                        June 2018
 
 
 
-Vcelak, et al.          Expires December 31, 2018              [Page 35]
+Vcelak, et al.           Expires August 12, 2019               [Page 35]

@@ -101,7 +101,7 @@
       </address>
     </author>
 
-    <date year="2018"/>
+    <date year="2019"/>
 
     <area>Internet</area>
     <workgroup>Network Working Group</workgroup>
@@ -313,7 +313,7 @@ proof is known, anyone can compute its corresponding NSEC5 hash.</t>
   A triple of VRF algorithms that 
   compute an NSEC5 proof (VRF_prove),
   verify an NSEC5 proof (VRF_verify), 
-  and process an NSEC5 proof to obtain its NSEC5 hash (VRF_proof2hash).</t>
+  and process an NSEC5 proof to obtain its NSEC5 hash (VRF_proof_to_hash).</t>
 </list></t>
 
 </section>
@@ -343,7 +343,7 @@ using the following steps:</t>
   NSEC5 key, normally acquired via an NSEC5KEY RR, can verify that a
   given NSEC5 proof corresponds to a given domain name.</t>
   <t>The NSEC5 proof is then processed using a publicly-computable VRF
-  proof2hash function to obtain the NSEC5 hash.  The NSEC5 hash can
+  VRF_proof_to_hash function to obtain the NSEC5 hash.  The NSEC5 hash can
   be computed by anyone who knows the input NSEC5 proof.</t>
 </list></t>
 
@@ -371,7 +371,7 @@ corresponding to the queried name.</t>
   <t>The client uses the public NSEC5 key, normally acquired from the
 NSEC5KEY RR, to verify that the NSEC5 proof in the NSEC5PROOF RR
 corresponds to the queried name.</t>
-  <t>The client uses the VRF proof2hash function to compute the NSEC5
+  <t>The client uses the VRF_proof_to_hash function to compute the NSEC5
 hash from the NSEC5 proof in the NSEC5PROOF RR.  The client verifies
 that the NSEC5 hash is covered by the NSEC5 RR.</t>
   <t>The client verifies that the NSEC5 RR is validly signed by the RRSIG
@@ -387,15 +387,13 @@ the NSEC5 proof and the NSEC5 hash are computed and validated.</t>
 
 <t>The NSEC5 proof corresponding to a name is computed using ECVRF_prove(), 
 as specified in <xref target="I-D.irtf-cfrg-vrf"/>.
-The input to ECVRF_prove() is 
-a public NSEC5 key followed by
-a private NSEC5 key followed by
-an RR owner name in <xref target="RFC4034"/> canonical wire format.
-The output NSEC5 proof is an octet string.</t>
+The input to ECVRF_prove() is a private NSEC5 key and the
+RR owner name in <xref target="RFC4034"/> canonical wire format.
+The output of ECVRF_prove() is an octet string.</t>
 
 <t>An NSEC5 hash corresponding to a name is computed from 
-its NSEC5 proof using ECVRF_proof2hash(), as specified in <xref target="I-D.irtf-cfrg-vrf"/>.
-The input to VRF_proof2hash() is 
+its NSEC5 proof using ECVRF_proof_to_hash(), as specified in <xref target="I-D.irtf-cfrg-vrf"/>.
+The input to ECVRF_proof_to_hash() is 
 an NSEC5 proof as an octet string. 
 The output NSEC5 hash is either an octet string, or INVALID.</t>
 
