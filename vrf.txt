@@ -13,7 +13,7 @@ Expires: August 12, 2019                                 D. Papadopoulos
 
 
                    Verifiable Random Functions (VRFs)
-                         draft-irtf-cfrg-vrf-03
+                         draft-irtf-cfrg-vrf-04
 
 Abstract
 
