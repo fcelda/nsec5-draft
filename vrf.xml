@@ -72,7 +72,7 @@
             </address>
         </author>
 
-        <date year="2018" />
+        <date year="2019" />
 
         <workgroup>CFRG</workgroup>
 
@@ -641,23 +641,14 @@
 
         <section title="ECVRF Proving" anchor="ecvrfprove">
                 
-                <t>
-                    Note: this function must have the VRF private key SK as input. 
-                    Below we make it more
-                    efficient by supplying it also with the secret scalar x and the public key Y as
-                    additional inputs; however, each of these can be computed from SK if desired.
-                </t>
-                
             <t>
-                ECVRF_prove(Y, x, alpha_string)
+                ECVRF_prove(SK, alpha_string)
             </t>
 
             <t>
                 Input:
                 <list>
                     <t>SK - VRF private key</t>
-                    <t>x - VRF secret scalar</t>
-                    <t>Y = x*B - VRF public key</t>
                     <t>alpha_string = input alpha, an octet string</t>
                 </list>
             </t>
@@ -672,6 +663,9 @@
             <t>
                 Steps:
                 <list style="numbers">
+                    <t>Use SK to derive the VRF secret scalar x and the VRF public key Y = x*B
+                        <vspace/>(this derivation depends on the ciphersuite, as per  <xref target="suites"/>;
+                        <vspace/>these values can be cached, for example, after key generation, and need not be rederived each time)</t>
                     <t>H = ECVRF_hash_to_curve(suite_string, Y, alpha_string)</t>
                     <t>h_string = point_to_string(H)</t>
                     <t>Gamma = x*H</t>
@@ -1430,14 +1424,17 @@
     is available at <eref target ="https://github.com/reyzin/ecvrf" />. This implementation is neither secure nor especially effecient, but can be used to generate
         test vectors.
    </t>
+  
+  <t>
+      An implementation of ECVRF-ED25519-SHA512-Elligator2 is available at <eref target="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03" />.
+  </t>
 
 
         <t>
-            An implementation of the RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was
+            An implementation of an earlier, slightly different, version of RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was
             first developed
             as a part of the NSEC5 project <xref target="I-D.vcelak-nsec5" /> and is available
-            at <eref target="http://github.com/fcelda/nsec5-crypto" />. 
-            These implementations may be out of date as this spec has evolved.
+            at <eref target="http://github.com/fcelda/nsec5-crypto" />.
         </t>
 
 
@@ -1447,7 +1444,7 @@
     uses a VRF implemention that is similar to
     the ECVRF-P256-SHA256-TAI, with a few minor changes
     including the use of SHA-512 instead of SHA-256. Its implementation
-    is available <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
+    is available at <eref target="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go" />
     </t>
     
     
@@ -1735,6 +1732,7 @@
                 via H, which is computed via hash_to_curve using the suite_string (which identifies B) and Y.</t>
                 <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; made Verify return beta so unverified proofs don't end
                     up in proof_to_hash; added test vectors.</t>
+                <t> 04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</t>
             </list>
         </t>
     </section>
