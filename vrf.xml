@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-irtf-cfrg-vrf-04" ipr="trust200902">
+<rfc category="std" docName="draft-irtf-cfrg-vrf-05" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -841,7 +841,7 @@
             
                 <t> The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
                 algorithm implements ECVRF_hash_to_curve using the elligator2
-                algorithm from Section 5 of <xref target="BHKT13"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>) exclusively for the Ed25519 elliptic curve (which the Edwards equivalent of Curve25519). It can be implemented with running time that is independent of the input alpha (so-called "constant-time").
+                algorithm from Section 5 of <xref target="BHKT13"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>) exclusively for the edwards25519 elliptic curve. It can be implemented with running time that is independent of the input alpha (so-called "constant-time").
                 </t>
                                 
                 <t>
@@ -865,9 +865,9 @@
                 
                 <t> Fixed options:
                     <list>
-                        <t> p = 2^255-19, the size of the finite field F, a prime, for Curve25519</t>
-                        <t> A = 486662, Montgomery curve constant for Curve25519 </t>
-                        <t> cofactor = 8 , the cofactor for Curve25519 </t>
+                        <t> p = 2^255-19, the size of the finite field F, a prime, for edwards25519 and curve25519 curves</t>
+                        <t> A = 486662, Montgomery curve constant for curve25519 </t>
+                        <t> cofactor = 8, the cofactor for edwards25519 and curve25519 curves</t>
                     </list>
                 </t>
                 
@@ -1071,8 +1071,7 @@
                     The ECVRF_nonce_generation function is as specified in 
                     <xref target="RFC6979"/> Section 3.2 where
                     <list>
-                    <t> Step a is omitted</t>
-                    <t> h_1 is set equal to h_string</t>
+                    <t> Input m is set equal to h_string</t>
                     <t> The "suitable for DSA or ECDSA" check in step h.3 is omitted</t>
                     <t> The hash function H is Hash and its output length hlen is set as hLen*8</t>
                     <t> The secret key x is set equal to the VRF secret scalar x </t>
@@ -1262,12 +1261,12 @@
         </t>
 
         
-        <t>This document defines ECVRF-ED25519-SHA512-TAI as follows:
+        <t>This document defines ECVRF-EDWARDS25519-SHA512-TAI as follows:
         <list style="symbols">
         <t>
         suite_string = 0x03 = int_to_string(3, 1). </t>
         <t>
-            The EC group G is the Ed25519
+            The EC group G is the edwards25519
             elliptic curve with parameters defined in Table 1 of
              <xref target="RFC8032" />.       
             For this group, 2n = qLen = 32 and cofactor = 8.
@@ -1311,10 +1310,10 @@
         </list>
         </t>
    
-   <t>This document defines ECVRF-ED25519-SHA512-Elligator2 as follows:
+   <t>This document defines ECVRF-EDWARDS25519-SHA512-Elligator2 as follows:
     
         <list style="symbols">
-        <t> This ciphersuite is identical to ECVRF-ED25519-SHA512-TAI except that
+        <t> This ciphersuite is identical to ECVRF-EDWARDS25519-SHA512-TAI except that
         the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/> and 
         suite_string = 0x04 = int_to_string(4, 1).
         </t>
@@ -1382,7 +1381,7 @@
                 to output "INVALID" if Y is the point at infinity. Moreover, when cofactor>1, it is not necessary to verify
                 that Y is in the subgroup G; Step 3 suffices. Therefore, if the cofactor is small, the total number
                 of points that could cause Step 3 to output "INVALID" may be small, and it may be more efficient to simply
-                check Y against a fixed list of such points. For example, the following algorithm can be used for the Ed25519 curve:
+                check Y against a fixed list of such points. For example, the following algorithm can be used for the edwards25519 curve:
                 </t>
                 
                 <t>
@@ -1420,13 +1419,17 @@
     <section title="Implementation Status" anchor="imp">
 
   <t>
-    A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-ED25519-SHA512-TAI, ECVRF-ED25519-SHA512-Elligator2
+    A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2
     is available at <eref target ="https://github.com/reyzin/ecvrf" />. This implementation is neither secure nor especially effecient, but can be used to generate
         test vectors.
    </t>
   
   <t>
-      An implementation of ECVRF-ED25519-SHA512-Elligator2 is available at <eref target="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03" />.
+      An implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <eref target="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03" />.
+  </t>
+  
+  <t>
+      An implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <eref target="https://crates.io/crates/vrf" />.
   </t>
 
 
@@ -1463,7 +1466,7 @@
     
     <t>
     Open Whisper Systems also uses a VRF very similar to 
-    ECVRF-ED25519-SHA512-Elligator, called VXEdDSA, and specified here:
+    ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here:
     <eref target="https://whispersystems.org/docs/specifications/xeddsa/" />
     </t> 
     </section>    
@@ -1601,7 +1604,7 @@
     </t>
 
     
-    <t>Meanwhile, ECVRF-P256-SHA256-SWU and ECVRF-ED25519-SHA512-Elligator2 can be made to
+    <t>Meanwhile, ECVRF-P256-SHA256-SWU and ECVRF-EDWARDS25519-SHA512-Elligator2 can be made to
         run in time constant in alpha.
     </t>
     
@@ -1733,6 +1736,8 @@
                 <t> 03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; made Verify return beta so unverified proofs don't end
                     up in proof_to_hash; added test vectors.</t>
                 <t> 04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</t>
+                <t> 05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to
+                    Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</t>
             </list>
         </t>
     </section>
@@ -1746,7 +1751,7 @@
             Sachin Vasant (Cisco Systems), and
             Asaf Ziv (Facebook).
             Shumon Huque, David C. Lawerence, Trevor Perrin, Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova,
-            Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, and Gary Belvin provided
+            Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, Gary Belvinm, Piotr Nojszewski, Gorka Irazoqui Apecechea, and Mario Cao Cueto provided
             valuable input to this draft.
         </t>
     </section>
@@ -1934,10 +1939,10 @@
                 alpha = 73616d706c65 (ASCII "sample") <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = 02e2e1ab1b9f5a8a68fa4aad597e7493095648d3473b213bba120fe42d1a595f3e <vspace />
-                k = c1aba586552242e6b324ab4b7b26f86239226f3cfa85b1c3b675cc061cf147dc <vspace />
-                U = k*B = 02007fe22a3ed063db835a63a92cb1e487c4fea264c3f3700ae105f8f3d3fd391f <vspace />
-                V = k*H = 03d0a63fa7a7fefcc590cb997b21bbd21dc01304102df183fb7115adf6bcbc2a74 <vspace />
-                pi = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524193b7a850195ef3d5329018a8683114cb446c33fe16ebcc0bc775b043b5860dcb2e553d91268281688438df9394103ab <vspace />
+                k = b7de5757b28c349da738409dfba70763ace31a6b15be8216991715fbc833e5fa <vspace />
+                U = k*B = 030286d82c95d54feef4d39c000f8659a5ce00a5f71d3a888bd1b8e8bf07449a50 <vspace />
+                V = k*H = 03e4258b4a5f772ed29830050712fa09ea8840715493f78e5aaaf7b27248efc216 <vspace />
+                pi = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524347fc46ccd87843ec0a9fdc090a407c6fbae8ac1480e240c58854897eabbc3a7bb61b201059f89186e7175af796d65e7 <vspace />
                 beta = 59ca3801ad3e981a88e36880a3aee1df38a0472d5be52d6e39663ea0314e594c</t>
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
@@ -1945,10 +1950,10 @@
                 alpha = 74657374 (ASCII "test") <vspace />
                 try_and_increment succeded on ctr = 0 <vspace />
                 H = 02ca565721155f9fd596f1c529c7af15dad671ab30c76713889e3d45b767ff6433 <vspace />
-                k = 7fc43fbc2aa51886139614792c613e672624b3fb8d0cf3fa6f52543d6a2fc26c <vspace />
-                U = k*B = 037cd79cd8ab7b0324600b4d76c673a0726f3f1ff26b4b850d0c14b3aa272bf841 <vspace />
-                V = k*H = 02372cc8b56281e8d7f21ab7503c10af22164a4227e7433de0953a0df5e7a609bd <vspace />
-                pi = 03873a1cce2ca197e466cc116bca7b1156fff599be67ea40b17256c4f34ba2549c9c8b100049e76661dbcf6393e4d625597ed21d4de684e08dc6817b60938f3ff4148823ea46a47fa8a4d43f5fa6f77dc8 <vspace />
+                k = c3c4f385523b814e1794f22ad1679c952e83bff78583c85eb5c2f6ea6eee2e7d <vspace />
+                U = k*B = 034b3793d1088500ec3cccdea079beb0e2c7cdf4dccef1bbda379cc06e084f09d0 <vspace />
+                V = k*H = 02427cdb19aa5dd645e153d6bd8c0d81a658deee37b203edfd461953f301c4f868 <vspace />
+                pi = 03873a1cce2ca197e466cc116bca7b1156fff599be67ea40b17256c4f34ba2549c94ffd2b31588b5fe034fd92c87de5b520b12084da6c4ab63080a7c5467094a1ee84b80b59aca54bba2e2baa0d108191b <vspace />
                 beta = dc85c20f95100626eddc90173ab58d5e4f837bb047fb2f72e9a408feae5bc6c1</t>
             <t>This example secret key and message are taken from Appendix L.4.2 of <xref target="ANSI.X9-62-2005"/>.</t>
             <t>
@@ -1957,10 +1962,10 @@
                 alpha = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <vspace />
                 try_and_increment succeded on ctr = 1 <vspace />
                 H = 02141e41d4d55802b0e3adaba114c81137d95fd3869b6b385d4487b1130126648d <vspace />
-                k = 111e1505c8531c885dab6607a0962cd40a0af77637cdf183c7c9fb799dded43e <vspace />
-                U = k*B = 02b3aceb619b90e811c8e50de73b27e65dd84669821055cb60dc1fa47199396c74 <vspace />
-                V = k*H = 02f117fe7daa8942d5492cc968784ced16025161b2dad374808eb7fbaf5eda5331 <vspace />
-                pi = 02abe3ce3b3aa2ab3c6855a7e729517ebfab6901c2fd228f6fa066f15ebc9b9d41fd212750d9ff775527943049053a77252e9fa59e332a2e5d5db6d0be734076e98befcdefdcbaf817a5c13d4e45fbf9bc <vspace />
+                k = 6ac8f1efa102bdcdcc8db99b755d39bc995491e3f9dea076add1905a92779610 <vspace />
+                U = k*B = 034bf7bd3638ef06461c6ec0cfaef7e58bfdaa971d7e36125811e629e1a1e77c8a <vspace />
+                V = k*H = 03b8b33a134759eb8c9094fb981c9590aa53fd13d35042575067a7bd7c5bc6287b <vspace />
+                pi = 02abe3ce3b3aa2ab3c6855a7e729517ebfab6901c2fd228f6fa066f15ebc9b9d415a680736f7c33f6c796e367f7b2f467026495907affb124be9711cf0e2d05722d3a33e11d0c5bf932b8f0c5ed1981b64 <vspace />
                 beta = e880bde34ac5263b2ce5c04626870be2cbff1edcdadabd7d4cb7cbc696467168</t>
         </section>
         <section title="ECVRF-P256-SHA256-SWU">
@@ -1973,10 +1978,10 @@
                 In SWU: w = d8125c3ae82fc2b7f1c326b6f3dbfdf3583272336a60cb08efb84e002e98a3b3 <vspace />
                 In SWU: e = -1 <vspace />
                 H = 027827143876a58c2189402306c6ff6f7f9a7271067f3ed28eb63790d58a84fdd6 <vspace />
-                k = e15d8e7677f9473ae922d36977dbcc305a4ffd8149499dccfcb44fa097a2200c <vspace />
-                U = k*B = 035dc0dee6903dba1a3e7cae4e2a960609e873e6e696cc8d5e56dfa8efccdfc97a <vspace />
-                V = k*H = 03bec301c2930d69ed359eab2a54349d1431625c7a3ee0cfc2643ae5f8a21c3add <vspace />
-                pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024c35641fe838a72d0d9bc1bcf032f895f3b3f4c79d0f8f9d5705d83181fe82e19f49619eb8290930809b2b9651786e4f945 <vspace />
+                k = cabfb61ad47b639814365bcbe2cc48a9ad4e3cfe61172aced7d539d47f459654 <vspace />
+                U = k*B = 023cd2988db2421dbfd5cefb8c2342ed2413160d4f6521d301e7b2995fe8551bd6 <vspace />
+                V = k*H = 025443fe6f00281ff3afa0ff93db2ce9cb20dfcafb7c17b78c9e912d26f4e22cf2 <vspace />
+                pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024c3b3056b7310e0130317274a58e57317c469b46fe5ab6a34463d7ecb2a7ae1d808381f53c0f6aaaebe62195cfd14526f03 <vspace />
                 beta = 143f36bf7175053315693cfcfdff5aebb13e5eb9c47f897f53f81561993cfcd2</t>
             <t>
                 SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <vspace />
@@ -1986,10 +1991,10 @@
                 In SWU: w = 0eed10be2937c902c9612d80b8ea5b0783f81c419faedd57efc84e6dfcfe2c72 <vspace />
                 In SWU: e = 1 <vspace />
                 H = 020e6c14efc8bc7150a3467aafa78be9856a2c6e405bdcc50f767fe638569d0172 <vspace />
-                k = 2addf2924eea6557e87acd635f08b54156cba70d718d8a3b6268af795cfdb7f2 <vspace />
-                U = k*B = 028347e823490cb50becb229cf059942afff39d6b276b987a384e45f29d1bf0dc3 <vspace />
-                V = k*H = 034759927f83caf0ed5d7ad1505844548051ef90a2f29de30efaf8eb811afb3342 <vspace />
-                pi = 0376b758f457d2cabdfaeb18700e46e64f073eb98c119dee4db6c5bb1eaf677806895ab451335f6adb792d40c68351929fce44068ffdcbbeac12f058b0365856ed5d86aadba1f54c9db13f9c8759589609 <vspace />
+                k = eb2035e5d6993b96589937c36482c647dab2b420fd152ffe026437b0b6c22e26 <vspace />
+                U = k*B = 038bf7231765143e6de2cef1bbd79dd80729a320dbc040ecd8f3d937b756b68e56 <vspace />
+                V = k*H = 0365e6610ff260aef9721450e2353677470e179573937756a803df1df9680ca698 <vspace />
+                pi = 0376b758f457d2cabdfaeb18700e46e64f073eb98c119dee4db6c5bb1eaf67780654504c6e583fd6eb129195b1836f91a6dd16504f957c8dedb653806952e3b0217ef187b87b9dda851f0a515f4dcc09d1 <vspace />
                 beta = 6b5bb622a6bc1387a7dcc4f46cfdcc3bce67669b32f3bc39e047c3b6cd3e65d9</t>
             <t>This example secret key and message are taken from Appendix L.4.2 of <xref target="ANSI.X9-62-2005"/>.</t>
             <t>
@@ -2000,14 +2005,15 @@
                 In SWU: w = 76f564cca31934c80dd2a285ba43543df63a078b132c8f34d2ab1b7089cb3401 <vspace />
                 In SWU: e = -1 <vspace />
                 H = 02429690b91e1783cd0d7e393db07cc44b48c226cb837adb2282251cabf431a484 <vspace />
-                k = 2ba4cd5e9f7be946659555b3d052af618d2d3a14f5a756c8d56fab058d1831ff <vspace />
-                U = k*B = 025943c217f48354e297156ac7dce8d2b50f63867acc23ba1aea87a66578392ca8 <vspace />
-                V = k*H = 0399ccafce764acf0db264183d97c1ae968daf661b9931a145bb8cbfc5f3f8f9a5 <vspace />
-                pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f29477cd29f8754f3bbdea3dd129560e9ba0c73ae7894a8d0c0e1ac01e5c2685da67009d96e6ccdb634c7e0c5f38fa3e4908c02 <vspace />
+                k = 6181315ddb4f4d159ce8cbad48d5454625ccbf47c46c4cabd972be72b372a50b <vspace />
+                U = k*B = 02c6dac6f9a51b79b8bc928a67320f4d569090b8c6b86f011ddf898788559c134d <vspace />
+                V = k*H = 033f8070c0a09ac089d1ceffc384d3f25bb0597f63161ca82431331278baf1568f <vspace />
+                pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f29477ca8e8f01b40c77c61a169ad6db9d76fae7938e94a4338bca9c586c8e266ead7a6b24b769d3d34efc85f6cdb82d96bb717 <vspace />
                 beta = be1dcb17e9815ac6acf819e7ad4b75e575eafad25915c2608959d780364fc912</t>
         </section>
 
-        <section title="ECVRF-ED25519-SHA512-TAI">
+
+        <section title="ECVRF-EDWARDS25519-SHA512-TAI">
             <t>These three example secret keys and messages are taken from Section 7.1 of <xref target="RFC8032"/>.</t>
             <t>
                 SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />
@@ -2046,7 +2052,7 @@
                 pi = aca8ade9b7f03e2b149637629f95654c94fc9053c225ec21e5838f193af2b727b84ad849b0039ad38b41513fe5a66cdd2367737a84b488d62486bd2fb110b4801a46bfca770af98e059158ac563b690f <vspace />
                 beta = d938b2012f2551b0e13a49568612effcbdca2aed5d1d3a13f47e180e01218916e049837bd246f66d5058e56d3413dbbbad964f5e9f160a81c9a1355dcd99b453</t>
         </section>
-        <section title="ECVRF-ED25519-SHA512-Elligator2">
+        <section title="ECVRF-EDWARDS25519-SHA512-Elligator2">
             <t>These three example secret keys and messages are taken from Section 7.1 of <xref target="RFC8032"/>.</t>
             <t>
                 SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />
