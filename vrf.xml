@@ -766,7 +766,7 @@
         
             <t>The ECVRF_hash_to_curve algorithm takes in the VRF input alpha
             and converts it to H, an EC point in G.
-            This algorithm is the only place the VRF input alpha is used in 
+            This algorithm is the only place the VRF input alpha is used
             for proving and verfying. See
             <xref target="prehash" /> for further discussion.
             </t>
@@ -835,213 +835,65 @@
             
             
             </section>
-            
-            
-            <section title="ECVRF_hash_to_curve_elligator2_25519" anchor="elligator2">
-            
-                <t> The following ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
-                algorithm implements ECVRF_hash_to_curve using the elligator2
-                algorithm from Section 5 of <xref target="BHKT13"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>) exclusively for the edwards25519 elliptic curve. It can be implemented with running time that is independent of the input alpha (so-called "constant-time").
-                </t>
-                                
-                <t>
-                    ECVRF_hash_to_curve_elligator2_25519(suite_string, Y, alpha_string)
-                </t>
-                <t>
-                    Input:
-                    <list>
-                        <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
-                        <t>alpha_string - value to be hashed, an octet string</t>
-                        <t>Y - public key, an EC point</t>
-                    </list>
-                </t>
-                <t>
-                    Output:
-                    <list>
-                        <t>H - hashed value, a finite EC point in G
-                        </t>
-                    </list>
-                </t>
-                
-                <t> Fixed options:
-                    <list>
-                        <t> p = 2^255-19, the size of the finite field F, a prime, for edwards25519 and curve25519 curves</t>
-                        <t> A = 486662, Montgomery curve constant for curve25519 </t>
-                        <t> cofactor = 8, the cofactor for edwards25519 and curve25519 curves</t>
-                    </list>
-                </t>
-                
-                <t> Constraints on options:
-                    <list>
-                        <t> output length of Hash is at least 16n (i.e., 256) bits</t>
-                    </list>
-                </t>
-                
-                <t>
-                    Steps:
-                    <list style="numbers">
-                        <t>PK_string = point_to_string(Y)</t>
-                        <t>one_string = 0x01 = int_to_string(1, 1)
-                        <vspace/>(a single octet with value 1) </t>
-                        <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
-                        <t>r_string = hash_string[0]...hash_string[31]
-                            <!--<vspace/>(first 32 octets of hash)--></t>
-                        <!--<t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
-                            <vspace/>(a single octet with value 128)</t> -->
-                        <t>oneTwentySeven_string = 0x7F = int_to_string(127, 1)
-                            <vspace/>(a single octet with value 127)</t>
-                        <!--<t>x0 = r_string[31] &amp; oneTwentyEight_string
-                            <vspace/>(where &amp; denotes the bit-wise AND)
-                            <vspace/>(this step saves highest-order bit of octet 31 in x0)</t>-->
-                        <t>r_string[31] = r_string[31] &amp; oneTwentySeven_string
-                            <vspace/>(this step clears the high-order bit of octet 31)</t>
-                        <t>r = string_to_int(r_string)</t>
-                        <t>u = - A / (1 + 2*(r^2) )  mod p
-                            <vspace/>(note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
-                        <t>w = u * (u^2 + A*u + 1) mod p
-                            <vspace/>(this step evaluates the Montgomery equation for Curve25519)</t>
-                        <t>Let e equal the Legendre symbol of w and p
-                        <vspace/>(see note below on how to compute e)</t>
-                        <t>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p
-                            <vspace/>(note: final_u is the Montgomery u-coordinate of the output; see note below on how to compute it)</t>
-                        <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
-                            <vspace/>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u)
-                            <vspace/>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</t>
-                        <t>y_string = int_to_string (y_coordinate, 32)</t>
-                        <!--<t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
-                            <list style="letters">
-                                <t>y_string = int_to_string (y_coordinate, 32)</t>
-                                <t>y_string[31] = y_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't]
-                                    <vspace/>(where | denotes the bit-wise OR)</t>
-                            </list>
-                        </t>-->
-                        <t>H_prelim = string_to_point(y_string)
-                        <vspace/> (note: string_to_point will not return INVALID by correctness of Elligator2)</t>
-                        <t>Set H = cofactor * H_prelim</t>
-                        <t>Output H</t>
-                    </list>
-                </t>
-                
-                
-                <t> In order to make this algorithm run in time that is (almost) independent
-                    of the input alpha_string (so-called "constant-time"), implementers should pay particular attention
-                    to Steps 10 and 11 above.
-                    These steps can be implemented using the following approach:
+
+            <section title="ECVRF_hash_to_curve_h2csuite" anchor="h2csuite">
+
+            <t>The ECVRF_hash_to_curve_h2csuite(suite_string, Y, alpha_string) algorithm
+                implements ECVRF_hash_to_curve using
+                a hash-to-curve suite as defined in
+                <xref target="I-D.irtf-cfrg-hash-to-curve"/>.
+            </t>
+
+            <t>
+                ECVRF_hash_to_curve_h2csuite(suite_string, Y, alpha_string)
+            </t>
+            <t>
+                Input:
                 <list>
-                    <t> e = w ^ ((p-1)/2) mod p</t>
-                    <t>final_u = (e*u + (e-1) * (A/2)) mod p</t>
+                    <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
+                    <t>alpha_string - value to be hashed, an octet string</t>
+                    <t>Y - public key, an EC point</t>
                 </list>
-                The first step will produce a value e that is either 1 or p-1 (it is guaranteed not to be any other value, because w is guaranteed to be nonzero). Implementers should also ensure that the second step
-                runs in the same amount of time regardless of e by ensuring that
-                arithmetic in constant time.
-                </t>
-                
-                <t>
-                Alternatively, let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
-                selector is 1 and  result_if_0 when selector is 0. If CMOV is implemented in constant time, then steps 12 and 13 above can be implemented as follows:
+            </t>
+            <t>
+                Output:
                 <list>
-                    <t>e = (w^((p-1)/2))+1 mod p</t>
-                    <t>b = e/2</t>
-                    <t>other_u = (-A-u) mod p</t>
-                    <t>final_u = CMOV(u, other_u, b)</t>
+                    <t>H - hashed value, a finite EC point in G
+                    </t>
                 </list>
-                (Note that after the first step, e is either 0 or 2, and only the least significant byte of e is needed in the second step).
-                CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b)
-                </t>
-                <t>
-                    If having this algorithm run in constant time is not important, then there are much faster algorithms
-                    to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).
-                    See, for example, Section 12.3 of <xref target="ntb"/>.
-                </t>
-                
+            </t>
+            <t>
+                Fixed options (specified in <xref target="suites"/>):
+                <list>
+                    <t>h2cSuite - a hash-to-curve suite ID (see discussion below)</t>
+                </list>
+            </t>
+            <t>
+                Steps
+                <list style="numbers">
+                    <t>PK_string = point_to_string(Y)</t>
+                    <t>one_string = 0x01 = int_to_string(1, 1)
+                    <vspace/>(a single octet with value 1) </t>
+                    <t>string_to_hash = suite_string || one_string || PK_string || alpha_string</t>
+                    <t>H = encode(string_to_hash)
+                    <vspace/>(the encode function is discussed below) </t>
+                    <t>Output H</t>
+                </list>
+            </t>
+            <t>The encode function is provided by the hash-to-curve suite whose ID is h2cSuite.
+                For more details, see <xref target="I-D.irtf-cfrg-hash-to-curve"/>, Section 8.
+                The domain separation tag DST, a parameter to the hash-to-curve suite, is
+            </t>
+            <t>
+            "ECVRF_" || suite_string || "_" || h2csuite_string || "_"
+            </t>
+            <t>
+                where "ECVRF_" and "_" are ASCII string literals,
+                suite_string is a single octet,
+                and h2csuite_string is the ASCII encoding of the h2cSuite option value.
+            </t>
             </section>
-            
-            <section title="ECVRF_hash_to_curve_Simplified_SWU" anchor="SimpleSWU">
-                
-                <t> The following ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
-                    algorithm implements ECVRF_hash_to_curve using the simplified Shallue-Woestijne <xref target="SW06"/> and Ulas <xref target="Ulas07"/>
-                    algorithm from Section 7 of <xref target="BCIMRT10"/> (see also <xref target="I-D.irtf-cfrg-hash-to-curve"/>).  It can be implemented with running time that is independent of the input alpha (so-called "constant-time"). Generally,
-                    this method can be used
-                    for any curve with prime p that is congruent
-                    to 3 modulo 4; however, the (very unlikely) case of d=0 in step 6 below may need to be handled differently depending on the curve equation, to ensure that the result is a point on the curve.
-                </t>
-                
-                <t>
-                    ECVRF_hash_to_curve_Simplified_SWU(suite_string, Y, alpha_string)
-                </t>
-                <t>
-                    Input:
-                    <list>
-                        <t>suite_string - a single octet specifying ECVRF ciphersuite. </t>
-                        <t>alpha_string - value to be hashed, an octet string</t>
-                        <t>Y - public key, an EC point</t>
-                    </list>
-                </t>
-                <t>
-                    Output:
-                    <list>
-                        <t>H - hashed value, a finite EC point in G
-                        </t>
-                    </list>
-                </t>
-                
-                <t> Fixed options:
-                    <list>
-                        <t> a and b, constants for the Weierstrass form elliptic curve equation y^2 = x^3 + ax +b for the curve E</t>
-                    </list>
-                </t>
-                <t>
-                    Steps:
-                    <list style="numbers">
-                        <t>PK_string = EC2OSP(Y)</t>
-                        <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>t_string = Hash(suite_string || one_string || PK_string || alpha_string)</t>
-                        <t>t = string_to_int(t_string) mod p</t>
-                        <t>r = -(t^2) mod p</t>
-                        <t>d = (r^2 + r) mod p
-                            <vspace/>(d is t^4-t^2 mod p)</t>
-                        <t>If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p
-                            <vspace/>(as long as Hash is secure, the case of d = 0 is an utterly improbably occurrence;
-                            <vspace/>the two cases can be combined into one by computing d_inverse = d^(p-2) mod p)</t>
-                        <t>x = ((-b/a) * (1 + d_inverse)) mod p</t>
-                        <t>w = (x^3 + a*x + b) mod p
-                        <vspace/>(this step evaluates the curve equation)</t>
-                        <t>Let e equal the Legendre symbol of w and p
-                        <vspace/>(see note below on how to compute e)</t>
-                        <t>If e is equal to 0 or 1 then final_x = x; else final_x = r * x mod p
-                            <vspace/>(final_x is the x-coordinate of the output; see note below on how to compute it)</t>
-                        <t>H_prelim = arbitrary_string_to_point(int_to_string(final_x, 2n))
-                            <vspace/> (note: arbitrary_string_to_point will not return INVALID by correctness of Simple SWU)</t>
-                        <t>If cofactor > 1, set H = cofactor * H; else set H = H_prelim</t>
-                        <t>Output H</t>
-                    </list>
-                </t>
-                
-                
-                <t> In order to make this algorithm run in time that is (almost) independent
-                    of the input (so-called "constant-time"), implementers should pay particular attention
-                    to Steps 10 and 11 above.
-                    These steps can be implemented using the following approach.
-                    Let CMOV(result_if_1, result_if_0, selector) be the function that returns result_if_1 when
-                    selector is 1 and  result_if_0 when selector is 0. If arithmetic and CMOV are implemented in constant time, then steps 9 and 10 above can be implemented as follows:
-                    <list>
-                        <t>e = (w ^ ((p-1)/2))+1 mod p
-                        <vspace />(At this point, e is 0, 1, or 2, as an integer.)</t>
-                        <t>Let b = (e+1) / 2, where / denotes integer division with rounding down.
-                        <vspace />(Note carefully that this step is integer, not modular, division. Only the last byte of e is needed for this step. This step converts 0, 1, or 2 to 0 or 1.)</t>
-                        <t>other_x = r * x mod p</t>
-                        <t>final_x = CMOV(x, other_x, b)</t>
-                    </list>
-                    CMOV can be implemented in constant time a variety of ways; for example, by expanding b from a single bit to an all-0 or all-1 string (accomplished by negating b in standard two's-complement arithmetic) and then applying bitwise XOR and AND operations as follows: other_x XOR ((x XOR other_x) AND b)
-                </t>
-                <t>
-                    If having this algorithm run in constant time is not important, then there are much faster algorithms
-                    to compute the Legendre symbol (which is the same as the Jacobi symbol because p is a prime).
-                    See, for example, Section 12.3 of <xref target="ntb"/>.
-                </t>
-                
-            </section>
-            
+
         </section>
         <section title="ECVRF Nonce Generation" anchor="ecvrfNonceGeneration">
         
@@ -1254,8 +1106,9 @@
             
             <list style="symbols">
                 <t> This ciphersuite is identical to ECVRF-P256-SHA256-TAI except that
-                    the ECVRF_hash_to_curve function is as specified in <xref target="SimpleSWU"/> and
-                    suite_string = 0x02 = int_to_string(2, 1).
+                    the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/>
+                    with h2cSuite = P256-SHA256-SSWU-NU-
+                    and suite_string = 0x02 = int_to_string(2, 1).
                 </t>
             </list>
         </t>
@@ -1314,8 +1167,14 @@
     
         <list style="symbols">
         <t> This ciphersuite is identical to ECVRF-EDWARDS25519-SHA512-TAI except that
-        the ECVRF_hash_to_curve function is as specified in <xref target="elligator2"/> and 
-        suite_string = 0x04 = int_to_string(4, 1).
+            the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/>
+            with h2cSuite = edwards25519-SHA512-EDELL2-NU-
+            and suite_string = 0x04 = int_to_string(4, 1).
+        </t>
+        <t>
+            The suite edwards25519-SHA512-EDELL2-NU- is identical to the suite
+            edwards25519-SHA256-EDELL2-NU- defined in <xref target="I-D.irtf-cfrg-hash-to-curve"/>,
+            Section 8, except that the hash function H is SHA-512 rather than SHA-256.
         </t>
         </list>
         </t>
@@ -1927,7 +1786,7 @@
 
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
-        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-01.xml"?>
+        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-05.xml"?>
 
     <reference anchor = "ANSI.X9-62-2005">
         <front>
