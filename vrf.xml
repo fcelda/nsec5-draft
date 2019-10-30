@@ -883,10 +883,10 @@
                 The domain separation tag DST, a parameter to the hash-to-curve suite, is
             </t>
             <t>
-            "ECVRF_" || suite_string || "_" || h2csuite_string || "_"
+            "ECVRF_V01_" || suite_string || "_" || h2csuite_string || "_"
             </t>
             <t>
-                where "ECVRF_" and "_" are ASCII string literals,
+                where "ECVRF_V01_" and "_" are ASCII string literals,
                 suite_string is a single octet,
                 and h2csuite_string is the ASCII encoding of the h2cSuite option value.
             </t>
