@@ -1108,6 +1108,10 @@
                     with h2cSuite = P256-SHA256-SSWU-NU-
                     and suite_string = 0x02 = int_to_string(2, 1).
                 </t>
+                <t>
+                    The hash-to-curve suite P256-SHA256-SSWU-NU- is defined in
+                    <xref target="I-D.irtf-cfrg-hash-to-curve"/> Section 8.2.
+                </t>
             </list>
         </t>
 
@@ -1170,9 +1174,9 @@
             and suite_string = 0x04 = int_to_string(4, 1).
         </t>
         <t>
-            The suite edwards25519-SHA512-EDELL2-NU- is identical to the suite
-            edwards25519-SHA256-EDELL2-NU- defined in <xref target="I-D.irtf-cfrg-hash-to-curve"/>,
-            Section 8, except that the hash function H is SHA-512 rather than SHA-256.
+            The hash-to-curve suite edwards25519-SHA512-EDELL2-NU- is identical to the suite
+            edwards25519-SHA256-EDELL2-NU- defined in <xref target="I-D.irtf-cfrg-hash-to-curve"/>
+            Section 8.5, except that the hash function H is SHA-512 rather than SHA-256.
         </t>
         </list>
         </t>
