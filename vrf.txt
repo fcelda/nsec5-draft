@@ -1850,8 +1850,8 @@ Goldberg, et al.         Expires August 14, 2020               [Page 33]
 Internet-Draft                     VRF                     February 2020
 
 
-      06 - Made some variable names more descriptive.  Added a reference
-      to a python implementation.
+      06 - Made some variable names more descriptive.  Added a few
+      implementation references.
 
 9.  Contributors
 

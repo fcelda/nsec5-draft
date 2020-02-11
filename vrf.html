@@ -1440,7 +1440,7 @@
 <li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; made Verify return beta so unverified proofs don't end up in proof_to_hash; added test vectors.</li>
 <li>04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</li>
 <li>05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</li>
-<li>06 - Made some variable names more descriptive. Added a reference to a python implementation.</li>
+<li>06 - Made some variable names more descriptive. Added a few implementation references.</li>
 </ul>
 
 <p> </p>
