@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-irtf-cfrg-vrf-05" ipr="trust200902">
+<rfc category="std" docName="draft-irtf-cfrg-vrf-06" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -72,7 +72,7 @@
             </address>
         </author>
 
-        <date year="2019" />
+        <date year="2020" />
 
         <workgroup>CFRG</workgroup>
 
@@ -884,18 +884,18 @@
                         <t>one_string = 0x01 = int_to_string(1, 1)
                         <vspace/>(a single octet with value 1) </t>
                         <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string )</t>
-                        <t>truncated_h_string = hash_string[0]...hash_string[31]
+                        <t>r_string = hash_string[0]...hash_string[31]
                             <!--<vspace/>(first 32 octets of hash)--></t>
                         <!--<t>oneTwentyEight_string = 0x80 = int_to_string(128, 1)
                             <vspace/>(a single octet with value 128)</t> -->
                         <t>oneTwentySeven_string = 0x7F = int_to_string(127, 1)
                             <vspace/>(a single octet with value 127)</t>
-                        <!--<t>x0 = truncated_h_string[31] &amp; oneTwentyEight_string
+                        <!--<t>x0 = r_string[31] &amp; oneTwentyEight_string
                             <vspace/>(where &amp; denotes the bit-wise AND)
                             <vspace/>(this step saves highest-order bit of octet 31 in x0)</t>-->
-                        <t>truncated_h_string[31] = truncated_h_string[31] &amp; oneTwentySeven_string
+                        <t>r_string[31] = r_string[31] &amp; oneTwentySeven_string
                             <vspace/>(this step clears the high-order bit of octet 31)</t>
-                        <t>r = string_to_int(truncated_h_string)</t>
+                        <t>r = string_to_int(r_string)</t>
                         <t>u = - A / (1 + 2*(r^2) )  mod p
                             <vspace/>(note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</t>
                         <t>w = u * (u^2 + A*u + 1) mod p
@@ -907,15 +907,15 @@
                         <t>y_coordinate = (final_u - 1) / (final_u + 1) mod p
                             <vspace/>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u)
                             <vspace/>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</t>
-                        <t>h_string = int_to_string (y_coordinate, 32)</t>
+                        <t>y_string = int_to_string (y_coordinate, 32)</t>
                         <!--<t>Form an octet string encoding of an elliptic curve point out of y_coordinate and x0, as follows:
                             <list style="letters">
-                                <t>h_string = int_to_string (y_coordinate, 32)</t>
-                                <t>h_string[31] = h_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't]
+                                <t>y_string = int_to_string (y_coordinate, 32)</t>
+                                <t>y_string[31] = y_string[31] | x0 [TODO: should we do this? hash-to-curve draft doesn't]
                                     <vspace/>(where | denotes the bit-wise OR)</t>
                             </list>
                         </t>-->
-                        <t>H_prelim = string_to_point(h_string)
+                        <t>H_prelim = string_to_point(y_string)
                         <vspace/> (note: string_to_point will not return INVALID by correctness of Elligator2)</t>
                         <t>Set H = cofactor * H_prelim</t>
                         <t>Output H</t>
@@ -995,8 +995,8 @@
                     <list style="numbers">
                         <t>PK_string = EC2OSP(Y)</t>
                         <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </t>
-                        <t>h_string = Hash(suite_string || one_string || PK_string || alpha_string)</t>
-                        <t>t = string_to_int(h_string) mod p</t>
+                        <t>t_string = Hash(suite_string || one_string || PK_string || alpha_string)</t>
+                        <t>t = string_to_int(t_string) mod p</t>
                         <t>r = -(t^2) mod p</t>
                         <t>d = (r^2 + r) mod p
                             <vspace/>(d is t^4-t^2 mod p)</t>
@@ -1236,9 +1236,9 @@
             the octet string does not decode to an EC point.
         </t>
         
-        <t> arbitrary_string_to_point(h_string) = string_to_point(0x02 || h_string)
+        <t> arbitrary_string_to_point(s) = string_to_point(0x02 || s)
         (where 0x02 is a single 
-        octet with value 2, 0x02=int_to_string(2, 1)). The input h_string is a 32-octet string
+        octet with value 2, 0x02=int_to_string(2, 1)). The input s is a 32-octet string
         and the output is either an EC point or "INVALID". </t>
         
         <t>
@@ -1299,7 +1299,7 @@
             the octet string does not decode to an EC point.
         </t>
 
-        <t>arbitrary_string_to_point(h_string) = string_to_point(h_string[0]...h_string[31])</t>
+        <t>arbitrary_string_to_point(s) = string_to_point(s[0]...s[31])</t>
 
         <t>
             The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>, with hLen = 64.
@@ -1419,18 +1419,25 @@
     <section title="Implementation Status" anchor="imp">
 
   <t>
-    A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2
+    A reference C++ implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2
     is available at <eref target ="https://github.com/reyzin/ecvrf" />. This implementation is neither secure nor especially effecient, but can be used to generate
         test vectors.
    </t>
-  
   <t>
-      An implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <eref target="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03" />.
+      A Python implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <eref target="https://github.com/integritychain/draft-irtf-cfrg-vrf-05" />.
   </t>
-  
+
   <t>
-      An implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <eref target="https://crates.io/crates/vrf" />.
+      A C implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <eref target="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03" />.
   </t>
+
+  <t>
+      A Rust implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <eref target="https://crates.io/crates/vrf" />.
+  </t>
+  <t>
+      A C implemention of a variant of this VRF for the secp256k1 curve is available at <eref target="https://github.com/aergoio/secp256k1-vrf" />.
+  </t>
+
 
 
         <t>
@@ -1466,8 +1473,12 @@
     
     <t>
     Open Whisper Systems also uses a VRF very similar to 
-    ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here:
+    ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here
     <eref target="https://whispersystems.org/docs/specifications/xeddsa/" />
+    and here <eref target="https://moderncrypto.org/mail-archive/curves/2017/000925.html" />.
+    Implementations in C and Java are available at <eref target="https://github.com/signalapp/curve25519-java" /> and
+    <eref target="https://github.com/wavesplatform/curve25519-java" />.
+    
     </t> 
     </section>    
 
@@ -1738,6 +1749,7 @@
                 <t> 04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</t>
                 <t> 05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to
                     Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</t>
+                <t> 06 - Made some variable names more descriptive. Added a few implementation references.</t>
             </list>
         </t>
     </section>

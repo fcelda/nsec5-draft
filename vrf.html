@@ -428,8 +428,8 @@
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-05" />
-  <meta name="dct.issued" scheme="ISO8601" content="2019-08" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-06" />
+  <meta name="dct.issued" scheme="ISO8601" content="2020-11" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -453,7 +453,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: February 9, 2020</td>
+<td class="left">Expires: August 14, 2020</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -470,7 +470,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">August 8, 2019</td>
+<td class="right">February 11, 2020</td>
 </tr>
 
     	
@@ -478,7 +478,7 @@
   </table>
 
   <p class="title">Verifiable Random Functions (VRFs)<br />
-  <span class="filename">draft-irtf-cfrg-vrf-05</span></p>
+  <span class="filename">draft-irtf-cfrg-vrf-06</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  </p>
@@ -486,9 +486,9 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 9, 2020.</p>
+<p>This Internet-Draft will expire on August 14, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
@@ -1049,17 +1049,17 @@
 <li>PK_string = point_to_string(Y)</li>
 <li>one_string = 0x01 = int_to_string(1, 1) <br>(a single octet with value 1) </li>
 <li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string )</li>
-<li>truncated_h_string = hash_string[0]...hash_string[31] </li>
+<li>r_string = hash_string[0]...hash_string[31] </li>
 <li>oneTwentySeven_string = 0x7F = int_to_string(127, 1) <br>(a single octet with value 127)</li>
-<li>truncated_h_string[31] = truncated_h_string[31] &amp; oneTwentySeven_string <br>(this step clears the high-order bit of octet 31)</li>
-<li>r = string_to_int(truncated_h_string)</li>
+<li>r_string[31] = r_string[31] &amp; oneTwentySeven_string <br>(this step clears the high-order bit of octet 31)</li>
+<li>r = string_to_int(r_string)</li>
 <li>u = - A / (1 + 2*(r^2) )  mod p <br>(note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)</li>
 <li>w = u * (u^2 + A*u + 1) mod p <br>(this step evaluates the Montgomery equation for Curve25519)</li>
 <li>Let e equal the Legendre symbol of w and p <br>(see note below on how to compute e)</li>
 <li>If e is equal to 1 then final_u = u; else final_u = (-A - u) mod p <br>(note: final_u is the Montgomery u-coordinate of the output; see note below on how to compute it)</li>
 <li>y_coordinate = (final_u - 1) / (final_u + 1) mod p <br>(note 1: y_coordinate is the Edwards coordinate corresponding to final_u) <br>(note 2: the inverse of (final_u + 1) modulo p is guaranteed to exist)</li>
-<li>h_string = int_to_string (y_coordinate, 32)</li>
-<li>H_prelim = string_to_point(h_string) <br> (note: string_to_point will not return INVALID by correctness of Elligator2)</li>
+<li>y_string = int_to_string (y_coordinate, 32)</li>
+<li>H_prelim = string_to_point(y_string) <br> (note: string_to_point will not return INVALID by correctness of Elligator2)</li>
 <li>Set H = cofactor * H_prelim</li>
 <li>Output H</li>
 </ol>
@@ -1113,8 +1113,8 @@
 <ol>
 <li>PK_string = EC2OSP(Y)</li>
 <li>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1 </li>
-<li>h_string = Hash(suite_string || one_string || PK_string || alpha_string)</li>
-<li>t = string_to_int(h_string) mod p</li>
+<li>t_string = Hash(suite_string || one_string || PK_string || alpha_string)</li>
+<li>t = string_to_int(t_string) mod p</li>
 <li>r = -(t^2) mod p</li>
 <li>d = (r^2 + r) mod p <br>(d is t^4-t^2 mod p)</li>
 <li>If d = 0 then d_inverse = 0; else d_inverse = 1/d mod p <br>(as long as Hash is secure, the case of d = 0 is an utterly improbably occurrence; <br>the two cases can be combined into one by computing d_inverse = d^(p-2) mod p)</li>
@@ -1274,7 +1274,7 @@
 <li>The string_to_int function is the OS2IP function specified in Section 4.2 of <a href="#RFC8017" class="xref">[RFC8017]</a>. (This is big endian representation.)</li>
 <li>The point_to_string function converts an EC point to an octet string according to the encoding specified in Section 2.3.3 of <a href="#SECG1" class="xref">[SECG1]</a> with point compression on.  This implies ptLen = 2n + 1 = 33.  (Note that certain software implementations do not introduce a separate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such an implementation, the point_to_string function can be treated as the identity function.) </li>
 <li>The string_to_point function converts an octet string to an EC point according to the encoding specified in Section 2.3.4 of <a href="#SECG1" class="xref">[SECG1]</a>. This function MUST output INVALID if the octet string does not decode to an EC point.  </li>
-<li>arbitrary_string_to_point(h_string) = string_to_point(0x02 || h_string) (where 0x02 is a single octet with value 2, 0x02=int_to_string(2, 1)). The input h_string is a 32-octet string and the output is either an EC point or "INVALID". </li>
+<li>arbitrary_string_to_point(s) = string_to_point(0x02 || s) (where 0x02 is a single octet with value 2, 0x02=int_to_string(2, 1)). The input s is a 32-octet string and the output is either an EC point or "INVALID". </li>
 <li>The hash function Hash is SHA-256 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>, with hLen = 32.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -1297,7 +1297,7 @@
 <li>The string_to_int function interprets the string as an integer in little-endian representation.</li>
 <li>The point_to_string function converts an EC point to an octect string according to the encoding specified in Section 5.1.2 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This implies ptLen = 2n = 32.  (Note that certain software implementations do not introduce a separate elliptic curve point type and instead directly treat the EC point as an octet string per above encoding. When using such and implementation, the point_to_string function can be treated as the identity function.) </li>
 <li>The string_to_point function converts an octet string to an EC point according to the encoding specified in Section 5.1.3 of <a href="#RFC8032" class="xref">[RFC8032]</a>.  This function MUST output INVALID if the octet string does not decode to an EC point.  </li>
-<li>arbitrary_string_to_point(h_string) = string_to_point(h_string[0]...h_string[31])</li>
+<li>arbitrary_string_to_point(s) = string_to_point(s[0]...s[31])</li>
 <li>The hash function Hash is SHA-512 as specified in <a href="#RFC6234" class="xref">[RFC6234]</a>, with hLen = 64.  </li>
 <li>The ECVRF_hash_to_curve function is as specified in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a>.  </li>
 </ul>
@@ -1366,14 +1366,16 @@
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
-<p id="rfc.section.6.p.1">A reference implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>. This implementation is neither secure nor especially effecient, but can be used to generate test vectors.  </p>
-<p id="rfc.section.6.p.2">An implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03">https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.3">An implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <span>&lt;</span><a href="https://crates.io/crates/vrf">https://crates.io/crates/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.4">An implementation of an earlier, slightly different, version of RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.5">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available at <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
-<p id="rfc.section.6.p.6">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.7">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.8">Open Whisper Systems also uses a VRF very similar to ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here: <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> </p>
+<p id="rfc.section.6.p.1">A reference C++ implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>. This implementation is neither secure nor especially effecient, but can be used to generate test vectors.  </p>
+<p id="rfc.section.6.p.2">A Python implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/integritychain/draft-irtf-cfrg-vrf-05">https://github.com/integritychain/draft-irtf-cfrg-vrf-05</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.3">A C implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03">https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.4">A Rust implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <span>&lt;</span><a href="https://crates.io/crates/vrf">https://crates.io/crates/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.5">A C implemention of a variant of this VRF for the secp256k1 curve is available at <span>&lt;</span><a href="https://github.com/aergoio/secp256k1-vrf">https://github.com/aergoio/secp256k1-vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.6">An implementation of an earlier, slightly different, version of RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.7">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available at <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
+<p id="rfc.section.6.p.8">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.9">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.10">Open Whisper Systems also uses a VRF very similar to ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> and here <span>&lt;</span><a href="https://moderncrypto.org/mail-archive/curves/2017/000925.html">https://moderncrypto.org/mail-archive/curves/2017/000925.html</a><span>&gt;</span>.  Implementations in C and Java are available at <span>&lt;</span><a href="https://github.com/signalapp/curve25519-java">https://github.com/signalapp/curve25519-java</a><span>&gt;</span> and <span>&lt;</span><a href="https://github.com/wavesplatform/curve25519-java">https://github.com/wavesplatform/curve25519-java</a><span>&gt;</span>.  </p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#securitycons" id="securitycons">Security Considerations</a>
 </h1>
@@ -1438,6 +1440,7 @@
 <li>03 - Changed Ed25519 conversions to little-endian, to match RFC 8032;  added simple key validation for Ed25519; added Simple SWU cipher suite; clarified Elligator and removed the extra x0 bit, to make Montgomery and Edwards Elligator the same; added domain separation for RSA VRF; improved notation throughout; added nonce generation as a section; changed counter in try-and-increment from four bytes to one, to avoid endian issues; renamed try-and-increment ciphersuites to -TAI; added qLen as a separate paremeter; changed output length to hLen for ECVRF, to match RSAVRF; made Verify return beta so unverified proofs don't end up in proof_to_hash; added test vectors.</li>
 <li>04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</li>
 <li>05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</li>
+<li>06 - Made some variable names more descriptive. Added a reference to a python implementation.</li>
 </ul>
 
 <p> </p>
