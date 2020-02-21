@@ -347,14 +347,14 @@
    hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.
    </t>
    
-   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <xref target="GHMVZ17" /> and <xref target="KRDO17" />). This property is similar
+   <t>There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <xref target="GHMVZ17" /> and <xref target="DGKR18" />). This property is similar
        to the unpredictability achieved by an (ordinary, unkeyed)
        cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable
        from uniform.
     </t>
    <t>
-       Although neither formal definitions nor proofs of this property have appeared in cryptographic literature, the VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy
-       manner. Additionally, the ECVRF also satisifies this property even if the public key was not generated in a trustworthy manner, as long as
+       A formal definition of this property appears in Section 3.2 of <xref target="DGKR18" />.  The VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy
+       manner. Additionally, the ECVRF is believed to also satisify this property even if the public key was not generated in a trustworthy manner, as long as
        the public key satisfies the key validation
    procedure in <xref target="keycheck"/>.</t>
    </section>
@@ -1913,16 +1913,16 @@
             <seriesInfo name="in" value="Proceedings of the 26th Symposium on Operating Systems Principles (SOSP)" />
         </reference>
 
-    <reference anchor = "KRDO17" target = "https://eprint.iacr.org/2016/889">
+    <reference anchor = "DGKR18" target = "https://eprint.iacr.org/2017/573">
         <front>
-            <title>Ouroboros: A Provably Secure Proof-of-Stake Blockchain Protocol</title>
+            <title>Ouroboros Praos: An adaptively-secure, semi-synchronous proof-of-stake protocol</title>
+            <author initials ="B." surname = "David"><organization /></author>
+            <author initials ="P." surname = "Gazi"><organization /></author>
             <author initials ="A." surname = "Kiayias"><organization /></author>
             <author initials ="A." surname = "Russell"><organization /></author>
-            <author initials ="B." surname = "David"><organization /></author>
-            <author initials ="R." surname = "Oliynykov"><organization /></author>
-            <date year = "2017" />
+            <date year = "2018" />
         </front>
-        <seriesInfo name="in" value="Advances in Cryptology - CRYPTO" />
+        <seriesInfo name="in" value="Advances in Cryptology - EUROCRYPT" />
     </reference>
 
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>

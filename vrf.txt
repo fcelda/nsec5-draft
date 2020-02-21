@@ -5,11 +5,11 @@
 CFRG                                                         S. Goldberg
 Internet-Draft                                                 L. Reyzin
 Intended status: Standards Track                       Boston University
-Expires: August 14, 2020                                 D. Papadopoulos
+Expires: August 23, 2020                                 D. Papadopoulos
                            Hong Kong University of Science and Techology
                                                                J. Vcelak
                                                                      NS1
-                                                       February 11, 2020
+                                                       February 20, 2020
 
 
                    Verifiable Random Functions (VRFs)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 14, 2020.
+   This Internet-Draft will expire on August 23, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 1]
+Goldberg, et al.         Expires August 23, 2020                [Page 1]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 2]
+Goldberg, et al.         Expires August 23, 2020                [Page 2]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -165,7 +165,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 3]
+Goldberg, et al.         Expires August 23, 2020                [Page 3]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -221,7 +221,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 4]
+Goldberg, et al.         Expires August 23, 2020                [Page 4]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -277,7 +277,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 5]
+Goldberg, et al.         Expires August 23, 2020                [Page 5]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -323,26 +323,26 @@ Internet-Draft                     VRF                     February 2020
 
    There is, however, a different type of unpredictability that is
    desirable in certain VRF applications (such as [GHMVZ17] and
-   [KRDO17]).  This property is similar to the unpredictability achieved
+   [DGKR18]).  This property is similar to the unpredictability achieved
    by an (ordinary, unkeyed) cryptographic hash function: if the input
    has enough entropy (i.e., cannot be predicted), then the correct
    output is indistinguishable from uniform.
 
-   Although neither formal definitions nor proofs of this property have
-   appeared in cryptographic literature, the VRF schemes presented in
+   A formal definition of this property appears in Section 3.2 of
+   [DGKR18].  The VRF schemes presented in this specification are
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 6]
+Goldberg, et al.         Expires August 23, 2020                [Page 6]
 
 Internet-Draft                     VRF                     February 2020
 
 
-   this specification are believed to satisfy this property if the
-   public key was generated in a trustworthy manner.  Additionally, the
-   ECVRF also satisifies this property even if the public key was not
-   generated in a trustworthy manner, as long as the public key
-   satisfies the key validation procedure in Section 5.6.
+   believed to satisfy this property if the public key was generated in
+   a trustworthy manner.  Additionally, the ECVRF is believed to also
+   satisify this property even if the public key was not generated in a
+   trustworthy manner, as long as the public key satisfies the key
+   validation procedure in Section 5.6.
 
 4.  RSA Full Domain Hash VRF (RSA-FDH-VRF)
 
@@ -389,7 +389,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 7]
+Goldberg, et al.         Expires August 23, 2020                [Page 7]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -445,7 +445,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 8]
+Goldberg, et al.         Expires August 23, 2020                [Page 8]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -501,7 +501,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020                [Page 9]
+Goldberg, et al.         Expires August 23, 2020                [Page 9]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -557,7 +557,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 10]
+Goldberg, et al.         Expires August 23, 2020               [Page 10]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -613,7 +613,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 11]
+Goldberg, et al.         Expires August 23, 2020               [Page 11]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -669,7 +669,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 12]
+Goldberg, et al.         Expires August 23, 2020               [Page 12]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -725,7 +725,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 13]
+Goldberg, et al.         Expires August 23, 2020               [Page 13]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -781,7 +781,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 14]
+Goldberg, et al.         Expires August 23, 2020               [Page 14]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -837,7 +837,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 15]
+Goldberg, et al.         Expires August 23, 2020               [Page 15]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -893,7 +893,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 16]
+Goldberg, et al.         Expires August 23, 2020               [Page 16]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -949,7 +949,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 17]
+Goldberg, et al.         Expires August 23, 2020               [Page 17]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 18]
+Goldberg, et al.         Expires August 23, 2020               [Page 18]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 19]
+Goldberg, et al.         Expires August 23, 2020               [Page 19]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 20]
+Goldberg, et al.         Expires August 23, 2020               [Page 20]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 21]
+Goldberg, et al.         Expires August 23, 2020               [Page 21]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 22]
+Goldberg, et al.         Expires August 23, 2020               [Page 22]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 23]
+Goldberg, et al.         Expires August 23, 2020               [Page 23]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 24]
+Goldberg, et al.         Expires August 23, 2020               [Page 24]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 25]
+Goldberg, et al.         Expires August 23, 2020               [Page 25]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 26]
+Goldberg, et al.         Expires August 23, 2020               [Page 26]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 27]
+Goldberg, et al.         Expires August 23, 2020               [Page 27]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1565,7 +1565,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 28]
+Goldberg, et al.         Expires August 23, 2020               [Page 28]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 29]
+Goldberg, et al.         Expires August 23, 2020               [Page 29]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 30]
+Goldberg, et al.         Expires August 23, 2020               [Page 30]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 31]
+Goldberg, et al.         Expires August 23, 2020               [Page 31]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1789,7 +1789,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 32]
+Goldberg, et al.         Expires August 23, 2020               [Page 32]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 33]
+Goldberg, et al.         Expires August 23, 2020               [Page 33]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1901,7 +1901,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 34]
+Goldberg, et al.         Expires August 23, 2020               [Page 34]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -1935,6 +1935,11 @@ Internet-Draft                     VRF                     February 2020
               Computer and Communications Security (CCS), 2013,
               <https://elligator.cr.yp.to/elligator-20130828.pdf>.
 
+   [DGKR18]   David, B., Gazi, P., Kiayias, A., and A. Russell,
+              "Ouroboros Praos: An adaptively-secure, semi-synchronous
+              proof-of-stake protocol", in Advances in Cryptology -
+              EUROCRYPT, 2018, <https://eprint.iacr.org/2017/573>.
+
    [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
               Zeldovich, "Algorand: Scaling Byzantine Agreements for
               Cryptocurrencies", in Proceedings of the 26th Symposium on
@@ -1946,26 +1951,22 @@ Internet-Draft                     VRF                     February 2020
               Curves", draft-irtf-cfrg-hash-to-curve-01 (work in
               progress), July 2018.
 
+
+
+
+
+
+
+Goldberg, et al.         Expires August 23, 2020               [Page 35]
+
+Internet-Draft                     VRF                     February 2020
+
+
    [I-D.vcelak-nsec5]
               Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
               D. Lawrence, "NSEC5, DNSSEC Authenticated Denial of
               Existence", draft-vcelak-nsec5-08 (work in progress),
               December 2018.
-
-
-
-
-
-
-Goldberg, et al.         Expires August 14, 2020               [Page 35]
-
-Internet-Draft                     VRF                     February 2020
-
-
-   [KRDO17]   Kiayias, A., Russell, A., David, B., and R. Oliynykov,
-              "Ouroboros: A Provably Secure Proof-of-Stake Blockchain
-              Protocol", in Advances in Cryptology - CRYPTO, 2017,
-              <https://eprint.iacr.org/2016/889>.
 
    [MRV99]    Michali, S., Rabin, M., and S. Vadhan, "Verifiable Random
               Functions", in FOCS, 1999,
@@ -2012,8 +2013,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-
-Goldberg, et al.         Expires August 14, 2020               [Page 36]
+Goldberg, et al.         Expires August 23, 2020               [Page 36]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2069,7 +2069,7 @@ A.1.  ECVRF-P256-SHA256-TAI
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 37]
+Goldberg, et al.         Expires August 23, 2020               [Page 37]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2125,7 +2125,7 @@ A.2.  ECVRF-P256-SHA256-SWU
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 38]
+Goldberg, et al.         Expires August 23, 2020               [Page 38]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2181,7 +2181,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 39]
+Goldberg, et al.         Expires August 23, 2020               [Page 39]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2237,7 +2237,7 @@ A.3.  ECVRF-EDWARDS25519-SHA512-TAI
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 40]
+Goldberg, et al.         Expires August 23, 2020               [Page 40]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2293,7 +2293,7 @@ A.4.  ECVRF-EDWARDS25519-SHA512-Elligator2
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 41]
+Goldberg, et al.         Expires August 23, 2020               [Page 41]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2349,7 +2349,7 @@ Internet-Draft                     VRF                     February 2020
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 42]
+Goldberg, et al.         Expires August 23, 2020               [Page 42]
 
 Internet-Draft                     VRF                     February 2020
 
@@ -2405,4 +2405,4 @@ Authors' Addresses
 
 
 
-Goldberg, et al.         Expires August 14, 2020               [Page 43]
+Goldberg, et al.         Expires August 23, 2020               [Page 43]

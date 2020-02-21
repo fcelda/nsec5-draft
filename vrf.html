@@ -429,7 +429,7 @@
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-06" />
-  <meta name="dct.issued" scheme="ISO8601" content="2020-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2020-20" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -453,7 +453,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: August 14, 2020</td>
+<td class="left">Expires: August 23, 2020</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -470,7 +470,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">February 11, 2020</td>
+<td class="right">February 20, 2020</td>
 </tr>
 
     	
@@ -486,7 +486,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 14, 2020.</p>
+<p>This Internet-Draft will expire on August 23, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -681,8 +681,8 @@
 <h1 id="rfc.section.3.4">
 <a href="#rfc.section.3.4">3.4.</a> A random-oracle-like unpredictability property</h1>
 <p id="rfc.section.3.4.p.1">Pseudorandomness, as defined in <a href="#pseudodef" class="xref">Section 3.3</a>, does not hold if the VRF keys were generated adversarially. For instance, if an adversary outputs VRF keys that are deterministically generated (or hard-coded and publicly known), then the outputs are easily derived by anyone.  </p>
-<p id="rfc.section.3.4.p.2">There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <a href="#GHMVZ17" class="xref">[GHMVZ17]</a> and <a href="#KRDO17" class="xref">[KRDO17]</a>). This property is similar to the unpredictability achieved by an (ordinary, unkeyed) cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable from uniform.  </p>
-<p id="rfc.section.3.4.p.3">Although neither formal definitions nor proofs of this property have appeared in cryptographic literature, the VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy manner. Additionally, the ECVRF also satisifies this property even if the public key was not generated in a trustworthy manner, as long as the public key satisfies the key validation procedure in <a href="#keycheck" class="xref">Section 5.6</a>.</p>
+<p id="rfc.section.3.4.p.2">There is, however, a different type of unpredictability that is desirable in certain VRF applications (such as <a href="#GHMVZ17" class="xref">[GHMVZ17]</a> and <a href="#DGKR18" class="xref">[DGKR18]</a>). This property is similar to the unpredictability achieved by an (ordinary, unkeyed) cryptographic hash function: if the input has enough entropy (i.e., cannot be predicted), then the correct output is indistinguishable from uniform.  </p>
+<p id="rfc.section.3.4.p.3">A formal definition of this property appears in Section 3.2 of <a href="#DGKR18" class="xref">[DGKR18]</a>.  The VRF schemes presented in this specification are believed to satisfy this property if the public key was generated in a trustworthy manner. Additionally, the ECVRF is believed to also satisify this property even if the public key was not generated in a trustworthy manner, as long as the public key satisfies the key validation procedure in <a href="#keycheck" class="xref">Section 5.6</a>.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#fdh" id="fdh">RSA Full Domain Hash VRF (RSA-FDH-VRF)</a>
 </h1>
@@ -1512,6 +1512,11 @@
 <a>Bernstein, D.</a>, <a>Hamburg, M.</a>, <a>Krasnova, A.</a> and <a>T. Lange</a>, "<a href="https://elligator.cr.yp.to/elligator-20130828.pdf">Elligator: elliptic-curve points indistinguishable from uniform random strings</a>", in ACM SIGSAC Conference on Computer and Communications Security (CCS), 2013.</td>
 </tr>
 <tr>
+<td class="reference"><b id="DGKR18">[DGKR18]</b></td>
+<td class="top">
+<a>David, B.</a>, <a>Gazi, P.</a>, <a>Kiayias, A.</a> and <a>A. Russell</a>, "<a href="https://eprint.iacr.org/2017/573">Ouroboros Praos: An adaptively-secure, semi-synchronous proof-of-stake protocol</a>", in Advances in Cryptology - EUROCRYPT, 2018.</td>
+</tr>
+<tr>
 <td class="reference"><b id="GHMVZ17">[GHMVZ17]</b></td>
 <td class="top">
 <a>Gilad, Y.</a>, <a>Hemo, R.</a>, <a>Micali, Y.</a>, <a>Vlachos, Y.</a> and <a>Y. Zeldovich</a>, "<a href="https://eprint.iacr.org/2017/454">Algorand: Scaling Byzantine Agreements for Cryptocurrencies</a>", in Proceedings of the 26th Symposium on Operating Systems Principles (SOSP), 2017.</td>
@@ -1525,11 +1530,6 @@
 <td class="reference"><b id="I-D.vcelak-nsec5">[I-D.vcelak-nsec5]</b></td>
 <td class="top">
 <a>Vcelak, J.</a>, <a>Goldberg, S.</a>, <a>Papadopoulos, D.</a>, <a>Huque, S.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/draft-vcelak-nsec5-08">NSEC5, DNSSEC Authenticated Denial of Existence</a>", Internet-Draft draft-vcelak-nsec5-08, December 2018.</td>
-</tr>
-<tr>
-<td class="reference"><b id="KRDO17">[KRDO17]</b></td>
-<td class="top">
-<a>Kiayias, A.</a>, <a>Russell, A.</a>, <a>David, B.</a> and <a>R. Oliynykov</a>, "<a href="https://eprint.iacr.org/2016/889">Ouroboros: A Provably Secure Proof-of-Stake Blockchain Protocol</a>", in Advances in Cryptology - CRYPTO, 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="MRV99">[MRV99]</b></td>
