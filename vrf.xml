@@ -460,7 +460,7 @@
                 Steps:
                 <list style="numbers">
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
+                    <t>EM = MGF1(alpha_string || I2OSP(k, 4) || I2OSP(n, k) || one_string, k - 1)</t>
                     <t>m = OS2IP(EM)</t>
                     <t>s = RSASP1(K, m)</t>
                     <t>pi_string = I2OSP(s, k)</t>
@@ -499,7 +499,7 @@
                 Steps:
                 <list style="numbers">
                     <t>two_string = 0x02 = I2OSP(2, 1), a single octet with value 2</t>
-                    <t>beta_string = Hash(two_string || pi_string)</t>
+                    <t>beta_string = Hash(pi_string || two_string)</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -534,7 +534,7 @@
                     <t>m = RSAVP1((n, e), s)</t>
                     <t>EM = I2OSP(m, k - 1)</t>
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM' = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
+                    <t>EM' = MGF1(alpha_string || I2OSP(k, 4) || I2OSP(n, k) || one_string, k - 1)</t>
                     <t>
                         If EM and EM' are equal, output ("VALID", RSAFDHVRF_proof_to_hash(pi_string));
                         else output "INVALID".
