@@ -563,6 +563,17 @@
         </t>
         
         <t>
+            Notation used:
+            <list>
+                <t>Elliptic curve operations are written in additive notation, with P+Q denoting point addition and x*P denoting scalar multiplication of a point P by a scalar x</t>
+                <t>x^y - x raised to the power y</t>
+                <t>x*y - x multiplied by y</t>
+                <t>s || t - concatenation of octet strings s and t</t>
+            </list>
+        </t>
+
+        
+        <t>
             Fixed options (specified in <xref target="suites"/>):
             <list>
                 <t>F - finite field</t>
@@ -576,53 +587,36 @@
                 <t>B - generator of group G</t>
                 <t>Hash - cryptographic hash function</t>
                 <t>hLen - output length in octets of Hash; must be at least 2n</t>
-                <t>suite_string - a single nonzero octet specifying the ECVRF 
-                ciphersuite, which determines the above options</t>
+                <t>ECVRF_hash_to_curve - a function that hashes strings to an EC point.</t>
+                <t>ECVRF_nonce_generation - a function that derives a pseudorandom nonce
+                    from SK and the input as part of ECVRF proving.</t>
+                <t>suite_string - a single nonzero octet specifying the ECVRF
+                ciphersuite, which determines the above options as well as type conversions and parameter generation </t>
             </list>
 
         </t>
-        
         <t>
-            Notation and primitives used:
-            <list>
-                <t>Elliptic curve operations are written in additive notation, with P+Q denoting point addition and x*P denoting scalar multiplication of a point P by a scalar x</t>
-                <t>x^y - a raised to the power b</t>
-                <t>x*y - a multiplied by b</t>
-                <t>|| - octet string concatenation</t>
-                <t>ECVRF_hash_to_curve - collision resistant hash of strings
-                    to an EC point; options described in <xref target="ecvrfH2C" /> and specified in <xref target="suites"/>.</t>
-                <t>ECVRF_nonce_generation - derives a pseudorandom nonce
-                    from SK and the input as part of ECVRF proving.
-                    Specified in <xref target="suites"/></t>
-                <t>ECVRF_hash_points - collision resistant hash of EC points
-                    to an integer. Specified in <xref target="ecvrfHashPoints"/>.</t>
-            </list>
-        </t>
-        <t>
-            Type conversions:
+            Type conversions (specified in <xref target="suites"/>):
             <list>
                 <t>int_to_string(a, len) - conversion of nonnegative integer a to
-                    to octet string of length len as specified in <xref target="suites"/>.</t>
+                    to octet string of length len</t>
                 <t> string_to_int(a_string) - conversion of an octet string a_string
-                    to a nonnegative integer as specified in <xref target="suites"/>.</t>
-                <t>point_to_string - conversion of EC point to an ptLen-octet string
-                    as specified in <xref target="suites"/></t>
-                <t>string_to_point - conversion of an ptLen-octet string to EC point
-                    as specified in <xref target="suites"/>.
+                    to a nonnegative integer</t>
+                <t>point_to_string - conversion of EC point to an ptLen-octet string</t>
+                <t>string_to_point - conversion of an ptLen-octet string to EC point.
                     string_to_point returns INVALID if the octet string does not convert to a valid EC point.</t>
-                <t>arbitrary_string_to_point - conversion of an arbitrary octet string to an
-                    EC point as specified in <xref target="suites"/></t>
                 <t>
-                    Note that with certain software libraries 
-                    (for big integer and elliptic curve arithmetic), 
-                    the int_to_string and point_to_string conversions are not needed. 
-                    For example, in some implementations, EC point 
-                    operations will take octet strings as inputs and 
-                    produce octet strings as outputs, without introducing 
+                    Note that with certain software libraries
+                    (for big integer and elliptic curve arithmetic),
+                    the int_to_string and point_to_string conversions are not needed.
+                    For example, in some implementations, EC point
+                    operations will take octet strings as inputs and
+                    produce octet strings as outputs, without introducing
                     a separate elliptic curve point type.
                 </t>
             </list>
         </t>
+
 
           <t>
             Parameters used (the generation of these parameters is specified in <xref target="suites"/>):
@@ -670,7 +664,7 @@
                     <t>h_string = point_to_string(H)</t>
                     <t>Gamma = x*H</t>
                     <t>k = ECVRF_nonce_generation(SK, h_string)</t>
-                    <t>c = ECVRF_hash_points(H, Gamma, k*B, k*H)</t>
+                    <t>c = ECVRF_hash_points(H, Gamma, k*B, k*H) (see <xref target="ecvrfHashPoints"/>)</t>
                     <t>s = (k + c*x) mod q</t>
                     <t>pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, qLen)</t>
                     <t>Output pi_string</t>
@@ -708,7 +702,7 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>D = ECVRF_decode_proof(pi_string)</t>
+                    <t>D = ECVRF_decode_proof(pi_string) (see <xref target="ecvrfDecodeProof"/>)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
@@ -743,13 +737,13 @@
             <t>
                 Steps:
                 <list style="numbers">
-                    <t>D = ECVRF_decode_proof(pi_string)</t>
+                    <t>D = ECVRF_decode_proof(pi_string) (see <xref target="ecvrfDecodeProof"/>)</t>
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(Gamma, c, s) = D</t>
                     <t>H = ECVRF_hash_to_curve(Y, alpha_string)</t>
                     <t>U = s*B - c*Y</t>
                     <t>V = s*H - c*Gamma</t>
-                    <t>c' = ECVRF_hash_points(H, Gamma, U, V)</t>
+                    <t>c' = ECVRF_hash_points(H, Gamma, U, V) (see <xref target="ecvrfHashPoints"/>)</t>
                     <t>
                         If c and c' are equal, output ("VALID", ECVRF_proof_to_hash(pi_string));
                         else output "INVALID"
@@ -771,7 +765,7 @@
             <xref target="prehash" /> for further discussion.
             </t>
 
-            <t>The algorithms in this section are not compatible with each other; the choice of algorithm is made in <xref target="suites"/>.</t>
+            <t>This section specifies a number of such algorithms, which are not compatible with each other. The choice of a particular algorithm from the options specified in this section is made in <xref target="suites"/>.</t>
             
             <section title="ECVRF_hash_to_curve_try_and_increment" anchor="ecvrfH2C1">
             
@@ -812,6 +806,14 @@
                     <t>H - hashed value, a finite EC point in G </t>
                 </list>
             </t>
+            <t>
+                Fixed option  (specified in <xref target="suites"/>):
+                <list>
+                <t>arbitrary_string_to_point - conversion of an arbitrary octet string to an
+                    EC point.</t>
+                </list>
+            </t>
+
             
             <t>
                 Steps:
@@ -835,16 +837,19 @@
             
             </section>
 
-            <section title="ECVRF_hash_to_curve_h2csuite" anchor="h2csuite">
+            <section title="ECVRF_hash_to_curve_h2c_suite" anchor="h2csuite">
 
-            <t>The ECVRF_hash_to_curve_h2csuite(Y, alpha_string) algorithm
-                implements ECVRF_hash_to_curve using
-                a hash-to-curve suite as defined in
+            <t>The ECVRF_hash_to_curve_h2c_suite(Y, alpha_string) algorithm
+                implements ECVRF_hash_to_curve using one of the several
+                hash-to-curve options defined in
                 <xref target="I-D.irtf-cfrg-hash-to-curve"/>.
+                The specific choice of the hash-to-curve option
+                (called Suite ID in <xref target="I-D.irtf-cfrg-hash-to-curve"/>)
+                is given by the h2c_suite_ID_string parameter.
             </t>
 
             <t>
-                ECVRF_hash_to_curve_h2csuite(Y, alpha_string)
+                ECVRF_hash_to_curve_h2c_suite(Y, alpha_string)
             </t>
             <t>
                 Input:
@@ -861,9 +866,9 @@
                 </list>
             </t>
             <t>
-                Fixed options (specified in <xref target="suites"/>):
+                Fixed option (specified in <xref target="suites"/>):
                 <list>
-                    <t>h2cSuite - a hash-to-curve suite ID (see discussion below)</t>
+                    <t>h2c_suite_ID_string - a hash-to-curve suite ID, encoded in ASCII (see discussion below)</t>
                 </list>
             </t>
             <t>
@@ -876,26 +881,25 @@
                     <t>Output H</t>
                 </list>
             </t>
-            <t>The encode function is provided by the hash-to-curve suite whose ID is h2cSuite.
-                For more details, see <xref target="I-D.irtf-cfrg-hash-to-curve"/>, Section 8.
-                The domain separation tag DST, a parameter to the hash-to-curve suite, is
-            </t>
-            <t>
-            "ECVRF_" || h2csuite_string || suite_string || one_string
-            </t>
-            <t>
-                where "ECVRF_" is an ASCII string literal,
-                suite_string is a single octet,
-                one_string = 0x01 = int_to_string(1, 1), a single octet with value 1,
-                and h2csuite_string is the ASCII encoding of the h2cSuite option value.
+            <t>The encode function is provided by the hash-to-curve suite whose ID is h2c_suite_ID_string, as specified in
+                <xref target="I-D.irtf-cfrg-hash-to-curve"/>, Section 8.
+                The domain separation tag DST, a parameter to the hash-to-curve suite, SHALL be set to
+            <list>
+                <t>
+                    "ECVRF_" || h2c_suite_ID_string || suite_string || one_string
+                </t>
+            </list>
+                where "ECVRF_" is represented as a 6-byte ASCII encoding (in hexadecimal, octets 45 43 56 52 46 5F) and one_string = 0x01 = int_to_string(1, 1), a single octet with value 1.
             </t>
             </section>
 
         </section>
         <section title="ECVRF Nonce Generation" anchor="ecvrfNonceGeneration">
         
-        <t>The following subroutines generate the 
-        nonce value k in a deterministic pseudorandom fashion.</t>
+        <t>The following algorithms generate the
+        nonce value k in a deterministic pseudorandom fashion.
+            This section specifies a number of such algorithms, which are not compatible with each other.
+            The choice of a particular algorithm from the options specified in this section is made in Section 5.5.</t>
         
             <section title = "ECVRF Nonce Generation From RFC 6979" anchor="nonceP256">
                 
@@ -1002,7 +1006,7 @@
                    
         </section>
 
-        <section title="ECVRF Decode Proof">
+        <section title="ECVRF Decode Proof" anchor="ecvrfDecodeProof">
             <t>
                 ECVRF_decode_proof(pi_string)
             </t>
@@ -1047,7 +1051,7 @@
         <t>This document defines ECVRF-P256-SHA256-TAI as follows:
         <list style="symbols">
         <t>
-        suite_string = 0x01 = int_to_string(1, 1). </t>
+        suite_string = 0x01 = int_to_string(1, 1), a single octet with value 1.</t>
         <t>
             The EC group G is the NIST P-256 elliptic curve, with curve parameters
             as specified in <xref target="FIPS-186-4"></xref> (Section D.1.2.3)
@@ -1085,40 +1089,33 @@
             the octet string does not decode to an EC point.
         </t>
         
-        <t> arbitrary_string_to_point(s) = string_to_point(0x02 || s)
-        (where 0x02 is a single 
-        octet with value 2, 0x02=int_to_string(2, 1)). The input s is a 32-octet string
-        and the output is either an EC point or "INVALID". </t>
         
         <t>
             The hash function Hash is SHA-256 as specified in <xref target="RFC6234"/>, with hLen = 32.
         </t>
         <t>
-            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>, with arbitrary_string_to_point(s) = string_to_point(0x02 || s)
+                  (where 0x02 is a single
+                  octet with value 2, 0x02=int_to_string(2, 1)). The input s to arbitrary_string_to_point is a 32-octet string
+                  and the output is either an EC point or "INVALID".
         </t>
         </list>
         </t>
         
-        <t>This document defines ECVRF-P256-SHA256-SWU as follows:
-            
-            <list style="symbols">
-                <t> This ciphersuite is identical to ECVRF-P256-SHA256-TAI except that
-                    the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/>
-                    with h2cSuite = P256_XMD:SHA-256_SSWU_NU_
-                    and suite_string = 0x02 = int_to_string(2, 1).
-                </t>
-                <t>
-                    The hash-to-curve suite P256_XMD:SHA-256_SSWU_NU_ is defined in
-                    <xref target="I-D.irtf-cfrg-hash-to-curve"/> Section 8.1.
-                </t>
-            </list>
+        <t>This document defines ECVRF-P256-SHA256-SWU as identical to ECVRF-P256-SHA256-TAI, except that:
+                <list style="symbols">
+                    <t> suite_string = 0x02 = int_to_string(2, 1), a single octet with value 2.</t>
+                    <t>the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/>
+                        with h2c_suite_ID_string = P256_XMD:SHA-256_SSWU_NU_
+                        (the suite is defined in <xref target="I-D.irtf-cfrg-hash-to-curve"/> Section 8.1)</t>
+                </list>
         </t>
 
         
         <t>This document defines ECVRF-EDWARDS25519-SHA512-TAI as follows:
         <list style="symbols">
         <t>
-        suite_string = 0x03 = int_to_string(3, 1). </t>
+        suite_string = 0x03 = int_to_string(3, 1), a single octet with value 3. </t>
         <t>
             The EC group G is the edwards25519
             elliptic curve with parameters defined in Table 1 of
@@ -1153,28 +1150,26 @@
             the octet string does not decode to an EC point.
         </t>
 
-        <t>arbitrary_string_to_point(s) = string_to_point(s[0]...s[31])</t>
 
         <t>
             The hash function Hash is SHA-512 as specified in <xref target="RFC6234"/>, with hLen = 64.
         </t>
         <t>
-            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>.
+            The ECVRF_hash_to_curve function is as specified in <xref target="ecvrfH2C1"/>, with arbitrary_string_to_point(s) = string_to_point(s[0]...s[31]).
         </t>
         </list>
         </t>
    
-   <t>This document defines ECVRF-EDWARDS25519-SHA512-Elligator2 as follows:
+   <t>This document defines ECVRF-EDWARDS25519-SHA512-Elligator2 as identical to ECVRF-EDWARDS25519-SHA512-TAI, except:
     
         <list style="symbols">
-        <t> This ciphersuite is identical to ECVRF-EDWARDS25519-SHA512-TAI except that
-            the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/>
-            with h2cSuite = edwards25519_XMD:SHA-512_ELL2_NU_
-            and suite_string = 0x04 = int_to_string(4, 1).
-        </t>
         <t>
-            The hash-to-curve suite edwards25519_XMD:SHA-512_ELL2_NU_ is defined in
-            <xref target="I-D.irtf-cfrg-hash-to-curve"/> Section 8.4.
+            suite_string = 0x04 = int_to_string(4, 1), a single octet with value 4.
+        </t>
+        <t>the ECVRF_hash_to_curve function is as specified in <xref target="h2csuite"/> with
+            h2c_suite_ID_string = edwards25519_XMD:SHA-512_ELL2_NU_
+            (the suite is defined in
+            <xref target="I-D.irtf-cfrg-hash-to-curve"/> Section 8.4.)
         </t>
         </list>
         </t>
@@ -1649,6 +1644,8 @@
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.8032.xml"?>
         <?rfc include="reference.RFC.6979.xml"?>
+        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-05.xml"?>
+
 
         <reference anchor="FIPS-186-4" target = "https://csrc.nist.gov/publications/detail/fips/186/4/final">
             <front>
@@ -1672,13 +1669,6 @@
 
     <references title="Informative References">
 
-        <reference anchor="ntb" target="http://www.shoup.net/ntb/ntb-v2.pdf">
-            <front>
-                <title>A Computational Introduction to Number Theory and Algebra</title>
-                <author initials="V." surname="Shoup"><organization /></author>
-                <date year="2008" />
-            </front>
-        </reference>
 
         <reference anchor="PWHVNRG17" target="https://eprint.iacr.org/2017/099.pdf">
             <front>
@@ -1706,50 +1696,6 @@
             <seriesInfo name="in" value="FOCS" />
         </reference>
 
-        <reference anchor="BHKT13" target = "https://elligator.cr.yp.to/elligator-20130828.pdf">
-            <front>
-                <title>Elligator: elliptic-curve points indistinguishable from uniform random strings</title>
-                <author initials = "D.J." surname = "Bernstein"><organization /></author>
-                <author initials = "M." surname = "Hamburg"><organization /></author>
-                <author initials = "A." surname = "Krasnova"><organization /></author>
-                <author initials = "T." surname = "Lange"><organization /></author>
-                <date year = "2013"/>
-            </front>
-            <seriesInfo name="in" value="ACM SIGSAC Conference on Computer and Communications Security (CCS)" />
-        </reference>
-        
-        <reference anchor="BCIMRT10" target = "https://eprint.iacr.org/2009/340">
-            <front>
-                <title>Efficient Indifferentiable Hashing into Ordinary Elliptic Curves</title>
-                <author initials= "E." surname="Brier"><organization /></author>
-                <author initials= "J.-S." surname="Coron"><organization /></author>
-                <author initials= "T." surname="Icart"><organization /></author>
-                <author initials= "D." surname="Madore"><organization /></author>
-                <author initials= "H." surname="Randriam"><organization /></author>
-                <author initials= "M." surname="Tibouchi"><organization /></author>
-                <date year="2010" />
-            </front>
-            <seriesInfo name="in" value="Advances in Cryptology - CRYPTO" />
-        </reference>
-        
-        <reference anchor="SW06" target = "https://works.bepress.com/andrew_shallue/1/">
-            <front>
-                <title>Construction of rational points on elliptic curves over finite fields</title>
-                <author initials ="A." surname = "Shallue"><organization /></author>
-                <author initials ="C." surname = "van de Woestijne"><organization /></author>
-                <date year = "2006" />
-            </front>
-        <seriesInfo name="in" value="Algorithmic Number Theory - ANTS" />
-        </reference>
-    
-        <reference anchor="Ulas07" target = "https://arxiv.org/abs/0706.1448">
-            <front>
-                <title>Rational points on certain hyperelliptic curves over finite fields</title>
-                <author initials ="M." surname = "Ulas"><organization /></author>
-                <date year = "2007" />
-            </front>
-        <seriesInfo name="in" value="Bull. Polish Acad. Sci. Math." />
-        </reference>
         
         <reference anchor = "X25519" target = "https://cr.yp.to/ecdh.html#validate">
             <front>
@@ -1786,7 +1732,6 @@
 
         <?rfc include="reference.I-D.vcelak-nsec5.xml"?>
 
-        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-05.xml"?>
 
     <reference anchor = "ANSI.X9-62-2005">
         <front>
@@ -1801,6 +1746,7 @@
     
     
     <section title="Test Vectors for the ECVRFs">
+        <t>THESE TEST VECTORS ARE OUT OF DATE GIVEN THE CHANGES TO THE SPECIFICATION</t>
         <t>The test vectors in this section were genereated using the reference implementation at <eref target ="https://github.com/reyzin/ecvrf" />.</t>
         <section title="ECVRF-P256-SHA256-TAI">
             <t>These two example secret keys and messages are taken from Appendix A.2.5 of <xref target="RFC6979"/>.</t>
