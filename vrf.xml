@@ -1644,7 +1644,7 @@
         <?rfc include="reference.RFC.6234.xml"?>
         <?rfc include="reference.RFC.8032.xml"?>
         <?rfc include="reference.RFC.6979.xml"?>
-        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-05.xml"?>
+        <?rfc include="reference.I-D.draft-irtf-cfrg-hash-to-curve-07.xml"?>
 
 
         <reference anchor="FIPS-186-4" target = "https://csrc.nist.gov/publications/detail/fips/186/4/final">
