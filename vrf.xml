@@ -1617,6 +1617,7 @@
                 <t> 05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to
                     Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</t>
                 <t> 06 - Made some variable names more descriptive. Added a few implementation references.</t>
+                <t> 07 - Incorporated hash-to-curve draft by reference to replace our own Elligator2 and SWU. Clarified discussion of EC parameters and functions.</t>
             </list>
         </t>
     </section>
@@ -1631,7 +1632,7 @@
             Asaf Ziv (Facebook).
             Shumon Huque, David C. Lawerence, Trevor Perrin, Annie Yousar, Stanislav Smyshlyaev, Liliya Akhmetzyanova,
             Tony Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood, Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, Gary Belvinm, Piotr Nojszewski, Gorka Irazoqui Apecechea, and Mario Cao Cueto provided
-            valuable input to this draft.
+            valuable input to this draft. Riad Wahby was very helpful with the integration of the hash-to-curve draft.
         </t>
     </section>
 

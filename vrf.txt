@@ -1641,6 +1641,10 @@ Internet-Draft                     VRF                          May 2020
       06 - Made some variable names more descriptive.  Added a few
       implementation references.
 
+      07 - Incorporated hash-to-curve draft by reference to replace our
+      own Elligator2 and SWU.  Clarified discussion of EC parameters and
+      functions.
+
 9.  Contributors
 
    This document also would not be possible without the work of Moni
@@ -1650,7 +1654,8 @@ Internet-Draft                     VRF                          May 2020
    Arcieri, Sergey Gorbunov, Sam Scott, Nick Sullivan, Christopher Wood,
    Marek Jankowski, Derek Ting-Haye Leung, Adam Suhl, Gary Belvinm,
    Piotr Nojszewski, Gorka Irazoqui Apecechea, and Mario Cao Cueto
-   provided valuable input to this draft.
+   provided valuable input to this draft.  Riad Wahby was very helpful
+   with the integration of the hash-to-curve draft.
 
 10.  References
 
@@ -1667,11 +1672,6 @@ Internet-Draft                     VRF                          May 2020
               C. Wood, "Hashing to Elliptic Curves", draft-irtf-cfrg-
               hash-to-curve-07 (work in progress), April 2020.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
 
 
 
@@ -1681,6 +1681,11 @@ Goldberg, et al.        Expires November 23, 2020              [Page 30]
 
 Internet-Draft                     VRF                          May 2020
 
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC5114]  Lepinski, M. and S. Kent, "Additional Diffie-Hellman
               Groups for Use with IETF Standards", RFC 5114,
@@ -1724,11 +1729,6 @@ Internet-Draft                     VRF                          May 2020
               proof-of-stake protocol", in Advances in Cryptology -
               EUROCRYPT, 2018, <https://eprint.iacr.org/2017/573>.
 
-   [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
-              Zeldovich, "Algorand: Scaling Byzantine Agreements for
-              Cryptocurrencies", in Proceedings of the 26th Symposium on
-              Operating Systems Principles (SOSP), 2017,
-              <https://eprint.iacr.org/2017/454>.
 
 
 
@@ -1737,6 +1737,12 @@ Goldberg, et al.        Expires November 23, 2020              [Page 31]
 
 Internet-Draft                     VRF                          May 2020
 
+
+   [GHMVZ17]  Gilad, Y., Hemo, R., Micali, Y., Vlachos, Y., and Y.
+              Zeldovich, "Algorand: Scaling Byzantine Agreements for
+              Cryptocurrencies", in Proceedings of the 26th Symposium on
+              Operating Systems Principles (SOSP), 2017,
+              <https://eprint.iacr.org/2017/454>.
 
    [I-D.vcelak-nsec5]
               Vcelak, J., Goldberg, S., Papadopoulos, D., Huque, S., and
@@ -1757,12 +1763,6 @@ Internet-Draft                     VRF                          May 2020
 
    [X25519]   Bernstein, D., "How do I validate Curve25519 public
               keys?", 2006, <https://cr.yp.to/ecdh.html#validate>.
-
-
-
-
-
-
 
 
 
