@@ -460,7 +460,7 @@
                 Steps:
                 <list style="numbers">
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM = MGF1(alpha_string || I2OSP(k, 4) || I2OSP(n, k) || one_string, k - 1)</t>
+                    <t>EM = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) || alpha_string, k - 1)</t>
                     <t>m = OS2IP(EM)</t>
                     <t>s = RSASP1(K, m)</t>
                     <t>pi_string = I2OSP(s, k)</t>
@@ -499,7 +499,7 @@
                 Steps:
                 <list style="numbers">
                     <t>two_string = 0x02 = I2OSP(2, 1), a single octet with value 2</t>
-                    <t>beta_string = Hash(pi_string || two_string)</t>
+                    <t>beta_string = Hash(two_string || pi_string)</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -534,7 +534,7 @@
                     <t>m = RSAVP1((n, e), s)</t>
                     <t>EM = I2OSP(m, k - 1)</t>
                     <t>one_string = 0x01 = I2OSP(1, 1), a single octet with value 1</t>
-                    <t>EM' = MGF1(alpha_string || I2OSP(k, 4) || I2OSP(n, k) || one_string, k - 1)</t>
+                    <t>EM' = MGF1(one_string || I2OSP(k, 4) || I2OSP(n, k) ||  alpha_string, k - 1)</t>
                     <t>
                         If EM and EM' are equal, output ("VALID", RSAFDHVRF_proof_to_hash(pi_string));
                         else output "INVALID".
@@ -706,7 +706,7 @@
                     <t>If D is "INVALID", output "INVALID" and stop</t>
                     <t>(Gamma, c, s) = D</t>
                     <t>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </t>
-                    <t>beta_string = Hash(point_to_string(cofactor * Gamma) || suite_string || three_string)</t>
+                    <t>beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</t>
                     <t>Output beta_string</t>
                 </list>
             </t>
@@ -825,7 +825,7 @@
                     <t>While H is "INVALID" or H is EC point at infinity:
                     <list style="letters">
                         <t>ctr_string = int_to_string(ctr, 1)</t>
-                        <t>hash_string = Hash(PK_string || alpha_string || ctr_string || suite_string || one_string)</t>
+                        <t>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</t>
                         <t>H = arbitrary_string_to_point(hash_string)</t>
                         <t>If H is not "INVALID" and cofactor > 1, set H = cofactor * H</t>
                         <t>ctr = ctr + 1</t>
@@ -886,10 +886,10 @@
                 The domain separation tag DST, a parameter to the hash-to-curve suite, SHALL be set to
             <list>
                 <t>
-                    "ECVRF_" || h2c_suite_ID_string || suite_string || one_string
+                    "ECVRF_" || h2c_suite_ID_string || suite_string
                 </t>
             </list>
-                where "ECVRF_" is represented as a 6-byte ASCII encoding (in hexadecimal, octets 45 43 56 52 46 5F) and one_string = 0x01 = int_to_string(1, 1), a single octet with value 1.
+                where "ECVRF_" is represented as a 6-byte ASCII encoding (in hexadecimal, octets 45 43 56 52 46 5F).
             </t>
             </section>
 
@@ -990,11 +990,11 @@
                 Steps:
                 <list style="numbers">
                     <t>two_string = 0x02 = int_to_string(2, 1), a single octet with value 2 </t>
-                    <t>Initialize str to the empty string</t>
+                    <t>Initialize str = suite_string || two_string </t>
                     <t>for PJ in [P1, P2, ... PM]:
                        <vspace/>str = str || point_to_string(PJ)
                     </t>
-                    <t>c_string = Hash(str || suite_string || two_string)</t>
+                    <t>c_string = Hash(str)</t>
                     <t>truncated_c_string = c_string[0]...c_string[n-1] 
                     <!--(first n octets of c_string)--></t>
                     <t>c = string_to_int(truncated_c_string)</t>
@@ -1514,15 +1514,28 @@
          to equal each other or to any queries made to the hash function for the same SK and 
          different alpha. This is indeed the case for the RSA-FDH-VRF defined in this document, because the first octets
          of the input to the hash function used in MGF1 and in proof_to_hash are different.
+     </t>
+
+     <t>
          This is also the case for the ECVRF ciphersuites defined in this document, because:
          <list style="symbols">
           <t>inputs to the hash function used during nonce_generation are unlikely to equal 
-          to inputs given to hash_to_curve, proof_to_hash, and hash_points. This
+          inputs used in hash_to_curve, proof_to_hash, and hash_points. This
           follows since nonce_generation inputs a secret to the hash function that is not used by 
           honest parties as input to any other hash function, and is not available to the adversary</t>
+
           <t>the second octet of the input to the hash function used in 
-          hash_to_curve, proof_to_hash, and
-          hash_points are all different</t>
+          proof_to_hash, hash_points, and hash_to_curve (try-and-increment variant)
+          are all different</t>
+
+          <t>suites that use ECVRF_hash_to_curve_h2c_suite entail additional hash invocations inside
+          the expand_message_xmd function defined in <xref target="I-D.irtf-cfrg-hash-to-curve"/>.
+          The input to the hash function inside expand_message_xmd takes one of two forms:
+          either it begins with an input block of zero octets (thus, it has a different second
+          octet from hash inputs in proof_to_hash and hash_points), or it begins with a value that is neither
+          used elsewhere by an honest party nor available to the adversary (thus, it is unlikely
+          that the input will equal inputs given in nonce_generation, proof_to_hash, or hash_points).</t>
+
          </list>
          
      </t>
