@@ -418,9 +418,9 @@
 <link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References">
 <link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors for the ECVRFs">
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 ECVRF-P256-SHA256-TAI">
-<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 ECVRF-P256-SHA256-SWU">
-<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 ECVRF-EDWARDS25519-SHA512-TAI">
-<link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 ECVRF-EDWARDS25519-SHA512-Elligator2">
+<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 ECVRF-P256-SHA256-SSWU">
+<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 ECVRF-ED25519-SHA512-TAI">
+<link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 ECVRF-ED25519-SHA512-Elligator2">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -428,8 +428,8 @@
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Vcelak" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-06" />
-  <meta name="dct.issued" scheme="ISO8601" content="2020-22" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-irtf-cfrg-vrf-07" />
+  <meta name="dct.issued" scheme="ISO8601" content="2020-27" />
   <meta name="dct.abstract" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
   <meta name="description" content="A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  " />
 
@@ -453,7 +453,7 @@
 <td class="right">Boston University</td>
 </tr>
 <tr>
-<td class="left">Expires: November 23, 2020</td>
+<td class="left">Expires: November 28, 2020</td>
 <td class="right">D. Papadopoulos</td>
 </tr>
 <tr>
@@ -470,7 +470,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">May 22, 2020</td>
+<td class="right">May 27, 2020</td>
 </tr>
 
     	
@@ -478,7 +478,7 @@
   </table>
 
   <p class="title">Verifiable Random Functions (VRFs)<br />
-  <span class="filename">draft-irtf-cfrg-vrf-06</span></p>
+  <span class="filename">draft-irtf-cfrg-vrf-07</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>A Verifiable Random Function (VRF) is the public-key version of a keyed cryptographic hash. Only the holder of the private key can compute the hash, but anyone with public key can verify the correctness of the hash.  VRFs are useful for preventing enumeration of hash-based data structures.  This document specifies several VRF constructions that are secure in the cryptographic random oracle model. One  VRF uses RSA and the other VRF uses Eliptic Curves (EC).  </p>
@@ -486,7 +486,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 23, 2020.</p>
+<p>This Internet-Draft will expire on November 28, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -584,11 +584,11 @@
 </li>
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">ECVRF-P256-SHA256-TAI</a>
 </li>
-<li>A.2.   <a href="#rfc.appendix.A.2">ECVRF-P256-SHA256-SWU</a>
+<li>A.2.   <a href="#rfc.appendix.A.2">ECVRF-P256-SHA256-SSWU</a>
 </li>
-<li>A.3.   <a href="#rfc.appendix.A.3">ECVRF-EDWARDS25519-SHA512-TAI</a>
+<li>A.3.   <a href="#rfc.appendix.A.3">ECVRF-ED25519-SHA512-TAI</a>
 </li>
-<li>A.4.   <a href="#rfc.appendix.A.4">ECVRF-EDWARDS25519-SHA512-Elligator2</a>
+<li>A.4.   <a href="#rfc.appendix.A.4">ECVRF-ED25519-SHA512-Elligator2</a>
 </li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
@@ -921,7 +921,8 @@
 <li>If D is "INVALID", output "INVALID" and stop</li>
 <li>(Gamma, c, s) = D</li>
 <li>three_string = 0x03 = int_to_string(3, 1), a single octet with value 3 </li>
-<li>beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))</li>
+<li>zero_string = 0x00 = int_to_string(0, 1), a single octet with value 0 </li>
+<li>beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma) || zero_string)</li>
 <li>Output beta_string</li>
 </ol>
 
@@ -996,10 +997,11 @@
 <li>ctr = 0</li>
 <li>PK_string = point_to_string(Y)</li>
 <li>one_string = 0x01 = int_to_string(1, 1), a single octet with value 1 </li>
+<li>zero_string = 0x00 = int_to_string(0, 1), a single octet with value 0 </li>
 <li>H = "INVALID"</li>
 <li>While H is "INVALID" or H is EC point at infinity: <ol style="list-style-type: upper-alpha">
 <li>ctr_string = int_to_string(ctr, 1)</li>
-<li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string)</li>
+<li>hash_string = Hash(suite_string || one_string || PK_string || alpha_string || ctr_string || zero_string)</li>
 <li>H = arbitrary_string_to_point(hash_string)</li>
 <li>If H is not "INVALID" and cofactor &gt; 1, set H = cofactor * H</li>
 <li>ctr = ctr + 1</li>
@@ -1129,6 +1131,8 @@
 <li>two_string = 0x02 = int_to_string(2, 1), a single octet with value 2 </li>
 <li>Initialize str = suite_string || two_string </li>
 <li>for PJ in [P1, P2, ... PM]: <br>str = str || point_to_string(PJ) </li>
+<li>zero_string = 0x00 = int_to_string(0, 1), a single octet with value 0 </li>
+<li>str = str || zero_string</li>
 <li>c_string = Hash(str)</li>
 <li>truncated_c_string = c_string[0]...c_string[n-1] </li>
 <li>c = string_to_int(truncated_c_string)</li>
@@ -1188,7 +1192,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.2">This document defines ECVRF-P256-SHA256-SWU as identical to ECVRF-P256-SHA256-TAI, except that: </p>
+<p id="rfc.section.5.5.p.2">This document defines ECVRF-P256-SHA256-SSWU as identical to ECVRF-P256-SHA256-TAI, except that: </p>
 
 <ul>
 <li>suite_string = 0x02 = int_to_string(2, 1), a single octet with value 2.</li>
@@ -1213,7 +1217,7 @@
 </ul>
 
 <p> </p>
-<p id="rfc.section.5.5.p.4">This document defines ECVRF-EDWARDS25519-SHA512-Elligator2 as identical to ECVRF-EDWARDS25519-SHA512-TAI, except: </p>
+<p id="rfc.section.5.5.p.4">This document defines ECVRF-EDWARDS25519-SHA512-ELL2 as identical to ECVRF-EDWARDS25519-SHA512-TAI, except: </p>
 
 <ul>
 <li>suite_string = 0x04 = int_to_string(4, 1), a single octet with value 4.  </li>
@@ -1279,16 +1283,16 @@
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#imp" id="imp">Implementation Status</a>
 </h1>
-<p id="rfc.section.6.p.1">A reference C++ implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SWU, ECVRF-EDWARDS25519-SHA512-TAI, ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>. This implementation is neither secure nor especially effecient, but can be used to generate test vectors.  </p>
-<p id="rfc.section.6.p.2">A Python implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/integritychain/draft-irtf-cfrg-vrf-05">https://github.com/integritychain/draft-irtf-cfrg-vrf-05</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.3">A C implementation of ECVRF-EDWARDS25519-SHA512-Elligator2 is available at <span>&lt;</span><a href="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03">https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.4">A Rust implemention of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <span>&lt;</span><a href="https://crates.io/crates/vrf">https://crates.io/crates/vrf</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.1">A reference C++ implementation of ECVRF-P256-SHA256-TAI, ECVRF-P256-SHA256-SSWU, ECVRF-EDWARDS25519-SHA512-TAI, and ECVRF-EDWARDS25519-SHA512-ELL2 is available at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>. This implementation is neither secure nor especially effecient, but can be used to generate test vectors.  </p>
+<p id="rfc.section.6.p.2">A Python implementation of a previous version of ECVRF-EDWARDS25519-SHA512-ELL2 is available at <span>&lt;</span><a href="https://github.com/integritychain/draft-irtf-cfrg-vrf-05">https://github.com/integritychain/draft-irtf-cfrg-vrf-05</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.3">A C implementation of a previous version of ECVRF-EDWARDS25519-SHA512-ELL2 is available at <span>&lt;</span><a href="https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03">https://github.com/algorand/libsodium/tree/draft-irtf-cfrg-vrf-03/src/libsodium/crypto_vrf/ietfdraft03</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.4">A Rust implemention of a previous version of ECVRF-P256-SHA256-TAI, as well as variants for the sect163k1 and secp256k1 curves, is available at <span>&lt;</span><a href="https://crates.io/crates/vrf">https://crates.io/crates/vrf</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.5">A C implemention of a variant of this VRF for the secp256k1 curve is available at <span>&lt;</span><a href="https://github.com/aergoio/secp256k1-vrf">https://github.com/aergoio/secp256k1-vrf</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.6">An implementation of an earlier, slightly different, version of RSA-FDH-VRF (SHA-256) and ECVRF-P256-SHA256-TAI was first developed as a part of the NSEC5 project <a href="#I-D.vcelak-nsec5" class="xref">[I-D.vcelak-nsec5]</a> and is available at <span>&lt;</span><a href="http://github.com/fcelda/nsec5-crypto">http://github.com/fcelda/nsec5-crypto</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.7">The Key Transparency project at Google uses a VRF implemention that is similar to the ECVRF-P256-SHA256-TAI, with a few minor changes including the use of SHA-512 instead of SHA-256. Its implementation is available at <span>&lt;</span><a href="https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go">https://github.com/google/keytransparency/blob/master/core/vrf/vrf.go</a><span>&gt;</span> </p>
 <p id="rfc.section.6.p.8">An implementation by Yahoo! similar to the ECVRF is available at <span>&lt;</span><a href="https://github.com/r2ishiguro/vrf">https://github.com/r2ishiguro/vrf</a><span>&gt;</span>.  </p>
 <p id="rfc.section.6.p.9">An implementation similar to ECVRF is available as part of the CONIKS implementation in Golang at <span>&lt;</span><a href="https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf">https://github.com/coniks-sys/coniks-go/tree/master/crypto/vrf</a><span>&gt;</span>.  </p>
-<p id="rfc.section.6.p.10">Open Whisper Systems also uses a VRF very similar to ECVRF-EDWARDS25519-SHA512-Elligator, called VXEdDSA, and specified here <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> and here <span>&lt;</span><a href="https://moderncrypto.org/mail-archive/curves/2017/000925.html">https://moderncrypto.org/mail-archive/curves/2017/000925.html</a><span>&gt;</span>.  Implementations in C and Java are available at <span>&lt;</span><a href="https://github.com/signalapp/curve25519-java">https://github.com/signalapp/curve25519-java</a><span>&gt;</span> and <span>&lt;</span><a href="https://github.com/wavesplatform/curve25519-java">https://github.com/wavesplatform/curve25519-java</a><span>&gt;</span>.  </p>
+<p id="rfc.section.6.p.10">Open Whisper Systems also uses a VRF very similar to ECVRF-EDWARDS25519-SHA512-ELL2, called VXEdDSA, and specified here <span>&lt;</span><a href="https://whispersystems.org/docs/specifications/xeddsa/">https://whispersystems.org/docs/specifications/xeddsa/</a><span>&gt;</span> and here <span>&lt;</span><a href="https://moderncrypto.org/mail-archive/curves/2017/000925.html">https://moderncrypto.org/mail-archive/curves/2017/000925.html</a><span>&gt;</span>.  Implementations in C and Java are available at <span>&lt;</span><a href="https://github.com/signalapp/curve25519-java">https://github.com/signalapp/curve25519-java</a><span>&gt;</span> and <span>&lt;</span><a href="https://github.com/wavesplatform/curve25519-java">https://github.com/wavesplatform/curve25519-java</a><span>&gt;</span>.  </p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#securitycons" id="securitycons">Security Considerations</a>
 </h1>
@@ -1321,7 +1325,7 @@
 <a href="#rfc.section.7.4">7.4.</a> Side-channel attacks</h1>
 <p id="rfc.section.7.4.p.1">Side channel attacks on cryptographic primatives are an important issue.  Here we discuss only one such side channel:  timing attacks that can be used to leak information about the VRF input alpha.  Implementers should take care to avoid side-channel attacks that leak information about the VRF private key SK (and the nonce k used in the ECVRF).</p>
 <p id="rfc.section.7.4.p.2">The ECVRF_hash_to_curve_try_and_increment algorithm defined in <a href="#ecvrfH2C1" class="xref">Section 5.4.1.1</a> SHOULD NOT be used in applications where the VRF input alpha is secret and is hashed by the VRF on-the-fly.  This is because the algorithm's running time depends on the VRF input alpha, and thus creates a timing channel that can be used to learn information about alpha.  That said, for most inputs the amount of information obtained from such a timing attack is likely to be small (1 bit, on average), since the algorithm is expected to find a valid curve point after only two attempts.  However, there might be inputs which cause the algorithm to make many attempts before it finds a valid curve point; for such inputs, the information leaked in a timing attack will be more than 1 bit.  </p>
-<p id="rfc.section.7.4.p.3">Meanwhile, ECVRF-P256-SHA256-SWU and ECVRF-EDWARDS25519-SHA512-Elligator2 can be made to run in time constant in alpha.  </p>
+<p id="rfc.section.7.4.p.3">ECVRF-P256-SHA256-SSWU and ECVRF-EDWARDS25519-SHA512-ELL2 can be made to run in time independent of alpha, following recommendations in <a href="#I-D.irtf-cfrg-hash-to-curve" class="xref">[I-D.irtf-cfrg-hash-to-curve]</a>.  </p>
 <h1 id="rfc.section.7.5">
 <a href="#rfc.section.7.5">7.5.</a> Proofs Provide No Secrecy for VRF Input</h1>
 <p id="rfc.section.7.5.p.1">The VRF proof pi is not designed to provide secrecy and, in general, may reveal the VRF input alpha.  Anyone who knows PK and pi is able to perform an offline dictionary attack to search for alpha, by verifying guesses for alpha using VRF_verify.  This is in contrast to the VRF hash output beta which, without the proof, is pseudorandom and thus is designed to reveal no information about alpha.  </p>
@@ -1336,8 +1340,8 @@
 
 <ul>
 <li>inputs to the hash function used during nonce_generation are unlikely to equal inputs used in hash_to_curve, proof_to_hash, and hash_points. This follows since nonce_generation inputs a secret to the hash function that is not used by honest parties as input to any other hash function, and is not available to the adversary</li>
-<li>the second octet of the input to the hash function used in proof_to_hash, hash_points, and hash_to_curve (try-and-increment variant) are all different</li>
-<li>suites that use ECVRF_hash_to_curve_h2c_suite entail additional hash invocations inside the expand_message_xmd function defined in <a href="#I-D.irtf-cfrg-hash-to-curve" class="xref">[I-D.irtf-cfrg-hash-to-curve]</a>.  The input to the hash function inside expand_message_xmd takes one of two forms: either it begins with an input block of zero octets (thus, it has a different second octet from hash inputs in proof_to_hash and hash_points), or it begins with a value that is neither used elsewhere by an honest party nor available to the adversary (thus, it is unlikely that the input will equal inputs given in nonce_generation, proof_to_hash, or hash_points).</li>
+<li>the second octets of the inputs to the hash function used in proof_to_hash, hash_points, and ECVRF_hash_to_curve_try_and_increment are all different</li>
+<li>the last octet of the input to the hash function used in proof_to_hash, hash_points, and ECVRF_hash_to_curve_try_and_increment is always zero, and therefore different from the last octet of the input to the hash function used in ECVRF_hash_to_curve_h2c_suite, which is set equal to the nonzero length of the domain separation tag by <a href="#I-D.irtf-cfrg-hash-to-curve" class="xref">[I-D.irtf-cfrg-hash-to-curve]</a>.</li>
 </ul>
 
 <p> </p>
@@ -1356,7 +1360,7 @@
 <li>04 - Clarified handling of optional arguments x and PK in ECVRF_prove. Edited implementation status to bring it up to date.</li>
 <li>05 - Renamed ed25519 into the more commonly used edwards25519. Corrected ECVRF_nonce_generation_RFC6979 (thanks to Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</li>
 <li>06 - Made some variable names more descriptive. Added a few implementation references.</li>
-<li>07 - Incorporated hash-to-curve draft by reference to replace our own Elligator2 and SWU. Clarified discussion of EC parameters and functions.</li>
+<li>07 - Incorporated hash-to-curve draft by reference to replace our own Elligator2 and Simple SWU. Clarified discussion of EC parameters and functions. Added a 0 octet to all hashing to enforce domain separation from hashing done inside hash-to-curve.</li>
 </ul>
 
 <p> </p>
@@ -1455,34 +1459,33 @@
 </tbody></table>
 <h1 id="rfc.appendix.A">
 <a href="#rfc.appendix.A">Appendix A.</a> Test Vectors for the ECVRFs</h1>
-<p id="rfc.section.A.p.1">THESE TEST VECTORS ARE OUT OF DATE GIVEN THE CHANGES TO THE SPECIFICATION</p>
-<p id="rfc.section.A.p.2">The test vectors in this section were genereated using the reference implementation at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>.</p>
+<p id="rfc.section.A.p.1">The test vectors in this section were genereated using the reference implementation at <span>&lt;</span><a href="https://github.com/reyzin/ecvrf">https://github.com/reyzin/ecvrf</a><span>&gt;</span>.</p>
 <h1 id="rfc.appendix.A.1">
 <a href="#rfc.appendix.A.1">A.1.</a> ECVRF-P256-SHA256-TAI</h1>
 <p id="rfc.section.A.1.p.1">These two example secret keys and messages are taken from Appendix A.2.5 of <a href="#RFC6979" class="xref">[RFC6979]</a>.</p>
-<p id="rfc.section.A.1.p.2">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 73616d706c65 (ASCII "sample") <br> try_and_increment succeded on ctr = 0 <br> H = 02e2e1ab1b9f5a8a68fa4aad597e7493095648d3473b213bba120fe42d1a595f3e <br> k = b7de5757b28c349da738409dfba70763ace31a6b15be8216991715fbc833e5fa <br> U = k*B = 030286d82c95d54feef4d39c000f8659a5ce00a5f71d3a888bd1b8e8bf07449a50 <br> V = k*H = 03e4258b4a5f772ed29830050712fa09ea8840715493f78e5aaaf7b27248efc216 <br> pi = 029bdca4cc39e57d97e2f42f88bcf0ecb1120fb67eb408a856050dbfbcbf57c524347fc46ccd87843ec0a9fdc090a407c6fbae8ac1480e240c58854897eabbc3a7bb61b201059f89186e7175af796d65e7 <br> beta = 59ca3801ad3e981a88e36880a3aee1df38a0472d5be52d6e39663ea0314e594c</p>
-<p id="rfc.section.A.1.p.3">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 74657374 (ASCII "test") <br> try_and_increment succeded on ctr = 0 <br> H = 02ca565721155f9fd596f1c529c7af15dad671ab30c76713889e3d45b767ff6433 <br> k = c3c4f385523b814e1794f22ad1679c952e83bff78583c85eb5c2f6ea6eee2e7d <br> U = k*B = 034b3793d1088500ec3cccdea079beb0e2c7cdf4dccef1bbda379cc06e084f09d0 <br> V = k*H = 02427cdb19aa5dd645e153d6bd8c0d81a658deee37b203edfd461953f301c4f868 <br> pi = 03873a1cce2ca197e466cc116bca7b1156fff599be67ea40b17256c4f34ba2549c94ffd2b31588b5fe034fd92c87de5b520b12084da6c4ab63080a7c5467094a1ee84b80b59aca54bba2e2baa0d108191b <br> beta = dc85c20f95100626eddc90173ab58d5e4f837bb047fb2f72e9a408feae5bc6c1</p>
-<p id="rfc.section.A.1.p.4">This example secret key and message are taken from Appendix L.4.2 of <a href="#ANSI.X9-62-2005" class="xref">[ANSI.X9-62-2005]</a>.</p>
-<p id="rfc.section.A.1.p.5">SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <br> PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <br> alpha = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <br> try_and_increment succeded on ctr = 1 <br> H = 02141e41d4d55802b0e3adaba114c81137d95fd3869b6b385d4487b1130126648d <br> k = 6ac8f1efa102bdcdcc8db99b755d39bc995491e3f9dea076add1905a92779610 <br> U = k*B = 034bf7bd3638ef06461c6ec0cfaef7e58bfdaa971d7e36125811e629e1a1e77c8a <br> V = k*H = 03b8b33a134759eb8c9094fb981c9590aa53fd13d35042575067a7bd7c5bc6287b <br> pi = 02abe3ce3b3aa2ab3c6855a7e729517ebfab6901c2fd228f6fa066f15ebc9b9d415a680736f7c33f6c796e367f7b2f467026495907affb124be9711cf0e2d05722d3a33e11d0c5bf932b8f0c5ed1981b64 <br> beta = e880bde34ac5263b2ce5c04626870be2cbff1edcdadabd7d4cb7cbc696467168</p>
+<p id="rfc.section.A.1.p.2">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 73616d706c65 (ASCII "sample") <br> try_and_increment succeded on ctr = 1 <br> H = 0272a877532e9ac193aff4401234266f59900a4a9e3fc3cfc6a4b7e467a15d06d4 <br> k = 0d90591273453d2dc67312d39914e3a93e194ab47a58cd598886897076986f77 <br> U = k*B = 02bb6a034f67643c6183c10f8b41dc4babf88bff154b674e377d90bde009c21672 <br> V = k*H = 02893ebee7af9a0faa6da810da8a91f9d50e1dc071240c9706726820ff919e8394 <br> pi = 035b5c726e8c0e2c488a107c600578ee75cb702343c153cb1eb8dec77f4b5071b498e7c291a16dafb9ccff8c2ae1f039fa92a328d5f7e0d483ee18353067a13f699944a78892ff24939bcd044827eef884 <br> beta = a3ad7b0ef73d8fc6655053ea22f9bede8c743f08bbed3d38821f0e16474b505e</p>
+<p id="rfc.section.A.1.p.3">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 74657374 (ASCII "test") <br> try_and_increment succeded on ctr = 3 <br> H = 02173119b4fff5e6f8afed4868a29fe8920f1b54c2cf89cc7b301d0d473de6b974 <br> k = 5852353a868bdce26938cde1826723e58bf8cb06dd2fed475213ea6f3b12e961 <br> U = k*B = 022779a2cafcb65414c4a04a4b4d2adf4c50395f57995e89e6de823250d91bc48e <br> V = k*H = 033b4a14731672e82339f03b45ff6b5b13dee7ada38c9bf1d6f8f61e2ce5921119 <br> pi = 034dac60aba508ba0c01aa9be80377ebd7562c4a52d74722e0abae7dc3080ddb56c874cc95b7d29a6a65cb518fe6f4418256385f12b1eccbad023c901bb983ff707b109b3a3b526ca3a1e8661f7b8481a2 <br> beta = a284f94ceec2ff4b3794629da7cbafa49121972671b466cab4ce170aa365f26d</p>
+<p id="rfc.section.A.1.p.4">This example secret key is taken from Appendix L.4.2 of <a href="#ANSI.X9-62-2005" class="xref">[ANSI.X9-62-2005]</a>.</p>
+<p id="rfc.section.A.1.p.5">SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <br> PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <br> alpha = 4578616d706c65207573696e67204543445341206b65792066726f6d20417070656e646978204c2e342e32206f6620414e53492e58392d36322d32303035 (ASCII "Example using ECDSA key from Appendix L.4.2 of ANSI.X9-62-2005") <br> try_and_increment succeded on ctr = 1 <br> H = 0258055c26c4b01d01c00fb57567955f7d39cd6f6e85fd37c58f696cc6b7aa761d <br> k = 5689e2e08e1110b4dda293ac21667eac6db5de4a46a519c73d533f69be2f4da3 <br> U = k*B = 020f465cd0ec74d2e23af0abde4c07e866ae4e5138bded5dd1196b8843f380db84 <br> V = k*H = 036cb6f811428fc4904370b86c488f60c280fa5b496d2f34ff8772f60ed24b2d1d <br> pi = 03d03398bf53aa23831d7d1b2937e005fb0062cbefa06796579f2a1fc7e7b8c6679d92353c8a4fdfddb2a8540094b686cb5fb50f730d833a098a0399ccad32f3fec4da2299891fc75ebda42baeb65e8c11 <br> beta = 90871e06da5caa39a3c61578ebb844de8635e27ac0b13e829997d0d95dd98c19</p>
 <h1 id="rfc.appendix.A.2">
-<a href="#rfc.appendix.A.2">A.2.</a> ECVRF-P256-SHA256-SWU</h1>
+<a href="#rfc.appendix.A.2">A.2.</a> ECVRF-P256-SHA256-SSWU</h1>
 <p id="rfc.section.A.2.p.1">These two example secret keys and messages are taken from Appendix A.2.5 of <a href="#RFC6979" class="xref">[RFC6979]</a>.</p>
-<p id="rfc.section.A.2.p.2">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 73616d706c65 (ASCII "sample") <br> In SWU: t = f1523667d029b9119a319a5bb316ff846691600e3552514ec4f93f9c84d65a4f <br> In SWU: w = d8125c3ae82fc2b7f1c326b6f3dbfdf3583272336a60cb08efb84e002e98a3b3 <br> In SWU: e = -1 <br> H = 027827143876a58c2189402306c6ff6f7f9a7271067f3ed28eb63790d58a84fdd6 <br> k = cabfb61ad47b639814365bcbe2cc48a9ad4e3cfe61172aced7d539d47f459654 <br> U = k*B = 023cd2988db2421dbfd5cefb8c2342ed2413160d4f6521d301e7b2995fe8551bd6 <br> V = k*H = 025443fe6f00281ff3afa0ff93db2ce9cb20dfcafb7c17b78c9e912d26f4e22cf2 <br> pi = 021d684d682e61dd76c794eef43988a2c61fbdb2af64fbb4f435cc2a842b0024c3b3056b7310e0130317274a58e57317c469b46fe5ab6a34463d7ecb2a7ae1d808381f53c0f6aaaebe62195cfd14526f03 <br> beta = 143f36bf7175053315693cfcfdff5aebb13e5eb9c47f897f53f81561993cfcd2</p>
-<p id="rfc.section.A.2.p.3">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 74657374 (ASCII "test") <br> In SWU: t = e20da1d7386cb673deffec63d47ec65862dce55f113be168fa45cba2a6c1ddbc <br> In SWU: w = 0eed10be2937c902c9612d80b8ea5b0783f81c419faedd57efc84e6dfcfe2c72 <br> In SWU: e = 1 <br> H = 020e6c14efc8bc7150a3467aafa78be9856a2c6e405bdcc50f767fe638569d0172 <br> k = eb2035e5d6993b96589937c36482c647dab2b420fd152ffe026437b0b6c22e26 <br> U = k*B = 038bf7231765143e6de2cef1bbd79dd80729a320dbc040ecd8f3d937b756b68e56 <br> V = k*H = 0365e6610ff260aef9721450e2353677470e179573937756a803df1df9680ca698 <br> pi = 0376b758f457d2cabdfaeb18700e46e64f073eb98c119dee4db6c5bb1eaf67780654504c6e583fd6eb129195b1836f91a6dd16504f957c8dedb653806952e3b0217ef187b87b9dda851f0a515f4dcc09d1 <br> beta = 6b5bb622a6bc1387a7dcc4f46cfdcc3bce67669b32f3bc39e047c3b6cd3e65d9</p>
-<p id="rfc.section.A.2.p.4">This example secret key and message are taken from Appendix L.4.2 of <a href="#ANSI.X9-62-2005" class="xref">[ANSI.X9-62-2005]</a>.</p>
-<p id="rfc.section.A.2.p.5">SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <br> PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <br> alpha = 4578616d706c65206f66204543445341207769746820616e736970323536723120616e64205348412d323536 (ASCII "Example of ECDSA with ansip256r1 and SHA-256") <br> In SWU: t = e93da6ba2bca714061dc94c8c513343ad11bfc9678339e4a8bd86a08232aa6d7 <br> In SWU: w = 76f564cca31934c80dd2a285ba43543df63a078b132c8f34d2ab1b7089cb3401 <br> In SWU: e = -1 <br> H = 02429690b91e1783cd0d7e393db07cc44b48c226cb837adb2282251cabf431a484 <br> k = 6181315ddb4f4d159ce8cbad48d5454625ccbf47c46c4cabd972be72b372a50b <br> U = k*B = 02c6dac6f9a51b79b8bc928a67320f4d569090b8c6b86f011ddf898788559c134d <br> V = k*H = 033f8070c0a09ac089d1ceffc384d3f25bb0597f63161ca82431331278baf1568f <br> pi = 035e844533a7c5109ab3dffd04f2ef0d38d679101124f15243199ce92f0f29477ca8e8f01b40c77c61a169ad6db9d76fae7938e94a4338bca9c586c8e266ead7a6b24b769d3d34efc85f6cdb82d96bb717 <br> beta = be1dcb17e9815ac6acf819e7ad4b75e575eafad25915c2608959d780364fc912</p>
+<p id="rfc.section.A.2.p.2">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 73616d706c65 (ASCII "sample") <br> In SSWU: uniform_bytes = 5024e98d6067dec313af09ff0cbe78218324a645c2a4b0aae2453f6fe91aa3bd9471f7b4a5fbf128e4b53f0c59603f7e <br> In SSWU: u = df565615a2372e8b31b8771f7503bafc144e48b05688b97958cc27ce29a8d810 <br> In SSWU: x1 = e7e39eb8a4c982426fcff629e55a3e13516cfeb62c02c369b1e750316f5e94eb <br> In SSWU: gx1 is a nonsquare <br> H = 02b31973e872d4a097e2cfae9f37af9f9d73428fde74ac537dda93b5f18dbc5842 <br> k = e92820035a0a8afe132826c6312662b6ea733fc1a0d33737945016de54d02dd8 <br> U = k*B = 031490f49d0355ffcdf66e40df788bee93861917ee713acff79be40d20cc91a30a <br> V = k*H = 03701df0228138fa3d16612c0d720389326b3265151bc7ac696ea4d0591cd053e3 <br> pi = 0331d984ca8fece9cbb9a144c0d53df3c4c7a33080c1e02ddb1a96a365394c7888a39dfe7432f119228473f37db3f87ca470c63b0237432a791f18f823c1215e276b7ac0962725ba8daec2bf90c0ccc91a <br> beta = 21e66dc9747430f17ed9efeda054cf4a264b097b9e8956a1787526ed00dc664b</p>
+<p id="rfc.section.A.2.p.3">SK = x = c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721 <br> PK = 0360fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6 <br> alpha = 74657374 (ASCII "test") <br> In SSWU: uniform_bytes = 910cc66d84a57985a1d15843dad83fd9138a109afb243b7fa5d64d766ec9ca3894fdcf46ebeb21a3972eb452a4232fd3 <br> In SSWU: u = d8b0107f7e7aa36390240d834852f8703a6dc407019d6196bda5861b8fc00181 <br> In SSWU: x1 = ccc747fa7318b9486ce4044adbbecaa084c27be6eda88eb7b7f3d688fd0968c7 <br> In SSWU: gx1 is a square <br> H = 03ccc747fa7318b9486ce4044adbbecaa084c27be6eda88eb7b7f3d688fd0968c7 <br> k = febc3451ea7639fde2cf41ffd03f463124ecb3b5a79913db1ed069147c8a7dea <br> U = k*B = 031200f9900e96f811d1247d353573f47e0d9da601fc992566234fc1a5b37749ae <br> V = k*H = 02d3715dcfee136c7ae50e95ffca76f4ca6c29ddfb92a39c31a0d48e75c6605cd1 <br> pi = 03f814c0455d32dbc75ad3aea08c7e2db31748e12802db23640203aebf1fa8db2721e0499b7cecd68027a82f6095da076625a5f2f62908f1c283d5ee9b9e852d85bedf64f2452a4e5094729e101824443e <br> beta = 8e7185d2b420e4f4681f44ce313a26d05613323837da09a69f00491a83ad25dd</p>
+<p id="rfc.section.A.2.p.4">This example secret key is taken from Appendix L.4.2 of <a href="#ANSI.X9-62-2005" class="xref">[ANSI.X9-62-2005]</a>.</p>
+<p id="rfc.section.A.2.p.5">SK = x = 2ca1411a41b17b24cc8c3b089cfd033f1920202a6c0de8abb97df1498d50d2c8 <br> PK = 03596375e6ce57e0f20294fc46bdfcfd19a39f8161b58695b3ec5b3d16427c274d <br> alpha = 4578616d706c65207573696e67204543445341206b65792066726f6d20417070656e646978204c2e342e32206f6620414e53492e58392d36322d32303035 (ASCII "Example using ECDSA key from Appendix L.4.2 of ANSI.X9-62-2005") <br> In SSWU: uniform_bytes = 9b81d55a242d3e8438d3bcfb1bee985a87fd144802c9268cf9adeee160e6e9ff765569797a0f701cb4316018de2e7dd4 <br> In SSWU: u = e43c98c2ae06d13839fedb0303e5ee815896beda39be83fb11325b97976efdce <br> In SSWU: x1 = be9e195a50f175d3563aed8dc2d9f513a5536c1e9aee1757d86c08d32d582a86 <br> In SSWU: gx1 is a nonsquare <br> H = 022dd5150e5a2a24c66feab2f68532be1486e28e07f1b9a055cf38ccc16f6595ff <br> k = 8e29221f33564f3f66f858ba2b0c14766e1057adbd422c3e7d0d99d5e142b613 <br> U = k*B = 03a8823ff9fd16bf879261c740b9c7792b77fee0830f21314117e441784667958d <br> V = k*H = 02d48fbb45921c755b73b25be2f23379e3ce69294f6cee9279815f57f4b422659d <br> pi = 039f8d9cdc162c89be2871cbcb1435144739431db7fab437ab7bc4e2651a9e99d5288aac70a5e4bd07df303c1d460eb6336bb5fa95436a07c2f6b7aec6fef7cc4846ea901ee1e238dee12bf752029b0b2e <br> beta = 4fbadf33b42a5f42f23a6f89952d2e634a6e3810f15878b46ef1bb85a04fe95a</p>
 <h1 id="rfc.appendix.A.3">
-<a href="#rfc.appendix.A.3">A.3.</a> ECVRF-EDWARDS25519-SHA512-TAI</h1>
+<a href="#rfc.appendix.A.3">A.3.</a> ECVRF-ED25519-SHA512-TAI</h1>
 <p id="rfc.section.A.3.p.1">These three example secret keys and messages are taken from Section 7.1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.</p>
-<p id="rfc.section.A.3.p.2">SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <br> PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <br> alpha =  (the empty string) <br> x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <br> try_and_increment succeded on ctr = 0 <br> H = 5b2c80db3ce2d79cc85b1bfb269f02f915c5f0e222036dc82123f640205d0d24 <br> k = 647ac2b3ca3f6a77e4c4f4f79c6c4c8ce1f421a9baaa294b0adf0244915130f7067640acb6fd9e7e84f8bc30d4e03a95e410b82f96a5ada97080e0f187758d38 <br> U = k*B = a21c342b8704853ad10928e3db3e58ede289c798e3cdfd485fbbb8c1b620604f <br> V = k*H = 426fe41752f0b27439eb3d0c342cb645174a720cae2d4e9bb37de034eefe27ad <br> pi = 9275df67a68c8745c0ff97b48201ee6db447f7c93b23ae24cdc2400f52fdb08a1a6ac7ec71bf9c9c76e96ee4675ebff60625af28718501047bfd87b810c2d2139b73c23bd69de66360953a642c2a330a <br> beta = a64c292ec45f6b252828aff9a02a0fe88d2fcc7f5fc61bb328f03f4c6c0657a9d26efb23b87647ff54f71cd51a6fa4c4e31661d8f72b41ff00ac4d2eec2ea7b3</p>
-<p id="rfc.section.A.3.p.3">SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <br> PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <br> alpha = 72 (1 byte) <br> x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <br> try_and_increment succeded on ctr = 4 <br> H = 08e18a34f3923db32e80834fb8ced4e878037cd0459c63ddd66e5004258cf76c <br> k = 627237308294a8b344a09ad893997c630153ee514cd292eddd577a9068e2a6f24cbee0038beb0b1ee5df8be08215e9fc74608e6f9358b0e8d6383b1742a70628 <br> U = k*B = 18b5e500cb34690ced061a0d6995e2722623c105221eb91b08d90bf0491cf979 <br> V = k*H = 87e1f47346c86dbbd2c03eafc7271caa1f5307000a36d1f71e26400955f1f627 <br> pi = 84a63e74eca8fdd64e9972dcda1c6f33d03ce3cd4d333fd6cc789db12b5a7b9d03f1cb6b2bf7cd81a2a20bacf6e1c04e59f2fa16d9119c73a45a97194b504fb9a5c8cf37f6da85e03368d6882e511008 <br> beta = cddaa399bb9c56d3be15792e43a6742fb72b1d248a7f24fd5cc585b232c26c934711393b4d97284b2bcca588775b72dc0b0f4b5a195bc41f8d2b80b6981c784e</p>
-<p id="rfc.section.A.3.p.4">SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <br> PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <br> alpha = af82 (2 bytes) <br> x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <br> try_and_increment succeded on ctr = 0 <br> H = e4581824b70badf0e57af789dd8cf85513d4b9814566de0e3f738439becfba33 <br> k = a950f736af2e3ae2dbcb76795f9cbd57c671eee64ab17069f945509cd6c4a74852fe1bbc331e1bd573038ec703ca28601d861ad1e9684ec89d57bc22986acb0e <br> U = k*B = 5114dc4e741b7c4a28844bc585350240a51348a05f337b5fd75046d2c2423f7a <br> V = k*H = a6d5780c472dea1ace78795208aaa05473e501ed4f53da57e1fb13b7e80d7f59 <br> pi = aca8ade9b7f03e2b149637629f95654c94fc9053c225ec21e5838f193af2b727b84ad849b0039ad38b41513fe5a66cdd2367737a84b488d62486bd2fb110b4801a46bfca770af98e059158ac563b690f <br> beta = d938b2012f2551b0e13a49568612effcbdca2aed5d1d3a13f47e180e01218916e049837bd246f66d5058e56d3413dbbbad964f5e9f160a81c9a1355dcd99b453</p>
+<p id="rfc.section.A.3.p.2">SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <br> PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <br> alpha =  (the empty string) <br> x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <br> try_and_increment succeded on ctr = 0 <br> H = 91bbed02a99461df1ad4c6564a5f5d829d0b90cfc7903e7a5797bd658abf3318 <br> k = 7100f3d9eadb6dc4743b029736ff283f5be494128df128df2817106f345b8594b6d6da2d6fb0b4c0257eb337675d96eab49cf39e66cc2c9547c2bf8b2a6afae4 <br> U = k*B = aef27c725be964c6a9bf4c45ca8e35df258c1878b838f37d9975523f09034071 <br> V = k*H = 5016572f71466c646c119443455d6cb9b952f07d060ec8286d678615d55f954f <br> pi = 8657106690b5526245a92b003bb079ccd1a92130477671f6fc01ad16f26f723f5e8bd1839b414219e8626d393787a192241fc442e6569e96c462f62b8079b9ed83ff2ee21c90c7c398802fdeebea4001 <br> beta = 90cf1df3b703cce59e2a35b925d411164068269d7b2d29f3301c03dd757876ff66b71dda49d2de59d03450451af026798e8f81cd2e333de5cdf4f3e140fdd8ae</p>
+<p id="rfc.section.A.3.p.3">SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <br> PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <br> alpha = 72 (1 byte) <br> x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <br> try_and_increment succeded on ctr = 1 <br> H = 5b659fc3d4e9263fd9a4ed1d022d75eaacc20df5e09f9ea937502396598dc551 <br> k = 42589bbf0c485c3c91c1621bb4bfe04aed7be76ee48f9b00793b2342acb9c167cab856f9f9d4febc311330c20b0a8afd3743d05433e8be8d32522ecdc16cc5ce <br> U = k*B = 1dcb0a4821a2c48bf53548228b7f170962988f6d12f5439f31987ef41f034ab3 <br> V = k*H = fd03c0bf498c752161bae4719105a074630a2aa5f200ff7b3995f7bfb1513423 <br> pi = f3141cd382dc42909d19ec5110469e4feae18300e94f304590abdced48aed593f7eaf3eb2f1a968cba3f6e23b386aeeaab7b1ea44a256e811892e13eeae7c9f6ea8992557453eac11c4d5476b1f35a08 <br> beta = eb4440665d3891d668e7e0fcaf587f1b4bd7fbfe99d0eb2211ccec90496310eb5e33821bc613efb94db5e5b54c70a848a0bef4553a41befc57663b56373a5031</p>
+<p id="rfc.section.A.3.p.4">SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <br> PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <br> alpha = af82 (2 bytes) <br> x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <br> try_and_increment succeded on ctr = 0 <br> H = bf4339376f5542811de615e3313d2b36f6f53c0acfebb482159711201192576a <br> k = 38b868c335ccda94a088428cbf3ec8bc7955bfaffe1f3bd2aa2c59fc31a0febc59d0e1af3715773ce11b3bbdd7aba8e3505d4b9de6f7e4a96e67e0d6bb6d6c3a <br> U = k*B = 2bae73e15a64042fcebf062abe7e432b2eca6744f3e8265bc38e009cd577ecd5 <br> V = k*H = 88cba1cb0d4f9b649d9a86026b69de076724a93a65c349c988954f0961c5d506 <br> pi = 9bc0f79119cc5604bf02d23b4caede71393cedfbb191434dd016d30177ccbf80e29dc513c01c3a980e0e545bcd848222d08a6c3e3665ff5a4cab13a643bef812e284c6b2ee063a2cb4f456794723ad0a <br> beta = 645427e5d00c62a23fb703732fa5d892940935942101e456ecca7bb217c61c452118fec1219202a0edcf038bb6373241578be7217ba85a2687f7a0310b2df19f</p>
 <h1 id="rfc.appendix.A.4">
-<a href="#rfc.appendix.A.4">A.4.</a> ECVRF-EDWARDS25519-SHA512-Elligator2</h1>
+<a href="#rfc.appendix.A.4">A.4.</a> ECVRF-ED25519-SHA512-Elligator2</h1>
 <p id="rfc.section.A.4.p.1">These three example secret keys and messages are taken from Section 7.1 of <a href="#RFC8032" class="xref">[RFC8032]</a>.</p>
-<p id="rfc.section.A.4.p.2">SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <br> PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <br> alpha =  (the empty string) <br> x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <br> In Elligator: r = 9ddd071cd5837e591a3a40c57a46701bb7f49b1b53c670d490c2766a08fa6e3d <br> In Elligator: w = c7b5d6239e52a473a2b57a92825e0e5de4656e349bb198de5afd6a76e5a07066 <br> In Elligator: e = -1 <br> H = 1c5672d919cc0a800970cd7e05cb36ed27ed354c33519948e5a9eaf89aee12b7 <br> k = 868b56b8b3faf5fc7e276ff0a65aaa896aa927294d768d0966277d94599b7afe4a6330770da5fdc2875121e0cbecbffbd4ea5e491eb35be53fa7511d9f5a61f2 <br> U = k*B = c4743a22340131a2323174bfc397a6585cbe0cc521bfad09f34b11dd4bcf5936 <br> V = k*H = e309cf5272f0af2f54d9dc4a6bad6998a9d097264e17ae6fce2b25dcbdd10e8b <br> pi = b6b4699f87d56126c9117a7da55bd0085246f4c56dbc95d20172612e9d38e8d7ca65e573a126ed88d4e30a46f80a666854d675cf3ba81de0de043c3774f061560f55edc256a787afe701677c0f602900 <br> beta = 5b49b554d05c0cd5a5325376b3387de59d924fd1e13ded44648ab33c21349a603f25b84ec5ed887995b33da5e3bfcb87cd2f64521c4c62cf825cffabbe5d31cc</p>
-<p id="rfc.section.A.4.p.3">SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <br> PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <br> alpha = 72 (1 byte) <br> x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <br> In Elligator: r = 92181bd612695e464049590eb1f9746750d6057441789c9759af8308ac77fd4a <br> In Elligator: w = 7ff6d8b773bfbae57b2ab9d49f9d3cb7d9af40a03d3ed3c6beaaf2d486b1fe6e <br> In Elligator: e = 1 <br> H = 86725262c971bf064168bca2a87f593d425a49835bd52beb9f52ea59352d80fa <br> k = fd919e9d43c61203c4cd948cdaea0ad4488060db105d25b8fb4a5da2bd40e4b8330ca44a0538cc275ac7d568686660ccfd6323c805b917e91e28a4ab352b9575 <br> U = k*B = 04b1ba4d8129f0d4cec522b0fd0dff84283401df791dcc9b93a219c51cf27324 <br> V = k*H = ca8a97ce1947d2a0aaa280f03153388fa7aa754eedfca2b4a7ad405707599ba5 <br> pi = ae5b66bdf04b4c010bfe32b2fc126ead2107b697634f6f7337b9bff8785ee111200095ece87dde4dbe87343f6df3b107d91798c8a7eb1245d3bb9c5aafb093358c13e6ae1111a55717e895fd15f99f07 <br> beta = 94f4487e1b2fec954309ef1289ecb2e15043a2461ecc7b2ae7d4470607ef82eb1cfa97d84991fe4a7bfdfd715606bc27e2967a6c557cfb5875879b671740b7d8</p>
-<p id="rfc.section.A.4.p.4">SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <br> PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <br> alpha = af82 (2 bytes) <br> x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <br> In Elligator: r = dcd7cda88d6798599e07216de5a48a27dcd1cde197ab39ccaf6a906ae6b25c7f <br> In Elligator: w = 2ceaa2c2ff3028c34f9fbe076ff99520b925f18d652285b4daad5ccc467e523b <br> In Elligator: e = -1 <br> H = 9d8663faeb6ab14a239bfc652648b34f783c2e99f758c0e1b6f4f863f9419b56 <br> k = 8f675784cdc984effc459e1054f8d386050ec400dc09d08d2372c6fe0850eaaa50defd02d965b79930dcbca5ba9222a3d99510411894e63f66bbd5d13d25db4b <br> U = k*B = d6f8a95a4ce86812e3e50febd9d48196b3bc5d1d9fa7b6dfa33072641b45d029 <br> V = k*H = f77cd4ce0b49b386e80c3ce404185f93bb07463600dc14c31b0a09beaff4d592 <br> pi = dfa2cba34b611cc8c833a6ea83b8eb1bb5e2ef2dd1b0c481bc42ff36ae7847f6ab52b976cfd5def172fa412defde270c8b8bdfbaae1c7ece17d9833b1bcf31064fff78ef493f820055b561ece45e1009 <br> beta = 2031837f582cd17a9af9e0c7ef5a6540e3453ed894b62c293686ca3c1e319dde9d0aa489a4b59a9594fc2328bc3deff3c8a0929a369a72b1180a596e016b5ded</p>
+<p id="rfc.section.A.4.p.2">SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <br> PK = d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a <br> alpha =  (the empty string) <br> x = 307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f <br> In Elligator2: uniform_bytes = d620782a206d9de584b74e23ae5ee1db5ca5298b3fc527c4867f049dee6dd419b3674967bd614890f621c128d72269ae <br> In Elligator2: u = 30f037b9745a57a9a2b8a68da81f397c39d46dee9d047f86c427c53f8b29a55c <br> In Elligator2: gx1 = 8cb66318fb2cea01672d6c27a5ab662ae33220961607f69276080a56477b4a08 <br> In Elligator2: gx1 is a square <br> H = b8066ebbb706c72b64390324e4a3276f129569eab100c26b9f05011200c1bad9 <br> k = b5682049fee54fe2d519c9afff73bbfad724e69a82d5051496a42458f817bed7a386f96b1a78e5736756192aeb1818a20efb336a205ffede351cfe88dab8d41c <br> U = k*B = 762f5c178b68f0cddcc1157918edf45ec334ac8e8286601a3256c3bbf858edd9 <br> V = k*H = 4652eba1c4612e6fce762977a59420b451e12964adbe4fbecd58a7aeff5860af <br> pi = 7d9c633ffeee27349264cf5c667579fc583b4bda63ab71d001f89c10003ab46f25898f6bd7d4ed4c75f0282b0f7bb9d0e61b387b76db60b3cbf34bf09109ccb33fab742a8bddc0c8ba3caf5c0b75bb04 <br> beta = 9d574bf9b8302ec0fc1e21c3ec5368269527b87b462ce36dab2d14ccf80c53cccf6758f058c5b1c856b116388152bbe509ee3b9ecfe63d93c3b4346c1fbc6c54</p>
+<p id="rfc.section.A.4.p.3">SK = 4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb <br> PK = 3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c <br> alpha = 72 (1 byte) <br> x = 68bd9ed75882d52815a97585caf4790a7f6c6b3b7f821c5e259a24b02e502e51 <br> In Elligator2: uniform_bytes = 04ae20a9ad2a2330fb33318e376a2448bd77bb99e81d126f47952b156590444a9225b84128b66a2f15b41294fa2f2f6d <br> In Elligator2: u = 3092f033b16d4d5f74a3f7dc7091fe434b449065152b95476f121de899bb773d <br> In Elligator2: gx1 = 25d7fe7f82456e7078e99fdb24ef2582b4608357cdba9c39a8d535a3fd98464d <br> In Elligator2: gx1 is a nonsquare <br> H = 76ac3ccb86158a9104dff819b1ca293426d305fd76b39b13c9356d9b58c08e57 <br> k = 88bf479281fd29a6cbdffd67e2c5ec0024d92f14eaed58f43f22f37c4c37f1d41e65c036fbf01f9fba11d554c07494d0c02e7e5c9d64be88ef78cab7544e444d <br> U = k*B = 8ec26e77b8cb3114dd2265fe1564a4efb40d109aa3312536d93dfe3d8d80a061 <br> V = k*H = fe799eb5770b4e3a5a27d22518bb631db183c8316bb552155f442c62a47d1c8b <br> pi = 47b327393ff2dd81336f8a2ef10339112401253b3c714eeda879f12c509072ef9bf1a234f833f72d8fff36075fd9b836da28b5569e74caa418bae7ef521f2ddd35f5727d271ecc70b4a83c1fc8ebc40c <br> beta = 38561d6b77b71d30eb97a062168ae12b667ce5c28caccdf76bc88e093e4635987cd96814ce55b4689b3dd2947f80e59aac7b7675f8083865b46c89b2ce9cc735</p>
+<p id="rfc.section.A.4.p.4">SK = c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7 <br> PK = fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025 <br> alpha = af82 (2 bytes) <br> x = 909a8b755ed902849023a55b15c23d11ba4d7f4ec5c2f51b1325a181991ea95c <br> In Elligator2: uniform_bytes = be0aed556e36cdfddf8f1eeddbb7356a24fad64cf95a922a098038f215588b216beabbfe6acf20256188e883292b7a3a <br> In Elligator2: u = f6675dc6d17fc790d4b3f1c6acf689a13d8b5815f23880092a925af94cd6fa24 <br> In Elligator2: gx1 = a63d48e3247c903e22fdfb88fd9295e396712a5fe576af335dbe16f99f0af26c <br> In Elligator2: gx1 is a square <br> H = 13d2a8b5ca32db7e98094a61f656a08c6c964344e058879a386a947a4e189ed1 <br> k = a7ddd74a3a7d165d511b02fa268710ddbb3b939282d276fa2efcfa5aaf79cf576087299ca9234aacd7cd674d912deba00f4e291733ef189a51e36c861b3d683b <br> U = k*B = a012f35433df219a88ab0f9481f4e0065d00422c3285f3d34a8b0202f20bac60 <br> V = k*H = fb613986d171b3e98319c7ca4dc44c5dd8314a6e5616c1a4f16ce72bd7a0c25a <br> pi = 926e895d308f5e328e7aa159c06eddbe56d06846abf5d98c2512235eaa57fdce6187befa109606682503b3a1424f0f729ca0418099fbd86a48093e6a8de26307b8d93e02da927e6dd5b73c8f119aee0f <br> beta = 121b7f9b9aaaa29099fc04a94ba52784d44eac976dd1a3cca458733be5cd090a7b5fbd148444f17f8daf1fb55cb04b1ae85a626e30a54b4b0f8abf4a43314a58</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
@@ -1494,7 +1497,7 @@
 	</span>
 	<span class="org vcardline">Boston University</span>
 	<span class="adr">
-	  <span class="vcardline">111 Cummington St, MCS135</span>
+	  <span class="vcardline">111 Cummington Mall</span>
 
 	  <span class="vcardline">
 		<span class="locality">Boston</span>,  
@@ -1516,7 +1519,7 @@
 	</span>
 	<span class="org vcardline">Boston University</span>
 	<span class="adr">
-	  <span class="vcardline">111 Cummington St, MCS135</span>
+	  <span class="vcardline">111 Cummington Mall</span>
 
 	  <span class="vcardline">
 		<span class="locality">Boston</span>,  
@@ -1547,7 +1550,7 @@
 	  </span>
 	  <span class="country-name vcardline">Hong Kong</span>
 	</span>
-	<span class="vcardline">EMail: <a href="mailto:dipapado@cse.ust.hkbu.edu">dipapado@cse.ust.hkbu.edu</a></span>
+	<span class="vcardline">EMail: <a href="mailto:dipapado@cse.ust.hk">dipapado@cse.ust.hk</a></span>
 
   </address>
 </div><div class="avoidbreak">
