@@ -1842,7 +1842,7 @@
         </section>
 
 
-        <section title="ECVRF-ED25519-SHA512-TAI">
+        <section title="ECVRF-EDWARDS25519-SHA512-TAI">
         <t>These three example secret keys and messages are taken from Section 7.1 of <xref target="RFC8032"/>.</t>
         <t>
         SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />
@@ -1881,7 +1881,7 @@
         pi = 9bc0f79119cc5604bf02d23b4caede71393cedfbb191434dd016d30177ccbf80e29dc513c01c3a980e0e545bcd848222d08a6c3e3665ff5a4cab13a643bef812e284c6b2ee063a2cb4f456794723ad0a <vspace />
         beta = 645427e5d00c62a23fb703732fa5d892940935942101e456ecca7bb217c61c452118fec1219202a0edcf038bb6373241578be7217ba85a2687f7a0310b2df19f</t>
         </section>
-        <section title="ECVRF-ED25519-SHA512-Elligator2">
+        <section title="ECVRF-EDWARDS25519-SHA512-ELL2">
         <t>These three example secret keys and messages are taken from Section 7.1 of <xref target="RFC8032"/>.</t>
         <t>
         SK = 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60 <vspace />

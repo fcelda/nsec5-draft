@@ -121,8 +121,8 @@ Internet-Draft                     VRF                         June 2020
    Appendix A.  Test Vectors for the ECVRFs  . . . . . . . . . . . .  33
      A.1.  ECVRF-P256-SHA256-TAI . . . . . . . . . . . . . . . . . .  33
      A.2.  ECVRF-P256-SHA256-SSWU  . . . . . . . . . . . . . . . . .  34
-     A.3.  ECVRF-ED25519-SHA512-TAI  . . . . . . . . . . . . . . . .  36
-     A.4.  ECVRF-ED25519-SHA512-Elligator2 . . . . . . . . . . . . .  37
+     A.3.  ECVRF-EDWARDS25519-SHA512-TAI . . . . . . . . . . . . . .  36
+     A.4.  ECVRF-EDWARDS25519-SHA512-ELL2  . . . . . . . . . . . . .  37
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  39
 
 1.  Introduction
@@ -1978,7 +1978,7 @@ Internet-Draft                     VRF                         June 2020
    beta =
    4fbadf33b42a5f42f23a6f89952d2e634a6e3810f15878b46ef1bb85a04fe95a
 
-A.3.  ECVRF-ED25519-SHA512-TAI
+A.3.  ECVRF-EDWARDS25519-SHA512-TAI
 
    These three example secret keys and messages are taken from
    Section 7.1 of [RFC8032].
@@ -2046,7 +2046,7 @@ Internet-Draft                     VRF                         June 2020
    beta = 645427e5d00c62a23fb703732fa5d892940935942101e456ecca7bb217c61c
    452118fec1219202a0edcf038bb6373241578be7217ba85a2687f7a0310b2df19f
 
-A.4.  ECVRF-ED25519-SHA512-Elligator2
+A.4.  ECVRF-EDWARDS25519-SHA512-ELL2
 
    These three example secret keys and messages are taken from
    Section 7.1 of [RFC8032].
