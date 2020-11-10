@@ -14,7 +14,7 @@ Expires: May 13, 2021                     Boston University and Algorand
 
 
                    Verifiable Random Functions (VRFs)
-                         draft-irtf-cfrg-vrf-07
+                         draft-irtf-cfrg-vrf-08
 
 Abstract
 
@@ -117,7 +117,7 @@ Internet-Draft                     VRF                     November 2020
    8.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  29
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  30
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  30
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  31
      10.2.  Informative References . . . . . . . . . . . . . . . . .  32
    Appendix A.  Test Vectors for the ECVRFs  . . . . . . . . . . . .  33
      A.1.  ECVRF-P256-SHA256-TAI . . . . . . . . . . . . . . . . . .  33
@@ -1655,6 +1655,8 @@ Internet-Draft                     VRF                     November 2020
       parameters and functions.  Added a 0 octet to all hashing to
       enforce domain separation from hashing done inside hash-to-curve.
 
+      08 - Changed Reyzin's affiliation.
+
 9.  Contributors
 
    This document also would not be possible without the work of Moni
@@ -1669,8 +1671,6 @@ Internet-Draft                     VRF                     November 2020
 
 10.  References
 
-10.1.  Normative References
-
 
 
 
@@ -1681,6 +1681,8 @@ Goldberg, et al.          Expires May 13, 2021                 [Page 30]
 
 Internet-Draft                     VRF                     November 2020
 
+
+10.1.  Normative References
 
    [FIPS-186-4]
               National Institute for Standards and Technology, "Digital
@@ -1726,8 +1728,6 @@ Internet-Draft                     VRF                     November 2020
    [SECG1]    Standards for Efficient Cryptography Group (SECG), "SEC 1:
               Elliptic Curve Cryptography", Version 2.0, May 2009,
               <http://www.secg.org/sec1-v2.pdf>.
-
-
 
 
 
