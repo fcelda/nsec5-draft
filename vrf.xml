@@ -10,7 +10,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 
-<rfc category="std" docName="draft-irtf-cfrg-vrf-07" ipr="trust200902">
+<rfc category="std" docName="draft-irtf-cfrg-vrf-08" ipr="trust200902">
     <front>
         <title abbrev="VRF">Verifiable Random Functions (VRFs)</title>
 
@@ -1614,6 +1614,7 @@
                     Gorka Irazoqui Apecechea and Mario Cao Cueto for finding the problem) and corresponding test vectors for the P256 suites. Added a reference to the Rust implementation.</t>
                 <t> 06 - Made some variable names more descriptive. Added a few implementation references.</t>
                 <t> 07 - Incorporated hash-to-curve draft by reference to replace our own Elligator2 and Simple SWU. Clarified discussion of EC parameters and functions. Added a 0 octet to all hashing to enforce domain separation from hashing done inside hash-to-curve.</t>
+            <t> 08 - Changed Reyzin's affiliation.</t>
             </list>
         </t>
     </section>
